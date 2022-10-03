@@ -1,14 +1,12 @@
 import {IBCChainInfo} from "../context/WalletConnect/types";
 import {ChainInfo} from "@keplr-wallet/types";
 
-export type typeItems = "Testnet"| "Mainnet"
-
-export type ExternalChainData = {
-    [key in typeItems]: ChainInfo[]
+interface ExternalChainData {
+    [index: string]: ChainInfo[];
 }
 
 export type IBCChainData = {
-    [keys in typeItems]: IBCChainInfo[]
+    [index: string]: IBCChainInfo[]
 }
 
 export const GasInfo = {
@@ -52,7 +50,7 @@ export const IBCChainInfos:IBCChainData = {
             sourceChannelId: 'channel-190',
             destinationChannelId: 'channel-24',
             portID: 'transfer',
-            coinDenom: 'ibc/C8A74ABBE2AF892E15680D916A7C22130585CE5704F9B17A10F184A90D53BECA',
+            coinDenom: 'uatom',
             prefix: 'cosmos'
         },
     ]

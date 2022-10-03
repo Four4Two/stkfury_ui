@@ -15,8 +15,8 @@ export const SHORT_INTERVAL = 10000
 // Key works
 export const COIN_ATOM = 'ATOM';
 export const COIN_ATOM_DENOM = 'uatom';
-export const COIN_PSTAKE = 'PSTAKE';
-export const COIN_GRAVITY = 'GRAVITON';
+export const STK_ATOM_DENOM = 'STKATOM';
+export const STK_ATOM_MINIMAL_DENOM = 'ustkatom';
 export const ATOM_BALANCE = 'AtomBalance';
 export const STK_ATOM_BALANCE = 'stkATOMBalance';
 export const COSMOS_ATOM_BALANCE = 'CosmosAtomBalance';

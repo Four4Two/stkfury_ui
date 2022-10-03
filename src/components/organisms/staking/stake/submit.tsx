@@ -10,10 +10,11 @@ import { IBCChainInfos } from '../../../../helpers/config';
 import { COSMOS_CHAIN_ID, STAKE, UN_STAKE } from "../../../../../AppConstants";
 import { executeStakeTransactionSaga } from "../../../../store/reducers/transactions/stake";
 
+const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const Submit = () => {
   const dispatch = useDispatch();
-  let ibcInfo = IBCChainInfos['Testnet'].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
+  let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
   const {atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount} = useSelector((state:RootState) => state.stake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);

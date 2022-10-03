@@ -7,7 +7,7 @@ import { Spinner } from "../../../atoms/spinner";
 import { LiquidUnStakeMsg, RedeemMsg } from "../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../helpers/utils";
 import { IBCChainInfos } from '../../../../helpers/config';
-import { COSMOS_CHAIN_ID, INSTANT, UN_STAKE } from "../../../../../AppConstants";
+import {COSMOS_CHAIN_ID, INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
 import { executeStakeTransactionSaga } from "../../../../store/reducers/transactions/stake";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
 
@@ -22,9 +22,9 @@ const Submit = () => {
   const stakeHandler = async () => {
     let messages;
     if(type === INSTANT){
-       messages = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), 'ustkatom')
+       messages = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
     }else{
-       messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), 'ustkatom')
+       messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
     }
     dispatch(executeUnStakeTransactionSaga({
       persistenceSigner:persistenceSigner!,

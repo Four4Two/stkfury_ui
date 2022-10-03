@@ -1,4 +1,4 @@
-import { put, select, SelectEffect } from "@redux-saga/core/effects";
+import { put, select } from "@redux-saga/core/effects";
 import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
 import { resetTransaction, setTransactionProgress } from "../reducers/transaction";
 import {
@@ -7,7 +7,7 @@ import {
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL,
-  PERSISTENCE_FEE, STAKE, UN_STAKE
+  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM, UN_STAKE
 } from "../../../AppConstants";
 import { setStakeAmount } from "../reducers/transactions/stake";
 import { Transaction } from "../../helpers/transaction";
@@ -26,7 +26,9 @@ import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
 import { hideDepositModal, setDepositAmount } from "../reducers/transactions/deposit";
 import { setUnStakeAmount } from "../reducers/transactions/unstake";
 
-let ibcInfo = IBCChainInfos['Testnet'].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
+const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+
+let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
   try {
@@ -43,7 +45,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
       );
       const state:RootState = yield select();
       const availableStkAtom = state?.balances.stkAtomBalance;
-      const response:string = yield pollAccountBalance(account, 'ustkatom', persistenceChainInfo.rpc, availableStkAtom.toString());
+      const response:string = yield pollAccountBalance(account, STK_ATOM_MINIMAL_DENOM, persistenceChainInfo.rpc, availableStkAtom.toString());
       if (response !== "0") {
         toast.dismiss();
         displayToast(

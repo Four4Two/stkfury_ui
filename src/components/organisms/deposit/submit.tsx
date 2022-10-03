@@ -10,9 +10,11 @@ import { COSMOS_CHAIN_ID, DEPOSIT, UN_STAKE } from "../../../../AppConstants";
 import { MakeIBCTransferMsg } from "../../../helpers/transaction";
 import { executeDepositTransactionSaga } from "../../../store/reducers/transactions/deposit";
 
+const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+
 const Submit = () => {
   const dispatch = useDispatch();
-  let ibcInfo = IBCChainInfos['Testnet'].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
+  let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
   const {ibcAtomBalance} = useSelector((state:RootState) => state.balances);
   const {amount} = useSelector((state:RootState) => state.deposit);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);

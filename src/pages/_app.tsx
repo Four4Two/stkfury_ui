@@ -1,19 +1,23 @@
 import '../styles/globals.css'
 import type {AppProps} from 'next/app'
 import {ExternalChains} from "../helpers/config";
-import {COSMOS_CHAIN_ID, PERSISTENCE_CHAIN_ID} from "../../AppConstants";
+import {COSMOS_CHAIN_ID, PERSISTENCE_CHAIN_ID, TEST_NET} from "../../AppConstants";
 import WalletProvider from "../context/WalletConnect/WalletConnect";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Flowbite } from 'flowbite-react';
 import { store } from "../store"
 import {Provider} from "react-redux";
+import {ChainInfo} from "@keplr-wallet/types";
 
 function MyApp({Component, pageProps}: AppProps) {
-  // type ss = typeItems
-  //   let env:typeItems = process.env.REACT_APP_ENVIRONMENT!;
-    let persistenceChainInfo = ExternalChains['Testnet'].find((chain) => chain.chainId === PERSISTENCE_CHAIN_ID);
-    let cosmosChainInfo= ExternalChains['Testnet'].find((chain) => chain.chainId === COSMOS_CHAIN_ID);
+
+    const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+
+    let persistenceChainInfo = ExternalChains[env].find((chain:ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID);
+
+    let cosmosChainInfo = ExternalChains[env].find((chain:ChainInfo) => chain.chainId === COSMOS_CHAIN_ID);
+
   return (
     <Provider store={store}>
       <Flowbite>
