@@ -21,7 +21,7 @@ const Stake = () => {
             Exchange Rate
           </p>
           <p className="font-normal text-sm leading-7 text-light-emphasis text-right flex items-center">
-            <ExchangeRate type={'stake'}/>
+            <ExchangeRate type={'unstake'}/>
           </p>
         </div>
         <Options/>

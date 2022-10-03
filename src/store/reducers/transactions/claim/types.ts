@@ -6,7 +6,7 @@ import { ClaimMsgTypes } from "../../../../helpers/protoMsg";
 export interface ClaimTransactionParams {
     persistenceSigner : OfflineSigner,
     persistenceChainInfo: ChainInfo,
-    account:string,
+    address:string,
     msg:ClaimMsgTypes
 }
 

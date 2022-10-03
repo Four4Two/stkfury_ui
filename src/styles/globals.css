@@ -268,6 +268,7 @@ input[type=number] {
    border: 1px solid rgba(252, 252, 252, 0.7);
    box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
 }
+
  /* sidebar */
 .close.offCanvas {
    transform: translateX(-100%);
@@ -278,13 +279,12 @@ input[type=number] {
    transform: none;
    transition: transform .4s ease-in-out;
 }
+
 .backDrop{
    transition: opacity .15s linear;
    background: #000;
 }
-.show .backDrop{
-   opacity: 0;
-}
+
 .show .backDrop{
 opacity: 0.5;
 }
@@ -314,4 +314,18 @@ opacity: 0.5;
 .tokenImage{
    width: 20px !important;
    height: 20px !important;
+}
+
+/* collapse */
+
+.unStakeList{
+   overflow: auto;
+   max-height: 0;
+   transition:max-height 0.4s ease;
+}
+
+.unStakeList.active{
+   max-height: 300px;
+   overflow-x: auto;
+   transition:max-height 0.4s ease;
 }

@@ -43,8 +43,8 @@ export const LoginOptions = () => {
           size="medium"
           type="custom"
           content={
-            <div className="flex items-center">
-              <div className="flex items-center py-2.5 pr-1.5 pl-3"  onClick={()=>{setDropdownOpen(!dropdownOpen)}}>
+            <span className="flex items-center">
+              <span className="flex items-center py-2.5 pr-1.5 pl-3"  onClick={()=>{setDropdownOpen(!dropdownOpen)}}>
                 <Image
                   src={"/images/keplr.svg"}
                   alt={"logo"}
@@ -53,11 +53,11 @@ export const LoginOptions = () => {
                   layout={'fixed'}
                 />
                 <span className="ml-3">{stringTruncate(persistenceAccountData!.address)}</span>
-              </div>
-              <div className="py-2.5 pr-3 pl-1.5">
+              </span>
+              <span className="py-2.5 pr-3 pl-1.5">
                 <Copy id={persistenceAccountData!.address}/>
-              </div>
-            </div>
+              </span>
+            </span>
 
           }
           className="button custom connected md:text-xsm"

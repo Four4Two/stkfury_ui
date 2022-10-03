@@ -27,7 +27,9 @@ const Options = () => {
           <div className="flex items-center">
             <p className="option-heading m-0 font-normal text-base text-light-disabled leading-normal flex-1 md:text-sm">
               Redeem Instantly
-              <span className="block max-limit font-normal leading-normal text-light-mid text-sm">(Max Limit: <span>1200.43 ATOM</span>)</span>
+              <span className="block max-limit font-normal leading-normal text-light-mid text-sm md:text-xsm">
+                (Max Limit: <span>1200.43 ATOM</span>)
+              </span>
             </p>
             <p className={`${styles.amount} option-value font-medium m-0 text-light-mid text-2xl text-center text-right overflow-x-auto md:text-lg`}>{atomAmount} ATOM</p>
           </div>

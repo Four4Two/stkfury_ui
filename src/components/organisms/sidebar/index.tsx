@@ -70,17 +70,19 @@ const Sidebar = () => {
 
   const router = useRouter();
   return (
-    <aside className={`w-61`} >
+    <aside className={`w-61`}>
       <div className={`${Styles.sideBarContent} bg-side-bar flex flex-col justify-between overflow-y-auto sticky`}>
         <div>
           <div className="text-center py-8">
             <Link href="/" className="nav-link" passHref>
-              <Image
-                src={"/images/logo.svg"}
-                alt={"logo"}
-                width={90}
-                height={32}
-              />
+             <div>
+               <Image
+                   src={"/images/logo.svg"}
+                   alt={"logo"}
+                   width={90}
+                   height={32}
+               />
+             </div>
             </Link>
           </div>
           <div>

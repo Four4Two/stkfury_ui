@@ -4,13 +4,17 @@ import TabItem from "../../../molecules/tabs/tabItem";
 import TabContent from "../../../molecules/tabs/tabContent";
 import Stake from "../stake";
 import UnStake from "../unstake";
+import Claim from "../claim";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
-  // -mb-px
+
+    const unstakingAmount = 0
+
   const tabItemClasses = 'cursor-pointer w-full bg-tabHeader ' +
     'font-semibold text-lg leading-normal text-center' +
     ' text-light-mid flex-1 px-4 py-2 md:px-2 md:py-1.5 md:text-base';
+
   return (
     <div className={`${styles.tabsContainer} m-auto px-10 pb-10`}>
       <ul className="tabsHeaderList flex flex-wrap mb-4">
@@ -25,6 +29,10 @@ const StakingTabs = () => {
           <UnStake/>
         </TabContent>
       </div>
+        {Number(unstakingAmount) > 0 ?
+            <Claim/>
+            : null
+        }
     </div>
   );
 };

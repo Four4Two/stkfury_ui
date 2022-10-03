@@ -1,6 +1,5 @@
 import {IBCChainInfo} from "../context/WalletConnect/types";
 import {ChainInfo} from "@keplr-wallet/types";
-import {getBindingIdentifiers} from "@babel/types";
 
 export type typeItems = "Testnet"| "Mainnet"
 

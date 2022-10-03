@@ -3,7 +3,7 @@ import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
 import { resetTransaction, setTransactionProgress } from "../reducers/transaction";
 import {
   CLAIM,
-  COSMOS_CHAIN_ID, DEPOSIT,
+  COSMOS_CHAIN_ID, DEPOSIT, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL,
@@ -65,6 +65,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
+    console.log("error came ", e)
     yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
@@ -127,8 +128,8 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
     yield put(setTransactionProgress(CLAIM));
-    const {persistenceSigner, persistenceChainInfo, account, msg} = payload
-    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    const {persistenceSigner, persistenceChainInfo, address, msg} = payload
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     if (transaction.code === 0) {
       displayToast(
         {
@@ -145,7 +146,7 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
     customScope.setTags({
-      [ERROR_WHILE_UNSTAKING]: payload.account
+      [ERROR_WHILE_CLAIMING]: payload.address
     })
     genericErrorHandler(e, customScope)
     yield failedTransactionActions("")

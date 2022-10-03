@@ -13,18 +13,18 @@ const Copy = ({ id }: IconTypes) => {
     }, 1000);
   };
   return (
-    <div className="relative flex">
+    <span className="relative flex">
       <CopyToClipboard onCopy={onCopy} text={id}>
-        <button className={Styles.copyButton}>
+        <span className={Styles.copyButton}>
           <Icon
           viewClass={Styles.copyIcon}
           iconName="copy"/>
-        </button>
+        </span>
       </CopyToClipboard>
       <section className={`${Styles.copyResult} absolute`}>
         {copyValue ? <span>Copied</span> : null}
       </section>
-    </div>
+    </span>
   );
 };
 

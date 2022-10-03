@@ -21,12 +21,14 @@ const NavigationBar = () => {
       <div className="flex items-center flex-1">
         <div className="hidden md:block">
           <Link href="/" className="nav-link" passHref>
-            <Image
-              src={"/images/logo.svg"}
-              alt={"logo"}
-              width={isMobile ? 90 : 124}
-              height={32}
-            />
+           <div>
+             <Image
+                 src={"/images/logo.svg"}
+                 alt={"logo"}
+                 width={isMobile ? 90 : 124}
+                 height={32}
+             />
+           </div>
           </Link>
         </div>
         <div className="flex ml-auto">
