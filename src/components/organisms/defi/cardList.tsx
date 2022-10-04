@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image'
 import {Icon} from "../../atoms/icon";
 import ButtonLink from "../../atoms/buttonLink";
 
@@ -22,19 +21,17 @@ const listShow = (item:any, index:number) => (
                     <div className="heading-section flex mb-8 md:mb-2">
                         <div className="icons relative flex items-center mr-8">
                             <span className="z-10 absolute flex">
-                                <Image
+                                <img
                                     src={item.inputToken_logo}
                                     width={32} height={32}
                                     alt={"inputToken_logo"}
-                                    layout={'fixed'}
                                 />
                             </span>
                             <span className="relative left-5 flex">
-                                <Image
+                                <img
                                     src={item.outputToken_logo}
-                                    width={32} height={32}
+                                    width={32}
                                     alt={"inputToken_logo"}
-                                    layout={'fixed'}
                                 />
                             </span>
                         </div>
@@ -46,9 +43,8 @@ const listShow = (item:any, index:number) => (
                         {listData('Platform',
                         <>
                             <span className="mr-2 flex">
-                                    <Image src={item.platform_logo}
-                                           width={28} height={28}
-                                           layout={'fixed'}
+                                    <img src={item.platform_logo}
+                                           width={28}
                                            alt={"logo"}
                                     />
                                 </span>

@@ -85,7 +85,7 @@ const Sidebar = () => {
             </Link>
           </div>
           <div>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <Link href="/" passHref>
                 <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} 
                 py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}>
@@ -97,7 +97,7 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <Link href={"/defi"} passHref>
                 <p className={`${Styles.navBarLink } ${router.pathname == "/defi" ? `${Styles.active} navItemActive` : ""} 
                 py-3 px-8 flex items-center cursor-pointer`}>
@@ -109,7 +109,7 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <Link href="/" className="nav-link" passHref>
                 <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""}
                  py-3 px-8 flex items-center cursor-pointer`}>
@@ -121,7 +121,7 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <p onClick={() => setOpen(!open)}
                  aria-controls="more-list"
                  aria-expanded={open}
