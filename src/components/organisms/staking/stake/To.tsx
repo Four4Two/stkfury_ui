@@ -21,11 +21,11 @@ const To = () => {
       <div className="p-6 bg-input border rounded-md border-solid border-[#1b1b1b99] flex-wrap flex md:p-3">
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
-            <Image src={'/images/tokens/stk_atom.svg'}
+            <img src={'/images/tokens/stk_atom.svg'}
                    width={isMobile ? 20 : 32} height={isMobile ? 20 : 32}
                    className="logo"
                    alt="atomIcon"
-                   layout={'fixed'}/>
+                   />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg">stkATOM</span>
           </div>
           <p className="mt-3 leading-normal text-sm font-normal">

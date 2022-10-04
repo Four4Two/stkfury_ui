@@ -37,7 +37,7 @@ const From = () => {
       <div className="inputContainer border rounded-md p-6 bg-input border-solid border-[#1b1b1b99] flex-wrap flex md:p-3">
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
-            <Image
+            <img
               src={'/images/tokens/stk_atom.svg'}
               width={isMobile ? 20 : 32} height={isMobile ? 20 : 32}
               className="logo" alt="atomIcon" />

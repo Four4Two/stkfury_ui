@@ -16,8 +16,6 @@ body{
 .mainContainer{
    background-image: url("/images/bg/bg_round1.svg");
    background-position: bottom right;
-   height: 100vh;
-   overflow: auto;
 }
 
 
@@ -39,14 +37,12 @@ body{
 .navItemActive .side-bar-icon{
    fill: #811318
 }
+
 .navItemActive .text{
    color: #fcfcfc;
    font-weight: 600;
 }
 
-.moreListHeader {
-   cursor: pointer;
-}
 .moreListHeader.opened {
    background: #1b1b1b;
 }
@@ -55,30 +51,26 @@ body{
    color: #fcfcfc;
    font-weight: 600;
 }
+
 .moreListHeader .side-bar-icon.arrow{
    transition: transform 0.35s ease;
    transform-origin: 0.5em 50%;
    width: 12px;
    height: 14px;
 }
+
 .moreListHeader.opened .side-bar-icon.arrow {
    fill: #fcfcfc;
    transform: rotate(90deg);
 }
 
 .moreList{
-   height: 200px;
    transition: height 0.35s ease;
-   overflow:hidden;
-   position:relative;
-   background: #1B1B1B;
 }
 
 .moreList.active{
    height:0;
    transition:height 0.35s ease;
-   overflow:hidden;
-   position:relative;
 }
 
 .moreList .itemIcon{
@@ -143,7 +135,6 @@ input[type=number] {
 
 
 /* toastify overriding styles */
-
 .Toastify .Toastify__toast-container .Toastify__toast {
    background: none;
    box-shadow: none;
@@ -230,20 +221,14 @@ input[type=number] {
 
 
 /* custom spinner */
-
 @keyframes spinner-border {
    to { transform: rotate(360deg);
    }
 }
 
 .spinner{
-   display: inline-block;
-   width: 1.5rem;
-   height: 1.5rem;
-   vertical-align: text-bottom;
    border: 0.15em solid currentColor;
    border-right-color: transparent;
-   border-radius: 50%;
    -webkit-animation: spinner-border .75s linear infinite;
    animation: spinner-border .75s linear infinite;
 }
@@ -310,17 +295,9 @@ opacity: 0.5;
    line-height: 1.5;
    padding: 5px 20px;
 }
-
-.tokenImage{
-   width: 20px !important;
-   height: 20px !important;
-}
-
 /* collapse */
 
 .unStakeList{
-   overflow: auto;
-   max-height: 0;
    transition:max-height 0.4s ease;
 }
 

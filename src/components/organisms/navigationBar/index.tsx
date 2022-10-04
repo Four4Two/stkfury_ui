@@ -1,7 +1,6 @@
 import React from 'react';
 import LoginOptions from "./loginOptions";
 import Button from "../../atoms/button";
-import Image from "next/image";
 import {TEST_NET} from "../../../../AppConstants";
 import { Icon } from "../../atoms/icon";
 import { useDispatch } from "react-redux";
@@ -21,14 +20,11 @@ const NavigationBar = () => {
       <div className="flex items-center flex-1">
         <div className="hidden md:block">
           <Link href="/" className="nav-link" passHref>
-           <div>
-             <Image
+             <img
                  src={"/images/logo.svg"}
                  alt={"logo"}
                  width={isMobile ? 90 : 124}
-                 height={32}
              />
-           </div>
           </Link>
         </div>
         <div className="flex ml-auto">
@@ -38,7 +34,7 @@ const NavigationBar = () => {
             content={
               <div className="flex items-center">
                 <div className="flex items-center">
-                  <Image
+                  <img
                     src={"/images/persistence_icon.svg"}
                     alt={"logo"}
                     width={18}

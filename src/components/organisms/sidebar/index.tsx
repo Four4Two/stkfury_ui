@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import logo from "../../assets/images/logo.svg";
 import Link from "next/link";
-import Image from "next/image";
 import { Icon } from "../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import { RootState } from "../../../store/reducers";
@@ -11,10 +10,9 @@ import { useRouter } from "next/router";
 import { formatNumber } from "../../../helpers/utils";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import Button from "../../atoms/button";
-import { fetchInitSaga } from "../../../store/reducers/initialData";
-import Deposit from "../deposit";
 import { showDepositModal } from "../../../store/reducers/transactions/deposit";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
+import {useWindowSize} from "../../../customHooks/useWindowSize";
 
 const socialList = [
   {
@@ -38,7 +36,8 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const {atomBalance} = useSelector((state:RootState) => state.balances);
-  const {isWalletConnected, persistenceChainData} = useWallet()
+  const {isWalletConnected} = useWallet()
+  const {isMobile} = useWindowSize();
 
   const moreList = [
     {
@@ -75,12 +74,12 @@ const Sidebar = () => {
         <div>
           <div className="text-center py-8">
             <Link href="/" className="nav-link" passHref>
-             <div>
-               <Image
+             <div className='text-center'>
+               <img
                    src={"/images/logo.svg"}
                    alt={"logo"}
-                   width={130}
-                   height={30}
+                   className='m-auto'
+                   width={isMobile ? 90 : 124}
                />
              </div>
             </Link>
@@ -139,10 +138,11 @@ const Sidebar = () => {
                   viewClass="side-bar-icon arrow"
                 />
               </p>
-              <div id="more-list" className={`${open ? '': 'active'} moreList`}>
+              <div id="more-list" className={`${open ? '': 'active'} moreList h-[180px] 
+              overflow-hidden relative bg-[#1B1B1B]`}>
                   {
                     moreList.map((item, index) => (
-                      <a className="pr-8 py-2 pl-12 flex items-center text-light-mid "
+                      <a className="pr-8 py-2 pl-12 flex items-center text-light-mid"
                          href={item.url}
                          target={"_blank"}
                          key={index}
@@ -182,7 +182,7 @@ const Sidebar = () => {
             </h2>
             <div className="flex justify-between items-center">
               <div className="flex items-center">
-                <Image src="/images/tokens/atom.svg" width={24} height={24} alt="atom"/>
+                <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
                 <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
               </div>
               <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(atomBalance, 3, 6)}</p>
