@@ -29,7 +29,7 @@ jobs:
         id: publish
         uses: cloudflare/pages-action@1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: 'stkATOM_ui' # e.g. 'my-project'
           directory: 'out' # e.g. 'dist'
