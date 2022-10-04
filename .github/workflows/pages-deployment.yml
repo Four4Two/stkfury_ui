@@ -22,6 +22,8 @@ jobs:
       - run: npm run build --if-present
         env:
           # Add your environment variables here
+          NEXT_PUBLIC_ENVIRONMENT: 'Testnet'
+          NEXT_PUBLIC_SENTRY_DSN: 'https://cd10a90d7ae74502a1bd0400b14799f6@o1057883.ingest.sentry.io/6605624'
       - run: npm run export --if-present
       - name: Publish
         id: publish
