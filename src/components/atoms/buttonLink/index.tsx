@@ -1,25 +1,27 @@
 import styles from './styles.module.css'
 import React from "react";
-import { ButtonProps } from "./types";
+import { ButtonLinkProps } from "./types";
 import {emptyFunc} from "../../../helpers/utils";
 
-export const Button = ({
-                          onClick = emptyFunc,
+export const ButtonLink = ({
+                          link = '',
                           content,
-                          disabled = false,
                           className,
                           type = "primary",
-                          size = "medium"
-                       }: ButtonProps) => {
+                          size = "medium",
+                           onClick = emptyFunc,
+    target = '_blank'
+                       }: ButtonLinkProps) => {
   return (
-    <button
+    <a
+      href={link}
       onClick={onClick}
-      disabled={disabled}
+      target={target}
       className={`py-2.5 px-4 ${styles.appButton} ${styles[type]} ${size} ${className}`}
     >
       {content}
-    </button>
+    </a>
   )
 }
 
-export default Button
+export default ButtonLink

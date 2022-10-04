@@ -1,7 +1,5 @@
 import React, { ChangeEvent } from "react";
-import Image  from 'next/image'
 import InputText from "../../../atoms/input";
-import { COIN_ATOM } from "../../../../../AppConstants";
 import { formatNumber } from "../../../../helpers/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";

@@ -1,0 +1,14 @@
+.defiContainer{
+    max-width: 970px;
+}
+
+.searchInput{
+    width: 196px;
+}
+
+.searchInputIcon{
+    right: 15px;
+    top: 15px;
+    width: 14px;
+    height: 14px;
+}

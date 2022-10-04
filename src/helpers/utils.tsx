@@ -97,7 +97,7 @@ export async function pollAccountBalance(address:string, denom:string, rpc:strin
         initialBalance = await fetchAccountBalance(address, denom, rpc)
     }
 
-    console.log(initialBalance, "initialBalance")
+    printConsole(initialBalance+"initialBalance")
     await delay(PollingConfig.initialTxHashQueryDelay);
     for (let i = 0; i < PollingConfig.numberOfRetries; i++) {
         try {

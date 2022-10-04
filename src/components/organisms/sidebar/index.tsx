@@ -85,9 +85,10 @@ const Sidebar = () => {
             </Link>
           </div>
           <div>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <Link href="/" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} py-3 px-8 flex items-center active:bg-sideBar-navLinkActive`}>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} 
+                py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}>
                   <Icon
                     iconName="staking"
                     viewClass="side-bar-icon mr-8"
@@ -96,9 +97,10 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`${Styles.navBarItem} list-none`}>
-              <Link href={"/"} passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""} py-3 px-8 flex items-center`}>
+            <li className={`list-none`}>
+              <Link href={"/defi"} passHref>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/defi" ? `${Styles.active} navItemActive` : ""} 
+                py-3 px-8 flex items-center cursor-pointer`}>
                   <Icon
                     iconName="defi"
                     viewClass="side-bar-icon mr-8"
@@ -107,9 +109,10 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <Link href="/" className="nav-link" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""} py-3 px-8 flex items-center`}>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""}
+                 py-3 px-8 flex items-center cursor-pointer`}>
                   <Icon
                     iconName="transactions"
                     viewClass="side-bar-icon mr-8"
@@ -118,7 +121,7 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`${Styles.navBarItem} list-none`}>
+            <li className={`list-none`}>
               <p onClick={() => setOpen(!open)}
                  aria-controls="more-list"
                  aria-expanded={open}
@@ -135,10 +138,11 @@ const Sidebar = () => {
                   viewClass="side-bar-icon arrow"
                 />
               </p>
-              <div id="more-list" className={`${open ? '': 'active'} moreList`}>
+              <div id="more-list" className={`${open ? '': 'active'} moreList h-[180px] 
+              overflow-hidden relative bg-[#1B1B1B]`}>
                   {
                     moreList.map((item, index) => (
-                      <a className="pr-8 py-2 pl-12 flex items-center text-light-mid "
+                      <a className="pr-8 py-2 pl-12 flex items-center text-light-mid"
                          href={item.url}
                          target={"_blank"}
                          key={index}

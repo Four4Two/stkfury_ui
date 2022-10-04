@@ -75,7 +75,7 @@ const Claim = () => {
                             viewClass={styles.collapseIcon}
                         />
                     </p>
-                    <div className={`${expand ? '': 'active'} unStakeList`}>
+                    <div className={`${expand ? '': 'active'} unStakeList overflow-hidden max-h-0`}>
                             <IndividualUnstakingClaim amount={200.899326} daysRemaining={1}
                                                       unstakedOn={'Unstaked on 19 Aug 2022, 9:12 UTC'}/>
                     </div>

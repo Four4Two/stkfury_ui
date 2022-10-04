@@ -28,7 +28,7 @@ export const PageTemplate = ({children, className}: { children: React.ReactNode,
           <Sidebar />
         </div>
         <MobileSideBar/>
-        <div className={`mainContainer overflow-auto bg-no-repeat ` + className}>
+        <div className={`mainContainer h-screen overflow-auto bg-no-repeat ` + className}>
           <Topbar/>
           {children}
         </div>

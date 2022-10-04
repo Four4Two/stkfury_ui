@@ -67,7 +67,6 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
-    console.log("error came ", e)
     yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
