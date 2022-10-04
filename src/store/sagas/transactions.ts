@@ -180,6 +180,7 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
           ToastType.SUCCESS
         );
       } else {
+        console.log("in try else")
         displayToast(
           {
             message: 'This transaction could not be completed'
@@ -193,6 +194,7 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
+    console.log("in catch")
     yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)

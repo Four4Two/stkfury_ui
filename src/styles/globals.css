@@ -329,3 +329,9 @@ opacity: 0.5;
    overflow-x: auto;
    transition:max-height 0.4s ease;
 }
+
+.filterButton.active{
+   background: #ECECEC;
+   border: 1px solid #ECECEC;
+   color: #070B09;
+}

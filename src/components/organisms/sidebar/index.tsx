@@ -79,8 +79,8 @@ const Sidebar = () => {
                <Image
                    src={"/images/logo.svg"}
                    alt={"logo"}
-                   width={90}
-                   height={32}
+                   width={130}
+                   height={30}
                />
              </div>
             </Link>
@@ -88,7 +88,8 @@ const Sidebar = () => {
           <div>
             <li className={`${Styles.navBarItem} list-none`}>
               <Link href="/" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} py-3 px-8 flex items-center active:bg-sideBar-navLinkActive`}>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} 
+                py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}>
                   <Icon
                     iconName="staking"
                     viewClass="side-bar-icon mr-8"
@@ -98,8 +99,9 @@ const Sidebar = () => {
               </Link>
             </li>
             <li className={`${Styles.navBarItem} list-none`}>
-              <Link href={"/"} passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""} py-3 px-8 flex items-center`}>
+              <Link href={"/defi"} passHref>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/defi" ? `${Styles.active} navItemActive` : ""} 
+                py-3 px-8 flex items-center cursor-pointer`}>
                   <Icon
                     iconName="defi"
                     viewClass="side-bar-icon mr-8"
@@ -110,7 +112,8 @@ const Sidebar = () => {
             </li>
             <li className={`${Styles.navBarItem} list-none`}>
               <Link href="/" className="nav-link" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""} py-3 px-8 flex items-center`}>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""}
+                 py-3 px-8 flex items-center cursor-pointer`}>
                   <Icon
                     iconName="transactions"
                     viewClass="side-bar-icon mr-8"
