@@ -1,6 +1,4 @@
-import Image from "next/image";
 import { formatNumber, truncateToFixedDecimalPlaces } from "../../../../helpers/utils";
-import InputText from "../../../atoms/input";
 import styles from "./styles.module.css";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";

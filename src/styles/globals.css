@@ -310,12 +310,6 @@ opacity: 0.5;
    line-height: 1.5;
    padding: 5px 20px;
 }
-
-.tokenImage{
-   width: 20px !important;
-   height: 20px !important;
-}
-
 /* collapse */
 
 .unStakeList{

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import Image from "next/image";
 import Styles from "./styles.module.css"
 import Button from "../../atoms/button";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
@@ -45,12 +44,11 @@ export const LoginOptions = () => {
           content={
             <span className="flex items-center">
               <span className="flex items-center py-2.5 pr-1.5 pl-3"  onClick={()=>{setDropdownOpen(!dropdownOpen)}}>
-                <Image
+                <img
                   src={"/images/keplr.svg"}
                   alt={"logo"}
                   width={isMobile ? 14 : 18}
                   height={isMobile ? 14 : 18}
-                  layout={'fixed'}
                 />
                 <span className="ml-3">{stringTruncate(persistenceAccountData!.address)}</span>
               </span>
@@ -85,7 +83,7 @@ export const LoginOptions = () => {
             :
             <div className={`${Styles.DropdownMenu} absolute bg-dropDown rounded-md`} ref={ref}>
               <div className="p-4 flex items-center" onClick={connectHandler}>
-                <Image
+                <img
                   src={"/images/keplr.svg"}
                   alt={"logo"}
                   width={20}
