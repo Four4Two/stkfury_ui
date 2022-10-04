@@ -1,0 +1,6 @@
+.tabsContainer{
+    max-width: 616px;
+    background-image: url('/images/bg/bg_round2.svg');
+    background-repeat: no-repeat;
+    background-position: 0 20px;
+}
