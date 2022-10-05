@@ -30,7 +30,6 @@
     "@types/react-copy-to-clipboard": "^5.0.4",
     "axios": "^0.27.2",
     "cosmjs-types": "^0.5.1",
-    "flowbite": "^1.5.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "12.2.2",
