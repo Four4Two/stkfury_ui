@@ -1,13 +1,12 @@
 import { put, select } from "@redux-saga/core/effects";
 import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
-import { resetTransaction, setTransactionProgress } from "../reducers/transaction";
+import { resetTransaction } from "../reducers/transaction";
 import {
-  CLAIM,
-  COSMOS_CHAIN_ID, DEPOSIT, ERROR_WHILE_CLAIMING,
+  COSMOS_CHAIN_ID, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
-  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM, UN_STAKE
+  PERSISTENCE_FEE, STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { setStakeAmount } from "../reducers/transactions/stake";
 import { Transaction } from "../../helpers/transaction";
@@ -33,7 +32,6 @@ let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COS
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
   try {
-    yield put(setTransactionProgress(STAKE));
     const {persistenceSigner, persistenceChainInfo, account, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setStakeAmount(""))
@@ -81,7 +79,6 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
-    yield put(setTransactionProgress(UN_STAKE));
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setUnStakeAmount(""))
@@ -145,7 +142,6 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
 
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
-    yield put(setTransactionProgress(CLAIM));
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     if (transaction.code === 0) {
@@ -177,7 +173,6 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
 
 export function* executeDepositTransaction({ payload }: DepositTransactionPayload) {
   try {
-    yield put(setTransactionProgress(DEPOSIT));
     const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, msg, persistenceAddress, cosmosAddress} = payload
     const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [msg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
     yield put(setDepositAmount(""))
