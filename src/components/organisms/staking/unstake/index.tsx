@@ -33,7 +33,7 @@ const Stake = () => {
             ""
             :
             <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
-              Your stkATOM will only be unbonded after an unbonding period of up to 24 days. If you
+              Your stkATOM will only be unbonded after an unbonding period of up to 21 days. If you
               want
               immediate
               liquidity, you can swap stkATOM for ATOM on one of the DEXes listed in our &nbsp;

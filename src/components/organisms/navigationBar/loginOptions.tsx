@@ -6,6 +6,13 @@ import { Icon } from "../../atoms/icon";
 import { stringTruncate } from "../../../helpers/utils";
 import Copy from "../../molecules/copy";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
+import {Window as KeplrWindow} from "@keplr-wallet/types/build/window";
+
+declare global {
+  interface Window extends KeplrWindow {
+  }
+}
+
 
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -18,9 +25,17 @@ export const LoginOptions = () => {
    setDropdownOpen(false);
   }
 
+
+
   const disconnectHandler = async () =>{
     window.location.reload();
   }
+
+  useEffect(() =>{
+    window.addEventListener("keplr_keystorechange", async () => {
+      await connect();
+    })
+  },[])
 
   useEffect(() => {
     const listener = (event: MouseEvent | TouchEvent) => {

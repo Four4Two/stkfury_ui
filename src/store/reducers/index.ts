@@ -5,7 +5,9 @@ import initialData from "./initialData";
 import transaction from "./transaction";
 import unStake from "./transactions/unstake";
 import deposit from "./transactions/deposit";
+import claim from "./transactions/claim";
 import mobileSidebar from "./sidebar";
+import claimQueries from "./claim";
 
 const reducers = combineReducers({
     balances,
@@ -14,7 +16,9 @@ const reducers = combineReducers({
     transaction,
     unStake,
     deposit,
-    mobileSidebar
+    mobileSidebar,
+    claimQueries,
+    claim
 })
 
 export default reducers;

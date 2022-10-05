@@ -1,7 +1,12 @@
-import { MsgLiquidStake, MsgLiquidUnstake, MsgRedeem } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
+import {
+  MsgClaim,
+  MsgLiquidStake,
+  MsgLiquidUnstake,
+  MsgRedeem
+} from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
 import { GasPrice } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
-import { COSMOS_LIQUID_STAKE_URL, COSMOS_LIQUID_UN_STAKE_URL, REDEEM_URL } from "../../AppConstants";
+import { COSMOS_LIQUID_STAKE_URL, COSMOS_LIQUID_UN_STAKE_URL, REDEEM_URL,CLAIM_URL } from "../../AppConstants";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { IBCConfiguration } from "./config";
 import * as Sentry from "@sentry/react";
@@ -22,7 +27,8 @@ export async function Transaction(signer:OfflineSigner, signerAddress:string, ms
       registry: new Registry([...defaultRegistryTypes,
         [COSMOS_LIQUID_STAKE_URL, MsgLiquidStake],
         [COSMOS_LIQUID_UN_STAKE_URL, MsgLiquidUnstake],
-        [REDEEM_URL, MsgRedeem]
+        [REDEEM_URL, MsgRedeem],
+          [CLAIM_URL, MsgClaim]
       ]),
       gasPrice: GasPrice.fromString(gasPrice)
     }

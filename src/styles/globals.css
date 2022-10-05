@@ -43,6 +43,10 @@ body{
    font-weight: 600;
 }
 
+img, video{
+   max-width: initial;
+}
+
 .moreListHeader.opened {
    background: #1b1b1b;
 }
@@ -305,6 +309,10 @@ opacity: 0.5;
    max-height: 300px;
    overflow-x: auto;
    transition:max-height 0.4s ease;
+}
+
+.unStakeListHeader.opened .collapseIcon{
+   transform: rotate(90deg);
 }
 
 .filterButton.active{

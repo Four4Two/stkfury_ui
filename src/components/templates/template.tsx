@@ -7,7 +7,7 @@ import Deposit from "../organisms/deposit";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
-export const PageTemplate = ({children, className}: { children: React.ReactNode, className: string }) => {
+export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
 
     Sentry.init({
         dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -21,7 +21,7 @@ export const PageTemplate = ({children, className}: { children: React.ReactNode,
   return (
     <div>
       <Head>
-        <title>pSTAKE</title>
+        <title>{title}</title>
       </Head>
       <div className="appLayout grid gap-6 md:block">
         <div className="md:hidden">

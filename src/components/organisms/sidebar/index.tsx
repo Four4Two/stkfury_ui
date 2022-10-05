@@ -4,15 +4,16 @@ import Link from "next/link";
 import { Icon } from "../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import { RootState } from "../../../store/reducers";
-import { Tooltip } from "flowbite-react";
 import Styles from "./styles.module.css"
 import { useRouter } from "next/router";
-import { formatNumber } from "../../../helpers/utils";
+import {emptyFunc, formatNumber} from "../../../helpers/utils";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import Button from "../../atoms/button";
 import { showDepositModal } from "../../../store/reducers/transactions/deposit";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
+import Tooltip from "rc-tooltip";
+import 'rc-tooltip/assets/bootstrap.css';
 
 const socialList = [
   {
@@ -67,9 +68,13 @@ const Sidebar = () => {
     dispatch(showDepositModal())
   }
 
+  const closeSideHandler = () => {
+    dispatch(hideMobileSidebar())
+  }
+
   const router = useRouter();
   return (
-    <aside className={`w-61`}>
+    <aside className="w-[284px] md:w-[220px]">
       <div className={`${Styles.sideBarContent} bg-side-bar flex flex-col justify-between overflow-y-auto sticky`}>
         <div>
           <div className="text-center py-8">
@@ -88,36 +93,39 @@ const Sidebar = () => {
             <li className={`list-none`}>
               <Link href="/" passHref>
                 <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} 
-                py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}>
+                py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}
+                onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon
                     iconName="staking"
-                    viewClass="side-bar-icon mr-8"
+                    viewClass="side-bar-icon mr-8 md:mr-4"
                   />
-                  <span className="text text-light-mid leading-6 text-base">Staking</span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm">Staking</span>
                 </p>
               </Link>
             </li>
             <li className={`list-none`}>
               <Link href={"/defi"} passHref>
                 <p className={`${Styles.navBarLink } ${router.pathname == "/defi" ? `${Styles.active} navItemActive` : ""} 
-                py-3 px-8 flex items-center cursor-pointer`}>
+                py-3 px-8 flex items-center cursor-pointer`}
+                   onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon
                     iconName="defi"
-                    viewClass="side-bar-icon mr-8"
+                    viewClass="side-bar-icon mr-8 md:mr-4"
                   />
-                  <span className="text text-light-mid leading-6 text-base">DeFi</span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm">DeFi</span>
                 </p>
               </Link>
             </li>
             <li className={`list-none`}>
               <Link href="/" className="nav-link" passHref>
                 <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""}
-                 py-3 px-8 flex items-center cursor-pointer`}>
+                 py-3 px-8 flex items-center cursor-pointer`}
+                   onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon
                     iconName="transactions"
-                    viewClass="side-bar-icon mr-8"
+                    viewClass="side-bar-icon mr-8 md:mr-4"
                   />
-                  <span className="text text-light-mid leading-6 text-base">Transactions</span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm">Transactions</span>
                 </p>
               </Link>
             </li>
@@ -129,9 +137,9 @@ const Sidebar = () => {
                   <span className="flex items-center">
                       <Icon
                         iconName="more"
-                        viewClass="side-bar-icon mr-8"
+                        viewClass="side-bar-icon mr-8 md:mr-4"
                       />
-                      <span className="text-light-mid leading-6 text-base">More</span>
+                      <span className="text-light-mid leading-6 text-base md:text-sm">More</span>
                   </span>
                 <Icon
                   iconName="right-arrow"
@@ -146,12 +154,15 @@ const Sidebar = () => {
                          href={item.url}
                          target={"_blank"}
                          key={index}
-                         rel="noopener noreferrer">
-                        <Icon
-                          iconName={item.icon}
-                          viewClass="itemIcon mr-2"
-                        />
-                        {item.name}
+                         rel="noopener noreferrer"
+                         onClick={isMobile ? closeSideHandler : emptyFunc}>
+                        <span>
+                          <Icon
+                              iconName={item.icon}
+                              viewClass="itemIcon"
+                          />
+                        </span>
+                        <span className="ml-2 text-base md:text-sm">{item.name}</span>
                         <Icon
                           iconName="arrow-redirect-white"
                           viewClass="redirect"
@@ -166,19 +177,13 @@ const Sidebar = () => {
         <div>
           <div className={`${Styles.balanceList} p-6`}>
             <h2 className="text-light-emphasis text-base flex items-center font-semibold leading-normal mb-4">Balances
-             <div className={`${Styles.toolTipHeader} md:hidden`}>
-               <Tooltip
-                 placement="bottom"
-                 content={<p className="m-0">
-                   Only showing balances of your assets staked via pSTAKE.
-                 </p>}>
-                 <button className="icon-button px-1" type="button">
+               <Tooltip placement="bottom" overlay={<span>Only showing balances of <br/> your assets staked via pSTAKE.</span>}>
+                 <button className="icon-button px-1">
                    <Icon
-                     viewClass="arrow-right"
-                     iconName="info"/>
+                       viewClass="arrow-right"
+                       iconName="info"/>
                  </button>
                </Tooltip>
-             </div>
             </h2>
             <div className="flex justify-between items-center">
               <div className="flex items-center">
@@ -204,19 +209,15 @@ const Sidebar = () => {
           <div className={`${Styles.socialLinks} socialLinks flex py-3 px-6`}>
               {
                 socialList.map((item, index) => (
-                  <div className={Styles.toolTipHeader} key={index}>
-                    <Tooltip
-                    placement="top"
-                    content={item.tooltip}>
-                      <a href={item.url}
-                         rel="noopener noreferrer"
-                         className="mr-2.5"
-                         target="_blank">
-                        <Icon viewClass="socialIcon"
-                              iconName={item.iconName}/>
-                      </a>
-                    </Tooltip>
-                  </div>
+                      <Tooltip placement="bottom" overlay={item.tooltip} key={index}>
+                        <a href={item.url}
+                           rel="noopener noreferrer"
+                           className="mr-2.5"
+                           target="_blank">
+                          <Icon viewClass="socialIcon"
+                                iconName={item.iconName}/>
+                        </a>
+                      </Tooltip>
                 ))
               }
           </div>

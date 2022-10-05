@@ -28,7 +28,7 @@ const Home: NextPage = () => {
   }, [isWalletConnected, dispatch, persistenceAccountData, cosmosAccountData, persistenceChainData, cosmosChainData])
 
   return (
-    <PageTemplate className="stake">
+    <PageTemplate className="stake" title="Stake">
         <StakingTabs/>
     </PageTemplate>
   );
