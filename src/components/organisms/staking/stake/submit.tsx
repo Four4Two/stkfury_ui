@@ -35,7 +35,7 @@ const Submit = () => {
   return (
     isWalletConnected ?
       <Button
-        className="button w-full md:py-2 md:text-sm"
+        className="button w-full md:py-2 md:text-sm flex items-center justify-center"
         type="primary"
         size="large"
         disabled={!enable}

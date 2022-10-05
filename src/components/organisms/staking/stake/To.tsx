@@ -27,7 +27,7 @@ const To = () => {
                    />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg">stkATOM</span>
           </div>
-          <p className="mt-3 leading-normal text-sm font-normal">
+          <p className="mt-3 leading-normal text-sm font-normal md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, 6)}</span>
           </p>

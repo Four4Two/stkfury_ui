@@ -1,10 +1,12 @@
 import { FetchBalanceSaga } from "../reducers/balances/types";
-import { fetchAccountBalance } from "../../pages/api/onChain";
+import {fetchAccountBalance, fetchAccountClaims, fetchClaimableAmount} from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import { setAtomBalance, setIbcAtomBalance, setStkAtomBalance } from "../reducers/balances";
 import { decimalize } from "../../helpers/utils";
 import { IBCChainInfos } from "../../helpers/config";
 import {COSMOS_CHAIN_ID, STK_ATOM_MINIMAL_DENOM} from "../../../AppConstants";
+import {FetchPendingClaimSaga} from "../reducers/claim/types";
+import {setClaimableBalance, setPendingClaimList} from "../reducers/claim";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -19,3 +21,13 @@ export function * fetchBalance({payload}: FetchBalanceSaga) {
   yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
   yield put(setIbcAtomBalance(Number(decimalize(ibcAtomBalance))));
 }
+
+export function * fetchPendingClaims({payload}: FetchPendingClaimSaga) {
+  const {address, persistenceChainInfo}:any = payload
+  // @ts-ignore
+  const accountClaims:any = yield fetchAccountClaims(address, persistenceChainInfo.rpc);
+  const claimableBalance:number = yield fetchClaimableAmount(address, persistenceChainInfo.rpc);
+  yield put(setClaimableBalance(claimableBalance))
+  yield put(setPendingClaimList(accountClaims))
+}
+

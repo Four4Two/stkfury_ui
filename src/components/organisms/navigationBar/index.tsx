@@ -16,7 +16,7 @@ const NavigationBar = () => {
     dispatch(showMobileSidebar());
   }
   return (
-    <div className="flex mb-10 py-6 px-7">
+    <div className="flex mb-10 py-6 px-7 md:px-3">
       <div className="flex items-center flex-1">
         <div className="hidden md:block">
           <Link href="/" className="nav-link" passHref>
@@ -49,7 +49,7 @@ const NavigationBar = () => {
               </div>
               </div>
             }
-            className="button custom lg:hidden"
+            className="button custom lg:hidden pointer-events-none"
           />
           <div className="pl-5">
             <LoginOptions/>

@@ -68,7 +68,7 @@ const listShow = (item:any, index:number) => (
                     item.type === "yield_farming" ?
                         <div className="flex flex-col justify-center mx-2.5">
                             <ButtonLink link={item.swap_link} target={"_blank"}
-                               className="button button-primary"
+                               className="button button-primary md:py-2 md:px-4 md:text-xsm"
                                 content={
                                 <>
                                     Start farming
@@ -84,7 +84,7 @@ const listShow = (item:any, index:number) => (
                         item.type === "defi" ?
                             <div className="flex flex-col justify-center mx-2.5">
                                 <ButtonLink link={item.swap_link} target={"_blank"}
-                                            className="button button-primary"
+                                            className="button button-primary md:py-2 md:px-4 md:text-xsm"
                                             content={
                                                 <>
                                                     Swap
@@ -96,7 +96,7 @@ const listShow = (item:any, index:number) => (
                                             }
                                 />
                                 <ButtonLink link={item.swap_link} target={"_blank"}
-                                            className="button button-primary"
+                                            className="button button-primary md:py-2 md:px-4 md:text-xsm"
                                             content={
                                                 <>
                                                     Add Liquidity
@@ -112,7 +112,7 @@ const listShow = (item:any, index:number) => (
                             :
                             <div className="flex flex-col justify-center mx-2.5">
                                 <ButtonLink link={item.swap_link} target={"_blank"}
-                                            className="button button-primary"
+                                            className="button button-primary md:py-2 md:px-4 md:text-xsm"
                                             content={
                                                 <>
                                                     Borrow
@@ -124,7 +124,7 @@ const listShow = (item:any, index:number) => (
                                             }
                                 />
                                 <ButtonLink link={item.swap_link} target={"_blank"}
-                                            className="button button-primary"
+                                            className="button button-primary md:py-2 md:px-4 md:text-xsm"
                                             content={
                                                 <>
                                                     Lend
@@ -138,7 +138,7 @@ const listShow = (item:any, index:number) => (
                             </div>
                     : <div className="flex flex-col justify-center lg:mx-0 lg:mt-4 mx-2.5">
                         <ButtonLink link={item.swap_link} target={"_blank"}
-                                    className="button button-primary pointer-events-none opacity-50"
+                                    className="button button-primary pointer-events-none opacity-50 md:py-2 md:px-4 md:text-xsm"
                                     content="Coming Soon"
                         />
                     </div>

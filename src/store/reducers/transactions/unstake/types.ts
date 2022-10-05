@@ -13,7 +13,7 @@ export interface UnStakeAmount {
 export interface UnStakeTransactionParams {
     persistenceSigner : OfflineSigner,
     persistenceChainInfo: ChainInfo,
-    account:string,
+    address:string,
     msg:LiquidStakeMsgTypes
 }
 

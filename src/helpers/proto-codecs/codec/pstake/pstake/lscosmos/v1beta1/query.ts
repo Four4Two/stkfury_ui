@@ -7,6 +7,9 @@ import {
   DelegationState,
   AllowListedValidators,
   IBCAmountTransientStore,
+  UnbondingEpochCValue,
+  HostAccountUndelegation,
+  DelegatorUnbondingEpochEntry,
 } from "./pstake/lscosmos/v1beta1/lscosmos";
 
 export const protobufPackage = "pstake.lscosmos.v1beta1";
@@ -66,6 +69,67 @@ export interface QueryIBCTransientStoreRequest {}
 /** QueryIBCTransientStoreRequest is a response for the Query/IBCTransientStore methods. */
 export interface QueryIBCTransientStoreResponse {
   iBCTransientStore?: IBCAmountTransientStore;
+}
+
+/** QueryUnclaimedRequest is a request for the Query/Unclaimed methods. */
+export interface QueryUnclaimedRequest {
+  delegatorAddress: string;
+}
+
+/** QueryUnclaimedResponse is a response for the Query/Unclaimed methods. */
+export interface QueryUnclaimedResponse {
+  unclaimed: UnbondingEpochCValue[];
+}
+
+/** QueryFailedUnbondingsRequest is a request for the Query/FailedUnbondings methods. */
+export interface QueryFailedUnbondingsRequest {
+  delegatorAddress: string;
+}
+
+/** QueryFailedUnbondingsResponse a response for the Query/FailedUnbondings methods. */
+export interface QueryFailedUnbondingsResponse {
+  failedUnbondings: UnbondingEpochCValue[];
+}
+
+/** QueryPendingUnbondingsRequest is a request for the Query/PendingUnbondings methods. */
+export interface QueryPendingUnbondingsRequest {
+  delegatorAddress: string;
+}
+
+/** QueryPendingUnbondingsResponse is a response for the Query/PendingUnbondings methods. */
+export interface QueryPendingUnbondingsResponse {
+  pendingUnbondings: UnbondingEpochCValue[];
+}
+
+/** QueryUnbondingEpochCValueRequest is a request for the Query/UnbondingEpochCValue methods. */
+export interface QueryUnbondingEpochCValueRequest {
+  epochNumber: Long;
+}
+
+/** QueryUnbondingEpochCValueResponse is a response for the Query/UnbondingEpochCValue methods. */
+export interface QueryUnbondingEpochCValueResponse {
+  unbondingEpochCValue?: UnbondingEpochCValue;
+}
+
+/** QueryHostAccountUndelegationRequest is a request for the Query/HostAccountUndelegation methods. */
+export interface QueryHostAccountUndelegationRequest {
+  epochNumber: Long;
+}
+
+/** QueryHostAccountUndelegationResponse is a response for the Query/HostAccountUndelegation methods. */
+export interface QueryHostAccountUndelegationResponse {
+  hostAccountUndelegation?: HostAccountUndelegation;
+}
+
+/** QueryDelegatorUnbondingEpochEntryRequest is a request for the Query/DelegatorUnbondingEpochEntry methods. */
+export interface QueryDelegatorUnbondingEpochEntryRequest {
+  delegatorAddress: string;
+  epochNumber: Long;
+}
+
+/** QueryDelegatorUnbondingEpochEntryResponse is a response for the Query/DelegatorUnbondingEpochEntry methods. */
+export interface QueryDelegatorUnbondingEpochEntryResponse {
+  delegatorUnbodingEpochEntry?: DelegatorUnbondingEpochEntry;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -849,6 +913,819 @@ export const QueryIBCTransientStoreResponse = {
   },
 };
 
+function createBaseQueryUnclaimedRequest(): QueryUnclaimedRequest {
+  return { delegatorAddress: "" };
+}
+
+export const QueryUnclaimedRequest = {
+  encode(
+    message: QueryUnclaimedRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorAddress !== "") {
+      writer.uint32(10).string(message.delegatorAddress);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUnclaimedRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUnclaimedRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorAddress = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUnclaimedRequest {
+    return {
+      delegatorAddress: isSet(object.delegatorAddress)
+        ? String(object.delegatorAddress)
+        : "",
+    };
+  },
+
+  toJSON(message: QueryUnclaimedRequest): unknown {
+    const obj: any = {};
+    message.delegatorAddress !== undefined &&
+      (obj.delegatorAddress = message.delegatorAddress);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryUnclaimedRequest>, I>>(
+    object: I
+  ): QueryUnclaimedRequest {
+    const message = createBaseQueryUnclaimedRequest();
+    message.delegatorAddress = object.delegatorAddress ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryUnclaimedResponse(): QueryUnclaimedResponse {
+  return { unclaimed: [] };
+}
+
+export const QueryUnclaimedResponse = {
+  encode(
+    message: QueryUnclaimedResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.unclaimed) {
+      UnbondingEpochCValue.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUnclaimedResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUnclaimedResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.unclaimed.push(
+            UnbondingEpochCValue.decode(reader, reader.uint32())
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUnclaimedResponse {
+    return {
+      unclaimed: Array.isArray(object?.unclaimed)
+        ? object.unclaimed.map((e: any) => UnbondingEpochCValue.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: QueryUnclaimedResponse): unknown {
+    const obj: any = {};
+    if (message.unclaimed) {
+      obj.unclaimed = message.unclaimed.map((e) =>
+        e ? UnbondingEpochCValue.toJSON(e) : undefined
+      );
+    } else {
+      obj.unclaimed = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryUnclaimedResponse>, I>>(
+    object: I
+  ): QueryUnclaimedResponse {
+    const message = createBaseQueryUnclaimedResponse();
+    message.unclaimed =
+      object.unclaimed?.map((e) => UnbondingEpochCValue.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseQueryFailedUnbondingsRequest(): QueryFailedUnbondingsRequest {
+  return { delegatorAddress: "" };
+}
+
+export const QueryFailedUnbondingsRequest = {
+  encode(
+    message: QueryFailedUnbondingsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorAddress !== "") {
+      writer.uint32(10).string(message.delegatorAddress);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryFailedUnbondingsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryFailedUnbondingsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorAddress = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryFailedUnbondingsRequest {
+    return {
+      delegatorAddress: isSet(object.delegatorAddress)
+        ? String(object.delegatorAddress)
+        : "",
+    };
+  },
+
+  toJSON(message: QueryFailedUnbondingsRequest): unknown {
+    const obj: any = {};
+    message.delegatorAddress !== undefined &&
+      (obj.delegatorAddress = message.delegatorAddress);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryFailedUnbondingsRequest>, I>>(
+    object: I
+  ): QueryFailedUnbondingsRequest {
+    const message = createBaseQueryFailedUnbondingsRequest();
+    message.delegatorAddress = object.delegatorAddress ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryFailedUnbondingsResponse(): QueryFailedUnbondingsResponse {
+  return { failedUnbondings: [] };
+}
+
+export const QueryFailedUnbondingsResponse = {
+  encode(
+    message: QueryFailedUnbondingsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.failedUnbondings) {
+      UnbondingEpochCValue.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryFailedUnbondingsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryFailedUnbondingsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.failedUnbondings.push(
+            UnbondingEpochCValue.decode(reader, reader.uint32())
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryFailedUnbondingsResponse {
+    return {
+      failedUnbondings: Array.isArray(object?.failedUnbondings)
+        ? object.failedUnbondings.map((e: any) =>
+            UnbondingEpochCValue.fromJSON(e)
+          )
+        : [],
+    };
+  },
+
+  toJSON(message: QueryFailedUnbondingsResponse): unknown {
+    const obj: any = {};
+    if (message.failedUnbondings) {
+      obj.failedUnbondings = message.failedUnbondings.map((e) =>
+        e ? UnbondingEpochCValue.toJSON(e) : undefined
+      );
+    } else {
+      obj.failedUnbondings = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryFailedUnbondingsResponse>, I>>(
+    object: I
+  ): QueryFailedUnbondingsResponse {
+    const message = createBaseQueryFailedUnbondingsResponse();
+    message.failedUnbondings =
+      object.failedUnbondings?.map((e) =>
+        UnbondingEpochCValue.fromPartial(e)
+      ) || [];
+    return message;
+  },
+};
+
+function createBaseQueryPendingUnbondingsRequest(): QueryPendingUnbondingsRequest {
+  return { delegatorAddress: "" };
+}
+
+export const QueryPendingUnbondingsRequest = {
+  encode(
+    message: QueryPendingUnbondingsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorAddress !== "") {
+      writer.uint32(10).string(message.delegatorAddress);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryPendingUnbondingsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPendingUnbondingsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorAddress = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryPendingUnbondingsRequest {
+    return {
+      delegatorAddress: isSet(object.delegatorAddress)
+        ? String(object.delegatorAddress)
+        : "",
+    };
+  },
+
+  toJSON(message: QueryPendingUnbondingsRequest): unknown {
+    const obj: any = {};
+    message.delegatorAddress !== undefined &&
+      (obj.delegatorAddress = message.delegatorAddress);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryPendingUnbondingsRequest>, I>>(
+    object: I
+  ): QueryPendingUnbondingsRequest {
+    const message = createBaseQueryPendingUnbondingsRequest();
+    message.delegatorAddress = object.delegatorAddress ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryPendingUnbondingsResponse(): QueryPendingUnbondingsResponse {
+  return { pendingUnbondings: [] };
+}
+
+export const QueryPendingUnbondingsResponse = {
+  encode(
+    message: QueryPendingUnbondingsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.pendingUnbondings) {
+      UnbondingEpochCValue.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryPendingUnbondingsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryPendingUnbondingsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pendingUnbondings.push(
+            UnbondingEpochCValue.decode(reader, reader.uint32())
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryPendingUnbondingsResponse {
+    return {
+      pendingUnbondings: Array.isArray(object?.pendingUnbondings)
+        ? object.pendingUnbondings.map((e: any) =>
+            UnbondingEpochCValue.fromJSON(e)
+          )
+        : [],
+    };
+  },
+
+  toJSON(message: QueryPendingUnbondingsResponse): unknown {
+    const obj: any = {};
+    if (message.pendingUnbondings) {
+      obj.pendingUnbondings = message.pendingUnbondings.map((e) =>
+        e ? UnbondingEpochCValue.toJSON(e) : undefined
+      );
+    } else {
+      obj.pendingUnbondings = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryPendingUnbondingsResponse>, I>>(
+    object: I
+  ): QueryPendingUnbondingsResponse {
+    const message = createBaseQueryPendingUnbondingsResponse();
+    message.pendingUnbondings =
+      object.pendingUnbondings?.map((e) =>
+        UnbondingEpochCValue.fromPartial(e)
+      ) || [];
+    return message;
+  },
+};
+
+function createBaseQueryUnbondingEpochCValueRequest(): QueryUnbondingEpochCValueRequest {
+  return { epochNumber: Long.ZERO };
+}
+
+export const QueryUnbondingEpochCValueRequest = {
+  encode(
+    message: QueryUnbondingEpochCValueRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (!message.epochNumber.isZero()) {
+      writer.uint32(8).int64(message.epochNumber);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUnbondingEpochCValueRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUnbondingEpochCValueRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.epochNumber = reader.int64() as Long;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUnbondingEpochCValueRequest {
+    return {
+      epochNumber: isSet(object.epochNumber)
+        ? Long.fromValue(object.epochNumber)
+        : Long.ZERO,
+    };
+  },
+
+  toJSON(message: QueryUnbondingEpochCValueRequest): unknown {
+    const obj: any = {};
+    message.epochNumber !== undefined &&
+      (obj.epochNumber = (message.epochNumber || Long.ZERO).toString());
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryUnbondingEpochCValueRequest>, I>
+  >(object: I): QueryUnbondingEpochCValueRequest {
+    const message = createBaseQueryUnbondingEpochCValueRequest();
+    message.epochNumber =
+      object.epochNumber !== undefined && object.epochNumber !== null
+        ? Long.fromValue(object.epochNumber)
+        : Long.ZERO;
+    return message;
+  },
+};
+
+function createBaseQueryUnbondingEpochCValueResponse(): QueryUnbondingEpochCValueResponse {
+  return { unbondingEpochCValue: undefined };
+}
+
+export const QueryUnbondingEpochCValueResponse = {
+  encode(
+    message: QueryUnbondingEpochCValueResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.unbondingEpochCValue !== undefined) {
+      UnbondingEpochCValue.encode(
+        message.unbondingEpochCValue,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryUnbondingEpochCValueResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryUnbondingEpochCValueResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.unbondingEpochCValue = UnbondingEpochCValue.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryUnbondingEpochCValueResponse {
+    return {
+      unbondingEpochCValue: isSet(object.unbondingEpochCValue)
+        ? UnbondingEpochCValue.fromJSON(object.unbondingEpochCValue)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryUnbondingEpochCValueResponse): unknown {
+    const obj: any = {};
+    message.unbondingEpochCValue !== undefined &&
+      (obj.unbondingEpochCValue = message.unbondingEpochCValue
+        ? UnbondingEpochCValue.toJSON(message.unbondingEpochCValue)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryUnbondingEpochCValueResponse>, I>
+  >(object: I): QueryUnbondingEpochCValueResponse {
+    const message = createBaseQueryUnbondingEpochCValueResponse();
+    message.unbondingEpochCValue =
+      object.unbondingEpochCValue !== undefined &&
+      object.unbondingEpochCValue !== null
+        ? UnbondingEpochCValue.fromPartial(object.unbondingEpochCValue)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryHostAccountUndelegationRequest(): QueryHostAccountUndelegationRequest {
+  return { epochNumber: Long.ZERO };
+}
+
+export const QueryHostAccountUndelegationRequest = {
+  encode(
+    message: QueryHostAccountUndelegationRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (!message.epochNumber.isZero()) {
+      writer.uint32(8).int64(message.epochNumber);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryHostAccountUndelegationRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryHostAccountUndelegationRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.epochNumber = reader.int64() as Long;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryHostAccountUndelegationRequest {
+    return {
+      epochNumber: isSet(object.epochNumber)
+        ? Long.fromValue(object.epochNumber)
+        : Long.ZERO,
+    };
+  },
+
+  toJSON(message: QueryHostAccountUndelegationRequest): unknown {
+    const obj: any = {};
+    message.epochNumber !== undefined &&
+      (obj.epochNumber = (message.epochNumber || Long.ZERO).toString());
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryHostAccountUndelegationRequest>, I>
+  >(object: I): QueryHostAccountUndelegationRequest {
+    const message = createBaseQueryHostAccountUndelegationRequest();
+    message.epochNumber =
+      object.epochNumber !== undefined && object.epochNumber !== null
+        ? Long.fromValue(object.epochNumber)
+        : Long.ZERO;
+    return message;
+  },
+};
+
+function createBaseQueryHostAccountUndelegationResponse(): QueryHostAccountUndelegationResponse {
+  return { hostAccountUndelegation: undefined };
+}
+
+export const QueryHostAccountUndelegationResponse = {
+  encode(
+    message: QueryHostAccountUndelegationResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.hostAccountUndelegation !== undefined) {
+      HostAccountUndelegation.encode(
+        message.hostAccountUndelegation,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryHostAccountUndelegationResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryHostAccountUndelegationResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.hostAccountUndelegation = HostAccountUndelegation.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryHostAccountUndelegationResponse {
+    return {
+      hostAccountUndelegation: isSet(object.hostAccountUndelegation)
+        ? HostAccountUndelegation.fromJSON(object.hostAccountUndelegation)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryHostAccountUndelegationResponse): unknown {
+    const obj: any = {};
+    message.hostAccountUndelegation !== undefined &&
+      (obj.hostAccountUndelegation = message.hostAccountUndelegation
+        ? HostAccountUndelegation.toJSON(message.hostAccountUndelegation)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryHostAccountUndelegationResponse>, I>
+  >(object: I): QueryHostAccountUndelegationResponse {
+    const message = createBaseQueryHostAccountUndelegationResponse();
+    message.hostAccountUndelegation =
+      object.hostAccountUndelegation !== undefined &&
+      object.hostAccountUndelegation !== null
+        ? HostAccountUndelegation.fromPartial(object.hostAccountUndelegation)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryDelegatorUnbondingEpochEntryRequest(): QueryDelegatorUnbondingEpochEntryRequest {
+  return { delegatorAddress: "", epochNumber: Long.ZERO };
+}
+
+export const QueryDelegatorUnbondingEpochEntryRequest = {
+  encode(
+    message: QueryDelegatorUnbondingEpochEntryRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorAddress !== "") {
+      writer.uint32(10).string(message.delegatorAddress);
+    }
+    if (!message.epochNumber.isZero()) {
+      writer.uint32(16).int64(message.epochNumber);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryDelegatorUnbondingEpochEntryRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryDelegatorUnbondingEpochEntryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorAddress = reader.string();
+          break;
+        case 2:
+          message.epochNumber = reader.int64() as Long;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryDelegatorUnbondingEpochEntryRequest {
+    return {
+      delegatorAddress: isSet(object.delegatorAddress)
+        ? String(object.delegatorAddress)
+        : "",
+      epochNumber: isSet(object.epochNumber)
+        ? Long.fromValue(object.epochNumber)
+        : Long.ZERO,
+    };
+  },
+
+  toJSON(message: QueryDelegatorUnbondingEpochEntryRequest): unknown {
+    const obj: any = {};
+    message.delegatorAddress !== undefined &&
+      (obj.delegatorAddress = message.delegatorAddress);
+    message.epochNumber !== undefined &&
+      (obj.epochNumber = (message.epochNumber || Long.ZERO).toString());
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryDelegatorUnbondingEpochEntryRequest>, I>
+  >(object: I): QueryDelegatorUnbondingEpochEntryRequest {
+    const message = createBaseQueryDelegatorUnbondingEpochEntryRequest();
+    message.delegatorAddress = object.delegatorAddress ?? "";
+    message.epochNumber =
+      object.epochNumber !== undefined && object.epochNumber !== null
+        ? Long.fromValue(object.epochNumber)
+        : Long.ZERO;
+    return message;
+  },
+};
+
+function createBaseQueryDelegatorUnbondingEpochEntryResponse(): QueryDelegatorUnbondingEpochEntryResponse {
+  return { delegatorUnbodingEpochEntry: undefined };
+}
+
+export const QueryDelegatorUnbondingEpochEntryResponse = {
+  encode(
+    message: QueryDelegatorUnbondingEpochEntryResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorUnbodingEpochEntry !== undefined) {
+      DelegatorUnbondingEpochEntry.encode(
+        message.delegatorUnbodingEpochEntry,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryDelegatorUnbondingEpochEntryResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryDelegatorUnbondingEpochEntryResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorUnbodingEpochEntry =
+            DelegatorUnbondingEpochEntry.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryDelegatorUnbondingEpochEntryResponse {
+    return {
+      delegatorUnbodingEpochEntry: isSet(object.delegatorUnbodingEpochEntry)
+        ? DelegatorUnbondingEpochEntry.fromJSON(
+            object.delegatorUnbodingEpochEntry
+          )
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryDelegatorUnbondingEpochEntryResponse): unknown {
+    const obj: any = {};
+    message.delegatorUnbodingEpochEntry !== undefined &&
+      (obj.delegatorUnbodingEpochEntry = message.delegatorUnbodingEpochEntry
+        ? DelegatorUnbondingEpochEntry.toJSON(
+            message.delegatorUnbodingEpochEntry
+          )
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryDelegatorUnbondingEpochEntryResponse>, I>
+  >(object: I): QueryDelegatorUnbondingEpochEntryResponse {
+    const message = createBaseQueryDelegatorUnbondingEpochEntryResponse();
+    message.delegatorUnbodingEpochEntry =
+      object.delegatorUnbodingEpochEntry !== undefined &&
+      object.delegatorUnbodingEpochEntry !== null
+        ? DelegatorUnbondingEpochEntry.fromPartial(
+            object.delegatorUnbodingEpochEntry
+          )
+        : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -869,6 +1746,22 @@ export interface Query {
   IBCTransientStore(
     request: QueryIBCTransientStoreRequest
   ): Promise<QueryIBCTransientStoreResponse>;
+  Unclaimed(request: QueryUnclaimedRequest): Promise<QueryUnclaimedResponse>;
+  FailedUnbondings(
+    request: QueryFailedUnbondingsRequest
+  ): Promise<QueryFailedUnbondingsResponse>;
+  PendingUnbondings(
+    request: QueryPendingUnbondingsRequest
+  ): Promise<QueryPendingUnbondingsResponse>;
+  UnbondingEpochCValue(
+    request: QueryUnbondingEpochCValueRequest
+  ): Promise<QueryUnbondingEpochCValueResponse>;
+  HostAccountUndelegation(
+    request: QueryHostAccountUndelegationRequest
+  ): Promise<QueryHostAccountUndelegationResponse>;
+  DelegatorUnbondingEpochEntry(
+    request: QueryDelegatorUnbondingEpochEntryRequest
+  ): Promise<QueryDelegatorUnbondingEpochEntryResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -882,6 +1775,13 @@ export class QueryClientImpl implements Query {
     this.CValue = this.CValue.bind(this);
     this.ModuleState = this.ModuleState.bind(this);
     this.IBCTransientStore = this.IBCTransientStore.bind(this);
+    this.Unclaimed = this.Unclaimed.bind(this);
+    this.FailedUnbondings = this.FailedUnbondings.bind(this);
+    this.PendingUnbondings = this.PendingUnbondings.bind(this);
+    this.UnbondingEpochCValue = this.UnbondingEpochCValue.bind(this);
+    this.HostAccountUndelegation = this.HostAccountUndelegation.bind(this);
+    this.DelegatorUnbondingEpochEntry =
+      this.DelegatorUnbondingEpochEntry.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -974,6 +1874,89 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryIBCTransientStoreResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  Unclaimed(request: QueryUnclaimedRequest): Promise<QueryUnclaimedResponse> {
+    const data = QueryUnclaimedRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "Unclaimed",
+      data
+    );
+    return promise.then((data) =>
+      QueryUnclaimedResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  FailedUnbondings(
+    request: QueryFailedUnbondingsRequest
+  ): Promise<QueryFailedUnbondingsResponse> {
+    const data = QueryFailedUnbondingsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "FailedUnbondings",
+      data
+    );
+    return promise.then((data) =>
+      QueryFailedUnbondingsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  PendingUnbondings(
+    request: QueryPendingUnbondingsRequest
+  ): Promise<QueryPendingUnbondingsResponse> {
+    const data = QueryPendingUnbondingsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "PendingUnbondings",
+      data
+    );
+    return promise.then((data) =>
+      QueryPendingUnbondingsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  UnbondingEpochCValue(
+    request: QueryUnbondingEpochCValueRequest
+  ): Promise<QueryUnbondingEpochCValueResponse> {
+    const data = QueryUnbondingEpochCValueRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "UnbondingEpochCValue",
+      data
+    );
+    return promise.then((data) =>
+      QueryUnbondingEpochCValueResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  HostAccountUndelegation(
+    request: QueryHostAccountUndelegationRequest
+  ): Promise<QueryHostAccountUndelegationResponse> {
+    const data = QueryHostAccountUndelegationRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "HostAccountUndelegation",
+      data
+    );
+    return promise.then((data) =>
+      QueryHostAccountUndelegationResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  DelegatorUnbondingEpochEntry(
+    request: QueryDelegatorUnbondingEpochEntryRequest
+  ): Promise<QueryDelegatorUnbondingEpochEntryResponse> {
+    const data =
+      QueryDelegatorUnbondingEpochEntryRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "DelegatorUnbondingEpochEntry",
+      data
+    );
+    return promise.then((data) =>
+      QueryDelegatorUnbondingEpochEntryResponse.decode(new _m0.Reader(data))
     );
   }
 }

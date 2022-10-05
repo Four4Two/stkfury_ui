@@ -1,6 +1,5 @@
 module.exports = {
   content: [
-    './node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}',
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
@@ -95,5 +94,5 @@ module.exports = {
       sm: { max: "512px" },
     },
   },
-  plugins: [require('flowbite/plugin')]
+  plugins: []
 };

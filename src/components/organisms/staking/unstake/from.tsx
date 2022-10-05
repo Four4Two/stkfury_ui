@@ -41,7 +41,7 @@ const From = () => {
               className="logo" alt="atomIcon" />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg">stkATOM</span>
           </div>
-          <p className="mt-3 leading-normal text-sm font-normal">
+          <p className="mt-3 leading-normal text-sm font-normal text-sm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, 6)}</span>
             {isWalletConnected ? <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>Max</span> : null}
