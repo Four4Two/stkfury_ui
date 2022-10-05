@@ -44,10 +44,14 @@ const From = () => {
                    />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg md:text-lg">{COIN_ATOM}</span>
           </div>
-          <p className="mt-3 leading-normal text-sm">
+          <p className="mt-3 leading-normal text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
-            <span className="text-light-mid">{formatNumber(atomBalance, 3, 6)}</span>
-            {isWalletConnected ? <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>Max</span> : null}
+            <span className="text-light-mid">
+              {formatNumber(atomBalance, 3, 6)}</span>
+            {isWalletConnected ?
+                <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>
+                  Max
+                </span> : null}
           </p>
         </div>
         <div>

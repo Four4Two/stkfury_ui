@@ -37,11 +37,11 @@ const Filters = ({setSortActive, sortActive, searchHandler}:any) => {
                     </button>
                 </div>
                 <div>
-                    <div className={`${styles.searchInput} relative my-2`}>
+                    <div className={`w-[196px] relative my-2`}>
                         <input
                             type="text"
                             className={"bg-[#161616] py-2 pr-8 pl-4 text-sm text-light-high b-[#070B09] " +
-                                "rounded-md font-normal border border-solid md:py:1.5 pl-2.5"}
+                                "rounded-md font-normal border border-solid md:py:1.5 pl-2.5 w-full"}
                             placeholder={"Search"}
                             autoFocus={false}
                             onChange={searchHandler}

@@ -6,7 +6,7 @@ import { Alert, ToastType } from "./types";
 const BroadCastMsg = ({message}:any) => (
     <div className="toast-content">
         <div className="title-section">
-          <div className="spinner light icon-toast"/>
+          <div className="spinner light icon-toast inline-block w-[1.5rem] h-[1.5rem] align-text-bottom rounded-full"/>
           <p className="title">Transaction Broadcasting</p>
         </div>
         <p className="content">{message}</p>

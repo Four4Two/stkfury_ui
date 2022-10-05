@@ -6,7 +6,7 @@ import {
   COSMOS_CHAIN_ID, DEPOSIT, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
-  ERROR_WHILE_UNSTAKING, FATAL,
+  ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
   PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM, UN_STAKE
 } from "../../../AppConstants";
 import { setStakeAmount } from "../reducers/transactions/stake";
@@ -17,7 +17,7 @@ import { ToastType } from "../../components/molecules/toast/types";
 import { genericErrorHandler, pollAccountBalance } from "../../helpers/utils";
 import { failedTransactionActions } from "./sagaHelpers";
 import * as Sentry from "@sentry/react"
-import { UnStakeTransactionPayload } from "../reducers/transactions/unstake/types";
+import {UnStakeTransactionPayload, unStakeType} from "../reducers/transactions/unstake/types";
 import { toast } from "react-toastify";
 import { DepositTransactionPayload } from "../reducers/transactions/deposit/types";
 import { IBCChainInfos } from "../../helpers/config";
@@ -25,6 +25,7 @@ import { RootState } from "../reducers";
 import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
 import { hideDepositModal, setDepositAmount } from "../reducers/transactions/deposit";
 import { setUnStakeAmount } from "../reducers/transactions/unstake";
+import {fetchPendingClaimsSaga} from "../reducers/claim";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -81,8 +82,8 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
     yield put(setTransactionProgress(UN_STAKE));
-    const {persistenceSigner, persistenceChainInfo, account, msg} = payload
-    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    const {persistenceSigner, persistenceChainInfo, address, msg} = payload
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -92,8 +93,20 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         ToastType.LOADING
       );
       const state:RootState = yield select();
-      const availableAtom = state?.balances.atomBalance;
-      const response:string = yield pollAccountBalance(account, ibcInfo!.coinDenom, persistenceChainInfo.rpc, availableAtom.toString());
+      const txnType:unStakeType = state?.unStake.type;
+
+      let availableAmount:any;
+      let balanceDenom:string;
+
+      if (txnType === INSTANT) {
+         availableAmount = state?.balances.atomBalance;
+         balanceDenom = ibcInfo!.coinDenom;
+      }else {
+        availableAmount = state?.balances.stkAtomBalance;
+        balanceDenom =  STK_ATOM_MINIMAL_DENOM;
+      }
+
+      const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, availableAmount.toString());
       if (response !== "0") {
         toast.dismiss();
         displayToast(
@@ -111,6 +124,10 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         );
       }
       yield put(resetTransaction())
+      yield  put(fetchPendingClaimsSaga({
+        address:address,
+        persistenceChainInfo: persistenceChainInfo!,
+      }));
     } else {
       throw new Error(transaction.rawLog);
     }
@@ -119,7 +136,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
     customScope.setTags({
-      [ERROR_WHILE_UNSTAKING]: payload.account
+      [ERROR_WHILE_UNSTAKING]: payload.address
     })
     genericErrorHandler(e, customScope)
     yield failedTransactionActions("")
@@ -139,6 +156,10 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
         ToastType.SUCCESS
       );
       yield put(resetTransaction())
+      yield  put(fetchPendingClaimsSaga({
+        address:address,
+        persistenceChainInfo: persistenceChainInfo!,
+      }));
     } else {
       throw new Error(transaction.rawLog);
     }

@@ -45,7 +45,7 @@ const DefiList = () => {
         setAllData(sortedTotalData);
     }
     return (
-        <div className={`${styles.defiContainer} px-2 pb-10 m-auto`}>
+        <div className={`${styles.defiContainer} px-2 pb-10 m-auto md:px-3`}>
             <div className="mb-8">
                 <h1 className="text-4xl font-semibold leading-normal text-light-high text-center md:text-lg">DeFi</h1>
                 <h6 className="text-base text-light-high text-center leading-normal md:text-sm">

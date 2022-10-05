@@ -5,7 +5,6 @@ import {COSMOS_CHAIN_ID, PERSISTENCE_CHAIN_ID, TEST_NET} from "../../AppConstant
 import WalletProvider from "../context/WalletConnect/WalletConnect";
 import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Flowbite } from 'flowbite-react';
 import { store } from "../store"
 import {Provider} from "react-redux";
 import {ChainInfo} from "@keplr-wallet/types";
@@ -20,7 +19,6 @@ function MyApp({Component, pageProps}: AppProps) {
 
   return (
     <Provider store={store}>
-      <Flowbite>
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -38,7 +36,6 @@ function MyApp({Component, pageProps}: AppProps) {
         >
           <Component {...pageProps} />
         </WalletProvider>
-      </Flowbite>
     </Provider>
   )
 }

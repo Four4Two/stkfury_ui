@@ -20,10 +20,10 @@ const Deposit = () => {
     <Modal show={showModal} onClose={handleClose} className="depositModal" header="Deposit Atom">
       <p className="title font-bold font-xl leading-normal text-light-emphasis">IBC Transfer</p>
       <div>
-        <p className="font-semibold text-sm leading-normal text-light-emphasis mb-1">
+        <p className="font-semibold text-sm leading-normal text-light-emphasis mb-1 ">
           From Address
         </p>
-        <p className="font-semibold text-sm leading-normal text-light-mid">
+        <p className="font-semibold text-sm leading-normal text-light-mid break-all">
           {cosmosAccountData?.address}
         </p>
       </div>
@@ -31,7 +31,7 @@ const Deposit = () => {
         <p className="font-semibold text-sm leading-normal text-light-emphasis mb-1">
           To Address
         </p>
-        <p className="font-semibold text-sm leading-normal text-light-mid">
+        <p className="font-semibold text-sm leading-normal text-light-mid break-all">
           {persistenceAccountData?.address}
         </p>
       </div>

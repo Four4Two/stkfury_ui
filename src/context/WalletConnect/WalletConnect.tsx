@@ -8,6 +8,7 @@ import { fetchBalanceSaga } from "../../store/reducers/balances";
 import { useDispatch } from "react-redux";
 import { fetchInitSaga } from "../../store/reducers/initialData";
 import { printConsole } from "../../helpers/utils";
+import {fetchPendingClaimsSaga} from "../../store/reducers/claim";
 
 declare global {
     interface Window extends KeplrWindow {
@@ -70,6 +71,10 @@ export const WalletProvider: FC<WalletProviderProps> = ({
                 cosmosAddress: cosmosAccounts[0]!.address,
                 persistenceChainInfo: persistenceChainInfo!,
                 cosmosChainInfo: cosmosChainInfo!
+            }));
+            dispatch(fetchPendingClaimsSaga({
+                address:persistenceAccounts[0]!.address,
+                persistenceChainInfo: persistenceChainInfo!,
             }));
         } catch (e:any) {
             printConsole(e)
