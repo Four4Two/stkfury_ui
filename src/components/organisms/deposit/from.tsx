@@ -20,7 +20,7 @@ const From = () => {
   const { isMobile } = useWindowSize();
 
   const inputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
-    let rex = /^\d*\.?\d{0,6}$/;
+    let rex = /^\d{0,10}(\.\d{0,6})?$/;
     if (rex.test(evt.target.value)) {
       dispatch(setDepositAmount(evt.target.value))
     } else {
@@ -69,7 +69,7 @@ const From = () => {
              box-shadow-none font-normal 
              text-3xl m-0 focus:border-0 
              focus:box-shadow-none text-right md:text-lg
-             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal`}
+             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal outline-none`}
           />
           <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, 2)}</p>
         </div>

@@ -7,8 +7,9 @@ import { Spinner } from "../../../atoms/spinner";
 import { LiquidStakeMsg } from "../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../helpers/utils";
 import { IBCChainInfos } from '../../../../helpers/config';
-import { COSMOS_CHAIN_ID, STAKE, UN_STAKE } from "../../../../../AppConstants";
+import {COSMOS_CHAIN_ID, STAKE} from "../../../../../AppConstants";
 import { executeStakeTransactionSaga } from "../../../../store/reducers/transactions/stake";
+import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -28,6 +29,7 @@ const Submit = () => {
       account: persistenceAccountData!.address,
       persistenceChainInfo:persistenceChainData!
     }))
+    dispatch(setTransactionProgress(STAKE));
   }
 
   const enable = amount && (Number(amount) > 0) && (Number(amount) < Number(atomBalance))
@@ -35,11 +37,11 @@ const Submit = () => {
   return (
     isWalletConnected ?
       <Button
-        className="button w-full md:py-2 md:text-sm flex items-center justify-center"
+        className={`${(name === STAKE && inProgress) ? '!py-[0.8125rem]' : ''} button w-full md:py-2 md:text-sm flex items-center justify-center`}
         type="primary"
         size="large"
-        disabled={!enable}
-        content={(name === STAKE && inProgress) ? <Spinner/> : 'Stake'}
+        disabled={!enable || (name === STAKE && inProgress)}
+        content={(name === STAKE && inProgress) ? <Spinner width={1.5}/> : 'Stake'}
         onClick={stakeHandler}
       />
       :

@@ -45,7 +45,7 @@ const To = () => {
              box-shadow-none font-normal 
              text-3xl mb-1 focus:border-0 
              focus:box-shadow-none text-right md:text-lg
-             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal`}
+             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal outline-none`}
           />
           <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, 2)}</p>
         </div>

@@ -29,6 +29,7 @@ export const fetchAccountBalance = async (address: string, tokenDenom: string, r
     }
   } catch (error) {
     console.log(error);
+    return "0";
   }
 };
 

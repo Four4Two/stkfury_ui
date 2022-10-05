@@ -24,8 +24,8 @@
 }
 
 .primary:disabled, .secondary:disabled, .tertiary:disabled{
-    color: #787878;
-    background: #4A2A2A;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 

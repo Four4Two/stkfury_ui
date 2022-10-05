@@ -1,7 +1,7 @@
 import React from 'react';
 
-export const Spinner = () =>{
+export const Spinner = ({width}:any) =>{
   return(
-    <span className="spinner light icon-toast inline-block w-[1.3rem] h-[1.3rem] align-text-bottom rounded-full"/>
+    <span className={`spinner light icon-toast inline-block w-[${width}rem] h-[${width}rem] align-text-bottom rounded-full`}/>
   )
 }
