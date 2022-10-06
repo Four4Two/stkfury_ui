@@ -26,8 +26,8 @@ export const LoginOptions = () => {
   }
 
 
-
   const disconnectHandler = async () =>{
+    localStorage.clear();
     window.location.reload();
   }
 

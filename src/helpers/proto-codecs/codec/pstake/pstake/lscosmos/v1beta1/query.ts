@@ -11,6 +11,7 @@ import {
   HostAccountUndelegation,
   DelegatorUnbondingEpochEntry,
 } from "./pstake/lscosmos/v1beta1/lscosmos";
+import { Coin } from "./cosmos/base/v1beta1/coin";
 
 export const protobufPackage = "pstake.lscosmos.v1beta1";
 
@@ -130,6 +131,14 @@ export interface QueryDelegatorUnbondingEpochEntryRequest {
 /** QueryDelegatorUnbondingEpochEntryResponse is a response for the Query/DelegatorUnbondingEpochEntry methods. */
 export interface QueryDelegatorUnbondingEpochEntryResponse {
   delegatorUnbodingEpochEntry?: DelegatorUnbondingEpochEntry;
+}
+
+/** QueryRewardBoosterAccountRequest is a request for the Query/RewardsBoosterAccount methods. */
+export interface QueryRewardBoosterAccountRequest {}
+
+/** QueryRewardBoosterAccountResponse is a response for the Query/RewardsBoosterAccount methods. */
+export interface QueryRewardBoosterAccountResponse {
+  balance?: Coin;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -1726,6 +1735,118 @@ export const QueryDelegatorUnbondingEpochEntryResponse = {
   },
 };
 
+function createBaseQueryRewardBoosterAccountRequest(): QueryRewardBoosterAccountRequest {
+  return {};
+}
+
+export const QueryRewardBoosterAccountRequest = {
+  encode(
+    _: QueryRewardBoosterAccountRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryRewardBoosterAccountRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryRewardBoosterAccountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryRewardBoosterAccountRequest {
+    return {};
+  },
+
+  toJSON(_: QueryRewardBoosterAccountRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryRewardBoosterAccountRequest>, I>
+  >(_: I): QueryRewardBoosterAccountRequest {
+    const message = createBaseQueryRewardBoosterAccountRequest();
+    return message;
+  },
+};
+
+function createBaseQueryRewardBoosterAccountResponse(): QueryRewardBoosterAccountResponse {
+  return { balance: undefined };
+}
+
+export const QueryRewardBoosterAccountResponse = {
+  encode(
+    message: QueryRewardBoosterAccountResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.balance !== undefined) {
+      Coin.encode(message.balance, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryRewardBoosterAccountResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryRewardBoosterAccountResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.balance = Coin.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryRewardBoosterAccountResponse {
+    return {
+      balance: isSet(object.balance)
+        ? Coin.fromJSON(object.balance)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryRewardBoosterAccountResponse): unknown {
+    const obj: any = {};
+    message.balance !== undefined &&
+      (obj.balance = message.balance
+        ? Coin.toJSON(message.balance)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryRewardBoosterAccountResponse>, I>
+  >(object: I): QueryRewardBoosterAccountResponse {
+    const message = createBaseQueryRewardBoosterAccountResponse();
+    message.balance =
+      object.balance !== undefined && object.balance !== null
+        ? Coin.fromPartial(object.balance)
+        : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1762,6 +1883,9 @@ export interface Query {
   DelegatorUnbondingEpochEntry(
     request: QueryDelegatorUnbondingEpochEntryRequest
   ): Promise<QueryDelegatorUnbondingEpochEntryResponse>;
+  RewardsBoosterAccount(
+    request: QueryRewardBoosterAccountRequest
+  ): Promise<QueryRewardBoosterAccountResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1782,6 +1906,7 @@ export class QueryClientImpl implements Query {
     this.HostAccountUndelegation = this.HostAccountUndelegation.bind(this);
     this.DelegatorUnbondingEpochEntry =
       this.DelegatorUnbondingEpochEntry.bind(this);
+    this.RewardsBoosterAccount = this.RewardsBoosterAccount.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -1957,6 +2082,20 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryDelegatorUnbondingEpochEntryResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  RewardsBoosterAccount(
+    request: QueryRewardBoosterAccountRequest
+  ): Promise<QueryRewardBoosterAccountResponse> {
+    const data = QueryRewardBoosterAccountRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "RewardsBoosterAccount",
+      data
+    );
+    return promise.then((data) =>
+      QueryRewardBoosterAccountResponse.decode(new _m0.Reader(data))
     );
   }
 }

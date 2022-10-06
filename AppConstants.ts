@@ -2,8 +2,6 @@ export const PERSISTENCE_CHAIN_ID = "pstaked-1";
 export const COSMOS_CHAIN_ID = "gaiad-1";
 export const TEST_NET = "Testnet";
 export const DEPOSIT_ADDRESS = "cosmos16vhhczel0jzdf6kxxk62uwzkay763p9cryp7we";
-export const PERSISTENCE_INCENTIVES_ADDRESS =
-  "persistence1rd4svmr4qfe2r2uf0g9sjwcdjd4r4q60gnkvfq";
 export const PERSISTENCE_FEE = "0uxprt";
 export const COSMOS_FEE = "0uatom";
 export const COSMOS_LIQUID_STAKE_URL =

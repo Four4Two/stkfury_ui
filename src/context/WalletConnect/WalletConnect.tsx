@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { fetchInitSaga } from "../../store/reducers/initialData";
 import { printConsole } from "../../helpers/utils";
 import {fetchPendingClaimsSaga} from "../../store/reducers/claim";
+import useLocalStorage from "../../customHooks/useLocalStorage";
 
 declare global {
     interface Window extends KeplrWindow {
@@ -44,8 +45,15 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     const [isWalletConnected, setIsWalletConnected] = useState(false);
     const [persistenceAccountData, setPersistenceAccountData] = useState<AccountData | null>(null);
     const [cosmosAccountData, setCosmosAccountData] = useState<AccountData | null>(null);
+    const [walletConnected, setWalletConnected] = useLocalStorage("wallet", "");
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (walletConnected) {
+            connect();
+        }
+    }, [walletConnected])
 
     useEffect(() => {
         dispatch(fetchInitSaga({ persistenceChainInfo: persistenceChainInfo! }));
@@ -76,6 +84,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
                 address:persistenceAccounts[0]!.address,
                 persistenceChainInfo: persistenceChainInfo!,
             }));
+            setWalletConnected('connected')
         } catch (e:any) {
             printConsole(e)
             console.error(e)
