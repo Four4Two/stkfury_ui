@@ -80,9 +80,8 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
-    printConsole(persistenceSigner+','+persistenceChainInfo+','+address +','+ msg + 'Transaction DETAILS')
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
-    printConsole(Transaction+ 'Transaction')
+    printConsole(transaction+ 'transaction')
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -104,7 +103,9 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         availableAmount = state?.balances.stkAtomBalance;
         balanceDenom =  STK_ATOM_MINIMAL_DENOM;
       }
-      printConsole(availableAmount+'UNSTAKE DATA'+balanceDenom+','+txnType)
+      printConsole(balanceDenom+' balanceDenom in txn');
+      printConsole(availableAmount+' availableAmount in txn');
+      printConsole(txnType+' txnType in txn');
       const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, availableAmount.toString());
       if (response !== "0") {
         toast.dismiss();

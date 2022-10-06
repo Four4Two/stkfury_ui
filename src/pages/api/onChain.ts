@@ -97,6 +97,7 @@ export const fetchAccountClaims = async (address: string, rpc: string) => {
       await pstakeQueryService.PendingUnbondings({
         delegatorAddress: address
       });
+    console.log(unbondingsResponse, "unbondAmountResponse");
 
     if (unbondingsResponse.pendingUnbondings.length) {
       for (let item of unbondingsResponse.pendingUnbondings) {
@@ -126,15 +127,13 @@ export const fetchAccountClaims = async (address: string, rpc: string) => {
 
         const currentDate = moment();
 
-        const daysRemaining = given.diff(currentDate, "days");
+        // const daysRemaining = given.diff(currentDate, 'days')
 
         let unStakedon = given.utc().format("DD MMM YYYY hh:mm A UTC");
+        //
+        // printConsole(unbondAmount+ unStakedon +daysRemaining + "filteredClaims data");
 
-        printConsole(
-          unbondAmount + unStakedon + daysRemaining + "filteredClaims data"
-        );
-
-        filteredClaims.push({ unbondAmount, unStakedon, daysRemaining });
+        filteredClaims.push({ unbondAmount, unStakedon, daysRemaining: 0 });
       }
     }
     return filteredClaims;
