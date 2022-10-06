@@ -13,7 +13,7 @@ import { Transaction } from "../../helpers/transaction";
 import { DeliverTxResponse } from "@cosmjs/stargate/build/stargateclient";
 import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
-import { genericErrorHandler, pollAccountBalance } from "../../helpers/utils";
+import {genericErrorHandler, pollAccountBalance, printConsole} from "../../helpers/utils";
 import { failedTransactionActions } from "./sagaHelpers";
 import * as Sentry from "@sentry/react"
 import {UnStakeTransactionPayload, unStakeType} from "../reducers/transactions/unstake/types";
@@ -80,7 +80,9 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
+    printConsole(persistenceSigner+','+persistenceChainInfo+','+address +','+ msg + 'Transaction DETAILS')
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    printConsole(Transaction+ 'Transaction')
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -102,7 +104,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         availableAmount = state?.balances.stkAtomBalance;
         balanceDenom =  STK_ATOM_MINIMAL_DENOM;
       }
-
+      printConsole(availableAmount+'UNSTAKE DATA'+balanceDenom+','+txnType)
       const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, availableAmount.toString());
       if (response !== "0") {
         toast.dismiss();

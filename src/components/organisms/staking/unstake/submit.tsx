@@ -5,7 +5,7 @@ import { RootState } from "../../../../store/reducers";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../atoms/spinner";
 import { LiquidUnStakeMsg, RedeemMsg } from "../../../../helpers/protoMsg";
-import { unDecimalize } from "../../../../helpers/utils";
+import {printConsole, unDecimalize} from "../../../../helpers/utils";
 import {INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
@@ -25,6 +25,7 @@ const Submit = () => {
     }else{
        messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
     }
+    printConsole(messages+'stakeHandler'+type,);
     dispatch(executeUnStakeTransactionSaga({
       persistenceSigner:persistenceSigner!,
       msg: messages,
