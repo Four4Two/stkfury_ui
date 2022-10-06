@@ -41,7 +41,6 @@ const Submit = () => {
   }
 
   const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(stkAtomBalance))
-
   return (
     isWalletConnected ?
       <Button

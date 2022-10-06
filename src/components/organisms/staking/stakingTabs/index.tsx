@@ -38,15 +38,11 @@ const StakingTabs = () => {
           <UnStake/>
         </TabContent>
       </div>
-        {Number(claimableBalance) > 0 || pendingClaimList.length  || Number(claimableStkAtomBalance) > 0 ?
-            <Claim
-                activeClaims={activeClaims}
-                pendingList={pendingList}
-                claimableStkAtomBalance={claimableStkAtomBalance}
-            />
-            :
-            null
-        }
+        <Claim
+            activeClaims={activeClaims}
+            pendingList={pendingList}
+            claimableStkAtomBalance={claimableStkAtomBalance}
+        />
     </div>
   );
 };

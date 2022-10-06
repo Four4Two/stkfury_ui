@@ -35,7 +35,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     const {persistenceSigner, persistenceChainInfo, account, msg, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setStakeAmount(""))
-    printConsole(transaction ,'transaction')
+    printConsole(transaction ,'transaction stake')
     if (transaction.code === 0) {
       displayToast(
         {
@@ -80,7 +80,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
-    printConsole(transaction ,'transaction')
+    printConsole(transaction ,'transaction unstake')
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -125,6 +125,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
+    printConsole(e ,'transaction error')
     yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
@@ -140,7 +141,7 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], COSMOS_FEE, "", persistenceChainInfo.rpc);
-    printConsole(transaction ,'transaction')
+    printConsole(transaction ,'transaction claim')
     if (transaction.code === 0) {
       displayToast(
         {
@@ -172,7 +173,7 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
   try {
     const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, msg, persistenceAddress, cosmosAddress, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [msg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
-    printConsole(transaction ,'transaction')
+    printConsole(transaction ,'transaction deposit')
     yield put(setDepositAmount(""))
     if (transaction.code === 0) {
       displayToast(

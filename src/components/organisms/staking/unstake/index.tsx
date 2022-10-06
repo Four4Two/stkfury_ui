@@ -1,7 +1,5 @@
 import React  from "react";
 import From from "./from";
-import { Icon } from "../../../atoms/icon";
-import styles from './styles.module.css'
 import Options from "./options";
 import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
@@ -18,7 +16,7 @@ const Stake = () => {
       <>
         <From/>
         <Options/>
-          <div className="flex items-center justify-between flex-wrap mt-4 px-4">
+          <div className="flex items-center justify-between flex-wrap mt-4 px-4 md:p-0">
               <p className="font-normal text-sm leading-7 text-light-emphasis">
                   Exchange Rate
               </p>
@@ -28,7 +26,7 @@ const Stake = () => {
           </div>
           {
               type === INSTANT ?
-                  <div className="flex items-center justify-between flex-wrap mt-2 px-4">
+                  <div className="flex items-center justify-between flex-wrap mt-2 md:p-0 px-4">
                       <p className="font-normal text-sm leading-7 text-light-emphasis">
                           Fee
                       </p>

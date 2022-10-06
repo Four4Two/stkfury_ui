@@ -1,23 +1,21 @@
-import {
-  QueryAllBalancesResponse,
-  QueryClientImpl as BankQuery
-} from "cosmjs-types/cosmos/bank/v1beta1/query";
+import {QueryAllBalancesResponse, QueryClientImpl as BankQuery} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import {
   decimalize,
   genericErrorHandler,
-  printConsole,
   getCommission,
   getIncentives,
+  printConsole,
   RpcClient
 } from "../../helpers/utils";
 
 import {
-  QueryClientImpl, QueryFailedUnbondingsResponse,
+  QueryClientImpl,
+  QueryFailedUnbondingsResponse,
   QueryPendingUnbondingsResponse,
   QueryUnclaimedResponse
 } from "../../helpers/proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
-import { Scope } from "@sentry/react";
-import { Coin } from "@cosmjs/proto-signing";
+import {Scope} from "@sentry/react";
+import {Coin} from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 
@@ -83,7 +81,7 @@ export const getFee = async (rpc: string) => {
       "Error while fetching exchange rate": rpc
     });
     genericErrorHandler(e, customScope);
-    return 1;
+    return 0;
   }
 };
 
@@ -92,8 +90,7 @@ export const getAPR = async () => {
     const baseRate = 18.92;
     const commission = await getCommission();
     const incentives = await getIncentives();
-    const apr = baseRate - commission + incentives;
-    return apr;
+    return baseRate - commission + incentives;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
