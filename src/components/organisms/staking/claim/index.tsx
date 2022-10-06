@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
@@ -20,7 +20,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any
                    <p className="leading-normal text-light-low text-xsm font-normal">{unstakedOn}</p>
                </div>
                <div>
-                   <p className="leading-normal text-light-low text-xsm font-normal">{daysRemaining} days remaining</p>
+                   <p className="leading-normal text-light-low text-xsm font-normal">{0} days remaining</p>
                </div>
            </div>
        </>
