@@ -9,8 +9,14 @@ import { Decimal } from "@cosmjs/math";
 import { Scope } from "@sentry/react";
 import * as Sentry from "@sentry/react";
 import { fetchAccountBalance } from "../pages/api/onChain";
-import { IBCConfiguration, PollingConfig } from "./config";
-import { TEST_NET } from "../../AppConstants";
+import { ExternalChains, IBCConfiguration, PollingConfig } from "./config";
+import {
+  COSMOS_CHAIN_ID,
+  IBC_DENOM,
+  PERSISTENCE_CHAIN_ID,
+  PERSISTENCE_INCENTIVES_ADDRESS,
+  TEST_NET
+} from "../../AppConstants";
 import {
   QueryAllowListedValidatorsResponse,
   QueryClientImpl,
@@ -20,7 +26,18 @@ import {
   QueryClientImpl as StakingQueryClient,
   QueryValidatorResponse
 } from "cosmjs-types/cosmos/staking/v1beta1/query";
+import { ChainInfo } from "@keplr-wallet/types";
 const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
+
+const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+
+const persistenceChainInfo = ExternalChains[env].find(
+  (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+);
+
+const cosmosChainInfo = ExternalChains[env].find(
+  (chain: ChainInfo) => chain.chainId === COSMOS_CHAIN_ID
+);
 
 export async function RpcClient(rpc: string) {
   const tendermintClient = await Tendermint34Client.connect(rpc);
@@ -204,15 +221,11 @@ export const getCommission = async () => {
   try {
     const weight: number = 1;
     let commission: number = 0;
-    const rpcClient = await RpcClient(
-      "https://rpc.devnet.persistence.pstake.finance"
-    );
+    const rpcClient = await RpcClient(persistenceChainInfo?.rpc!);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const allowListedValidators: QueryAllowListedValidatorsResponse =
       await pstakeQueryService.AllowListedValidators({});
-    const cosmosRpcClient = await RpcClient(
-      "https://rpc.devnet.cosmos.pstake.finance/"
-    );
+    const cosmosRpcClient = await RpcClient(cosmosChainInfo?.rpc!);
     const cosmosQueryService = new StakingQueryClient(cosmosRpcClient);
     const validators =
       allowListedValidators?.allowListedValidators?.allowListedValidators;
@@ -248,8 +261,7 @@ export const getCommission = async () => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching commission":
-        "https://rpc.devnet.persistence.pstake.finance"
+      "Error while fetching commission": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
     return 0;
@@ -262,11 +274,8 @@ export const getCommission = async () => {
  */
 export const getIncentives = async () => {
   try {
-    const address: string = process.env.NEXT_PUBLIC_PERSISTENCE_ADDRESS || "";
     let incentives: number = 0;
-    const rpcClient = await RpcClient(
-      "https://rpc.devnet.persistence.pstake.finance"
-    );
+    const rpcClient = await RpcClient(persistenceChainInfo?.rpc!);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const delegationState: QueryDelegationStateResponse =
       await pstakeQueryService.DelegationState({});
@@ -280,20 +289,19 @@ export const getIncentives = async () => {
       }
     }
     const balance = await fetchAccountBalance(
-      address,
-      "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-      "https://rpc.devnet.persistence.pstake.finance/"
+      PERSISTENCE_INCENTIVES_ADDRESS,
+      IBC_DENOM,
+      persistenceChainInfo?.rpc!
     );
     if (balance) {
-      incentives = (parseInt(balance, 10) * 4) / stakedAmount;
+      incentives = (parseInt(balance, 10) * 365) / stakedAmount;
     }
     return incentives;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching incentives":
-        "https://rpc.devnet.persistence.pstake.finance"
+      "Error while fetching incentives": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
     return 0;
