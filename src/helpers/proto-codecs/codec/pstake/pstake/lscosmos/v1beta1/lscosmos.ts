@@ -96,7 +96,7 @@ export interface UnbondingEpochCValue {
   sTKBurn?: Coin;
   amountUnbonded?: Coin;
   isMatured: boolean;
-  isTimedOut: boolean;
+  isFailed: boolean;
 }
 
 export interface DelegatorUnbondingEpochEntry {
@@ -1177,7 +1177,7 @@ function createBaseUnbondingEpochCValue(): UnbondingEpochCValue {
     sTKBurn: undefined,
     amountUnbonded: undefined,
     isMatured: false,
-    isTimedOut: false,
+    isFailed: false,
   };
 }
 
@@ -1198,8 +1198,8 @@ export const UnbondingEpochCValue = {
     if (message.isMatured === true) {
       writer.uint32(32).bool(message.isMatured);
     }
-    if (message.isTimedOut === true) {
-      writer.uint32(40).bool(message.isTimedOut);
+    if (message.isFailed === true) {
+      writer.uint32(40).bool(message.isFailed);
     }
     return writer;
   },
@@ -1227,7 +1227,7 @@ export const UnbondingEpochCValue = {
           message.isMatured = reader.bool();
           break;
         case 5:
-          message.isTimedOut = reader.bool();
+          message.isFailed = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1249,7 +1249,7 @@ export const UnbondingEpochCValue = {
         ? Coin.fromJSON(object.amountUnbonded)
         : undefined,
       isMatured: isSet(object.isMatured) ? Boolean(object.isMatured) : false,
-      isTimedOut: isSet(object.isTimedOut) ? Boolean(object.isTimedOut) : false,
+      isFailed: isSet(object.isFailed) ? Boolean(object.isFailed) : false,
     };
   },
 
@@ -1266,7 +1266,7 @@ export const UnbondingEpochCValue = {
         ? Coin.toJSON(message.amountUnbonded)
         : undefined);
     message.isMatured !== undefined && (obj.isMatured = message.isMatured);
-    message.isTimedOut !== undefined && (obj.isTimedOut = message.isTimedOut);
+    message.isFailed !== undefined && (obj.isFailed = message.isFailed);
     return obj;
   },
 
@@ -1287,7 +1287,7 @@ export const UnbondingEpochCValue = {
         ? Coin.fromPartial(object.amountUnbonded)
         : undefined;
     message.isMatured = object.isMatured ?? false;
-    message.isTimedOut = object.isTimedOut ?? false;
+    message.isFailed = object.isFailed ?? false;
     return message;
   },
 };
