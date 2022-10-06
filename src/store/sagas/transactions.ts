@@ -2,7 +2,7 @@ import { put, select } from "@redux-saga/core/effects";
 import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
 import { resetTransaction } from "../reducers/transaction";
 import {
-  COSMOS_CHAIN_ID, ERROR_WHILE_CLAIMING,
+  COSMOS_CHAIN_ID, COSMOS_FEE, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
@@ -81,7 +81,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
-    printConsole(transaction+ 'transaction')
+    printConsole(transaction ,'transaction')
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -103,9 +103,9 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         availableAmount = state?.balances.stkAtomBalance;
         balanceDenom =  STK_ATOM_MINIMAL_DENOM;
       }
-      printConsole(balanceDenom+' balanceDenom in txn');
-      printConsole(availableAmount+' availableAmount in txn');
-      printConsole(txnType+' txnType in txn');
+      printConsole(balanceDenom ,'balanceDenom in txn');
+      printConsole(availableAmount,'availableAmount in txn');
+      printConsole(txnType,'txnType in txn');
       const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, availableAmount.toString());
       if (response !== "0") {
         toast.dismiss();
@@ -124,10 +124,6 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         );
       }
       yield put(resetTransaction())
-      yield  put(fetchPendingClaimsSaga({
-        address:address,
-        persistenceChainInfo: persistenceChainInfo!,
-      }));
     } else {
       throw new Error(transaction.rawLog);
     }
@@ -146,7 +142,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
-    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], COSMOS_FEE, "", persistenceChainInfo.rpc);
     if (transaction.code === 0) {
       displayToast(
         {

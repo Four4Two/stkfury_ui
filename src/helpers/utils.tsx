@@ -137,8 +137,8 @@ export const decodeTendermintConsensusStateAny = (consensusState:any) => {
     return tendermint.ConsensusState.decode(consensusState.value);
 };
 
-export const printConsole = (message:string) => {
+export const printConsole = (message:any, helpText= '') => {
     if (process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET) {
-        console.log(message);
+        console.log(message, helpText);
     }
 }

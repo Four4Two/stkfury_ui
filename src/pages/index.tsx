@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import StakingTabs from "../components/organisms/staking/stakingTabs";
 import { SHORT_INTERVAL } from "../../AppConstants";
 import { printConsole } from "../helpers/utils";
+import {fetchPendingClaimsSaga} from "../store/reducers/claim";
 
 const Home: NextPage = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,10 @@ const Home: NextPage = () => {
           cosmosAddress: cosmosAccountData!.address,
           persistenceChainInfo: persistenceChainData!,
           cosmosChainInfo: cosmosChainData!
+        }));
+        dispatch(fetchPendingClaimsSaga({
+          address:persistenceAccountData!.address,
+          persistenceChainInfo: persistenceChainData!,
         }));
       }
     }, SHORT_INTERVAL)

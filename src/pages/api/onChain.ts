@@ -59,33 +59,35 @@ export const fetchAccountClaims = async (address:string, rpc: string) => {
     const unbondingsResponse:QueryPendingUnbondingsResponse = await pstakeQueryService.PendingUnbondings({
       delegatorAddress: address,
     })
-    console.log(unbondingsResponse,"unbondAmountResponse");
+    printConsole(unbondingsResponse,"unbondAmountResponse");
 
     if (unbondingsResponse.pendingUnbondings.length) {
       for (let item of unbondingsResponse.pendingUnbondings) {
 
-        const cvalue:number = (Number(item.sTKBurn?.amount) / Number(item.amountUnbonded?.amount))
+        const cvalue: number = (Number(item.sTKBurn?.amount) / Number(item.amountUnbonded?.amount))
 
         const epochNumber = item.epochNumber;
-        const unbondAmountResponse:any = await getUnbondingAmount(address, epochNumber, pstakeQueryService);
+        const unbondAmountResponse: any = await getUnbondingAmount(address, epochNumber, pstakeQueryService);
 
-        const unbondAmount = unbondAmountResponse.delegatorUnbodingEpochEntry.amount.amount / cvalue;
+        if (cvalue && unbondAmountResponse) {
+          const unbondAmount = unbondAmountResponse.delegatorUnbodingEpochEntry?.amount?.amount / cvalue;
 
-        const unbondTimeResponse:any = await getUnbondingTime(epochNumber, pstakeQueryService);
+          const unbondTimeResponse: any = await getUnbondingTime(epochNumber, pstakeQueryService);
 
-        const unbondTime = unbondTimeResponse.hostAccountUndelegation.completionTime;
+          const unbondTime = unbondTimeResponse.hostAccountUndelegation.completionTime;
 
-        const given = moment(unbondTime, "YYYY-MM-DD");
+          const given = moment(unbondTime, "YYYY-MM-DD");
 
-        const currentDate = moment();
+          const currentDate = moment();
 
-        // const daysRemaining = given.diff(currentDate, 'days')
+          const daysRemaining = given.diff(currentDate, 'days')
 
-        let unStakedon = given.utc().format('DD MMM YYYY hh:mm A UTC');
-        //
-        // printConsole(unbondAmount+ unStakedon +daysRemaining + "filteredClaims data");
+          let unStakedon = given.utc().format('DD MMM YYYY hh:mm A UTC');
 
-        filteredClaims.push({unbondAmount, unStakedon, daysRemaining:0})
+          printConsole(daysRemaining, "daysRemaining");
+
+          filteredClaims.push({unbondAmount, unStakedon, daysRemaining: daysRemaining})
+        }
       }
     }
     return filteredClaims;
