@@ -68,7 +68,6 @@ export const ExternalChains:ExternalChainData = {
                 coinMinimalDenom: 'uxprt',
                 coinDecimals: 6,
                 coinGeckoId: 'persistence',
-                coinImageUrl:'/images/tokens/xprt_logo.svg',
             },
             bip44: {
                 coinType: 118,
@@ -79,14 +78,12 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uxprt',
                     coinDecimals: 6,
                     coinGeckoId: 'persistence',
-                    coinImageUrl: '/images/tokens/xprt_logo.svg',
                 },
                 {
                     coinDenom: 'STKATOM',
                     coinMinimalDenom: 'ustkatom',
                     coinDecimals: 6,
-                    // coinGeckoId: '',
-                    coinImageUrl:'/images/tokens/stk_atom.svg',
+                    coinGeckoId: 'persistence',
                 }
             ],
             feeCurrencies: [
@@ -95,7 +92,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uxprt',
                     coinDecimals: 6,
                     coinGeckoId: 'persistence',
-                    coinImageUrl:'/images/tokens/xprt_logo.svg',
                 },
             ],
             bech32Config:{
@@ -117,7 +113,6 @@ export const ExternalChains:ExternalChainData = {
                 coinMinimalDenom: 'uatom',
                 coinDecimals: 6,
                 coinGeckoId: 'cosmos',
-                coinImageUrl: '/images/tokens/atom.svg',
             },
             bip44: {
                 coinType: 118,
@@ -128,7 +123,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uatom',
                     coinDecimals: 6,
                     coinGeckoId: 'cosmos',
-                    coinImageUrl: '/images/tokens/atom.svg',
                 },
             ],
             feeCurrencies: [
@@ -137,7 +131,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uatom',
                     coinDecimals: 6,
                     coinGeckoId: 'cosmos',
-                    coinImageUrl: '/images/tokens/atom.svg',
                 },
             ],
             bech32Config:{
@@ -161,7 +154,6 @@ export const ExternalChains:ExternalChainData = {
                 coinMinimalDenom: 'uatom',
                 coinDecimals: 6,
                 coinGeckoId: 'cosmos',
-                coinImageUrl: '/images/tokens/atom.svg',
             },
             bip44: {
                 coinType: 118,
@@ -172,7 +164,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uatom',
                     coinDecimals: 6,
                     coinGeckoId: 'cosmos',
-                    coinImageUrl:  '/images/tokens/atom.svg',
                 },
             ],
             feeCurrencies: [
@@ -181,7 +172,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uatom',
                     coinDecimals: 6,
                     coinGeckoId: 'cosmos',
-                    coinImageUrl: '/images/tokens/atom.svg',
                 },
             ],
             bech32Config:{
@@ -203,7 +193,6 @@ export const ExternalChains:ExternalChainData = {
                 coinMinimalDenom: 'uxprt',
                 coinDecimals: 6,
                 coinGeckoId: 'persistence',
-                coinImageUrl:'/images/tokens/xprt_logo.svg',
             },
             bip44: {
                 coinType: 750,
@@ -214,7 +203,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uxprt',
                     coinDecimals: 6,
                     coinGeckoId: 'persistence',
-                    coinImageUrl: '/images/tokens/xprt_logo.svg',
                 }
             ],
             feeCurrencies: [
@@ -223,7 +211,6 @@ export const ExternalChains:ExternalChainData = {
                     coinMinimalDenom: 'uxprt',
                     coinDecimals: 6,
                     coinGeckoId: 'persistence',
-                    coinImageUrl: '/images/tokens/xprt_logo.svg',
                 },
             ],
             bech32Config:{

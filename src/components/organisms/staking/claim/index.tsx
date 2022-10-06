@@ -27,7 +27,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any
     )
 }
 
-const Claim = ({pendingList, activeClaims}:any) => {
+const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
     const [expand, setExpand] = useState(false);
 
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
@@ -48,27 +48,35 @@ const Claim = ({pendingList, activeClaims}:any) => {
         dispatch(setTransactionProgress(CLAIM));
     }
 
-    const enable = Number(activeClaims) > 0;
+    const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
 
     return (
         <div className='mt-4'>
             <div className='p-6 bg-tabHeader rounded-md'>
                 <p className="mb-4 text-lg font-semibold leading-normal text-light-high md:text-base md:mb-2">
-                    Claim Unstaked stkATOM
+                    Claim Unstaked ATOM
                 </p>
                 <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
                     Select the unstaked amount you would like to claim.
                 </p>
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="flex items-center justify-between">
-                        <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                            {decimalize(activeClaims)} ATOM
-                        </p>
+                        <div>
+                            <p className="font-medium leading-normal text-lg text-light-high md:text-base">
+                                {decimalize(activeClaims)} ATOM
+                            </p>
+                            {claimableStkAtomBalance > 0 ?
+                                <p className="font-medium leading-normal text-lg text-light-high md:text-base">
+                                    {decimalize(claimableStkAtomBalance)} stkATOM
+                                </p>
+                                : null
+                            }
+                        </div>
                         <p className={`claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center 
                          ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none': ''}`}
                            onClick={claimHandler}>
-                            {(name === CLAIM && inProgress) ? <Spinner width={1.5}/> : 'Claim'}
+                            {(name === CLAIM && inProgress) ? <Spinner width={1.3}/> : 'Claim'}
                         </p>
                     </div>
                 </div>
@@ -86,7 +94,8 @@ const Claim = ({pendingList, activeClaims}:any) => {
                     </p>
                     <div className={`${expand ? 'active': ''} unStakeList overflow-hidden max-h-0`}>
                         {
-                            pendingList && pendingList.map((item:any, index:number) => {
+                            pendingList.length ?
+                            pendingList.map((item:any, index:number) => {
                                 return(
                                     <IndividualUnstakingClaim
                                         key={index}
@@ -95,6 +104,10 @@ const Claim = ({pendingList, activeClaims}:any) => {
                                         daysRemaining={item.daysRemaining}/>
                                 )
                             })
+                                :
+                                <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
+                                    No pending unbondings found
+                                </p>
                         }
                     </div>
                 </div>

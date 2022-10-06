@@ -32,9 +32,10 @@ let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COS
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
   try {
-    const {persistenceSigner, persistenceChainInfo, account, msg} = payload
+    const {persistenceSigner, persistenceChainInfo, account, msg, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setStakeAmount(""))
+    printConsole(transaction ,'transaction')
     if (transaction.code === 0) {
       displayToast(
         {
@@ -42,9 +43,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
         },
         ToastType.LOADING
       );
-      const state:RootState = yield select();
-      const availableStkAtom = state?.balances.stkAtomBalance;
-      const response:string = yield pollAccountBalance(account, STK_ATOM_MINIMAL_DENOM, persistenceChainInfo.rpc, availableStkAtom.toString());
+      const response:string = yield pollAccountBalance(account, STK_ATOM_MINIMAL_DENOM, persistenceChainInfo.rpc, pollInitialBalance.toString());
       if (response !== "0") {
         toast.dismiss();
         displayToast(
@@ -79,7 +78,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
-    const {persistenceSigner, persistenceChainInfo, address, msg} = payload
+    const {persistenceSigner, persistenceChainInfo, address, msg, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     printConsole(transaction ,'transaction')
     yield put(setUnStakeAmount(""))
@@ -93,20 +92,18 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
       const state:RootState = yield select();
       const txnType:unStakeType = state?.unStake.type;
 
-      let availableAmount:any;
       let balanceDenom:string;
 
       if (txnType === INSTANT) {
-         availableAmount = state?.balances.atomBalance;
          balanceDenom = ibcInfo!.coinDenom;
       }else {
-        availableAmount = state?.balances.stkAtomBalance;
         balanceDenom =  STK_ATOM_MINIMAL_DENOM;
       }
+
       printConsole(balanceDenom ,'balanceDenom in txn');
-      printConsole(availableAmount,'availableAmount in txn');
+      printConsole(pollInitialBalance,'availableAmount in txn');
       printConsole(txnType,'txnType in txn');
-      const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, availableAmount.toString());
+      const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, pollInitialBalance.toString());
       if (response !== "0") {
         toast.dismiss();
         displayToast(
@@ -143,6 +140,7 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], COSMOS_FEE, "", persistenceChainInfo.rpc);
+    printConsole(transaction ,'transaction')
     if (transaction.code === 0) {
       displayToast(
         {
@@ -172,8 +170,9 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
 
 export function* executeDepositTransaction({ payload }: DepositTransactionPayload) {
   try {
-    const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, msg, persistenceAddress, cosmosAddress} = payload
+    const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, msg, persistenceAddress, cosmosAddress, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [msg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
+    printConsole(transaction ,'transaction')
     yield put(setDepositAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -182,9 +181,7 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
         },
         ToastType.LOADING
       );
-      const state:RootState = yield select();
-      const availableATOM = state?.balances.atomBalance;
-      const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, availableATOM.toString());
+      const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, pollInitialBalance.toString());
       if (response !== "0") {
         toast.dismiss();
         displayToast(

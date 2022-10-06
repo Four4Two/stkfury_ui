@@ -13,17 +13,20 @@ import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
 const Submit = () => {
   const dispatch = useDispatch();
-  const {stkAtomBalance} = useSelector((state:RootState) => state.balances);
+  const {stkAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount, type} = useSelector((state:RootState) => state.unStake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
   const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData} = useWallet()
 
   const stakeHandler = async () => {
     let messages;
+    let pollingBalance;
     if(type === INSTANT){
        messages = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
+      pollingBalance = atomBalance;
     }else{
        messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
+      pollingBalance = stkAtomBalance;
     }
     printConsole(messages, 'stakeHandler msgs');
     printConsole(type, 'stakeHandler type');
@@ -31,7 +34,8 @@ const Submit = () => {
       persistenceSigner:persistenceSigner!,
       msg: messages,
       address: persistenceAccountData!.address,
-      persistenceChainInfo:persistenceChainData!
+      persistenceChainInfo:persistenceChainData!,
+      pollInitialBalance:pollingBalance
     }))
       dispatch(setTransactionProgress(UN_STAKE));
   }

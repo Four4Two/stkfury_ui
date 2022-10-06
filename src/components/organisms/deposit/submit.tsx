@@ -16,7 +16,7 @@ const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
-  const {ibcAtomBalance} = useSelector((state:RootState) => state.balances);
+  const {ibcAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount} = useSelector((state:RootState) => state.deposit);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
   const {persistenceAccountData, cosmosSigner, persistenceChainData, cosmosAccountData, cosmosChainData} = useWallet()
@@ -39,7 +39,8 @@ const Submit = () => {
       persistenceChainInfo: persistenceChainData!,
       cosmosAddress:cosmosAccountData!.address,
       persistenceAddress:persistenceAccountData!.address,
-      msg:msg
+      msg:msg,
+      pollInitialBalance:atomBalance
     }))
     dispatch(setTransactionProgress(DEPOSIT));
   }

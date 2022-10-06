@@ -12,7 +12,7 @@ import {
 } from "../../helpers/utils";
 
 import {
-  QueryClientImpl,
+  QueryClientImpl, QueryFailedUnbondingsResponse,
   QueryPendingUnbondingsResponse,
   QueryUnclaimedResponse
 } from "../../helpers/proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
@@ -57,6 +57,25 @@ export const getExchangeRate = async (rpc: string) => {
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const cvalue = await pstakeQueryService.CValue({});
     return Number(Number(decimalize(cvalue.cValue, 18)).toFixed(6));
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 1;
+  }
+};
+
+
+export const getFee = async (rpc: string) => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new QueryClientImpl(rpcClient);
+    const chainParamsResponse = await pstakeQueryService.HostChainParams({});
+    const fee = chainParamsResponse.hostChainParams?.pstakeParams?.pstakeRedemptionFee!
+    return Number(Number(decimalize(fee, 18)).toFixed(6));
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -142,7 +161,7 @@ export const fetchAccountClaims = async (address: string, rpc: string) => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate": rpc
+      "Error while fetching pending claims": rpc
     });
     genericErrorHandler(error, customScope);
     return [];
@@ -175,7 +194,7 @@ export const fetchClaimableAmount = async (address: string, rpc: string) => {
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const claimableBalanceTotal: QueryUnclaimedResponse =
       await pstakeQueryService.Unclaimed({ delegatorAddress: address });
-
+    printConsole(claimableBalanceTotal,"claimableBalanceTotal");
     let claimableAmount: number = 0;
     if (claimableBalanceTotal.unclaimed.length) {
       for (let item of claimableBalanceTotal.unclaimed) {
@@ -193,13 +212,48 @@ export const fetchClaimableAmount = async (address: string, rpc: string) => {
         claimableAmount += Number(unbondAmount);
       }
     }
-
-    return claimableAmount!;
+    return claimableAmount;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate": rpc
+      "Error while fetching claimable amount": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
+  }
+};
+
+export const fetchFailedUnbondings = async (address: string, rpc: string) => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new QueryClientImpl(rpcClient);
+    const failedUnbondingResponse: QueryFailedUnbondingsResponse =
+        await pstakeQueryService.FailedUnbondings({ delegatorAddress: address });
+    let totalFailedUnbondAmount: number = 0;
+    if (failedUnbondingResponse.failedUnbondings.length) {
+      for (let item of failedUnbondingResponse.failedUnbondings) {
+
+        const epochNumber = item.epochNumber;
+        const failedUnbondAmountResponse: any = await getUnbondingAmount(
+            address,
+            epochNumber,
+            pstakeQueryService
+        );
+
+        if (failedUnbondAmountResponse) {
+          const failedUnbondAmount =
+              failedUnbondAmountResponse.delegatorUnbodingEpochEntry?.amount?.amount;
+          totalFailedUnbondAmount += Number(failedUnbondAmount);
+        }
+      }
+    }
+    return totalFailedUnbondAmount!;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching failed unbondings": rpc
     });
     genericErrorHandler(e, customScope);
     return 0;
