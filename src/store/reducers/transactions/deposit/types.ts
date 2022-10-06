@@ -14,7 +14,9 @@ export interface DepositTransactionParams {
     persistenceChainInfo: ChainInfo,
     cosmosAddress:string,
     persistenceAddress:string,
-    msg:LiquidStakeMsgTypes
+    msg:LiquidStakeMsgTypes,
+    pollInitialBalance:number
+
 }
 
 export type DepositTransactionPayload = PayloadAction<DepositTransactionParams>

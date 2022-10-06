@@ -11,7 +11,8 @@ export interface StakeTransactionParams {
     persistenceSigner : OfflineSigner,
     persistenceChainInfo: ChainInfo,
     account:string,
-    msg:LiquidStakeMsgTypes
+    msg:LiquidStakeMsgTypes,
+    pollInitialBalance:number
 }
 
 export type StakeTransactionPayload = PayloadAction<StakeTransactionParams>

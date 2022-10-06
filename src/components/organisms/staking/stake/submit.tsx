@@ -16,7 +16,7 @@ const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
-  const {atomBalance} = useSelector((state:RootState) => state.balances);
+  const {atomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
   const {amount} = useSelector((state:RootState) => state.stake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
   const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData} = useWallet()
@@ -27,7 +27,8 @@ const Submit = () => {
       persistenceSigner:persistenceSigner!,
       msg: messages,
       account: persistenceAccountData!.address,
-      persistenceChainInfo:persistenceChainData!
+      persistenceChainInfo:persistenceChainData!,
+      pollInitialBalance: stkAtomBalance
     }))
     dispatch(setTransactionProgress(STAKE));
   }

@@ -23,7 +23,7 @@ const UnStake = () => {
         </div>
       </div>
       <To />
-      <div className="flex items-center justify-between flex-wrap">
+      <div className="flex items-center justify-between flex-wrap px-4 md:p-0">
         <p className="font-normal text-sm leading-7 text-light-emphasis mb-2">
           Exchange Rate
         </p>
@@ -31,7 +31,7 @@ const UnStake = () => {
           <ExchangeRate type={"stake"} />
         </p>
       </div>
-      <div className="flex items-center justify-between flex-wrap">
+      <div className="flex items-center justify-between flex-wrap px-4 md:p-0">
         <p className="font-normal text-sm leading-7 text-light-emphasis mb-2">
           Staking APR
         </p>

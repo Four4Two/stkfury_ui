@@ -1,12 +1,17 @@
 import { FetchBalanceSaga } from "../reducers/balances/types";
-import {fetchAccountBalance, fetchAccountClaims, fetchClaimableAmount} from "../../pages/api/onChain";
+import {
+  fetchAccountBalance,
+  fetchAccountClaims,
+  fetchClaimableAmount,
+  fetchFailedUnbondings
+} from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import { setAtomBalance, setIbcAtomBalance, setStkAtomBalance } from "../reducers/balances";
 import { decimalize } from "../../helpers/utils";
 import { IBCChainInfos } from "../../helpers/config";
 import {COSMOS_CHAIN_ID, STK_ATOM_MINIMAL_DENOM} from "../../../AppConstants";
 import {FetchPendingClaimSaga} from "../reducers/claim/types";
-import {setClaimableBalance, setPendingClaimList} from "../reducers/claim";
+import {setClaimableBalance, setClaimableStkAtomBalance, setPendingClaimList} from "../reducers/claim";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -27,7 +32,9 @@ export function * fetchPendingClaims({payload}: FetchPendingClaimSaga) {
   // @ts-ignore
   const accountClaims:any = yield fetchAccountClaims(address, persistenceChainInfo.rpc);
   const claimableBalance:number = yield fetchClaimableAmount(address, persistenceChainInfo.rpc);
+  const claimableStkATOMBalance:number = yield fetchFailedUnbondings(address, persistenceChainInfo.rpc);
   yield put(setClaimableBalance(claimableBalance))
   yield put(setPendingClaimList(accountClaims))
+  yield put(setClaimableStkAtomBalance(claimableStkATOMBalance))
 }
 

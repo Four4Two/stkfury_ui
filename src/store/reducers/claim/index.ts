@@ -4,11 +4,13 @@ import {
     SetPendingClaimList,
     SetClaimableBalance,
     FetchPendingClaimSaga,
+    SetClaimableStkAtomBalance
 } from "./types";
 
 const initialState: ClaimState = {
     pendingClaimList: [],
-    claimableBalance:0,
+    claimableBalance: 0,
+    claimableStkAtomBalance: 0
 }
 
 const claimQueries = createSlice({
@@ -22,10 +24,13 @@ const claimQueries = createSlice({
         setClaimableBalance: (state, action: SetClaimableBalance) => {
             state.claimableBalance = action.payload
         },
+        setClaimableStkAtomBalance: (state, action: SetClaimableStkAtomBalance) => {
+            state.claimableStkAtomBalance = action.payload
+        },
 
     }
 })
 
-export const {fetchPendingClaimsSaga, setPendingClaimList, setClaimableBalance} = claimQueries.actions
+export const {fetchPendingClaimsSaga, setPendingClaimList, setClaimableBalance, setClaimableStkAtomBalance} = claimQueries.actions
 
 export default claimQueries.reducer

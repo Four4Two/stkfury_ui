@@ -4,13 +4,15 @@ import {
   SetExchangeRate,
   FetchInitialDataSaga,
   InitialDataState,
-  SetAPR
+  SetAPR,
+  SetRedeemFee
 } from "./types";
 
 const initialState: InitialDataState = {
   exchangeRate: 1,
   atomPrice: 0,
-  apr: 0
+  apr: 0,
+  redeemFee:0
 };
 
 const initData = createSlice({
@@ -26,11 +28,14 @@ const initData = createSlice({
     },
     setAtomPrice: (state, action: SetAtomPrice) => {
       state.atomPrice = action.payload;
+    },
+    setRedeemFee: (state, action: SetRedeemFee) => {
+      state.redeemFee = action.payload;
     }
   }
 });
 
-export const { setAPR, setAtomPrice, fetchInitSaga, setExchangeRate } =
+export const { setRedeemFee, setAPR, setAtomPrice, fetchInitSaga, setExchangeRate } =
   initData.actions;
 
 export default initData.reducer;

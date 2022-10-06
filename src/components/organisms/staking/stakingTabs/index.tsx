@@ -13,7 +13,7 @@ const StakingTabs = () => {
     const [activeClaims, setActiveClaims] = useState(0);
     const [pendingList, setPendingList] = useState<any>([]);
 
-    const {claimableBalance, pendingClaimList} = useSelector((state:RootState) => state.claimQueries);
+    const {claimableBalance, pendingClaimList, claimableStkAtomBalance} = useSelector((state:RootState) => state.claimQueries);
 
     useEffect(()=>{
         setActiveClaims(claimableBalance)
@@ -38,10 +38,11 @@ const StakingTabs = () => {
           <UnStake/>
         </TabContent>
       </div>
-        {Number(claimableBalance) > 0 || pendingClaimList.length ?
-            <Claim activeClaims={activeClaims} pendingList={pendingList}/>
-            : null
-        }
+        <Claim
+            activeClaims={activeClaims}
+            pendingList={pendingList}
+            claimableStkAtomBalance={claimableStkAtomBalance}
+        />
     </div>
   );
 };
