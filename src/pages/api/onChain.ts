@@ -90,7 +90,8 @@ export const getAPR = async () => {
     const baseRate = 18.92;
     const commission = await getCommission();
     const incentives = await getIncentives();
-    return baseRate - commission + incentives;
+    const apr = baseRate - commission + incentives;
+    return apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -109,10 +110,11 @@ export const fetchAccountClaims = async (address: string, rpc: string) => {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService: QueryClientImpl = new QueryClientImpl(rpcClient);
 
-    const unbondingsResponse:QueryPendingUnbondingsResponse = await pstakeQueryService.PendingUnbondings({
-      delegatorAddress: address,
-    })
-    printConsole(unbondingsResponse,"unbondAmountResponse");
+    const unbondingsResponse: QueryPendingUnbondingsResponse =
+      await pstakeQueryService.PendingUnbondings({
+        delegatorAddress: address
+      });
+    printConsole(unbondingsResponse, "unbondAmountResponse");
 
     if (unbondingsResponse.pendingUnbondings.length) {
       for (let item of unbondingsResponse.pendingUnbondings) {
@@ -128,28 +130,32 @@ export const fetchAccountClaims = async (address: string, rpc: string) => {
 
         if (cvalue && unbondAmountResponse) {
           const unbondAmount =
-          unbondAmountResponse.delegatorUnbodingEpochEntry?.amount?.amount /
-          cvalue;
+            unbondAmountResponse.delegatorUnbodingEpochEntry?.amount?.amount /
+            cvalue;
 
           const unbondTimeResponse: any = await getUnbondingTime(
-          epochNumber,
-          pstakeQueryService
-        );
+            epochNumber,
+            pstakeQueryService
+          );
 
           const unbondTime =
-          unbondTimeResponse.hostAccountUndelegation.completionTime;
+            unbondTimeResponse.hostAccountUndelegation.completionTime;
 
           const given = moment(unbondTime, "YYYY-MM-DD");
 
           const currentDate = moment();
 
-          const daysRemaining = given.diff(currentDate, 'days')
+          const daysRemaining = given.diff(currentDate, "days");
 
           let unStakedon = given.utc().format("DD MMM YYYY hh:mm A UTC");
 
           printConsole(daysRemaining, "daysRemaining");
 
-          filteredClaims.push({unbondAmount, unStakedon, daysRemaining: daysRemaining})
+          filteredClaims.push({
+            unbondAmount,
+            unStakedon,
+            daysRemaining: daysRemaining
+          });
         }
       }
     }

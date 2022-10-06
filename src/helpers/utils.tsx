@@ -1,20 +1,14 @@
 import _ from "lodash";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
-import {
-  createProtobufRpcClient,
-  QueryClient,
-  setupIbcExtension
-} from "@cosmjs/stargate";
+import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
 import { Decimal } from "@cosmjs/math";
 import { Scope } from "@sentry/react";
 import * as Sentry from "@sentry/react";
 import { fetchAccountBalance } from "../pages/api/onChain";
-import { ExternalChains, IBCConfiguration, PollingConfig } from "./config";
+import { ExternalChains, PollingConfig } from "./config";
 import {
   COSMOS_CHAIN_ID,
-  IBC_DENOM,
   PERSISTENCE_CHAIN_ID,
-  PERSISTENCE_INCENTIVES_ADDRESS,
   TEST_NET
 } from "../../AppConstants";
 import {
@@ -206,11 +200,11 @@ export const decodeTendermintConsensusStateAny = (consensusState: any) => {
   return tendermint.ConsensusState.decode(consensusState.value);
 };
 
-export const printConsole = (message:any, helpText= '') => {
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET) {
-        console.log(message, helpText);
-    }
-}
+export const printConsole = (message: any, helpText = "") => {
+  if (process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET) {
+    console.log(message, helpText);
+  }
+};
 
 /**
  * It fetches the commission rates of all the validators in the network and returns the average
@@ -288,11 +282,10 @@ export const getIncentives = async () => {
         stakedAmount += parseInt(amount?.amount?.amount!, 10);
       }
     }
-    const balance = await fetchAccountBalance(
-      PERSISTENCE_INCENTIVES_ADDRESS,
-      IBC_DENOM,
-      persistenceChainInfo?.rpc!
-    );
+
+    const balance = (await pstakeQueryService.RewardsBoosterAccount({})).balance
+      ?.amount;
+
     if (balance) {
       incentives = (parseInt(balance, 10) * 365) / stakedAmount;
     }
