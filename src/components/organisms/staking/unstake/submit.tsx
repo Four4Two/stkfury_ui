@@ -5,11 +5,10 @@ import { RootState } from "../../../../store/reducers";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../atoms/spinner";
 import { LiquidUnStakeMsg, RedeemMsg } from "../../../../helpers/protoMsg";
-import { unDecimalize } from "../../../../helpers/utils";
-import { IBCChainInfos } from '../../../../helpers/config';
-import {COSMOS_CHAIN_ID, INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
-import { executeStakeTransactionSaga } from "../../../../store/reducers/transactions/stake";
+import {printConsole, unDecimalize} from "../../../../helpers/utils";
+import {INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
+import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
 
 const Submit = () => {
@@ -26,12 +25,14 @@ const Submit = () => {
     }else{
        messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
     }
+    printConsole(messages+'stakeHandler'+type,);
     dispatch(executeUnStakeTransactionSaga({
       persistenceSigner:persistenceSigner!,
       msg: messages,
       address: persistenceAccountData!.address,
       persistenceChainInfo:persistenceChainData!
     }))
+      dispatch(setTransactionProgress(UN_STAKE));
   }
 
   const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(stkAtomBalance))
@@ -39,11 +40,11 @@ const Submit = () => {
   return (
     isWalletConnected ?
       <Button
-        className="button w-full  md:py-2 md:text-smx flex items-center justify-center"
+        className={`${(name === UN_STAKE && inProgress) ? '!py-[0.8125rem]' : ''} button w-full  md:py-2 md:text-smx flex items-center justify-center`}
         type="primary"
         size="large"
-        disabled={!enable}
-        content={(name === UN_STAKE && inProgress) ? <Spinner/> :
+        disabled={!enable || (name === UN_STAKE && inProgress)}
+        content={(name === UN_STAKE && inProgress) ? <Spinner width={1.5} /> :
           type === INSTANT ?
             "Redeem Instantly" : "Unstake"
       }

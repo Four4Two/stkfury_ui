@@ -9,6 +9,7 @@ import {executeClaimTransactionSaga} from "../../../../store/reducers/transactio
 import {RootState} from "../../../../store/reducers";
 import {CLAIM} from "../../../../../AppConstants";
 import {Spinner} from "../../../atoms/spinner";
+import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
 const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any) => {
     return (
@@ -44,6 +45,7 @@ const Claim = ({pendingList, activeClaims}:any) => {
             msg: messages,
             address: persistenceAccountData!.address,
         }))
+        dispatch(setTransactionProgress(CLAIM));
     }
 
     const enable = Number(activeClaims) > 0;
@@ -64,9 +66,9 @@ const Claim = ({pendingList, activeClaims}:any) => {
                         </p>
                         <p className={`claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center 
-                         ${!enable ? 'opacity-50 pointer-events-none': ''}`}
+                         ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none': ''}`}
                            onClick={claimHandler}>
-                            {(name === CLAIM && inProgress) ? <Spinner/> : 'Claim'}
+                            {(name === CLAIM && inProgress) ? <Spinner width={1.5}/> : 'Claim'}
                         </p>
                     </div>
                 </div>

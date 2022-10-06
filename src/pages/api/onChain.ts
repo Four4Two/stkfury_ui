@@ -47,6 +47,7 @@ export const fetchAccountBalance = async (
     }
   } catch (error) {
     console.log(error);
+    return "0";
   }
 };
 

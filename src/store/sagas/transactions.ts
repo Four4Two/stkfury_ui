@@ -1,20 +1,19 @@
 import { put, select } from "@redux-saga/core/effects";
 import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
-import { resetTransaction, setTransactionProgress } from "../reducers/transaction";
+import { resetTransaction } from "../reducers/transaction";
 import {
-  CLAIM,
-  COSMOS_CHAIN_ID, DEPOSIT, ERROR_WHILE_CLAIMING,
+  COSMOS_CHAIN_ID, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
-  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM, UN_STAKE
+  PERSISTENCE_FEE, STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { setStakeAmount } from "../reducers/transactions/stake";
 import { Transaction } from "../../helpers/transaction";
 import { DeliverTxResponse } from "@cosmjs/stargate/build/stargateclient";
 import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
-import { genericErrorHandler, pollAccountBalance } from "../../helpers/utils";
+import {genericErrorHandler, pollAccountBalance, printConsole} from "../../helpers/utils";
 import { failedTransactionActions } from "./sagaHelpers";
 import * as Sentry from "@sentry/react"
 import {UnStakeTransactionPayload, unStakeType} from "../reducers/transactions/unstake/types";
@@ -33,7 +32,6 @@ let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COS
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
   try {
-    yield put(setTransactionProgress(STAKE));
     const {persistenceSigner, persistenceChainInfo, account, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setStakeAmount(""))
@@ -81,9 +79,10 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
-    yield put(setTransactionProgress(UN_STAKE));
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
+    printConsole(persistenceSigner+','+persistenceChainInfo+','+address +','+ msg + 'Transaction DETAILS')
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    printConsole(Transaction+ 'Transaction')
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
       displayToast(
@@ -105,7 +104,7 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
         availableAmount = state?.balances.stkAtomBalance;
         balanceDenom =  STK_ATOM_MINIMAL_DENOM;
       }
-
+      printConsole(availableAmount+'UNSTAKE DATA'+balanceDenom+','+txnType)
       const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, availableAmount.toString());
       if (response !== "0") {
         toast.dismiss();
@@ -145,7 +144,6 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
 
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
-    yield put(setTransactionProgress(CLAIM));
     const {persistenceSigner, persistenceChainInfo, address, msg} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     if (transaction.code === 0) {
@@ -177,7 +175,6 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
 
 export function* executeDepositTransaction({ payload }: DepositTransactionPayload) {
   try {
-    yield put(setTransactionProgress(DEPOSIT));
     const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, msg, persistenceAddress, cosmosAddress} = payload
     const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [msg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
     yield put(setDepositAmount(""))

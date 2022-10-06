@@ -128,13 +128,13 @@ export async function pollAccountBalance(
   for (let i = 0; i < PollingConfig.numberOfRetries; i++) {
     try {
       const fetchResult = await fetchAccountBalance(address, denom, rpc);
-      if (fetchResult !== "0" && fetchResult !== initialBalance) {
+      if (fetchResult !== "0" && decimalize(fetchResult) !== initialBalance) {
         return fetchResult;
       } else {
         throw Error("Balance unchanged");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.messae);
       console.log(
         "retrying in " + PollingConfig.scheduledTxHashQueryDelay + ": ",
         i,
@@ -143,6 +143,7 @@ export async function pollAccountBalance(
       await delay(PollingConfig.scheduledTxHashQueryDelay);
     }
   }
+
   // return;
   return JSON.stringify({
     txHash: address,
