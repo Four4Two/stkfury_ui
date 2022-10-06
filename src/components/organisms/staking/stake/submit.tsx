@@ -32,7 +32,7 @@ const Submit = () => {
     dispatch(setTransactionProgress(STAKE));
   }
 
-  const enable = amount && (Number(amount) > 0) && (Number(amount) < Number(atomBalance))
+  const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(atomBalance))
 
   return (
     isWalletConnected ?

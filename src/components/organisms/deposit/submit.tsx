@@ -44,7 +44,7 @@ const Submit = () => {
     dispatch(setTransactionProgress(DEPOSIT));
   }
 
-  const enable = (amount && (Number(amount) > 0) && (Number(amount) < Number(ibcAtomBalance)))
+  const enable = (amount && (Number(amount) > 0) && (Number(amount) <= Number(ibcAtomBalance)))
 
   return (
       <Button
