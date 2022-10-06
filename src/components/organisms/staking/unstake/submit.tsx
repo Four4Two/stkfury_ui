@@ -25,7 +25,8 @@ const Submit = () => {
     }else{
        messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
     }
-    printConsole(messages+'stakeHandler'+type,);
+    printConsole(messages+'stakeHandler msgs');
+    printConsole(type+'stakeHandler type',);
     dispatch(executeUnStakeTransactionSaga({
       persistenceSigner:persistenceSigner!,
       msg: messages,
