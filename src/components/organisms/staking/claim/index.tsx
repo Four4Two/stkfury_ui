@@ -16,7 +16,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any
        <>
            <div className="p-4 rounded-md bg-[#262626] flex items-center justify-between flex-wrap mb-4 " key={index}>
                <div>
-                   <p className="amount text-light-low font-normal leading-normal text-lg mb-2">{decimalize(amount)} ATOM</p>
+                   {/*<p className="amount text-light-low font-normal leading-normal text-lg mb-2">{decimalize(amount)} ATOM</p>*/}
                    <p className="leading-normal text-light-low text-xsm font-normal">{unstakedOn}</p>
                </div>
                <div>
@@ -49,7 +49,7 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
     }
 
     const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
-
+    console.log(activeClaims, "activeClaims");
     return (
         <div className='mt-4'>
             <div className='p-6 bg-tabHeader rounded-md'>
@@ -63,11 +63,11 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                                {decimalize(activeClaims)} ATOM
+                                    {activeClaims} ustkATOM
                             </p>
                             {claimableStkAtomBalance > 0 ?
                                 <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                                    {decimalize(claimableStkAtomBalance)} stkATOM
+                                    {/*{decimalize(claimableStkAtomBalance)} stkATOM*/}
                                 </p>
                                 : null
                             }
