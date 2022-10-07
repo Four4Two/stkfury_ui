@@ -18,6 +18,15 @@ import {Scope} from "@sentry/react";
 import {Coin} from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
+import { ChainInfo } from "@keplr-wallet/types";
+import { PERSISTENCE_CHAIN_ID } from "../../../AppConstants";
+import { ExternalChains } from "../../helpers/config";
+
+const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+
+const persistenceChainInfo = ExternalChains[env].find(
+  (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+);
 
 export const fetchAccountBalance = async (
   address: string,
@@ -90,14 +99,13 @@ export const getAPR = async () => {
     const baseRate = 18.92;
     const commission = await getCommission();
     const incentives = await getIncentives();
-    const apr = baseRate - commission + incentives;
+    const apr = baseRate - (commission / 100) * baseRate + incentives;
     return apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate":
-        "https://rpc.devnet.persistence.pstake.finance"
+      "Error while fetching exchange rate": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
     return 0;
