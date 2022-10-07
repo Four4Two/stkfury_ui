@@ -154,7 +154,7 @@ export const fetchAccountClaims = async (address: string, rpc: string) => {
           filteredClaims.push({
             unbondAmount,
             unStakedon,
-            daysRemaining: daysRemaining
+            daysRemaining: 0
           });
         }
       }

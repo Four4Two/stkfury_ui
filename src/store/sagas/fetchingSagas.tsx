@@ -33,6 +33,7 @@ export function * fetchPendingClaims({payload}: FetchPendingClaimSaga) {
   const accountClaims:any = yield fetchAccountClaims(address, persistenceChainInfo.rpc);
   const claimableBalance:number = yield fetchClaimableAmount(address, persistenceChainInfo.rpc);
   const claimableStkATOMBalance:number = yield fetchFailedUnbondings(address, persistenceChainInfo.rpc);
+  console.log(claimableBalance, 'accountClaims');
   yield put(setClaimableBalance(claimableBalance))
   yield put(setPendingClaimList(accountClaims))
   yield put(setClaimableStkAtomBalance(claimableStkATOMBalance))

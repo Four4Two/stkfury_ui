@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { store } from "../store"
 import {Provider} from "react-redux";
 import {ChainInfo} from "@keplr-wallet/types";
+import Maintenance from "./maintenance";
 
 function MyApp({Component, pageProps}: AppProps) {
 
@@ -34,7 +35,11 @@ function MyApp({Component, pageProps}: AppProps) {
           persistenceChainInfo={persistenceChainInfo!}
           cosmosChainInfo={cosmosChainInfo!}
         >
-          <Component {...pageProps} />
+            {(process.env.NEXT_PUBLIC_MAINTENANCE === 'true') ?
+                <Maintenance/>
+                 :
+                <Component {...pageProps} />
+            }
         </WalletProvider>
     </Provider>
   )
