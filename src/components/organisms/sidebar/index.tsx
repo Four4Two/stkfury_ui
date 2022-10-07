@@ -22,7 +22,7 @@ const socialList = [
     tooltip: 'twitter'
   },
   {
-    url: 'https://t.me/pstakefinance',
+    url: 'https://twitter.com/pstake_cosmos?s=11&t=E_q2T3rK9Bwiywy_YCvo5A',
     iconName: 'telegram-plane',
     tooltip: 'telegram'
   },
