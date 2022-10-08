@@ -31,7 +31,7 @@ const From = () => {
   };
 
   return (
-    <div className="flex-1 mb-4">
+    <div className="flex-1 mb-2">
       <div className="inputContainer border rounded-md p-6 bg-input border-solid border-[#1b1b1b99] flex-wrap flex md:p-3">
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
@@ -59,7 +59,7 @@ const From = () => {
             className={`${styles.Input} bg-transparent border-0
              text-light-high leading-normal 
              box-shadow-none font-normal 
-             text-3xl mb-1 focus:border-0 
+             text-3xl focus:border-0 
              focus:box-shadow-none text-right md:text-lg
              p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal outline-none`}
           />

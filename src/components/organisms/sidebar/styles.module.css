@@ -4,6 +4,7 @@
 
 .sideBarContent{
     height: 100vh;
+    background: hsla(0,0%,9%,.6);
 }
 
 .active{
@@ -21,4 +22,9 @@
 
 .DepositButton{
     width: 220px;
+}
+
+.navBarLinkIcon{
+    width: 20px;
+    height: auto;
 }
