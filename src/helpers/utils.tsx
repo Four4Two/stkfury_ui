@@ -114,7 +114,7 @@ export const decimalize = (valueString: string | number, decimals = 6) => {
   } else {
     truncate = valueString;
   }
-  console.log(truncate, "truncate")
+  printConsole(truncate, "truncate")
   return Decimal.fromAtomics(Math.trunc(truncate!).toString(), decimals).toString();
 };
 

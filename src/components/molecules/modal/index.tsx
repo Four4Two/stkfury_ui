@@ -1,35 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import styles from "./styles.module.css"
 import { ModalTypes } from "./types";
 import { emptyFunc } from "../../../helpers/utils";
 import { Icon } from "../../atoms/icon";
-import { hideDepositModal } from "../../../store/reducers/transactions/deposit";
-import { useDispatch } from "react-redux";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
 
 const Modal = ({ children, show, header, onClose = emptyFunc, className }: ModalTypes) => {
-  // const modalRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
-
 
   const modalRef = useOnClickOutside(onClose)
-  // useEffect(() => {
-  //   function handler(event:MouseEvent | TouchEvent) {
-  //     if (show && modalRef.current && !modalRef.current.contains(event.target as Node)) {
-  //         dispatch(hideDepositModal())
-  //     }
-  //   }
-  //   document.addEventListener("mousedown", handler)
-  //   return () => {
-  //     document.removeEventListener("mousedown", handler)
-  //   }
-  // }, [dispatch, show])
-
 
   return (
-    <div className={`${show ? 'block': 'hidden'}`}>
+      show ?
+    <div>
       <div className={`${styles.backDrop} fixed top-0 right-0 z-10 left-0 w-full h-full`}/>
-      <div className={`modal fixed top-0 right-0 left-0 w-full h-full z-20 overflow-auto `+styles.modal+` ${className}`}>
+      <div className={`${show ? 'open': 'close'} modal fade2 fixed top-0 right-0 left-0 w-full h-full z-20 overflow-auto `+styles.modal+` ${className}`}>
        <div className={`${styles.modalDialog} flex items-center min-h-full w-auto m-auto relative modalDialog`} >
          <div className={`${styles.modalContent} relative flex flex-col w-full rounded-lg text-light-mid modalContent`} ref={modalRef}>
          <button type="button" onClick={onClose} className={`${styles.buttonClose} buttonClose`}>
@@ -47,8 +31,8 @@ const Modal = ({ children, show, header, onClose = emptyFunc, className }: Modal
      </div>
      </div>
     </div>
-
     </div>
+          : null
   );
 };
 

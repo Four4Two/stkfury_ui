@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, {useEffect, useState} from "react";
 import Styles from "./styles.module.css"
 import Button from "../../atoms/button";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import { Icon } from "../../atoms/icon";
-import { stringTruncate } from "../../../helpers/utils";
+import {stringTruncate } from "../../../helpers/utils";
 import Copy from "../../molecules/copy";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
 import {Window as KeplrWindow} from "@keplr-wallet/types/build/window";
+import {useOnClickOutside} from "../../../customHooks/useOnClickOutside";
 
 declare global {
   interface Window extends KeplrWindow {
@@ -17,7 +18,6 @@ declare global {
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const {connect, isWalletConnected, persistenceAccountData} = useWallet()
-  const ref = useRef<HTMLDivElement>(null);
   const {isMobile} = useWindowSize();
 
   const connectHandler = async () =>{
@@ -32,33 +32,26 @@ export const LoginOptions = () => {
   }
 
   useEffect(() =>{
-    window.addEventListener("keplr_keystorechange", async () => {
-      await connect();
-    })
-  },[])
+    {
+      isWalletConnected ?
+          window.addEventListener("keplr_keystorechange", async () => {
+            await connect();
+          }) : null
+    }
+  },[isWalletConnected, connect])
 
-  useEffect(() => {
-    const listener = (event: MouseEvent | TouchEvent) => {
-      const node = ref.current;
-      // Do nothing if clicking dropdown or its descendants
-      if (!node || node.contains(event.target as Node)) return;
-      setDropdownOpen(false);
-    };
-    document.addEventListener("mousedown", listener);
-    return () => {
-      document.removeEventListener("mousedown", listener);
-    };
-  }, [ref, setDropdownOpen]);
+  const ref = useOnClickOutside(()=>{setDropdownOpen(false)})
 
   return (
-    <div className="flex w-fit cursor-pointer relative">
+    <div className="inline-block w-fit cursor-pointer relative">
       {isWalletConnected ?
         <Button
           size="medium"
           type="custom"
           content={
             <span className="flex items-center">
-              <span className="flex items-center py-2.5 pr-1.5 pl-3"  onClick={()=>{setDropdownOpen(!dropdownOpen)}}>
+              <span className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'} flex items-center py-2.5 pr-1.5 pl-3`}
+                    onClick={()=>{setDropdownOpen(true)}}>
                 <img
                   src={"/images/keplr.svg"}
                   alt={"logo"}
@@ -76,39 +69,40 @@ export const LoginOptions = () => {
           className="button custom connected md:text-xsm"
         />
         :
-        <Button
-        size="medium"
-        type="primary"
-        content="Connect Wallet"
-        className="button md:text-xsm md:py-2 md:px-4"
-        onClick={()=>{setDropdownOpen(!dropdownOpen)}}
-        />
+          <Button
+            size="medium"
+            type="primary"
+            content="Connect Wallet"
+            className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'} button md:text-xsm md:py-2 md:px-4`}
+            onClick={()=>{setDropdownOpen(true)}}
+          />
       }
-      {dropdownOpen ?
-          isWalletConnected ?
-            <div className={`${Styles.DropdownMenu} absolute bg-dropDown rounded-md`} ref={ref}>
+      <div className={`${Styles.DropdownMenu} ${dropdownOpen && Styles.DropdownMenuActive} absolute bg-dropDown rounded-md`}
+           ref={ref}>
+        {isWalletConnected ?
+            <>
               <div className="p-4 flex items-center" onClick={disconnectHandler}>
                 <Icon
-                  iconName="disconnect"
-                  viewClass="disconnect"
+                    iconName="disconnect"
+                    viewClass="disconnect"
                 />
                 <span className="ml-4 text-light-mid text-sm font-medium leading-normal">Disconnect</span>
               </div>
-            </div>
+            </>
             :
-            <div className={`${Styles.DropdownMenu} absolute bg-dropDown rounded-md`} ref={ref}>
+            <div>
               <div className="p-4 flex items-center" onClick={connectHandler}>
                 <img
-                  src={"/images/keplr.svg"}
-                  alt={"logo"}
-                  width={20}
-                  height={20}
+                    src={"/images/keplr.svg"}
+                    alt={"logo"}
+                    width={20}
+                    height={20}
                 />
                 <span className="ml-4 text-light-mid text-sm font-medium leading-normal">Keplr Wallet</span>
               </div>
             </div>
-        : ""
-      }
+        }
+      </div>
     </div>
   )
 }

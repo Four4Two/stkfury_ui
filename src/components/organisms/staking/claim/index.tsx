@@ -3,7 +3,7 @@ import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
 import {ClaimMsg} from "../../../../helpers/protoMsg";
-import {decimalize} from "../../../../helpers/utils";
+import {decimalize, printConsole} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
 import {executeClaimTransactionSaga} from "../../../../store/reducers/transactions/claim";
 import {RootState} from "../../../../store/reducers";
@@ -49,16 +49,14 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
     }
 
     const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
-    console.log(activeClaims, "activeClaims");
+    printConsole(activeClaims, "activeClaims");
     return (
         <div className='mt-4'>
             <div className='p-6 bg-tabHeader rounded-md'>
                 <p className="mb-4 text-lg font-semibold leading-normal text-light-high md:text-base md:mb-2">
                     Claim Unstaked ATOM
                 </p>
-                <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
-                    Select the unstaked amount you would like to claim.
-                </p>
+                
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="flex items-center justify-between">
                         <div>
