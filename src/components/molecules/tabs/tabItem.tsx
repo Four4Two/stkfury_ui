@@ -14,7 +14,7 @@ const TabItem = ({
   };
 
   return (
-      <li onClick={handleClick} className={`${activeTab === id ? "active tabItem" : "tabItem"} ` +className} >
+      <li onClick={handleClick} className={`${activeTab === id ? "active tabItem" : "tabItem hover:text-light-high"} ` +className} >
         {title}
       </li>
   );
