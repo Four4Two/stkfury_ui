@@ -9,8 +9,8 @@ import { INSTANT } from "../../../../../AppConstants";
 import Link from "next/link";
 
 const Stake = () => {
+
   const {type} = useSelector((state:RootState) => state.unStake)
-    const { redeemFee } = useSelector((state:RootState) => state.initialData);
 
   return (
       <>
@@ -24,18 +24,6 @@ const Stake = () => {
                   <ExchangeRate type={'unstake'}/>
               </p>
           </div>
-          {
-              type === INSTANT ?
-                  <div className="flex items-center justify-between flex-wrap mt-2 md:p-0 px-4">
-                      <p className="font-normal text-sm leading-7 text-light-emphasis">
-                          Fee
-                      </p>
-                      <p className="font-normal text-sm leading-7 text-light-emphasis text-right">
-                          {Math.round(redeemFee * 100)}%
-                      </p>
-                  </div>
-                  : ""
-          }
         <div className="mt-4">
           <Submit/>
         </div>

@@ -75,9 +75,9 @@ const Sidebar = () => {
   const router = useRouter();
   return (
     <aside className="w-[284px] md:w-[220px]">
-      <div className={`${Styles.sideBarContent} bg-side-bar flex flex-col justify-between overflow-y-auto sticky`}>
+      <div className={`${Styles.sideBarContent} flex flex-col justify-between overflow-y-auto sticky`}>
         <div>
-          <div className="text-center py-8">
+          <div className="text-center py-[2.1875rem]">
             <Link href="/" className="nav-link" passHref>
              <div className='text-center'>
                <img
@@ -92,40 +92,40 @@ const Sidebar = () => {
           <div>
             <li className={`list-none`}>
               <Link href="/" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : ""} 
+                <p className={`${Styles.navBarLink } ${router.pathname == "/" ? `${Styles.active} navItemActive` : "group"} 
                 py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}
                 onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon
                     iconName="staking"
-                    viewClass="side-bar-icon mr-8 md:mr-4"
+                    viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
                   />
-                  <span className="text text-light-mid leading-6 text-base md:text-sm">Staking</span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">Staking</span>
                 </p>
               </Link>
             </li>
             <li className={`list-none`}>
               <Link href={"/defi"} passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/defi" ? `${Styles.active} navItemActive` : ""} 
+                <p className={`${Styles.navBarLink } ${router.pathname == "/defi" ? `${Styles.active} navItemActive` : "group"} 
                 py-3 px-8 flex items-center cursor-pointer`}
                    onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon
                     iconName="defi"
-                    viewClass="side-bar-icon mr-8 md:mr-4"
+                    viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
                   />
-                  <span className="text text-light-mid leading-6 text-base md:text-sm">DeFi</span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">DeFi</span>
                 </p>
               </Link>
             </li>
             <li className={`list-none`}>
               <Link href="/" className="nav-link" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : ""}
+                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : "group"}
                  py-3 px-8 flex items-center cursor-pointer`}
                    onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon
                     iconName="transactions"
-                    viewClass="side-bar-icon mr-8 md:mr-4"
+                    viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
                   />
-                  <span className="text text-light-mid leading-6 text-base md:text-sm">Transactions</span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">Transactions</span>
                 </p>
               </Link>
             </li>
@@ -133,13 +133,14 @@ const Sidebar = () => {
               <p onClick={() => setOpen(!open)}
                  aria-controls="more-list"
                  aria-expanded={open}
-                 className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 ${open ? "opened" : "closed"} py-3 px-8`}>
+                 className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
+                 ${open ? "opened" : "closed"} py-3 px-8 group`}>
                   <span className="flex items-center">
                       <Icon
                         iconName="more"
-                        viewClass="side-bar-icon mr-8 md:mr-4"
+                        viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
                       />
-                      <span className="text-light-mid leading-6 text-base md:text-sm">More</span>
+                      <span className="text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">More</span>
                   </span>
                 <Icon
                   iconName="right-arrow"

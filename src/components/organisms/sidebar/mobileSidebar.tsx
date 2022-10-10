@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import Sidebar from "./index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
-import mobileSidebar, { hideMobileSidebar } from "../../../store/reducers/sidebar";
+import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
-import styles from "../../molecules/modal/styles.module.css";
 
 const MobileSideBar = () => {
   const dispatch = useDispatch();

@@ -107,8 +107,15 @@ export const truncateToFixedDecimalPlaces = (
 export const emptyFunc = () => ({});
 
 export const decimalize = (valueString: string | number, decimals = 6) => {
-  console.log(valueString, "valueString")
-  return Decimal.fromAtomics(valueString.toString(), decimals).toString();
+  let truncate:number
+  if (typeof valueString === "string")
+  {
+    truncate = Number(valueString);
+  } else {
+    truncate = valueString;
+  }
+  printConsole(truncate, "truncate")
+  return Decimal.fromAtomics(Math.trunc(truncate!).toString(), decimals).toString();
 };
 
 export const unDecimalize = (valueString: string | number, decimals = 6) => {

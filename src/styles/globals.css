@@ -320,3 +320,45 @@ opacity: 0.5;
    border: 1px solid #ECECEC;
    color: #070B09;
 }
+
+
+@keyframes modalFadeIn {
+   from {transform: translateY(-50%);opacity: 0;}
+   to {transform: translateY(0);opacity: 1;}
+}
+
+@keyframes fadein {
+   from {
+      opacity:0;
+   }
+   to {
+      opacity:1;
+   }
+}
+
+@keyframes fadeout {
+   from {
+      opacity:1;
+   }
+   to {
+      opacity:0;
+   }
+}
+
+
+@keyframes modalFadeOut {
+   from {transform: translateY(0);opacity: 1;}
+   to {transform: translateY(-50%);opacity: 0;}
+}
+
+
+.modal.open {
+   animation:modalFadeIn 0.5s;
+}
+
+.modal {
+   /*animation-name: modalFade;*/
+   /*animation-duration: .3s;*/
+   animation:fadeout 0.4s;
+   /*animation:modalFadeOut 0.2s ease-out forwards;*/
+}

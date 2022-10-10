@@ -3,7 +3,7 @@ import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
 import {ClaimMsg} from "../../../../helpers/protoMsg";
-import {decimalize} from "../../../../helpers/utils";
+import {decimalize, printConsole} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
 import {executeClaimTransactionSaga} from "../../../../store/reducers/transactions/claim";
 import {RootState} from "../../../../store/reducers";
@@ -16,7 +16,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any
        <>
            <div className="p-4 rounded-md bg-[#262626] flex items-center justify-between flex-wrap mb-4 " key={index}>
                <div>
-                   <p className="amount text-light-low font-normal leading-normal text-lg mb-2">{amount} uATOM</p>
+                   <p className="amount text-light-low font-normal leading-normal text-lg mb-2">{decimalize(amount)} ATOM</p>
                    <p className="leading-normal text-light-low text-xsm font-normal">{unstakedOn}</p>
                </div>
                <div>
@@ -49,25 +49,23 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
     }
 
     const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
-    console.log(activeClaims, "activeClaims");
+    printConsole(activeClaims, "activeClaims");
     return (
         <div className='mt-4'>
             <div className='p-6 bg-tabHeader rounded-md'>
                 <p className="mb-4 text-lg font-semibold leading-normal text-light-high md:text-base md:mb-2">
                     Claim Unstaked ATOM
                 </p>
-                <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
-                    Select the unstaked amount you would like to claim.
-                </p>
+                
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                                    {activeClaims} uATOM
+                                    {decimalize(activeClaims)} ATOM
                             </p>
                             {claimableStkAtomBalance > 0 ?
                                 <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                                    {/*{decimalize(claimableStkAtomBalance)} stkATOM*/}
+                                    {decimalize(claimableStkAtomBalance)} stkATOM
                                 </p>
                                 : null
                             }
