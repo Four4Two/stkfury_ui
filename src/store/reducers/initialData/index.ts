@@ -1,18 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { FEES, POOL_LIQUIDITY } from "../../../../AppConstants";
 import {
   SetAtomPrice,
   SetExchangeRate,
   FetchInitialDataSaga,
   InitialDataState,
   SetAPR,
-  SetRedeemFee
+  SetRedeemFee,
+  InitialLiquidityFees
 } from "./types";
+
+const initialLiquidity_Fees: InitialLiquidityFees = {
+  [POOL_LIQUIDITY]: 0,
+  [FEES]: 0
+};
 
 const initialState: InitialDataState = {
   exchangeRate: 1,
   atomPrice: 0,
   apr: 0,
-  redeemFee:0
+  redeemFee: 0,
+  osmosisInfo: initialLiquidity_Fees
 };
 
 const initData = createSlice({
@@ -31,11 +39,20 @@ const initData = createSlice({
     },
     setRedeemFee: (state, action: SetRedeemFee) => {
       state.redeemFee = action.payload;
+    },
+    setOsmosisInfo: (state, action) => {
+      state.osmosisInfo = action.payload;
     }
   }
 });
 
-export const { setRedeemFee, setAPR, setAtomPrice, fetchInitSaga, setExchangeRate } =
-  initData.actions;
+export const {
+  setRedeemFee,
+  setAPR,
+  setAtomPrice,
+  setOsmosisInfo,
+  fetchInitSaga,
+  setExchangeRate
+} = initData.actions;
 
 export default initData.reducer;

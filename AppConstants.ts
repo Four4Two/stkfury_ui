@@ -32,6 +32,8 @@ export const UN_STAKE = "unstake";
 export const CLAIM = "claim";
 export const FATAL = "fatal";
 export const DEPOSIT = "deposit";
+export const FEES = "fees";
+export const POOL_LIQUIDITY = "pool_liquidity";
 
 export const MID_INTERVAL = 60000;
 

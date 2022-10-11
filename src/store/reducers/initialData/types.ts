@@ -1,11 +1,18 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ChainInfo } from "@keplr-wallet/types";
+import { FEES, POOL_LIQUIDITY } from "../../../../AppConstants";
+
+export interface InitialLiquidityFees {
+  [POOL_LIQUIDITY]: number;
+  [FEES]: number;
+}
 
 export interface InitialDataState {
   exchangeRate: number;
   atomPrice: number;
   apr: number;
-  redeemFee:number
+  redeemFee: number;
+  osmosisInfo: InitialLiquidityFees;
 }
 
 export interface FetchInitialDataSagaParams {
