@@ -81,7 +81,7 @@ export const ExternalChains:ExternalChainData = {
                 },
                 {
                     coinDenom: 'STKATOM',
-                    coinMinimalDenom: 'ustkatom',
+                    coinMinimalDenom: 'stk/uatom',
                     coinDecimals: 6,
                     coinGeckoId: 'persistence',
                 }
