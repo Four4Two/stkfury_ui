@@ -6,6 +6,7 @@ import MobileSideBar from "../organisms/sidebar/mobileSidebar";
 import Deposit from "../organisms/deposit";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
+import ClaimModal from "../organisms/staking/claim";
 
 export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
 
@@ -33,7 +34,8 @@ export const PageTemplate = ({children, className, title }: { children: React.Re
           {children}
         </div>
       </div>
-      <Deposit />
+        <Deposit />
+        <ClaimModal/>
     </div>
   )
 }

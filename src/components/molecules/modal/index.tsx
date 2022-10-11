@@ -1,13 +1,14 @@
-import React from "react";
+import React, {useRef} from "react";
 import styles from "./styles.module.css"
 import { ModalTypes } from "./types";
 import { emptyFunc } from "../../../helpers/utils";
 import { Icon } from "../../atoms/icon";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
 
-const Modal = ({ children, show, header, onClose = emptyFunc, className }: ModalTypes) => {
+const Modal = ({ children, show, header, onClose = emptyFunc, className, staticBackDrop = true}: ModalTypes) => {
 
-  const modalRef = useOnClickOutside(onClose)
+    const modalRef = useRef<HTMLDivElement>(null)
+    useOnClickOutside(modalRef, onClose)
 
   return (
       show ?
@@ -15,7 +16,7 @@ const Modal = ({ children, show, header, onClose = emptyFunc, className }: Modal
       <div className={`${styles.backDrop} fixed top-0 right-0 z-10 left-0 w-full h-full`}/>
       <div className={`${show ? 'open': 'close'} modal fade2 fixed top-0 right-0 left-0 w-full h-full z-20 overflow-auto `+styles.modal+` ${className}`}>
        <div className={`${styles.modalDialog} flex items-center min-h-full w-auto m-auto relative modalDialog`} >
-         <div className={`${styles.modalContent} relative flex flex-col w-full rounded-lg text-light-mid modalContent`} ref={modalRef}>
+         <div className={`${styles.modalContent} relative flex flex-col w-full rounded-lg text-light-mid modalContent`} ref={staticBackDrop ? null : modalRef}>
          <button type="button" onClick={onClose} className={`${styles.buttonClose} buttonClose`}>
            <Icon iconName="close" viewClass={styles.buttonCloseIcon}/>
          </button>

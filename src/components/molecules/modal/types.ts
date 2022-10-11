@@ -6,5 +6,6 @@ export interface ModalTypes {
   children: React.ReactNode;
   closeButton?: boolean,
   show: boolean,
-  className?: string
+  className?: string,
+  staticBackDrop?:boolean
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Styles from "./styles.module.css"
 import Button from "../../atoms/button";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
@@ -40,7 +40,8 @@ export const LoginOptions = () => {
     }
   },[isWalletConnected, connect])
 
-  const ref = useOnClickOutside(()=>{setDropdownOpen(false)})
+    const ref = useRef<HTMLDivElement>(null)
+    useOnClickOutside(ref, ()=>{setDropdownOpen(false)})
 
   return (
     <div className="inline-block w-fit cursor-pointer relative">

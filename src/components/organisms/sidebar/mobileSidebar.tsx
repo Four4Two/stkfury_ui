@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Sidebar from "./index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
@@ -13,7 +13,8 @@ const MobileSideBar = () => {
     dispatch(hideMobileSidebar());
   }
 
-  const sideBarRef = useOnClickOutside(closeHandler)
+    const sideBarRef = useRef<HTMLDivElement>(null)
+    useOnClickOutside(sideBarRef, closeHandler)
 
   return(
     <div className={`${show ? "show":"close"} offCanvas hidden md:block `}>

@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, {useEffect, useState} from "react";
 import logo from "../../assets/images/logo.svg";
 import Link from "next/link";
 import { Icon } from "../../atoms/icon";
@@ -14,6 +14,7 @@ import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
 import Tooltip from "rc-tooltip";
 import 'rc-tooltip/assets/bootstrap.css';
+import {showClaimModal} from "../../../store/reducers/transactions/claim";
 
 const socialList = [
   {
@@ -33,39 +34,56 @@ const socialList = [
   }
 ];
 
+const moreList = [
+  {
+    url: 'https://pstake.finance/',
+    name: 'pstake.finance',
+    icon: 'globe'
+  },
+  {
+    url: 'https://docs.pstake.finance/',
+    name: 'Docs',
+    icon: 'docs'
+  },
+  {
+    url: 'https://analytics.pstake.finance/',
+    name: 'Analytics',
+    icon: 'analytics'
+  },
+  {
+    url: 'https://forum.pstake.finance/',
+    name: 'Governance',
+    icon: 'governance'
+  }
+];
+
 const Sidebar = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [activeClaims, setActiveClaims] = useState(0);
+  const [activeStkAtomClaims, setActiveStkAtomClaims] = useState(0);
+  const [pendingList, setPendingList] = useState<any>([]);
   const {atomBalance} = useSelector((state:RootState) => state.balances);
   const {isWalletConnected} = useWallet()
   const {isMobile} = useWindowSize();
 
-  const moreList = [
-    {
-      url: 'https://pstake.finance/',
-      name: 'pstake.finance',
-      icon: 'globe'
-    },
-    {
-      url: 'https://docs.pstake.finance/',
-      name: 'Docs',
-      icon: 'docs'
-    },
-    {
-      url: 'https://analytics.pstake.finance/',
-      name: 'Analytics',
-      icon: 'analytics'
-    },
-    {
-      url: 'https://forum.pstake.finance/',
-      name: 'Governance',
-      icon: 'governance'
-    }
-  ];
+  const {claimableBalance, pendingClaimList, claimableStkAtomBalance} = useSelector((state:RootState) => state.claimQueries);
+
+  useEffect(()=> {
+    setActiveClaims(claimableBalance)
+    setPendingList(pendingClaimList)
+    setActiveStkAtomClaims(claimableStkAtomBalance)
+  },[claimableBalance, pendingClaimList, claimableStkAtomBalance])
 
   const depositHandler = async () => {
     dispatch(hideMobileSidebar())
     dispatch(showDepositModal())
+  }
+
+
+  const claimHandler = async () => {
+    dispatch(hideMobileSidebar())
+    dispatch(showClaimModal())
   }
 
   const closeSideHandler = () => {
@@ -205,6 +223,18 @@ const Sidebar = () => {
                 onClick={depositHandler}/>
             </div>
             : ""
+          }
+
+          {isWalletConnected && (activeClaims > 0 || pendingList.length || activeStkAtomClaims > 0) ?
+              <div className={`${Styles.DepositButton} m-auto`}>
+                <Button
+                    size="medium"
+                    type="secondary"
+                    content="Claim"
+                    className="w-full mb-4  md:text-xsm md:py-2 md:px-4"
+                    onClick={claimHandler}/>
+              </div>
+              : ""
           }
 
           <div className={`${Styles.socialLinks} socialLinks flex py-3 px-6`}>
