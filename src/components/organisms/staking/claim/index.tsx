@@ -1,15 +1,16 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
 import {ClaimMsg} from "../../../../helpers/protoMsg";
 import {decimalize, printConsole} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
-import {executeClaimTransactionSaga} from "../../../../store/reducers/transactions/claim";
+import {executeClaimTransactionSaga, hideClaimModal} from "../../../../store/reducers/transactions/claim";
 import {RootState} from "../../../../store/reducers";
 import {CLAIM} from "../../../../../AppConstants";
 import {Spinner} from "../../../atoms/spinner";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
+import Modal from "../../../molecules/modal";
 
 const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any) => {
     return (
@@ -27,8 +28,9 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any
     )
 }
 
-const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
+const ClaimModal = () => {
     const [expand, setExpand] = useState(false);
+    const {showModal} = useSelector((state:RootState) => state.claim);
 
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
 
@@ -36,6 +38,15 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
 
     const {persistenceAccountData, persistenceSigner, persistenceChainData} = useWallet();
 
+    const [activeClaims, setActiveClaims] = useState(0);
+    const [pendingList, setPendingList] = useState<any>([]);
+
+    const {claimableBalance, pendingClaimList, claimableStkAtomBalance} = useSelector((state:RootState) => state.claimQueries);
+
+    useEffect(()=>{
+        setActiveClaims(claimableBalance)
+        setPendingList(pendingClaimList)
+    },[claimableBalance, pendingClaimList])
 
     const claimHandler = async () => {
         const messages = ClaimMsg(persistenceAccountData!.address)
@@ -50,13 +61,14 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
 
     const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
     printConsole(activeClaims, "activeClaims");
+
+    const handleClose = () =>{
+        dispatch(hideClaimModal())
+    }
+
     return (
+        <Modal show={showModal} onClose={handleClose}  className="depositModal" header="Claim Unstaked ATOM">
         <div className='mt-4'>
-            <div className='p-6 bg-tabHeader rounded-md'>
-                <p className="mb-4 text-lg font-semibold leading-normal text-light-high md:text-base md:mb-2">
-                    Claim Unstaked ATOM
-                </p>
-                
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="flex items-center justify-between">
                         <div>
@@ -78,7 +90,6 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
                         </p>
                     </div>
                 </div>
-
                 <div className="mt-5">
                     <p onClick={() => setExpand(!expand)}
                        className={`unStakeListHeader mb-4 cursor-pointer flex items-center justify-between ${expand ? "opened" : "closed"}`}>
@@ -109,11 +120,10 @@ const Claim = ({pendingList, activeClaims, claimableStkAtomBalance}:any) => {
                         }
                     </div>
                 </div>
-            </div>
         </div>
-
+        </Modal>
     );
 };
 
 
-export default Claim;
+export default ClaimModal;

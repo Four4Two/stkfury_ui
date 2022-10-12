@@ -10,15 +10,6 @@ import {RootState} from "../../../../store/reducers";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
-    const [activeClaims, setActiveClaims] = useState(0);
-    const [pendingList, setPendingList] = useState<any>([]);
-
-    const {claimableBalance, pendingClaimList, claimableStkAtomBalance} = useSelector((state:RootState) => state.claimQueries);
-
-    useEffect(()=>{
-        setActiveClaims(claimableBalance)
-        setPendingList(pendingClaimList)
-    },[claimableBalance, pendingClaimList])
 
   const tabItemClasses = 'cursor-pointer w-full bg-tabHeader ' +
     'font-semibold text-lg leading-normal text-center' +
@@ -38,11 +29,6 @@ const StakingTabs = () => {
           <UnStake/>
         </TabContent>
       </div>
-        <Claim
-            activeClaims={activeClaims}
-            pendingList={pendingList}
-            claimableStkAtomBalance={claimableStkAtomBalance}
-        />
     </div>
   );
 };
