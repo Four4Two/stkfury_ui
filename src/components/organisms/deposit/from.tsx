@@ -11,11 +11,12 @@ import { useWindowSize } from "../../../customHooks/useWindowSize";
 
 const From = () => {
   const dispatch = useDispatch();
-  const {ibcAtomBalance} = useSelector((state:RootState) => state.balances);
+  const {ibcAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount} = useSelector((state:RootState) => state.deposit);
   const {atomPrice} = useSelector((state:RootState) => state.initialData)
   const priceInDollars = atomPrice * Number(amount)
 
+  console.log(ibcAtomBalance, atomBalance, "ibcAtomBalance, atomBalance");
   const {isWalletConnected} = useWallet();
   const { isMobile } = useWindowSize();
 
@@ -29,7 +30,7 @@ const From = () => {
   };
 
   const maxHandler = () => {
-    dispatch(setDepositAmount(ibcAtomBalance.toString()))
+    dispatch(setDepositAmount(atomBalance.toString()))
   };
 
 
@@ -46,7 +47,7 @@ const From = () => {
           </div>
           <p className="mt-3 leading-normal text-sm text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
-            <span className="text-light-mid">{formatNumber(ibcAtomBalance, 3, 6)}</span>
+            <span className="text-light-mid">{formatNumber(atomBalance, 3, 6)}</span>
             {isWalletConnected &&
                 <span className="text-light-high ml-2 font-bold uppercase cursor-pointer"
                       onClick={maxHandler}>

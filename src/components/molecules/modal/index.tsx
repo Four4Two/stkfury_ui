@@ -26,7 +26,7 @@ const Modal = ({ children, show, header, onClose = emptyFunc, className, staticB
                <p>{header}</p>
              </div> : ""
          }
-         <div className="modal-body p-8 space-y-6">
+         <div className="modalBody p-8 space-y-6">
            {children}
          </div>
      </div>

@@ -19,12 +19,14 @@ let IBCInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COS
 
 export function * fetchBalance({payload}: FetchBalanceSaga) {
   const {persistenceAddress, cosmosAddress, persistenceChainInfo, cosmosChainInfo}:any = payload
-  const atomBalance:number = yield fetchAccountBalance(persistenceAddress, IBCInfo!.coinDenom, persistenceChainInfo.rpc)
+  //atom balance on persistence chain
+  const ibcAtomBalance:number = yield fetchAccountBalance(persistenceAddress, IBCInfo!.coinDenom, persistenceChainInfo.rpc)
   const stkAtomBalance:number = yield fetchAccountBalance(persistenceAddress, STK_ATOM_MINIMAL_DENOM, persistenceChainInfo.rpc)
-  const ibcAtomBalance:number = yield fetchAccountBalance(cosmosAddress, cosmosChainInfo.stakeCurrency.coinMinimalDenom, cosmosChainInfo.rpc)
-  yield put(setAtomBalance(Number(decimalize(atomBalance))));
-  yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
+ //atom balance on cosmos chain
+  const atomBalance:number = yield fetchAccountBalance(cosmosAddress, cosmosChainInfo.stakeCurrency.coinMinimalDenom, cosmosChainInfo.rpc)
   yield put(setIbcAtomBalance(Number(decimalize(ibcAtomBalance))));
+  yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
+  yield put(setAtomBalance(Number(decimalize(atomBalance))));
 }
 
 export function * fetchPendingClaims({payload}: FetchPendingClaimSaga) {

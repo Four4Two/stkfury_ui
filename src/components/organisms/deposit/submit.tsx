@@ -40,12 +40,12 @@ const Submit = () => {
       cosmosAddress:cosmosAccountData!.address,
       persistenceAddress:persistenceAccountData!.address,
       msg:msg,
-      pollInitialBalance:atomBalance
+      pollInitialBalance:ibcAtomBalance
     }))
     dispatch(setTransactionProgress(DEPOSIT));
   }
 
-  const enable = (amount && (Number(amount) > 0) && (Number(amount) <= Number(ibcAtomBalance)))
+  const enable = (amount && (Number(amount) > 0) && (Number(amount) <= Number(atomBalance)))
 
   return (
       <Button

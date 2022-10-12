@@ -63,7 +63,7 @@ const Sidebar = () => {
   const [activeClaims, setActiveClaims] = useState(0);
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState(0);
   const [pendingList, setPendingList] = useState<any>([]);
-  const {atomBalance} = useSelector((state:RootState) => state.balances);
+  const {ibcAtomBalance} = useSelector((state:RootState) => state.balances);
   const {isWalletConnected} = useWallet()
   const {isMobile} = useWindowSize();
 
@@ -209,7 +209,7 @@ const Sidebar = () => {
                 <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
                 <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
               </div>
-              <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(atomBalance, 3, 6)}</p>
+              <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
             </div>
           </div>
 

@@ -7,6 +7,7 @@ import Deposit from "../organisms/deposit";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import ClaimModal from "../organisms/staking/claim";
+import StakeModal from "../organisms/staking/stake/stakeModal";
 
 export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
 
@@ -36,6 +37,7 @@ export const PageTemplate = ({children, className, title }: { children: React.Re
       </div>
         <Deposit />
         <ClaimModal/>
+        <StakeModal/>
     </div>
   )
 }

@@ -8,29 +8,20 @@ import { LiquidStakeMsg } from "../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../helpers/utils";
 import { IBCChainInfos } from '../../../../helpers/config';
 import {COSMOS_CHAIN_ID, STAKE} from "../../../../../AppConstants";
-import { executeStakeTransactionSaga } from "../../../../store/reducers/transactions/stake";
+import {executeStakeTransactionSaga, showStakeModal} from "../../../../store/reducers/transactions/stake";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const Submit = () => {
   const dispatch = useDispatch();
-  let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
-  const {atomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
+  const {atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount} = useSelector((state:RootState) => state.stake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
-  const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData} = useWallet()
+  const {connect, isWalletConnected} = useWallet()
 
   const stakeHandler = async () => {
-    const messages = LiquidStakeMsg(persistenceAccountData!.address, unDecimalize(amount), ibcInfo!.coinDenom)
-    dispatch(executeStakeTransactionSaga({
-      persistenceSigner:persistenceSigner!,
-      msg: messages,
-      account: persistenceAccountData!.address,
-      persistenceChainInfo:persistenceChainData!,
-      pollInitialBalance: stkAtomBalance
-    }))
-    dispatch(setTransactionProgress(STAKE));
+    dispatch(showStakeModal());
   }
 
   const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(atomBalance))
