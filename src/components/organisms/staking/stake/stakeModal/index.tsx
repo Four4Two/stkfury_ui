@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import Modal from "../../../../molecules/modal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../store/reducers";
@@ -11,8 +11,6 @@ import {
 } from "../../../../../store/reducers/transactions/stake";
 import Submit from "./submit";
 import styles from "../styles.module.css";
-import {DEPOSIT, STAKE} from "../../../../../../AppConstants";
-import {Spinner} from "../../../../atoms/spinner";
 import Button from "../../../../atoms/button";
 import {resetTransaction} from "../../../../../store/reducers/transaction";
 

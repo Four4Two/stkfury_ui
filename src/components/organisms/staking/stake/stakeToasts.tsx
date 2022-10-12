@@ -1,41 +1,42 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import {displayToast} from "../../../molecules/toast";
 import {ToastType} from "../../../molecules/toast/types";
-import {setStakeTxnStepNumber} from "../../../../store/reducers/transactions/stake";
+import {setStakeTxnFailed, setStakeTxnStepNumber} from "../../../../store/reducers/transactions/stake";
+import {resetTransaction} from "../../../../store/reducers/transaction";
 
 const StakeToasts = () => {
     const dispatch = useDispatch();
     const {showModal, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
-    const [txnFailed, setTxnFailed] = useState(false);
 
     useEffect(()=> {
         if(stepNumber === 5 && !showModal) {
-            setTimeout(() => dispatch(setStakeTxnStepNumber(0)), 3000);
+            dispatch(setStakeTxnStepNumber(0))
         }
     },[stepNumber, dispatch, showModal])
 
-    useEffect(()=> {
+    useEffect(()=>{
         if(!showModal && txFailed) {
+            dispatch(setStakeTxnFailed(false))
             dispatch(setStakeTxnStepNumber(0))
-            setTxnFailed(txFailed)
+            dispatch(resetTransaction())
         }
     },[txFailed, showModal, dispatch])
 
     return (
         <>
-            { txnFailed && !showModal?
+            { txFailed && !showModal ?
                 displayToast(
                     {
-                        message: 'This transaction could not be completedd'
+                        message: 'This transaction could not be completed'
                     },
                     ToastType.ERROR
                 )
             :
                 <>
                     {
-                        stepNumber === 2 && !showModal && !txnFailed ?
+                        stepNumber === 2 && !showModal && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Deposit Transaction in progress'
@@ -44,7 +45,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        (stepNumber === 3 && !showModal)  && !txnFailed ?
+                        stepNumber === 3 && !showModal  && !txFailed?
                             displayToast(
                                 {
                                     message: 'Atom transferred to persistence chain successfully'
@@ -53,7 +54,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 4 && !showModal  && !txnFailed ?
+                        stepNumber === 4 && !showModal  && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Stake Transaction in progress'
@@ -62,7 +63,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 5 && !showModal  && !txnFailed ?
+                        stepNumber === 5 && !showModal  && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Your ATOM Staked Successfully'
