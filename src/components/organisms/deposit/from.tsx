@@ -16,7 +16,6 @@ const From = () => {
   const {atomPrice} = useSelector((state:RootState) => state.initialData)
   const priceInDollars = atomPrice * Number(amount)
 
-  console.log(ibcAtomBalance, atomBalance, "ibcAtomBalance, atomBalance");
   const {isWalletConnected} = useWallet();
   const { isMobile } = useWindowSize();
 

@@ -15,7 +15,7 @@ import Modal from "../../../molecules/modal";
 const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any) => {
     return (
        <>
-           <div className="p-4 rounded-md bg-[#262626] flex items-center justify-between flex-wrap mb-4 " key={index}>
+           <div className="p-4 rounded-md bg-[#383838] flex items-center justify-between flex-wrap mb-4 " key={index}>
                <div>
                    <p className="amount text-light-low font-normal leading-normal text-lg mb-2">{decimalize(amount)} ATOM</p>
                    <p className="leading-normal text-light-low text-xsm font-normal">{unstakedOn}</p>

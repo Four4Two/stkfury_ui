@@ -114,7 +114,6 @@ export const decimalize = (valueString: string | number, decimals = 6) => {
   } else {
     truncate = valueString;
   }
-  printConsole(truncate, "truncate")
   return Decimal.fromAtomics(Math.trunc(truncate!).toString(), decimals).toString();
 };
 
@@ -141,7 +140,6 @@ export async function pollAccountBalance(
   } else {
     initialBalance = await fetchAccountBalance(address, denom, rpc);
   }
-
   printConsole(initialBalance + "initialBalance");
   await delay(PollingConfig.initialTxHashQueryDelay);
   for (let i = 0; i < PollingConfig.numberOfRetries; i++) {
@@ -162,14 +160,7 @@ export async function pollAccountBalance(
       await delay(PollingConfig.scheduledTxHashQueryDelay);
     }
   }
-
-  // return;
-  return JSON.stringify({
-    txHash: address,
-    height: 0,
-    code: 111,
-    rawLog: "failed all retries"
-  });
+  throw new Error("failed all retries");
 }
 
 export const decodeTendermintClientStateAny = (clientState: any) => {

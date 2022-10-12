@@ -7,7 +7,7 @@ import { Spinner } from "../../../atoms/spinner";
 import { LiquidStakeMsg } from "../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../helpers/utils";
 import { IBCChainInfos } from '../../../../helpers/config';
-import {COSMOS_CHAIN_ID, STAKE} from "../../../../../AppConstants";
+import {COSMOS_CHAIN_ID, DEPOSIT, STAKE} from "../../../../../AppConstants";
 import {executeStakeTransactionSaga, showStakeModal} from "../../../../store/reducers/transactions/stake";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
@@ -16,7 +16,7 @@ const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   const {atomBalance} = useSelector((state:RootState) => state.balances);
-  const {amount} = useSelector((state:RootState) => state.stake);
+  const {amount, showModal} = useSelector((state:RootState) => state.stake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
   const {connect, isWalletConnected} = useWallet()
 
@@ -29,11 +29,11 @@ const Submit = () => {
   return (
     isWalletConnected ?
       <Button
-        className={`${(name === STAKE && inProgress) ? '!py-[0.8125rem]' : ''} button w-full md:py-2 md:text-sm flex items-center justify-center`}
+        className={`${((name === STAKE || name === DEPOSIT) && inProgress) ? '!py-[0.8125rem]' : ''} button w-full md:py-2 md:text-sm flex items-center justify-center`}
         type="primary"
         size="large"
-        disabled={!enable || (name === STAKE && inProgress)}
-        content={(name === STAKE && inProgress) ? <Spinner width={1.5}/> : 'Stake'}
+        disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
+        content={((name === STAKE || name === DEPOSIT) && inProgress && !showModal) ? <Spinner width={1.5}/> : 'Stake'}
         onClick={stakeHandler}
       />
       :

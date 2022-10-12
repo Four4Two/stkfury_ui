@@ -8,7 +8,7 @@ import { LiquidStakeMsg } from "../../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../../helpers/utils";
 import {IBCChainInfos, IBCConfiguration} from '../../../../../helpers/config';
 import {COSMOS_CHAIN_ID, DEPOSIT, STAKE} from "../../../../../../AppConstants";
-import { executeStakeTransactionSaga } from "../../../../../store/reducers/transactions/stake";
+import {executeStakeTransactionSaga, setStakeTxnFailed} from "../../../../../store/reducers/transactions/stake";
 import {setTransactionProgress} from "../../../../../store/reducers/transaction";
 import {MakeIBCTransferMsg} from "../../../../../helpers/transaction";
 import {executeDepositTransactionSaga} from "../../../../../store/reducers/transactions/deposit";
@@ -19,12 +19,13 @@ const Submit = () => {
     const dispatch = useDispatch();
     let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
     const {atomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
-    const {amount} = useSelector((state:RootState) => state.stake);
+    const {amount, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
     const {connect, isWalletConnected, cosmosAccountData, cosmosChainData, cosmosSigner, persistenceAccountData,
         persistenceSigner , persistenceChainData} = useWallet()
 
     const stakeHandler = async () => {
+        dispatch(setStakeTxnFailed(false))
         const depositMsg = await MakeIBCTransferMsg({
             channel: ibcInfo?.sourceChannelId,
             fromAddress: cosmosAccountData?.address,
@@ -58,11 +59,17 @@ const Submit = () => {
 
     return (
         <Button
-            className={`${((name === STAKE || name === DEPOSIT) && inProgress) ? '!py-[0.8125rem]' : ''} button w-full md:py-2 md:text-sm flex items-center justify-center`}
+            className={`${((name === STAKE || name === DEPOSIT) && inProgress) ? '!py-[0.8125rem]' : ''} 
+            button w-full md:py-2 md:text-sm flex items-center justify-center`}
             type="primary"
             size="large"
             disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
-            content={(name === STAKE && inProgress) ? <Spinner width={1.5}/> : 'Stake'}
+            content={
+            ((name === STAKE || name === DEPOSIT) && inProgress) ?
+                <Spinner width={1.5}/>
+                :
+                txFailed && stepNumber === 1 ? 'Retry' : 'Stake'
+            }
             onClick={stakeHandler}
         />
     );

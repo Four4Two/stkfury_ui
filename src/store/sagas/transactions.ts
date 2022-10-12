@@ -43,44 +43,23 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     yield put(setStakeTxnStepNumber(4))
     printConsole(transaction ,'transaction stake')
     if (transaction.code === 0) {
-      displayToast(
-        {
-          message: 'Stake Transaction in progress'
-        },
-        ToastType.LOADING
-      );
       const response:string = yield pollAccountBalance(account, STK_ATOM_MINIMAL_DENOM, persistenceChainInfo.rpc, pollInitialBalance.toString());
       if (response !== "0") {
-        toast.dismiss();
         yield put(setStakeTxnStepNumber(5))
-        displayToast(
-          {
-            message: 'Your ATOM Staked Successfully'
-          },
-          ToastType.SUCCESS
-        );
-      } else {
-        displayToast(
-          {
-            message: 'This transaction could not be completed'
-          },
-          ToastType.ERROR
-        );
       }
       yield put(resetTransaction())
     } else {
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
-    yield put(resetTransaction())
     yield put(setStakeTxnFailed(true))
+    yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
     customScope.setTags({
       [ERROR_WHILE_STAKING]: payload.account
     })
     genericErrorHandler(e, customScope)
-    yield failedTransactionActions("")
   }
 }
 
@@ -187,22 +166,9 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
     printConsole(transaction ,'transaction deposit')
     yield put(setDepositAmount(""))
     if (transaction.code === 0) {
-      displayToast(
-        {
-          message: 'Deposit Transaction in progress'
-        },
-        ToastType.LOADING
-      );
       const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, pollInitialDepositBalance.toString());
       if (response !== "0") {
         yield put(setStakeTxnStepNumber(3))
-        toast.dismiss();
-        displayToast(
-          {
-            message: 'Atom transferred to persistence chain successfully'
-          },
-          ToastType.SUCCESS
-        );
         yield put(executeStakeTransactionSaga({
           persistenceSigner:persistenceSigner!,
           msg: stakeMsg,
@@ -211,21 +177,11 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
           pollInitialBalance: pollInitialStakeBalance
         }))
         yield put(setTransactionProgress(STAKE));
-      } else {
-        displayToast(
-          {
-            message: 'This transaction could not be completed'
-          },
-          ToastType.ERROR
-        );
       }
-      yield put(hideDepositModal())
-      yield put(resetTransaction())
     } else {
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
-    yield put(resetTransaction())
     yield put(setStakeTxnFailed(true))
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
@@ -233,7 +189,6 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
       [ERROR_WHILE_DEPOSITING]: payload.persistenceAddress
     })
     genericErrorHandler(e, customScope)
-    yield failedTransactionActions("")
   }
 }
 

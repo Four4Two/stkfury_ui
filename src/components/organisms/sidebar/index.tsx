@@ -6,10 +6,9 @@ import {useDispatch, useSelector} from "react-redux";
 import { RootState } from "../../../store/reducers";
 import Styles from "./styles.module.css"
 import { useRouter } from "next/router";
-import {emptyFunc, formatNumber} from "../../../helpers/utils";
+import {decimalize, emptyFunc, formatNumber, truncateToFixedDecimalPlaces} from "../../../helpers/utils";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import Button from "../../atoms/button";
-import { showDepositModal } from "../../../store/reducers/transactions/deposit";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
 import Tooltip from "rc-tooltip";
@@ -63,7 +62,9 @@ const Sidebar = () => {
   const [activeClaims, setActiveClaims] = useState(0);
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState(0);
   const [pendingList, setPendingList] = useState<any>([]);
-  const {ibcAtomBalance} = useSelector((state:RootState) => state.balances);
+  const [totalPendingBalance, setTotalPendingBalance] = useState<number>(0);
+
+  const {ibcAtomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
   const {isWalletConnected} = useWallet()
   const {isMobile} = useWindowSize();
 
@@ -73,13 +74,14 @@ const Sidebar = () => {
     setActiveClaims(claimableBalance)
     setPendingList(pendingClaimList)
     setActiveStkAtomClaims(claimableStkAtomBalance)
-  },[claimableBalance, pendingClaimList, claimableStkAtomBalance])
-
-  const depositHandler = async () => {
-    dispatch(hideMobileSidebar())
-    dispatch(showDepositModal())
-  }
-
+    let totalPendingClaimableAmount:number = 0;
+    if (pendingList.length) {
+      pendingList.forEach((item:any) => {
+        totalPendingClaimableAmount += item.unbondAmount;
+      });
+    }
+    setTotalPendingBalance(totalPendingClaimableAmount)
+  },[claimableBalance, pendingClaimList, claimableStkAtomBalance, pendingList])
 
   const claimHandler = async () => {
     dispatch(hideMobileSidebar())
@@ -196,7 +198,49 @@ const Sidebar = () => {
         <div>
           <div className={`${Styles.balanceList} p-6`}>
             <h2 className="text-light-emphasis text-base flex items-center font-semibold leading-normal mb-4">Balances
-               <Tooltip placement="bottom" overlay={<span>Only showing balances of <br/> your assets staked via pSTAKE.</span>}>
+              <Tooltip placement="bottom" overlay={<span>Only showing balances of <br/> your assets staked via pSTAKE.</span>}>
+                <button className="icon-button px-1">
+                  <Icon
+                      viewClass="arrow-right"
+                      iconName="info"/>
+                </button>
+              </Tooltip>
+            </h2>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <img src={'/images/tokens/stk_atom.svg'} width={24} height={24} alt="atom"/>
+                <span className="text-light-mid text-sm leading-5 ml-2.5">stkATOM
+                </span>
+              </div>
+              <p className="text-light-mid text-sm font-medium leading-5">
+                {formatNumber(stkAtomBalance, 3, 6)}
+              </p>
+            </div>
+            {ibcAtomBalance > 0 ?
+                <div className="flex justify-between items-center mt-4">
+                  <div className="flex items-center">
+                    <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
+                    <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
+                    <Tooltip placement="bottom" overlay={<span className="text-center block">Withdraw <br/> (ATOM on Persistence)</span>}>
+                      <button className="icon-button px-1">
+                        <Icon
+                            viewClass="arrow-right"
+                            iconName="info"/>
+                      </button>
+                    </Tooltip>
+                  </div>
+                  <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
+                </div> : null
+            }
+          </div>
+
+          <div className={`${Styles.balanceList} p-6`}>
+            <h2 className="text-light-emphasis text-base flex items-center font-semibold leading-normal mb-4">
+              Unstaking
+               <Tooltip placement="bottom" overlay=
+                   {<span>Your assets in the process of <br/>
+                      being unstaked, after which  <br/>
+                      they can be claimed.</span>}>
                  <button className="icon-button px-1">
                    <Icon
                        viewClass="arrow-right"
@@ -209,23 +253,15 @@ const Sidebar = () => {
                 <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
                 <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
               </div>
-              <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
+              <p className="text-light-mid text-sm font-medium leading-5">
+                {truncateToFixedDecimalPlaces(Number(decimalize(activeClaims)) +
+                    Number(decimalize(totalPendingBalance)) +
+                    Number(activeStkAtomClaims))}
+              </p>
             </div>
           </div>
 
-          {isWalletConnected ?
-            <div className={`${Styles.DepositButton} m-auto`}>
-              <Button
-                size="medium"
-                type="secondary"
-                content="Deposit"
-                className="w-full mb-4  md:text-xsm md:py-2 md:px-4"
-                onClick={depositHandler}/>
-            </div>
-            : ""
-          }
-
-          {isWalletConnected && (activeClaims > 0 || pendingList.length || activeStkAtomClaims > 0) ?
+          {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0 || activeStkAtomClaims > 0) ?
               <div className={`${Styles.DepositButton} m-auto`}>
                 <Button
                     size="medium"

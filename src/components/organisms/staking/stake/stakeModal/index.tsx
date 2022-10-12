@@ -1,14 +1,22 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Modal from "../../../../molecules/modal";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../store/reducers";
 import {Icon} from "../../../../atoms/icon";
-import {hideStakeModal, setStakeTxnStepNumber, setStakeTxnFailed} from "../../../../../store/reducers/transactions/stake";
+import {
+    hideStakeModal,
+    setStakeTxnStepNumber,
+    setStakeTxnFailed,
+    setStakeAmount
+} from "../../../../../store/reducers/transactions/stake";
 import Submit from "./submit";
 import styles from "../styles.module.css";
+import {DEPOSIT, STAKE} from "../../../../../../AppConstants";
+import {Spinner} from "../../../../atoms/spinner";
+import Button from "../../../../atoms/button";
+import {resetTransaction} from "../../../../../store/reducers/transaction";
 
 const fetchIcon = (stepNumber:number, value:number, txFailed:boolean)=>{
-    console.log(stepNumber, value, txFailed, "txFailed");
     return(
         stepNumber < value?
             <Icon
@@ -41,18 +49,24 @@ const fetchIcon = (stepNumber:number, value:number, txFailed:boolean)=>{
 const StakeModal = () => {
     const dispatch = useDispatch();
     const {showModal, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
-    const {inProgress, name} = useSelector((state:RootState) => state.transaction);
     const {amount} = useSelector((state:RootState) => state.stake);
 
     const handleClose = () => {
         dispatch(setStakeTxnStepNumber(0))
         dispatch(setStakeTxnFailed(false))
         dispatch(hideStakeModal())
+        dispatch(setStakeAmount(""))
     }
+
+    useEffect(()=>{
+        if(showModal && txFailed) {
+            dispatch(resetTransaction())
+        }
+    },[txFailed, showModal, dispatch])
 
     return (
         <Modal show={showModal} onClose={handleClose}
-               className="stakeModal">
+               className="stakeModal" staticBackDrop={false} closeButton={false}>
             <div className="flex items-center justify-center px-8 pt-8">
                 <img src={'/images/tokens/atom.svg'}
                      className="logo"
@@ -113,15 +127,32 @@ const StakeModal = () => {
                         </p>
                     </div>
                 </div>
-                {
-                    stepNumber === 5 ?
-                        <p className="text-base text-light-high text-center font-semibold mb-4 animate-pulse">
-                            You staked {amount} ATOM on pSTAKE successfully!
-                        </p> : null
-                }
-                <Submit/>
-            </div>
 
+                {txFailed ?
+                    <p className="text-base text-light-high text-center font-semibold mb-4">
+                        Transfer could not be completed.
+                    </p> : null
+                }
+                {
+                    stepNumber === 5 &&
+                    <p className="text-base text-light-high text-center font-semibold mb-4 animate-pulse">
+                        You staked {amount} ATOM on pSTAKE successfully!
+                    </p>
+                }
+                {
+                   (txFailed && stepNumber !== 1) || stepNumber === 5  ?
+                        <Button
+                            className="button w-full md:py-2 md:text-sm flex items-center justify-center w-[350px] mx-auto"
+                            type="primary"
+                            size="medium"
+                            content="Done"
+                            onClick={handleClose}
+                        />
+                        :
+                        <Submit/>
+                }
+               
+            </div>
         </Modal>
     );
 };

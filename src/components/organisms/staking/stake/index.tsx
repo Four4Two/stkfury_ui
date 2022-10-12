@@ -7,9 +7,10 @@ import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
+import StakeToasts from "./stakeToasts";
 
 const UnStake = () => {
-  const { apr, atomPrice } = useSelector(
+  const { apr } = useSelector(
     (state: RootState) => state.initialData
   );
   return (
@@ -42,6 +43,7 @@ const UnStake = () => {
       <div className="mt-4">
         <Submit />
       </div>
+        <StakeToasts/>
     </>
   );
 };
