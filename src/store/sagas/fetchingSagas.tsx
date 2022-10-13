@@ -1,9 +1,7 @@
 import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
-  fetchAccountClaims, fetchAllEpochEntries,
-  fetchClaimableAmount,
-  fetchFailedUnbondings
+  fetchAllEpochEntries,
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import { setAtomBalance, setIbcAtomBalance, setStkAtomBalance } from "../reducers/balances";

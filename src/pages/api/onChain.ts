@@ -155,21 +155,18 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
               unbondTimeResponse.hostAccountUndelegation.completionTime;
 
           const epochInfo =  await getEpochInfo(rpc);
-          console.log(epochInfo.epochs, "epochInfo");
           const currentEpochNumberResponse = await getCurrentEpoch(rpc);
 
           const currentEpochNumber = currentEpochNumberResponse.currentEpoch.toNumber()
           const unbondEpochNumber = epochNumber.toNumber();
-          const previousEpochNumber = 4*(Math.floor(Math.abs(currentEpochNumber/4)));
 
           const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!
-          console.log(currentEpochNumber, "currentEpochNumber", epochNumber.toNumber(), "duration", drs);
 
           const diff = ((unbondEpochNumber - currentEpochNumber)+1)*drs
 
           const actualTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').format();
 
-          console.log(actualTime, "actualTime");
+          printConsole(actualTime, "actualTime");
 
           const given = moment(unbondTime, "YYYY-MM-DD");
 
@@ -188,27 +185,22 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             totalFailedUnbondAmount += Number(amount);
         } else if (isMatured && cValueEpochNumber.toNumber() > 0){ // claimable unbonding list
           claimableAmount += Number(amount);
-        }else {
-          // const nextEpochNumber = 4*(Math.ceil(Math.abs(currentEpochNumber/4)));
-          printConsole(epochNumber, "unbond epoch info");
-
+        }else { // unlisted pending unbonding list
           const epochInfo =  await getEpochInfo(rpc);
           const currentEpochNumberResponse = await getCurrentEpoch(rpc);
           const currentEpochNumber = currentEpochNumberResponse.currentEpoch.toNumber()
 
           const nextEpochNumber = epochNumber.toNumber();
           const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!
-          console.log(currentEpochNumber, "currentEpochNumber", epochNumber.toNumber(), "duration", drs);
 
           const diff = ((nextEpochNumber - currentEpochNumber)+1)*drs
-          const actualTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').format();
-          console.log(moment(epochInfo.epochs[0].currentEpochStartTime).format(), "current epoch time");
+          const tentativeTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').format();
 
-          console.log(actualTime, "actualTime", diff);
+          printConsole(tentativeTime, "tentativeTime");
 
           filteredUnlistedPendingClaims.push({
             unbondAmount: item.amount?.amount,
-            unStakedon: actualTime,
+            unStakedon: tentativeTime,
             daysRemaining: 0
           });
         }
@@ -233,73 +225,6 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
       claimableAmount:0,
       filteredUnlistedPendingClaims:[]
     };
-  }
-};
-
-export const fetchAccountClaims = async (address: string, rpc: string) => {
-  try {
-    const filteredClaims: Array<any> = [];
-    const rpcClient = await RpcClient(rpc);
-    const pstakeQueryService: QueryClientImpl = new QueryClientImpl(rpcClient);
-
-    const unbondingsResponse: QueryPendingUnbondingsResponse =
-      await pstakeQueryService.PendingUnbondings({
-        delegatorAddress: address
-      });
-    printConsole(unbondingsResponse, "unbondAmountResponse");
-
-    if (unbondingsResponse.pendingUnbondings.length) {
-      for (let item of unbondingsResponse.pendingUnbondings) {
-        const cvalue: number =
-          Number(item.sTKBurn?.amount) / Number(item.amountUnbonded?.amount);
-
-        const epochNumber = item.epochNumber;
-        const unbondAmountResponse: any = await getUnbondingAmount(
-          address,
-          epochNumber,
-          pstakeQueryService
-        );
-
-        if (cvalue && unbondAmountResponse) {
-          const unbondAmount =
-            unbondAmountResponse.delegatorUnbodingEpochEntry?.amount?.amount /
-            cvalue;
-
-          const unbondTimeResponse: any = await getUnbondingTime(
-            epochNumber,
-            pstakeQueryService
-          );
-
-          const unbondTime =
-            unbondTimeResponse.hostAccountUndelegation.completionTime;
-
-          const given = moment(unbondTime, "YYYY-MM-DD");
-
-          const currentDate = moment();
-
-          const daysRemaining = given.diff(currentDate, "days");
-
-          let unStakedon = given.utc().format("DD MMM YYYY hh:mm A UTC");
-
-          printConsole(unbondTime, "daysRemaining");
-
-          filteredClaims.push({
-            unbondAmount,
-            unStakedon,
-            daysRemaining: 0
-          });
-        }
-      }
-    }
-    return filteredClaims;
-  } catch (error) {
-    const customScope = new Scope();
-    customScope.setLevel("fatal");
-    customScope.setTags({
-      "Error while fetching pending claims": rpc
-    });
-    genericErrorHandler(error, customScope);
-    return [];
   }
 };
 
@@ -346,75 +271,4 @@ export const getUnbondingTime = async (
   });
 };
 
-export const fetchClaimableAmount = async (address: string, rpc: string) => {
-  try {
-    const rpcClient = await RpcClient(rpc);
-    const pstakeQueryService = new QueryClientImpl(rpcClient);
-    const claimableBalanceTotal: QueryUnclaimedResponse =
-      await pstakeQueryService.Unclaimed({ delegatorAddress: address });
-    printConsole(claimableBalanceTotal,"claimableBalanceTotal");
-    let claimableAmount: number = 0;
-    if (claimableBalanceTotal.unclaimed.length) {
-      for (let item of claimableBalanceTotal.unclaimed) {
-        const epochNumber = item.epochNumber;
-        const cvalue: any =
-          Number(item.sTKBurn?.amount) / Number(item.amountUnbonded?.amount);
-        const unbondAmountResponse: any = await getUnbondingAmount(
-          address,
-          epochNumber,
-          pstakeQueryService
-        );
-        const unbondAmount =
-          unbondAmountResponse.delegatorUnbodingEpochEntry.amount.amount /
-          cvalue;
-        claimableAmount += Number(unbondAmount);
-        printConsole(unbondAmount,"claimable unbondAmount");
-      }
-    }
-    return claimableAmount;
-  } catch (e) {
-    const customScope = new Scope();
-    customScope.setLevel("fatal");
-    customScope.setTags({
-      "Error while fetching claimable amount": rpc
-    });
-    genericErrorHandler(e, customScope);
-    return 0;
-  }
-};
 
-export const fetchFailedUnbondings = async (address: string, rpc: string) => {
-  try {
-    const rpcClient = await RpcClient(rpc);
-    const pstakeQueryService = new QueryClientImpl(rpcClient);
-    const failedUnbondingResponse: QueryFailedUnbondingsResponse =
-        await pstakeQueryService.FailedUnbondings({ delegatorAddress: address });
-    let totalFailedUnbondAmount: number = 0;
-    if (failedUnbondingResponse.failedUnbondings.length) {
-      for (let item of failedUnbondingResponse.failedUnbondings) {
-
-        const epochNumber = item.epochNumber;
-        const failedUnbondAmountResponse: any = await getUnbondingAmount(
-            address,
-            epochNumber,
-            pstakeQueryService
-        );
-
-        if (failedUnbondAmountResponse) {
-          const failedUnbondAmount =
-              failedUnbondAmountResponse.delegatorUnbodingEpochEntry?.amount?.amount;
-          totalFailedUnbondAmount += Number(failedUnbondAmount);
-        }
-      }
-    }
-    return totalFailedUnbondAmount!;
-  } catch (e) {
-    const customScope = new Scope();
-    customScope.setLevel("fatal");
-    customScope.setTags({
-      "Error while fetching failed unbondings": rpc
-    });
-    genericErrorHandler(e, customScope);
-    return 0;
-  }
-};

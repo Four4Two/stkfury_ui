@@ -227,20 +227,32 @@ const Sidebar = () => {
               </p>
             </div>
             {ibcAtomBalance > 0 ?
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center">
-                    <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
-                    <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
-                    <Tooltip placement="bottom" overlay={<span className="text-center block">Withdraw <br/> (ATOM on Persistence)</span>}>
-                      <button className="icon-button px-1">
-                        <Icon
-                            viewClass="arrow-right"
-                            iconName="info"/>
-                      </button>
-                    </Tooltip>
+                <>
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="flex items-center">
+                      <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
+                      <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
+                      <Tooltip placement="bottom" overlay={<span className="text-center block">Withdraw <br/> (ATOM on Persistence)</span>}>
+                        <button className="icon-button px-1">
+                          <Icon
+                              viewClass="arrow-right"
+                              iconName="info"/>
+                        </button>
+                      </Tooltip>
+                    </div>
+                    <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
                   </div>
-                  <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
-                </div> : null
+                  {/*<div className={`${Styles.DepositButton} m-auto`}>*/}
+                  {/*  <Button*/}
+                  {/*      size="small"*/}
+                  {/*      type="secondary"*/}
+                  {/*      content="Withdraw"*/}
+                  {/*      className="w-full mt-3 md:text-xsm md:py-2 md:px-4"*/}
+                  {/*      onClick={claimHandler}/>*/}
+                  {/*</div>*/}
+                </>
+
+                : null
             }
           </div>
 
@@ -271,13 +283,14 @@ const Sidebar = () => {
             </div>
           </div>
 
-          {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0 || activeStkAtomClaims > 0 || totalUnListedPendingClaims > 0) ?
+          {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0
+              || activeStkAtomClaims > 0 || totalUnListedPendingClaims > 0) ?
               <div className={`${Styles.DepositButton} m-auto`}>
                 <Button
-                    size="medium"
+                    size="small"
                     type="secondary"
                     content="Claim"
-                    className="w-full mb-4  md:text-xsm md:py-2 md:px-4"
+                    className="w-full mb-3 md:text-xsm md:py-2 md:px-4"
                     onClick={claimHandler}/>
               </div>
               : ""
