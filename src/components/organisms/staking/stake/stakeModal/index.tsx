@@ -66,18 +66,22 @@ const StakeModal = () => {
         <Modal show={showModal} onClose={handleClose}
                className="stakeModal" staticBackDrop={false} closeButton={false}>
             <div className="flex items-center justify-center px-8 pt-8">
-                <img src={'/images/tokens/atom.svg'}
-                     className="logo"
-                     alt="atomIcon"
-                />
+               <div className="w-[60px] h-[60px] bg-[#000] rounded-full flex items-center justify-center">
+                   <img src={'/images/tokens/atom.svg'}
+                        className="logo w-[40px] h-[40px]"
+                        alt="atomIcon"
+                   />
+               </div>
                 <Icon
                     iconName="right-arrow-bold"
                     viewClass="icon-arrow mx-4"
                 />
+                <div className="w-[60px] h-[60px] bg-[#000] rounded-full flex items-center justify-center">
                 <img src={'/images/tokens/stk_atom.svg'}
-                     className="logo"
+                     className="logo w-[40px] h-[40px]"
                      alt="atomIcon"
                 />
+                </div>
             </div>
             <p className="text-light-high text-center font-semibold text-lg leading normal px-8">
                 Liquid Staking {amount} ATOM

@@ -11,15 +11,6 @@ import StakeModal from "../organisms/staking/stake/stakeModal";
 
 export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
 
-    Sentry.init({
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-
-        integrations: [new Integrations.BrowserTracing()],
-
-        tracesSampleRate: 1.0, //lower the value in production
-
-    });
-
   return (
     <div>
       <Head>
