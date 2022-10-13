@@ -63,12 +63,14 @@ const Sidebar = () => {
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState(0);
   const [pendingList, setPendingList] = useState<any>([]);
   const [totalPendingBalance, setTotalPendingBalance] = useState<number>(0);
+  const [totalUnListedPendingClaims, setTotalUnlistedPendingClaims] = useState<number>(0);
 
   const {ibcAtomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
   const {isWalletConnected} = useWallet()
   const {isMobile} = useWindowSize();
 
-  const {claimableBalance, pendingClaimList, claimableStkAtomBalance} = useSelector((state:RootState) => state.claimQueries);
+  const {claimableBalance, pendingClaimList, claimableStkAtomBalance, unlistedPendingClaimList} =
+      useSelector((state:RootState) => state.claimQueries);
 
   useEffect(()=> {
     setActiveClaims(claimableBalance)
@@ -81,7 +83,15 @@ const Sidebar = () => {
       });
     }
     setTotalPendingBalance(totalPendingClaimableAmount)
-  },[claimableBalance, pendingClaimList, claimableStkAtomBalance, pendingList])
+
+    let totalUnlistedPendingClaimableAmount:number = 0;
+    if (unlistedPendingClaimList.length) {
+      unlistedPendingClaimList.forEach((item:any) => {
+        totalUnlistedPendingClaimableAmount += item.unbondAmount;
+      });
+    }
+    setTotalUnlistedPendingClaims(totalUnlistedPendingClaimableAmount)
+  },[claimableBalance, pendingClaimList, claimableStkAtomBalance, pendingList, unlistedPendingClaimList])
 
   const claimHandler = async () => {
     dispatch(hideMobileSidebar())
@@ -261,7 +271,7 @@ const Sidebar = () => {
             </div>
           </div>
 
-          {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0 || activeStkAtomClaims > 0) ?
+          {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0 || activeStkAtomClaims > 0 || totalUnListedPendingClaims > 0) ?
               <div className={`${Styles.DepositButton} m-auto`}>
                 <Button
                     size="medium"

@@ -11,17 +11,28 @@ import {CLAIM} from "../../../../../AppConstants";
 import {Spinner} from "../../../atoms/spinner";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
 import Modal from "../../../molecules/modal";
+import Tooltip from "rc-tooltip";
 
-const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining}:any) => {
+const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining, type}:any) => {
     return (
        <>
            <div className="p-4 rounded-md bg-[#383838] flex items-center justify-between flex-wrap mb-4 " key={index}>
                <div>
-                   <p className="amount text-light-low font-normal leading-normal text-lg mb-2">{decimalize(amount)} ATOM</p>
-                   <p className="leading-normal text-light-low text-xsm font-normal">{unstakedOn}</p>
+                   <p className="amount text-light-low font-normal leading-normal text-lg mb-2">
+                       {decimalize(amount)}
+                       {type === 'listedClaims' ? " ATOM": " stkATOM"}
+                   </p>
+                   <p className="leading-normal text-light-low text-xsm font-normal">
+                       {type === 'listedClaims' ?
+                           unstakedOn
+                           :
+                          "Tentative Unbond time -"+unstakedOn
+                       }
+
+                   </p>
                </div>
                <div>
-                   <p className="leading-normal text-light-low text-xsm font-normal">{0} days remaining</p>
+                   <p className="leading-normal text-light-low text-xsm font-normal">{daysRemaining} days remaining</p>
                </div>
            </div>
        </>
@@ -40,13 +51,16 @@ const ClaimModal = () => {
 
     const [activeClaims, setActiveClaims] = useState(0);
     const [pendingList, setPendingList] = useState<any>([]);
+    const [unListedPendingClaims, setUnlistedPendingClaims] = useState<any>([]);
 
-    const {claimableBalance, pendingClaimList, claimableStkAtomBalance} = useSelector((state:RootState) => state.claimQueries);
+    const {claimableBalance, pendingClaimList, claimableStkAtomBalance, unlistedPendingClaimList} =
+        useSelector((state:RootState) => state.claimQueries);
 
-    useEffect(()=>{
+    useEffect(()=> {
         setActiveClaims(claimableBalance)
         setPendingList(pendingClaimList)
-    },[claimableBalance, pendingClaimList])
+        setUnlistedPendingClaims(unlistedPendingClaimList)
+    },[claimableBalance, pendingClaimList, unlistedPendingClaimList])
 
     const claimHandler = async () => {
         const messages = ClaimMsg(persistenceAccountData!.address)
@@ -60,7 +74,6 @@ const ClaimModal = () => {
     }
 
     const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
-    printConsole(activeClaims, "activeClaims");
 
     const handleClose = () =>{
         dispatch(hideClaimModal())
@@ -70,20 +83,47 @@ const ClaimModal = () => {
         <Modal show={showModal} onClose={handleClose}  className="depositModal" header="Claim Unstaked ATOM">
         <div className='mt-4'>
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
-                    <div className="flex items-center justify-between">
+                    <div className="block">
                         <div>
-                            <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                                    {decimalize(activeClaims)} ATOM
-                            </p>
+                          <div className="flex justify-between items-center">
+                              <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
+                                  {decimalize(activeClaims)} ATOM
+                              </p>
+                              <div className="flex text-base text-light-mid leading-normal font-medium">
+                                  Completed Unstaking
+                                  <Tooltip placement="bottom" overlay=
+                                      {<span>Completed Unstaking.</span>}>
+                                      <button className="icon-button px-1">
+                                          <Icon
+                                              viewClass="arrow-right"
+                                              iconName="info"/>
+                                      </button>
+                                  </Tooltip>
+                              </div>
+                          </div>
+
                             {claimableStkAtomBalance > 0 ?
-                                <p className="font-medium leading-normal text-lg text-light-high md:text-base">
-                                    {decimalize(claimableStkAtomBalance)} stkATOM
-                                </p>
+                                <div className="flex justify-between items-center mt-3">
+                                    <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
+                                        {decimalize(claimableStkAtomBalance)} stkATOM
+                                    </p>
+                                    <div className="flex text-base text-light-mid leading-normal font-medium">
+                                        Failed Unstaking
+                                        <Tooltip placement="bottom" overlay=
+                                            {<span> Failed Unstaking</span>}>
+                                            <button className="icon-button px-1">
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    iconName="info"/>
+                                            </button>
+                                        </Tooltip>
+                                    </div>
+                                </div>
                                 : null
                             }
                         </div>
-                        <p className={`claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
-                         text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center 
+                        <p className={`mt-3 claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
+                         text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
                          ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none': ''}`}
                            onClick={claimHandler}>
                             {(name === CLAIM && inProgress) ? <Spinner width={1.5}/> : 'Claim'}
@@ -103,6 +143,21 @@ const ClaimModal = () => {
                     </p>
                     <div className={`${expand ? 'active': ''} unStakeList overflow-hidden max-h-0`}>
                         {
+                            unListedPendingClaims.length ?
+                                unListedPendingClaims.map((item:any, index:number) => {
+                                    return(
+                                        <IndividualUnstakingClaim
+                                            key={index}
+                                            amount={item.unbondAmount}
+                                            unstakedOn={item.unStakedon}
+                                            daysRemaining={item.daysRemaining}
+                                            type={'unListedClaims'}
+                                        />
+                                    )
+                                })
+                                : null
+                        }
+                        {
                             pendingList.length ?
                             pendingList.map((item:any, index:number) => {
                                 return(
@@ -110,13 +165,19 @@ const ClaimModal = () => {
                                         key={index}
                                         amount={item.unbondAmount}
                                         unstakedOn={item.unStakedon}
-                                        daysRemaining={item.daysRemaining}/>
+                                        daysRemaining={item.daysRemaining}
+                                        type={'listedClaims'}
+                                    />
                                 )
                             })
-                                :
-                                <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
-                                    No pending unbondings found
-                                </p>
+                                : null
+
+                        }
+                        {!unListedPendingClaims.length && !pendingList.length ?
+                            <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
+                                No pending unbondings found
+                            </p>
+                            : null
                         }
                     </div>
                 </div>

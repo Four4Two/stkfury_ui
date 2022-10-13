@@ -1,7 +1,7 @@
 import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
-  fetchAccountClaims,
+  fetchAccountClaims, fetchAllEpochEntries,
   fetchClaimableAmount,
   fetchFailedUnbondings
 } from "../../pages/api/onChain";
@@ -11,7 +11,12 @@ import {decimalize, printConsole} from "../../helpers/utils";
 import { IBCChainInfos } from "../../helpers/config";
 import {COSMOS_CHAIN_ID, STK_ATOM_MINIMAL_DENOM} from "../../../AppConstants";
 import {FetchPendingClaimSaga} from "../reducers/claim/types";
-import {setClaimableBalance, setClaimableStkAtomBalance, setPendingClaimList} from "../reducers/claim";
+import {
+  setClaimableBalance,
+  setClaimableStkAtomBalance,
+  setPendingClaimList,
+  setUnlistedPendingClaimList
+} from "../reducers/claim";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -32,12 +37,11 @@ export function * fetchBalance({payload}: FetchBalanceSaga) {
 export function * fetchPendingClaims({payload}: FetchPendingClaimSaga) {
   const {address, persistenceChainInfo}:any = payload
   // @ts-ignore
-  const accountClaims:any = yield fetchAccountClaims(address, persistenceChainInfo.rpc);
-  const claimableBalance:number = yield fetchClaimableAmount(address, persistenceChainInfo.rpc);
-  const claimableStkATOMBalance:number = yield fetchFailedUnbondings(address, persistenceChainInfo.rpc);
-  printConsole(claimableBalance, 'accountClaims');
-  yield put(setClaimableBalance(claimableBalance))
-  yield put(setPendingClaimList(accountClaims))
-  yield put(setClaimableStkAtomBalance(claimableStkATOMBalance))
+  const accountEpochs:any = yield fetchAllEpochEntries(address, persistenceChainInfo.rpc);
+  // printConsole(accountEpochs, 'accountEpochs');
+  yield put(setClaimableBalance(accountEpochs.claimableAmount))
+  yield put(setPendingClaimList(accountEpochs.filteredPendingClaims))
+  yield put(setUnlistedPendingClaimList(accountEpochs.filteredUnlistedPendingClaims))
+  yield put(setClaimableStkAtomBalance(accountEpochs.totalFailedUnbondAmount))
 }
 
