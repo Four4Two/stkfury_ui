@@ -8,6 +8,7 @@ import {
   DelegationState,
   HostChainRewardAddress,
   IBCAmountTransientStore,
+  HostAccounts,
   UnbondingEpochCValue,
   DelegatorUnbondingEpochEntry,
 } from "./pstake/lscosmos/v1beta1/lscosmos";
@@ -26,6 +27,7 @@ export interface GenesisState {
   iBCAmountTransientStore?: IBCAmountTransientStore;
   unbondingEpochCValues: UnbondingEpochCValue[];
   delegatorUnbondingEpochEntries: DelegatorUnbondingEpochEntry[];
+  hostAccounts?: HostAccounts;
 }
 
 function createBaseGenesisState(): GenesisState {
@@ -39,6 +41,7 @@ function createBaseGenesisState(): GenesisState {
     iBCAmountTransientStore: undefined,
     unbondingEpochCValues: [],
     delegatorUnbondingEpochEntries: [],
+    hostAccounts: undefined,
   };
 }
 
@@ -90,6 +93,12 @@ export const GenesisState = {
       DelegatorUnbondingEpochEntry.encode(
         v!,
         writer.uint32(74).fork()
+      ).ldelim();
+    }
+    if (message.hostAccounts !== undefined) {
+      HostAccounts.encode(
+        message.hostAccounts,
+        writer.uint32(82).fork()
       ).ldelim();
     }
     return writer;
@@ -148,6 +157,9 @@ export const GenesisState = {
             DelegatorUnbondingEpochEntry.decode(reader, reader.uint32())
           );
           break;
+        case 10:
+          message.hostAccounts = HostAccounts.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -189,6 +201,9 @@ export const GenesisState = {
             DelegatorUnbondingEpochEntry.fromJSON(e)
           )
         : [],
+      hostAccounts: isSet(object.hostAccounts)
+        ? HostAccounts.fromJSON(object.hostAccounts)
+        : undefined,
     };
   },
 
@@ -233,6 +248,10 @@ export const GenesisState = {
     } else {
       obj.delegatorUnbondingEpochEntries = [];
     }
+    message.hostAccounts !== undefined &&
+      (obj.hostAccounts = message.hostAccounts
+        ? HostAccounts.toJSON(message.hostAccounts)
+        : undefined);
     return obj;
   },
 
@@ -276,6 +295,10 @@ export const GenesisState = {
       object.delegatorUnbondingEpochEntries?.map((e) =>
         DelegatorUnbondingEpochEntry.fromPartial(e)
       ) || [];
+    message.hostAccounts =
+      object.hostAccounts !== undefined && object.hostAccounts !== null
+        ? HostAccounts.fromPartial(object.hostAccounts)
+        : undefined;
     return message;
   },
 };

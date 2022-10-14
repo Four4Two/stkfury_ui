@@ -1,14 +1,19 @@
 import { put, select } from "@redux-saga/core/effects";
 import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
-import { resetTransaction } from "../reducers/transaction";
+import {resetTransaction, setTransactionProgress} from "../reducers/transaction";
 import {
-  COSMOS_CHAIN_ID, COSMOS_FEE, ERROR_WHILE_CLAIMING,
+  COSMOS_CHAIN_ID, COSMOS_FEE, DEPOSIT, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
-  PERSISTENCE_FEE, STK_ATOM_MINIMAL_DENOM
+  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
-import { setStakeAmount } from "../reducers/transactions/stake";
+import {
+  executeStakeTransactionSaga,
+  setStakeAmount,
+  setStakeTxnFailed,
+  setStakeTxnStepNumber
+} from "../reducers/transactions/stake";
 import { Transaction } from "../../helpers/transaction";
 import { DeliverTxResponse } from "@cosmjs/stargate/build/stargateclient";
 import { displayToast } from "../../components/molecules/toast";
@@ -35,36 +40,19 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     const {persistenceSigner, persistenceChainInfo, account, msg, pollInitialBalance} = payload
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, account, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     yield put(setStakeAmount(""))
+    yield put(setStakeTxnStepNumber(4))
     printConsole(transaction ,'transaction stake')
     if (transaction.code === 0) {
-      displayToast(
-        {
-          message: 'Transaction in progress'
-        },
-        ToastType.LOADING
-      );
       const response:string = yield pollAccountBalance(account, STK_ATOM_MINIMAL_DENOM, persistenceChainInfo.rpc, pollInitialBalance.toString());
       if (response !== "0") {
-        toast.dismiss();
-        displayToast(
-          {
-            message: 'Transaction Successful'
-          },
-          ToastType.SUCCESS
-        );
-      } else {
-        displayToast(
-          {
-            message: 'This transaction could not be completed'
-          },
-          ToastType.ERROR
-        );
+        yield put(setStakeTxnStepNumber(5))
       }
       yield put(resetTransaction())
     } else {
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
+    yield put(setStakeTxnFailed(true))
     yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
@@ -72,7 +60,6 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
       [ERROR_WHILE_STAKING]: payload.account
     })
     genericErrorHandler(e, customScope)
-    yield failedTransactionActions("")
   }
 }
 
@@ -171,48 +158,37 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
 
 export function* executeDepositTransaction({ payload }: DepositTransactionPayload) {
   try {
-    const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, msg, persistenceAddress, cosmosAddress, pollInitialBalance} = payload
-    const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [msg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
+    yield put(setStakeTxnStepNumber(1))
+    const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, depositMsg, persistenceSigner, stakeMsg,
+      persistenceAddress, cosmosAddress, pollInitialDepositBalance, pollInitialStakeBalance} = payload
+    const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [depositMsg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
+    yield put(setStakeTxnStepNumber(2))
     printConsole(transaction ,'transaction deposit')
     yield put(setDepositAmount(""))
     if (transaction.code === 0) {
-      displayToast(
-        {
-          message: 'Transaction in progress'
-        },
-        ToastType.LOADING
-      );
-      const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, pollInitialBalance.toString());
+      const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, pollInitialDepositBalance.toString());
       if (response !== "0") {
-        toast.dismiss();
-        displayToast(
-          {
-            message: 'Transaction Successful'
-          },
-          ToastType.SUCCESS
-        );
-      } else {
-        displayToast(
-          {
-            message: 'This transaction could not be completed'
-          },
-          ToastType.ERROR
-        );
+        yield put(setStakeTxnStepNumber(3))
+        yield put(executeStakeTransactionSaga({
+          persistenceSigner:persistenceSigner!,
+          msg: stakeMsg,
+          account: persistenceAddress,
+          persistenceChainInfo:persistenceChainInfo!,
+          pollInitialBalance: pollInitialStakeBalance
+        }))
+        yield put(setTransactionProgress(STAKE));
       }
-      yield put(hideDepositModal())
-      yield put(resetTransaction())
     } else {
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
-    yield put(resetTransaction())
+    yield put(setStakeTxnFailed(true))
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
     customScope.setTags({
       [ERROR_WHILE_DEPOSITING]: payload.persistenceAddress
     })
     genericErrorHandler(e, customScope)
-    yield failedTransactionActions("")
   }
 }
 

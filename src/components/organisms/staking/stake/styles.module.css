@@ -12,3 +12,7 @@
     z-index: 1;
     left: auto;
 }
+
+.stakeModalBody{
+    border-top: 1px solid #383838;
+}

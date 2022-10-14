@@ -6,7 +6,6 @@ import { fetchBalanceSaga } from "../store/reducers/balances";
 import { useDispatch } from "react-redux";
 import StakingTabs from "../components/organisms/staking/stakingTabs";
 import { SHORT_INTERVAL } from "../../AppConstants";
-import { printConsole } from "../helpers/utils";
 import {fetchPendingClaimsSaga} from "../store/reducers/claim";
 
 const Home: NextPage = () => {

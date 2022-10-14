@@ -2,6 +2,11 @@
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { Coin } from "./cosmos/base/v1beta1/coin";
+import {
+  AllowListedValidators,
+  PstakeParams,
+  HostAccounts,
+} from "./pstake/lscosmos/v1beta1/lscosmos";
 
 export const protobufPackage = "pstake.lscosmos.v1beta1";
 
@@ -38,6 +43,22 @@ export interface MsgClaim {
 }
 
 export interface MsgClaimResponse {}
+
+export interface MsgJumpStart {
+  pstakeAddress: string;
+  chainID: string;
+  connectionID: string;
+  transferChannel: string;
+  transferPort: string;
+  baseDenom: string;
+  mintDenom: string;
+  minDeposit: string;
+  allowListedValidators?: AllowListedValidators;
+  pstakeParams?: PstakeParams;
+  hostAccounts?: HostAccounts;
+}
+
+export interface MsgJumpStartResponse {}
 
 function createBaseMsgLiquidStake(): MsgLiquidStake {
   return { delegatorAddress: "", amount: undefined };
@@ -598,6 +619,258 @@ export const MsgClaimResponse = {
   },
 };
 
+function createBaseMsgJumpStart(): MsgJumpStart {
+  return {
+    pstakeAddress: "",
+    chainID: "",
+    connectionID: "",
+    transferChannel: "",
+    transferPort: "",
+    baseDenom: "",
+    mintDenom: "",
+    minDeposit: "",
+    allowListedValidators: undefined,
+    pstakeParams: undefined,
+    hostAccounts: undefined,
+  };
+}
+
+export const MsgJumpStart = {
+  encode(
+    message: MsgJumpStart,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.pstakeAddress !== "") {
+      writer.uint32(10).string(message.pstakeAddress);
+    }
+    if (message.chainID !== "") {
+      writer.uint32(18).string(message.chainID);
+    }
+    if (message.connectionID !== "") {
+      writer.uint32(26).string(message.connectionID);
+    }
+    if (message.transferChannel !== "") {
+      writer.uint32(34).string(message.transferChannel);
+    }
+    if (message.transferPort !== "") {
+      writer.uint32(42).string(message.transferPort);
+    }
+    if (message.baseDenom !== "") {
+      writer.uint32(50).string(message.baseDenom);
+    }
+    if (message.mintDenom !== "") {
+      writer.uint32(58).string(message.mintDenom);
+    }
+    if (message.minDeposit !== "") {
+      writer.uint32(66).string(message.minDeposit);
+    }
+    if (message.allowListedValidators !== undefined) {
+      AllowListedValidators.encode(
+        message.allowListedValidators,
+        writer.uint32(74).fork()
+      ).ldelim();
+    }
+    if (message.pstakeParams !== undefined) {
+      PstakeParams.encode(
+        message.pstakeParams,
+        writer.uint32(82).fork()
+      ).ldelim();
+    }
+    if (message.hostAccounts !== undefined) {
+      HostAccounts.encode(
+        message.hostAccounts,
+        writer.uint32(90).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgJumpStart {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgJumpStart();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pstakeAddress = reader.string();
+          break;
+        case 2:
+          message.chainID = reader.string();
+          break;
+        case 3:
+          message.connectionID = reader.string();
+          break;
+        case 4:
+          message.transferChannel = reader.string();
+          break;
+        case 5:
+          message.transferPort = reader.string();
+          break;
+        case 6:
+          message.baseDenom = reader.string();
+          break;
+        case 7:
+          message.mintDenom = reader.string();
+          break;
+        case 8:
+          message.minDeposit = reader.string();
+          break;
+        case 9:
+          message.allowListedValidators = AllowListedValidators.decode(
+            reader,
+            reader.uint32()
+          );
+          break;
+        case 10:
+          message.pstakeParams = PstakeParams.decode(reader, reader.uint32());
+          break;
+        case 11:
+          message.hostAccounts = HostAccounts.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgJumpStart {
+    return {
+      pstakeAddress: isSet(object.pstakeAddress)
+        ? String(object.pstakeAddress)
+        : "",
+      chainID: isSet(object.chainID) ? String(object.chainID) : "",
+      connectionID: isSet(object.connectionID)
+        ? String(object.connectionID)
+        : "",
+      transferChannel: isSet(object.transferChannel)
+        ? String(object.transferChannel)
+        : "",
+      transferPort: isSet(object.transferPort)
+        ? String(object.transferPort)
+        : "",
+      baseDenom: isSet(object.baseDenom) ? String(object.baseDenom) : "",
+      mintDenom: isSet(object.mintDenom) ? String(object.mintDenom) : "",
+      minDeposit: isSet(object.minDeposit) ? String(object.minDeposit) : "",
+      allowListedValidators: isSet(object.allowListedValidators)
+        ? AllowListedValidators.fromJSON(object.allowListedValidators)
+        : undefined,
+      pstakeParams: isSet(object.pstakeParams)
+        ? PstakeParams.fromJSON(object.pstakeParams)
+        : undefined,
+      hostAccounts: isSet(object.hostAccounts)
+        ? HostAccounts.fromJSON(object.hostAccounts)
+        : undefined,
+    };
+  },
+
+  toJSON(message: MsgJumpStart): unknown {
+    const obj: any = {};
+    message.pstakeAddress !== undefined &&
+      (obj.pstakeAddress = message.pstakeAddress);
+    message.chainID !== undefined && (obj.chainID = message.chainID);
+    message.connectionID !== undefined &&
+      (obj.connectionID = message.connectionID);
+    message.transferChannel !== undefined &&
+      (obj.transferChannel = message.transferChannel);
+    message.transferPort !== undefined &&
+      (obj.transferPort = message.transferPort);
+    message.baseDenom !== undefined && (obj.baseDenom = message.baseDenom);
+    message.mintDenom !== undefined && (obj.mintDenom = message.mintDenom);
+    message.minDeposit !== undefined && (obj.minDeposit = message.minDeposit);
+    message.allowListedValidators !== undefined &&
+      (obj.allowListedValidators = message.allowListedValidators
+        ? AllowListedValidators.toJSON(message.allowListedValidators)
+        : undefined);
+    message.pstakeParams !== undefined &&
+      (obj.pstakeParams = message.pstakeParams
+        ? PstakeParams.toJSON(message.pstakeParams)
+        : undefined);
+    message.hostAccounts !== undefined &&
+      (obj.hostAccounts = message.hostAccounts
+        ? HostAccounts.toJSON(message.hostAccounts)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgJumpStart>, I>>(
+    object: I
+  ): MsgJumpStart {
+    const message = createBaseMsgJumpStart();
+    message.pstakeAddress = object.pstakeAddress ?? "";
+    message.chainID = object.chainID ?? "";
+    message.connectionID = object.connectionID ?? "";
+    message.transferChannel = object.transferChannel ?? "";
+    message.transferPort = object.transferPort ?? "";
+    message.baseDenom = object.baseDenom ?? "";
+    message.mintDenom = object.mintDenom ?? "";
+    message.minDeposit = object.minDeposit ?? "";
+    message.allowListedValidators =
+      object.allowListedValidators !== undefined &&
+      object.allowListedValidators !== null
+        ? AllowListedValidators.fromPartial(object.allowListedValidators)
+        : undefined;
+    message.pstakeParams =
+      object.pstakeParams !== undefined && object.pstakeParams !== null
+        ? PstakeParams.fromPartial(object.pstakeParams)
+        : undefined;
+    message.hostAccounts =
+      object.hostAccounts !== undefined && object.hostAccounts !== null
+        ? HostAccounts.fromPartial(object.hostAccounts)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseMsgJumpStartResponse(): MsgJumpStartResponse {
+  return {};
+}
+
+export const MsgJumpStartResponse = {
+  encode(
+    _: MsgJumpStartResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MsgJumpStartResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgJumpStartResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgJumpStartResponse {
+    return {};
+  },
+
+  toJSON(_: MsgJumpStartResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgJumpStartResponse>, I>>(
+    _: I
+  ): MsgJumpStartResponse {
+    const message = createBaseMsgJumpStartResponse();
+    return message;
+  },
+};
+
 /** Msg defines the lsCosmos services. */
 export interface Msg {
   LiquidStake(request: MsgLiquidStake): Promise<MsgLiquidStakeResponse>;
@@ -605,6 +878,7 @@ export interface Msg {
   Juice(request: MsgJuice): Promise<MsgJuiceResponse>;
   Redeem(request: MsgRedeem): Promise<MsgRedeemResponse>;
   Claim(request: MsgClaim): Promise<MsgClaimResponse>;
+  JumpStart(request: MsgJumpStart): Promise<MsgJumpStartResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -616,6 +890,7 @@ export class MsgClientImpl implements Msg {
     this.Juice = this.Juice.bind(this);
     this.Redeem = this.Redeem.bind(this);
     this.Claim = this.Claim.bind(this);
+    this.JumpStart = this.JumpStart.bind(this);
   }
   LiquidStake(request: MsgLiquidStake): Promise<MsgLiquidStakeResponse> {
     const data = MsgLiquidStake.encode(request).finish();
@@ -674,6 +949,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgClaimResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  JumpStart(request: MsgJumpStart): Promise<MsgJumpStartResponse> {
+    const data = MsgJumpStart.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Msg",
+      "JumpStart",
+      data
+    );
+    return promise.then((data) =>
+      MsgJumpStartResponse.decode(new _m0.Reader(data))
     );
   }
 }

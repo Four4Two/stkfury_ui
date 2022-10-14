@@ -13,7 +13,7 @@ import {setTransactionProgress} from "../../../../store/reducers/transaction";
 
 const Submit = () => {
   const dispatch = useDispatch();
-  const {stkAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
+  const {stkAtomBalance, ibcAtomBalance} = useSelector((state:RootState) => state.balances);
   const {amount, type} = useSelector((state:RootState) => state.unStake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
   const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData} = useWallet()
@@ -23,7 +23,7 @@ const Submit = () => {
     let pollingBalance;
     if(type === INSTANT){
        messages = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
-      pollingBalance = atomBalance;
+      pollingBalance = ibcAtomBalance;
     }else{
        messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
       pollingBalance = stkAtomBalance;

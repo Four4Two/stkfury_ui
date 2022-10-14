@@ -1,5 +1,4 @@
 import {PayloadAction} from "@reduxjs/toolkit";
-import { AccountData } from "@cosmjs/launchpad/build/signer";
 import { ChainInfo } from "@keplr-wallet/types";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { LiquidStakeMsgTypes } from "../../../../helpers/protoMsg";
@@ -14,9 +13,11 @@ export interface DepositTransactionParams {
     persistenceChainInfo: ChainInfo,
     cosmosAddress:string,
     persistenceAddress:string,
-    msg:LiquidStakeMsgTypes,
-    pollInitialBalance:number
-
+    depositMsg:LiquidStakeMsgTypes,
+    pollInitialDepositBalance:number,
+    persistenceSigner : OfflineSigner,
+    stakeMsg:LiquidStakeMsgTypes,
+    pollInitialStakeBalance:number
 }
 
 export type DepositTransactionPayload = PayloadAction<DepositTransactionParams>

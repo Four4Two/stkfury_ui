@@ -1,8 +1,11 @@
 import {createSlice} from "@reduxjs/toolkit";
-import { SetStakeAmount, StakeAmount, StakeTransactionPayload } from "./types";
+import { SetStakeAmount, StakeAmount, StakeTransactionPayload, SetTransactionFailedStatus, SetTransactionStep } from "./types";
 
 const initialState: StakeAmount = {
   amount: '',
+  showModal: false,
+  txFailed: false,
+  stepNumber: 0
 }
 
 const stake = createSlice({
@@ -13,9 +16,22 @@ const stake = createSlice({
     setStakeAmount: (state, { payload }: SetStakeAmount) => {
       state.amount = payload
     },
+    hideStakeModal: (state) => {
+      state.showModal = false
+    },
+    showStakeModal: (state) => {
+      state.showModal = true
+    },
+    setStakeTxnFailed: (state, {payload}: SetTransactionFailedStatus) => {
+      state.txFailed = payload
+    },
+    setStakeTxnStepNumber: (state, {payload}: SetTransactionStep) => {
+      state.stepNumber = payload
+    },
   }
 })
 
-export const {setStakeAmount, executeStakeTransactionSaga} = stake.actions
+export const {setStakeAmount, executeStakeTransactionSaga, hideStakeModal,
+  showStakeModal, setStakeTxnFailed, setStakeTxnStepNumber} = stake.actions
 
 export default stake.reducer

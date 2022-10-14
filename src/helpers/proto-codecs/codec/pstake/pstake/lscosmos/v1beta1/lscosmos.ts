@@ -105,6 +105,11 @@ export interface DelegatorUnbondingEpochEntry {
   amount?: Coin;
 }
 
+export interface HostAccounts {
+  delegatorAccountOwnerID: string;
+  rewardsAccountOwnerID: string;
+}
+
 function createBaseAllowListedValidators(): AllowListedValidators {
   return { allowListedValidators: [] };
 }
@@ -1376,6 +1381,75 @@ export const DelegatorUnbondingEpochEntry = {
       object.amount !== undefined && object.amount !== null
         ? Coin.fromPartial(object.amount)
         : undefined;
+    return message;
+  },
+};
+
+function createBaseHostAccounts(): HostAccounts {
+  return { delegatorAccountOwnerID: "", rewardsAccountOwnerID: "" };
+}
+
+export const HostAccounts = {
+  encode(
+    message: HostAccounts,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorAccountOwnerID !== "") {
+      writer.uint32(10).string(message.delegatorAccountOwnerID);
+    }
+    if (message.rewardsAccountOwnerID !== "") {
+      writer.uint32(18).string(message.rewardsAccountOwnerID);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HostAccounts {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHostAccounts();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorAccountOwnerID = reader.string();
+          break;
+        case 2:
+          message.rewardsAccountOwnerID = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HostAccounts {
+    return {
+      delegatorAccountOwnerID: isSet(object.delegatorAccountOwnerID)
+        ? String(object.delegatorAccountOwnerID)
+        : "",
+      rewardsAccountOwnerID: isSet(object.rewardsAccountOwnerID)
+        ? String(object.rewardsAccountOwnerID)
+        : "",
+    };
+  },
+
+  toJSON(message: HostAccounts): unknown {
+    const obj: any = {};
+    message.delegatorAccountOwnerID !== undefined &&
+      (obj.delegatorAccountOwnerID = message.delegatorAccountOwnerID);
+    message.rewardsAccountOwnerID !== undefined &&
+      (obj.rewardsAccountOwnerID = message.rewardsAccountOwnerID);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<HostAccounts>, I>>(
+    object: I
+  ): HostAccounts {
+    const message = createBaseHostAccounts();
+    message.delegatorAccountOwnerID = object.delegatorAccountOwnerID ?? "";
+    message.rewardsAccountOwnerID = object.rewardsAccountOwnerID ?? "";
     return message;
   },
 };
