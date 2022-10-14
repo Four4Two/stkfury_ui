@@ -33,7 +33,7 @@ const Submit = () => {
         type="primary"
         size="large"
         disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
-        content={((name === STAKE || name === DEPOSIT) && inProgress && !showModal) ? <Spinner width={1.5}/> : 'Liquid Stake'}
+        content={((name === STAKE || name === DEPOSIT) && inProgress && !showModal) ? <Spinner size={"medium"}/> : 'Liquid Stake'}
         onClick={stakeHandler}
       />
       :

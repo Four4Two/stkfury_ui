@@ -54,10 +54,9 @@ export const LoginOptions = () => {
               <span className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'} flex items-center py-2.5 pr-1.5 pl-3`}
                     onClick={()=>{setDropdownOpen(true)}}>
                 <img
-                  src={"/images/keplr.svg"}
+                  src={"/images/keplr_round.svg"}
                   alt={"logo"}
-                  width={isMobile ? 14 : 18}
-                  height={isMobile ? 14 : 18}
+                  className="w-[20px] h-[20px]"
                 />
                 <span className="ml-3">{stringTruncate(persistenceAccountData!.address)}</span>
               </span>
@@ -94,10 +93,9 @@ export const LoginOptions = () => {
             <div>
               <div className="p-4 flex items-center" onClick={connectHandler}>
                 <img
-                    src={"/images/keplr.svg"}
+                    src={"/images/keplr_round.svg"}
                     alt={"logo"}
-                    width={20}
-                    height={20}
+                    className="w-[20px] h-[20px]"
                 />
                 <span className="ml-4 text-light-mid text-sm font-medium leading-normal">Keplr Wallet</span>
               </div>

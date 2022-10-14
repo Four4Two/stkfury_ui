@@ -38,7 +38,7 @@ const Options = () => {
              onClick={() => optionHandler('normal')}>
           <div className="flex items-center">
             <p className="option-heading m-0 font-normal text-base text-light-disabled leading-normal flex-1 md:text-sm">
-              Unstake in 21 days
+              Unstake
             </p>
             <p className={`${styles.amount} option-value font-medium m-0 text-light-mid text-2xl text-center text-right overflow-x-auto md:text-lg`}>
               ~{atomAmount} ATOM

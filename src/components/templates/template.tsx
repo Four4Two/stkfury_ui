@@ -5,6 +5,7 @@ import Topbar from "../organisms/navigationBar";
 import MobileSideBar from "../organisms/sidebar/mobileSidebar";
 import ClaimModal from "../organisms/staking/claim";
 import StakeModal from "../organisms/staking/stake/stakeModal";
+import WithdrawModal from "../organisms/sidebar/withdrawModal";
 
 export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
 
@@ -14,9 +15,6 @@ export const PageTemplate = ({children, className, title }: { children: React.Re
         <title>{title}</title>
       </Head>
       <div className="appLayout grid gap-6 md:block">
-        <div className="md:hidden">
-          <Sidebar />
-        </div>
         <MobileSideBar/>
         <div className={`mainContainer h-screen overflow-auto bg-no-repeat ` + className}>
           <Topbar/>
@@ -25,6 +23,7 @@ export const PageTemplate = ({children, className, title }: { children: React.Re
       </div>
         <ClaimModal/>
         <StakeModal/>
+        <WithdrawModal/>
     </div>
   )
 }

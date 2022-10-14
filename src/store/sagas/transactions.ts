@@ -6,7 +6,7 @@ import {
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
-  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM
+  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM, WITHDRAW
 } from "../../../AppConstants";
 import {
   executeStakeTransactionSaga,
@@ -27,9 +27,11 @@ import { DepositTransactionPayload } from "../reducers/transactions/deposit/type
 import { IBCChainInfos } from "../../helpers/config";
 import { RootState } from "../reducers";
 import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
-import { hideDepositModal, setDepositAmount } from "../reducers/transactions/deposit";
+import { setDepositAmount } from "../reducers/transactions/deposit";
 import { setUnStakeAmount } from "../reducers/transactions/unstake";
 import {fetchPendingClaimsSaga} from "../reducers/claim";
+import {WithdrawTransactionPayload} from "../reducers/transactions/withdraw/types";
+import {setWithdrawTxnFailed, setWithdrawTxnStepNumber} from "../reducers/transactions/withdraw";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -193,3 +195,32 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
 }
 
 
+export function* executeWithdrawTransaction({ payload }: WithdrawTransactionPayload) {
+  try {
+    const {persistenceChainInfo, cosmosChainInfo,
+      withdrawMsg, persistenceAddress, cosmosAddress,
+      persistenceSigner, pollInitialIBCAtomBalance} = payload
+    yield put(setWithdrawTxnStepNumber(1))
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, persistenceAddress, [withdrawMsg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    printConsole(transaction ,'transaction withdraw')
+    yield put(setWithdrawTxnStepNumber(2))
+    if (transaction.code === 0) {
+      const response:string = yield pollAccountBalance(cosmosAddress, cosmosChainInfo?.stakeCurrency.coinMinimalDenom!, cosmosChainInfo.rpc, pollInitialIBCAtomBalance.toString());
+      if (response !== "0") {
+        yield put(setWithdrawTxnStepNumber(3))
+      }
+      yield put(resetTransaction())
+    } else {
+      throw new Error(transaction.rawLog);
+    }
+  } catch (e:any) {
+    yield put(resetTransaction())
+    yield put(setWithdrawTxnFailed(true))
+    const customScope = new Sentry.Scope();
+    customScope.setLevel(FATAL)
+    customScope.setTags({
+      [ERROR_WHILE_DEPOSITING]: payload.persistenceAddress
+    })
+    genericErrorHandler(e, customScope)
+  }
+}

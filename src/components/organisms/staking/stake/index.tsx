@@ -10,9 +10,7 @@ import { RootState } from "../../../../store/reducers";
 import StakeToasts from "./stakeToasts";
 
 const UnStake = () => {
-  const { apr } = useSelector(
-    (state: RootState) => state.initialData
-  );
+    const {showModal} = useSelector((state:RootState) => state.stake);
   return (
     <>
       <From />
@@ -20,7 +18,7 @@ const UnStake = () => {
         <div
           className={`${styles.iconBox} icon-box rounded-full flex justify-center items-center absolute`}
         >
-          <Icon iconName="exchange-arrow" viewClass="search" />
+          <Icon iconName="exchange-arrow" viewClass="search !w-[14px]" />
         </div>
       </div>
       <To />
@@ -34,16 +32,19 @@ const UnStake = () => {
       </div>
       <div className="flex items-center justify-between flex-wrap px-4 md:p-0">
         <p className="font-normal text-sm leading-7 text-light-emphasis mb-2">
-          Staking APR
+          Fee
         </p>
         <p className="font-normal text-sm leading-7 text-light-emphasis text-right mb-2">
-          {apr}%
+          0%
         </p>
       </div>
       <div className="mt-4">
         <Submit />
       </div>
-        <StakeToasts/>
+        {!showModal ?
+            <StakeToasts/> : null
+        }
+
     </>
   );
 };

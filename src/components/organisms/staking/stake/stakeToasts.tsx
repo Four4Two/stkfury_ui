@@ -8,25 +8,25 @@ import {resetTransaction} from "../../../../store/reducers/transaction";
 
 const StakeToasts = () => {
     const dispatch = useDispatch();
-    const {showModal, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
+    const {txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
 
     useEffect(()=> {
-        if(stepNumber === 5 && !showModal) {
+        if(stepNumber === 5) {
             dispatch(setStakeTxnStepNumber(0))
         }
-    },[stepNumber, dispatch, showModal])
+    },[stepNumber, dispatch])
 
-    useEffect(()=>{
-        if(!showModal && txFailed) {
+    useEffect(()=> {
+        if(txFailed) {
             dispatch(setStakeTxnFailed(false))
             dispatch(setStakeTxnStepNumber(0))
             dispatch(resetTransaction())
         }
-    },[txFailed, showModal, dispatch])
+    },[txFailed, dispatch])
 
     return (
         <>
-            { txFailed && !showModal ?
+            { txFailed ?
                 displayToast(
                     {
                         message: 'This transaction could not be completed'
@@ -36,7 +36,7 @@ const StakeToasts = () => {
             :
                 <>
                     {
-                        stepNumber === 2 && !showModal && !txFailed ?
+                        stepNumber === 2 && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Deposit Transaction in progress'
@@ -45,7 +45,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 3 && !showModal  && !txFailed?
+                        stepNumber === 3  && !txFailed?
                             displayToast(
                                 {
                                     message: 'Atom transferred to persistence chain successfully'
@@ -54,7 +54,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 4 && !showModal  && !txFailed ?
+                        stepNumber === 4  && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Stake Transaction in progress'
@@ -63,7 +63,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 5 && !showModal  && !txFailed ?
+                        stepNumber === 5  && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Your ATOM Staked Successfully'

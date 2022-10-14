@@ -12,7 +12,7 @@
     border-right: 3px solid #8c0208;
 }
 
-.balanceList, .socialLinks{
+.balanceList{
     border-top: 1px solid #2b2b2b;
 }
 
@@ -20,11 +20,26 @@
     display: flex;
 }
 
-.DepositButton{
-    width: 220px;
-}
-
 .navBarLinkIcon{
     width: 20px;
     height: auto;
+}
+
+.mobileDropdownContainer{
+    width: 284px;
+}
+.mobileSidebarBackdrop{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    transition: opacity .15s linear;
+    background: #000;
+}
+.mobileSidebar{
+    position: fixed;
+    z-index: 40;
+    background: #171717;
 }

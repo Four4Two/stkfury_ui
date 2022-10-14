@@ -21,11 +21,13 @@ const Submit = () => {
     const {atomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
     const {amount, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
-    const {connect, isWalletConnected, cosmosAccountData, cosmosChainData, cosmosSigner, persistenceAccountData,
+    const {cosmosAccountData, cosmosChainData, cosmosSigner, persistenceAccountData,
         persistenceSigner , persistenceChainData} = useWallet()
 
     const stakeHandler = async () => {
         dispatch(setStakeTxnFailed(false))
+        dispatch(setTransactionProgress(DEPOSIT));
+
         const depositMsg = await MakeIBCTransferMsg({
             channel: ibcInfo?.sourceChannelId,
             fromAddress: cosmosAccountData?.address,
@@ -52,7 +54,6 @@ const Submit = () => {
             pollInitialStakeBalance:stkAtomBalance,
             persistenceSigner:persistenceSigner!
         }))
-        dispatch(setTransactionProgress(DEPOSIT));
     }
 
     const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(atomBalance))
@@ -66,7 +67,7 @@ const Submit = () => {
             disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
             content={
             ((name === STAKE || name === DEPOSIT) && inProgress) ?
-                <Spinner width={1.5}/>
+                <Spinner size={"medium"}/>
                 :
                 txFailed && stepNumber === 1 ? 'Retry' : 'Liquid Stake'
             }
