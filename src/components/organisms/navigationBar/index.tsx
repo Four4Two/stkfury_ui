@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import LoginOptions from "./loginOptions";
 import Button from "../../atoms/button";
-import {TEST_NET} from "../../../../AppConstants";
+import {SHORT_INTERVAL, TEST_NET} from "../../../../AppConstants";
 import { Icon } from "../../atoms/icon";
 import { useDispatch } from "react-redux";
 import { showMobileSidebar } from "../../../store/reducers/sidebar";
 import Link from "next/link";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
+import {useWallet} from "../../../context/WalletConnect/WalletConnect";
+import {fetchBalanceSaga} from "../../../store/reducers/balances";
+import {fetchPendingClaimsSaga} from "../../../store/reducers/claim";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -15,6 +18,29 @@ const NavigationBar = () => {
   const handleMenu = () => {
     dispatch(showMobileSidebar());
   }
+
+  const {isWalletConnected, persistenceAccountData, cosmosAccountData, cosmosChainData, persistenceChainData } = useWallet()
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isWalletConnected) {
+        dispatch(fetchBalanceSaga({
+          persistenceAddress:persistenceAccountData!.address,
+          cosmosAddress: cosmosAccountData!.address,
+          persistenceChainInfo: persistenceChainData!,
+          cosmosChainInfo: cosmosChainData!
+        }));
+        dispatch(fetchPendingClaimsSaga({
+          address:persistenceAccountData!.address,
+          persistenceChainInfo: persistenceChainData!,
+        }));
+      }
+    }, SHORT_INTERVAL)
+    return () => clearInterval(interval)
+
+  }, [isWalletConnected, dispatch, persistenceAccountData, cosmosAccountData, persistenceChainData, cosmosChainData])
+
+
   return (
     <div className="flex mb-10 py-6 px-7 md:px-3">
       <div className="flex items-center flex-1">

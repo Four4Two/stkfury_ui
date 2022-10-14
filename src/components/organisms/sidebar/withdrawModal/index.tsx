@@ -3,26 +3,26 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../../store/reducers";
 import Modal from "../../../molecules/modal";
 import {
-    hideWithdrawModal,
+    hideWithdrawModal, setWithdrawAmount,
     setWithdrawTxnFailed,
     setWithdrawTxnStepNumber
 } from "../../../../store/reducers/transactions/withdraw";
 import {Icon} from "../../../atoms/icon";
 import styles from "../../staking/stake/styles.module.css";
-import TransactionIcon from "../../../molecules/transactionsIcon";
+import TransactionIcon from "../../../molecules/transactionHelper/transactiosIcon";
 import {resetTransaction} from "../../../../store/reducers/transaction";
 import Button from "../../../atoms/button";
 import Submit from "./submit";
 
 const WithdrawModal = () => {
     const dispatch = useDispatch();
-    const {showModal, txFailed, stepNumber} = useSelector((state:RootState) => state.withdraw);
-    const {ibcAtomBalance} = useSelector((state:RootState) => state.balances);
+    const {showModal, txFailed, stepNumber, amount} = useSelector((state:RootState) => state.withdraw);
 
     const handleClose = () => {
         dispatch(setWithdrawTxnStepNumber(0))
         dispatch(setWithdrawTxnFailed(false))
         dispatch(hideWithdrawModal())
+        dispatch(setWithdrawAmount(0))
     }
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const WithdrawModal = () => {
                 </div>
             </div>
             <p className="text-light-high text-center font-semibold text-lg leading normal px-8">
-                Withdrawing {ibcAtomBalance} ATOM from Peristence to your Keplr wallet
+                Withdrawing {amount} ATOM from Peristence to your Keplr wallet
             </p>
             <div className={`${styles.stakeModalBody} p-8`}>
                 <div className="mb-8">
@@ -86,7 +86,7 @@ const WithdrawModal = () => {
                 {
                     stepNumber === 3 &&
                     <p className="text-base text-light-high text-center font-semibold mb-4 animate-pulse">
-                        You withdraw {ibcAtomBalance} ATOM on pSTAKE successfully!
+                        You withdraw {amount} ATOM on pSTAKE successfully!
                     </p>
                 }
                 {

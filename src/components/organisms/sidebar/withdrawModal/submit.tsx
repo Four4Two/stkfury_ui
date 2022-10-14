@@ -26,9 +26,6 @@ const Submit = () => {
     const stakeHandler = async () => {
 
         dispatch(setWithdrawTxnFailed(false))
-        console.log(ibcInfo?.destinationChannelId, persistenceAccountData?.address, cosmosAccountData?.address,
-            unDecimalize(ibcAtomBalance), ibcInfo?.coinDenom,  persistenceChainData?.rpc, cosmosChainData?.rpc,
-            IBCConfiguration.ibcDefaultPort, "sdfsdfsdf")
         const withDrawMsg = await MakeIBCTransferMsg({
             channel: ibcInfo?.destinationChannelId,
             fromAddress: persistenceAccountData?.address,
@@ -40,18 +37,18 @@ const Submit = () => {
             sourceRPCUrl: persistenceChainData?.rpc,
             destinationRPCUrl: cosmosChainData?.rpc,
             port: IBCConfiguration.ibcDefaultPort});
-        //
-        // console.log(withDrawMsg, "withDrawMsg");
-        // dispatch(executeWithdrawTransactionSaga({
-        //     cosmosChainInfo: cosmosChainData!,
-        //     persistenceChainInfo: persistenceChainData!,
-        //     cosmosAddress:cosmosAccountData?.address!,
-        //     persistenceAddress:persistenceAccountData?.address!,
-        //     withdrawMsg:withDrawMsg,
-        //     pollInitialIBCAtomBalance:atomBalance,
-        //     persistenceSigner:persistenceSigner!
-        // }))
-        // dispatch(setTransactionProgress(WITHDRAW));
+
+        console.log(withDrawMsg, "withDrawMsg");
+        dispatch(executeWithdrawTransactionSaga({
+            cosmosChainInfo: cosmosChainData!,
+            persistenceChainInfo: persistenceChainData!,
+            cosmosAddress:cosmosAccountData?.address!,
+            persistenceAddress:persistenceAccountData?.address!,
+            withdrawMsg:withDrawMsg,
+            pollInitialIBCAtomBalance:atomBalance,
+            persistenceSigner:persistenceSigner!
+        }))
+        dispatch(setTransactionProgress(WITHDRAW));
     }
 
     return (
@@ -63,7 +60,7 @@ const Submit = () => {
             disabled={name === WITHDRAW && inProgress}
             content={
             (name === WITHDRAW && inProgress) ?
-                <Spinner width={1.5}/>
+                <Spinner size={"medium"}/>
                 :
                 txFailed && stepNumber === 1 ? 'Retry' : 'Withdraw'
             }

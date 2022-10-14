@@ -18,9 +18,6 @@ export const PageTemplate = ({children, className, title }: { children: React.Re
         <title>{title}</title>
       </Head>
       <div className="appLayout grid gap-6 md:block">
-        <div className="md:hidden">
-          <Sidebar />
-        </div>
         <MobileSideBar/>
         <div className={`mainContainer h-screen overflow-auto bg-no-repeat ` + className}>
           <Topbar/>

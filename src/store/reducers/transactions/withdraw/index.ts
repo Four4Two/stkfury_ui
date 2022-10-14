@@ -1,9 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
-import { WithdrawTransactionPayload, WithdrawState } from "./types";
-import {SetTransactionFailedStatus, SetTransactionStep} from "../stake/types";
+import { WithdrawTransactionPayload, WithdrawState,
+    SetTransactionStep, SetTransactionFailedStatus, SetWithdrawAmount } from "./types";
 
 const initialState: WithdrawState = {
-    amount: '',
+    amount: 0,
     showModal: false,
     txFailed: false,
     stepNumber: 0
@@ -16,6 +16,9 @@ const withdraw = createSlice({
         executeWithdrawTransactionSaga: (state, action:WithdrawTransactionPayload)=>{},
         hideWithdrawModal: (state) => {
             state.showModal = false
+        },
+        setWithdrawAmount: (state, { payload }: SetWithdrawAmount) => {
+            state.amount = payload
         },
         showWithdrawModal: (state) => {
             state.showModal = true
@@ -30,6 +33,6 @@ const withdraw = createSlice({
 })
 
 export const { executeWithdrawTransactionSaga,hideWithdrawModal,
-    showWithdrawModal, setWithdrawTxnFailed, setWithdrawTxnStepNumber } = withdraw.actions
+    showWithdrawModal, setWithdrawTxnFailed, setWithdrawTxnStepNumber, setWithdrawAmount } = withdraw.actions
 
 export default withdraw.reducer

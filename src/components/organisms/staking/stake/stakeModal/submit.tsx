@@ -67,7 +67,7 @@ const Submit = () => {
             disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
             content={
             ((name === STAKE || name === DEPOSIT) && inProgress) ?
-                <Spinner width={1.5}/>
+                <Spinner size={"medium"}/>
                 :
                 txFailed && stepNumber === 1 ? 'Retry' : 'Stake'
             }

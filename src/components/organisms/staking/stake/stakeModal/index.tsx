@@ -13,7 +13,7 @@ import Submit from "./submit";
 import styles from "../styles.module.css";
 import Button from "../../../../atoms/button";
 import {resetTransaction} from "../../../../../store/reducers/transaction";
-import TransactionIcon from "../../../../molecules/transactionsIcon";
+import TransactionIcon from "../../../../molecules/transactionHelper/transactiosIcon";
 
 
 const StakeModal = () => {

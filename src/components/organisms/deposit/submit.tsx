@@ -54,7 +54,7 @@ const Submit = () => {
         type="primary"
         size="large"
         disabled={!enable || (name === DEPOSIT && inProgress)}
-        content={(name === DEPOSIT && inProgress) ? <Spinner width={1.5}/> : 'Deposit'}
+        content={(name === DEPOSIT && inProgress) ? <Spinner size={"medium"}/> : 'Deposit'}
         onClick={depositHandler}
       />
   );

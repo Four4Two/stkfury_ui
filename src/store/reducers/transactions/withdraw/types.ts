@@ -2,9 +2,10 @@ import {PayloadAction} from "@reduxjs/toolkit";
 import { ChainInfo } from "@keplr-wallet/types";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { LiquidStakeMsgTypes } from "../../../../helpers/protoMsg";
+import {TransactionSteps} from "../stake/types";
 
 export interface WithdrawState {
-    amount: string,
+    amount: number,
     showModal: boolean,
     txFailed: boolean,
     stepNumber: number
@@ -20,4 +21,7 @@ export interface WithdrawTransactionParams {
     persistenceSigner : OfflineSigner,
 }
 
+export type SetWithdrawAmount = PayloadAction<number>
 export type WithdrawTransactionPayload = PayloadAction<WithdrawTransactionParams>
+export type SetTransactionFailedStatus = PayloadAction<boolean>
+export type SetTransactionStep = PayloadAction<TransactionSteps>

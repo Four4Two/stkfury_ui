@@ -31,7 +31,7 @@ import { hideDepositModal, setDepositAmount } from "../reducers/transactions/dep
 import { setUnStakeAmount } from "../reducers/transactions/unstake";
 import {fetchPendingClaimsSaga} from "../reducers/claim";
 import {WithdrawTransactionPayload} from "../reducers/transactions/withdraw/types";
-import {setWithdrawTxnStepNumber} from "../reducers/transactions/withdraw";
+import {setWithdrawTxnFailed, setWithdrawTxnStepNumber} from "../reducers/transactions/withdraw";
 
 const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -200,7 +200,7 @@ export function* executeWithdrawTransaction({ payload }: WithdrawTransactionPayl
     const {persistenceChainInfo, cosmosChainInfo,
       withdrawMsg, persistenceAddress, cosmosAddress,
       persistenceSigner, pollInitialIBCAtomBalance} = payload
-    yield put(setWithdrawTxnStepNumber(0))
+    yield put(setWithdrawTxnStepNumber(1))
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, persistenceAddress, [withdrawMsg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     printConsole(transaction ,'transaction withdraw')
     if (transaction.code === 0) {
@@ -217,7 +217,7 @@ export function* executeWithdrawTransaction({ payload }: WithdrawTransactionPayl
     }
   } catch (e:any) {
     yield put(resetTransaction())
-    yield put(setStakeTxnFailed(true))
+    yield put(setWithdrawTxnFailed(true))
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
     customScope.setTags({

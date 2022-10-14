@@ -126,7 +126,7 @@ const ClaimModal = () => {
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
                          ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none': ''}`}
                            onClick={claimHandler}>
-                            {(name === CLAIM && inProgress) ? <Spinner width={1.5}/> : 'Claim'}
+                            {(name === CLAIM && inProgress) ? <Spinner size={"medium"}/> : 'Claim'}
                         </p>
                     </div>
                 </div>

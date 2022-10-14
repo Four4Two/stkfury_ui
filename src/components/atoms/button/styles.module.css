@@ -3,6 +3,9 @@
     box-sizing: border-box;
     box-shadow: none;
     border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .primary {

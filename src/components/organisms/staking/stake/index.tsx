@@ -10,6 +10,7 @@ import { RootState } from "../../../../store/reducers";
 import StakeToasts from "./stakeToasts";
 
 const UnStake = () => {
+    const {showModal} = useSelector((state:RootState) => state.stake);
   return (
     <>
       <From />
@@ -40,7 +41,10 @@ const UnStake = () => {
       <div className="mt-4">
         <Submit />
       </div>
-        <StakeToasts/>
+        {!showModal ?
+            <StakeToasts/> : null
+        }
+
     </>
   );
 };

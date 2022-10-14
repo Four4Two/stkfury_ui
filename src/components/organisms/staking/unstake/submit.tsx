@@ -48,7 +48,7 @@ const Submit = () => {
         type="primary"
         size="large"
         disabled={!enable || (name === UN_STAKE && inProgress)}
-        content={(name === UN_STAKE && inProgress) ? <Spinner width={1.5} /> :
+        content={(name === UN_STAKE && inProgress) ? <Spinner size={"medium"} /> :
           type === INSTANT ?
             "Redeem Instantly" : "Unstake"
       }
