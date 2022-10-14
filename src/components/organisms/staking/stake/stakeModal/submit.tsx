@@ -68,7 +68,7 @@ const Submit = () => {
             ((name === STAKE || name === DEPOSIT) && inProgress) ?
                 <Spinner width={1.5}/>
                 :
-                txFailed && stepNumber === 1 ? 'Retry' : 'Stake'
+                txFailed && stepNumber === 1 ? 'Retry' : 'Liquid Stake'
             }
             onClick={stakeHandler}
         />
