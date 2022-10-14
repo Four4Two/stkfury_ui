@@ -23,6 +23,7 @@ const BalanceList = () => {
     const {ibcAtomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
     const {isWalletConnected} = useWallet()
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
+    const {showModal} = useSelector((state:RootState) => state.withdraw);
 
     const {claimableBalance, pendingClaimList, claimableStkAtomBalance, unlistedPendingClaimList} =
         useSelector((state:RootState) => state.claimQueries);
@@ -103,7 +104,7 @@ const BalanceList = () => {
                                 size="small"
                                 type="secondary"
                                 content={
-                                    (name !== WITHDRAW && !inProgress) ?
+                                    (name === WITHDRAW && inProgress && !showModal) ?
                                         <Spinner size={"small"}/>
                                         :
                                          'Withdraw'

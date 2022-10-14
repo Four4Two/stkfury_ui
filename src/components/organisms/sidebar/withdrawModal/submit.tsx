@@ -24,8 +24,8 @@ const Submit = () => {
         persistenceSigner , persistenceChainData} = useWallet()
 
     const stakeHandler = async () => {
-
         dispatch(setWithdrawTxnFailed(false))
+        dispatch(setTransactionProgress(WITHDRAW));
         const withDrawMsg = await MakeIBCTransferMsg({
             channel: ibcInfo?.destinationChannelId,
             fromAddress: persistenceAccountData?.address,
@@ -38,7 +38,6 @@ const Submit = () => {
             destinationRPCUrl: cosmosChainData?.rpc,
             port: IBCConfiguration.ibcDefaultPort});
 
-        console.log(withDrawMsg, "withDrawMsg");
         dispatch(executeWithdrawTransactionSaga({
             cosmosChainInfo: cosmosChainData!,
             persistenceChainInfo: persistenceChainData!,
@@ -48,7 +47,6 @@ const Submit = () => {
             pollInitialIBCAtomBalance:atomBalance,
             persistenceSigner:persistenceSigner!
         }))
-        dispatch(setTransactionProgress(WITHDRAW));
     }
 
     return (

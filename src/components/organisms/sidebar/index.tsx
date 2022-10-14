@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import logo from "../../assets/images/logo.svg";
 import Link from "next/link";
 import { Icon } from "../../atoms/icon";
@@ -12,6 +12,7 @@ import Tooltip from "rc-tooltip";
 import 'rc-tooltip/assets/bootstrap.css';
 import WithdrawToasts from "./withdrawModal/withdrawToasts";
 import BalanceList from "./balanceList";
+import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 
 const socialList = [
   {
@@ -55,17 +56,16 @@ const moreList = [
 ];
 
 const Sidebar = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const {showModal} = useSelector((state:RootState) => state.withdraw);
 
   const {isMobile} = useWindowSize();
 
   const closeSideHandler = () => {
-    // dispatch(hideMobileSidebar())
+    dispatch(hideMobileSidebar())
   }
 
-  console.log("sidebarreee")
   const router = useRouter();
   return (
     <aside className="w-[284px] md:w-[220px]">

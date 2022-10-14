@@ -9,9 +9,7 @@ import {RootState} from "../../../../store/reducers";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
-    const { apr } = useSelector(
-        (state: RootState) => state.initialData
-    );
+    const { apr } = useSelector((state: RootState) => state.initialData);
 
   const tabItemClasses = 'cursor-pointer w-full bg-tabHeader ' +
     'font-semibold text-lg leading-normal text-center' +

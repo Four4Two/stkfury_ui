@@ -44,7 +44,6 @@ export async function MakeIBCTransferMsg({channel, fromAddress, toAddress, amoun
   const queryClient = new QueryClient(tendermintClient);
 
   const ibcExtension = setupIbcExtension(queryClient);
-    console.log(ibcExtension, "ibcExtension");
 
   return await ibcExtension.ibc.channel.clientState(port, channel).then(async (clientStateResponse: QueryChannelClientStateResponse) => {
     const clientStateResponseDecoded = decodeTendermintClientStateAny(clientStateResponse?.identifiedClientState?.clientState);

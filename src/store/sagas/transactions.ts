@@ -27,7 +27,7 @@ import { DepositTransactionPayload } from "../reducers/transactions/deposit/type
 import { IBCChainInfos } from "../../helpers/config";
 import { RootState } from "../reducers";
 import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
-import { hideDepositModal, setDepositAmount } from "../reducers/transactions/deposit";
+import { setDepositAmount } from "../reducers/transactions/deposit";
 import { setUnStakeAmount } from "../reducers/transactions/unstake";
 import {fetchPendingClaimsSaga} from "../reducers/claim";
 import {WithdrawTransactionPayload} from "../reducers/transactions/withdraw/types";
@@ -203,13 +203,11 @@ export function* executeWithdrawTransaction({ payload }: WithdrawTransactionPayl
     yield put(setWithdrawTxnStepNumber(1))
     const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, persistenceAddress, [withdrawMsg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     printConsole(transaction ,'transaction withdraw')
+    yield put(setWithdrawTxnStepNumber(2))
     if (transaction.code === 0) {
-      yield put(setWithdrawTxnStepNumber(2))
       const response:string = yield pollAccountBalance(cosmosAddress, cosmosChainInfo?.stakeCurrency.coinMinimalDenom!, cosmosChainInfo.rpc, pollInitialIBCAtomBalance.toString());
       if (response !== "0") {
         yield put(setWithdrawTxnStepNumber(3))
-        toast.dismiss();
-        yield put(setTransactionProgress(WITHDRAW));
       }
       yield put(resetTransaction())
     } else {
