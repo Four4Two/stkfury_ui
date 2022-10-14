@@ -4,12 +4,14 @@ import TabItem from "../../../molecules/tabs/tabItem";
 import TabContent from "../../../molecules/tabs/tabContent";
 import Stake from "../stake";
 import UnStake from "../unstake";
-import Claim from "../claim";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/reducers";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
+    const { apr } = useSelector(
+        (state: RootState) => state.initialData
+    );
 
   const tabItemClasses = 'cursor-pointer w-full bg-tabHeader ' +
     'font-semibold text-lg leading-normal text-center' +
@@ -29,6 +31,24 @@ const StakingTabs = () => {
           <UnStake/>
         </TabContent>
       </div>
+        <div className="p-4 bg-[#18181899] flex items-center mt-4 rounded-md">
+            <div className="flex-1 border-r-[1px] border-solid border-[#2a2a2a]">
+                <p className="text-light-mid font-normal leading-normal text-sm text-center">
+                    APR
+                </p>
+                <p className="text-secondary font-semibold leading-normal text-2xl text-center">
+                    {apr}%
+                </p>
+            </div>
+            <div className="flex-1">
+                <p className="text-light-mid font-normal leading-normal text-sm text-center">
+                    Total Value Unlocked(TVU)
+                </p>
+                <p className="text-light-emphasis font-semibold leading-normal text-2xl text-center">
+                    0 ATOM
+                </p>
+            </div>
+        </div>
     </div>
   );
 };

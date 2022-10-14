@@ -8,6 +8,7 @@ import deposit from "./transactions/deposit";
 import claim from "./transactions/claim";
 import mobileSidebar from "./sidebar";
 import claimQueries from "./claim";
+import withdraw from "./transactions/withdraw";
 
 const reducers = combineReducers({
     balances,
@@ -18,7 +19,8 @@ const reducers = combineReducers({
     deposit,
     mobileSidebar,
     claimQueries,
-    claim
+    claim,
+    withdraw
 })
 
 export default reducers;

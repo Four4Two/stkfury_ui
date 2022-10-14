@@ -6,7 +6,8 @@ import {
     executeClaimTransaction,
     executeDepositTransaction,
     executeStakeTransaction,
-    executeUnStakeTransaction
+    executeUnStakeTransaction,
+    executeWithdrawTransaction
 } from "./transactions";
 import { executeStakeTransactionSaga } from "../reducers/transactions/stake";
 import { executeUnStakeTransactionSaga } from "../reducers/transactions/unstake";
@@ -14,6 +15,7 @@ import { executeDepositTransactionSaga } from "../reducers/transactions/deposit"
 import {fetchBalance, fetchPendingClaims} from "./fetchingSagas";
 import { executeClaimTransactionSaga } from "../reducers/transactions/claim";
 import {fetchPendingClaimsSaga} from "../reducers/claim";
+import {executeWithdrawTransactionSaga} from "../reducers/transactions/withdraw";
 
 
 export default function* appSaga() {
@@ -24,4 +26,5 @@ export default function* appSaga() {
     yield takeEvery(executeUnStakeTransactionSaga.type, executeUnStakeTransaction)
     yield takeEvery(executeDepositTransactionSaga.type, executeDepositTransaction)
     yield takeEvery(executeClaimTransactionSaga.type, executeClaimTransaction)
+    yield takeEvery(executeWithdrawTransactionSaga.type, executeWithdrawTransaction)
 }

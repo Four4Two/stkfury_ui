@@ -38,6 +38,7 @@ const Submit = () => {
             destinationRPCUrl: persistenceChainData?.rpc,
             port: IBCConfiguration.ibcDefaultPort});
 
+        console.log(depositMsg, "depositMsg");
         const stakeMsg = LiquidStakeMsg(persistenceAccountData!.address, unDecimalize(amount), ibcInfo!.coinDenom)
 
         dispatch(executeDepositTransactionSaga({

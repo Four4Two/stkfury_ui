@@ -14,6 +14,7 @@ import {useWindowSize} from "../../../customHooks/useWindowSize";
 import Tooltip from "rc-tooltip";
 import 'rc-tooltip/assets/bootstrap.css';
 import {showClaimModal} from "../../../store/reducers/transactions/claim";
+import {showWithdrawModal} from "../../../store/reducers/transactions/withdraw";
 
 const socialList = [
   {
@@ -96,6 +97,11 @@ const Sidebar = () => {
   const claimHandler = async () => {
     dispatch(hideMobileSidebar())
     dispatch(showClaimModal())
+  }
+
+  const withdrawHandler = async () => {
+    dispatch(hideMobileSidebar())
+    dispatch(showWithdrawModal())
   }
 
   const closeSideHandler = () => {
@@ -242,14 +248,14 @@ const Sidebar = () => {
                     </div>
                     <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
                   </div>
-                  {/*<div className={`${Styles.DepositButton} m-auto`}>*/}
-                  {/*  <Button*/}
-                  {/*      size="small"*/}
-                  {/*      type="secondary"*/}
-                  {/*      content="Withdraw"*/}
-                  {/*      className="w-full mt-3 md:text-xsm md:py-2 md:px-4"*/}
-                  {/*      onClick={claimHandler}/>*/}
-                  {/*</div>*/}
+                  <div className={`${Styles.DepositButton} m-auto`}>
+                    <Button
+                        size="small"
+                        type="secondary"
+                        content="Withdraw"
+                        className="w-full mt-3 md:text-xsm md:py-2 md:px-4"
+                        onClick={withdrawHandler}/>
+                  </div>
                 </>
 
                 : null
