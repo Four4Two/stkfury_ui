@@ -7,6 +7,7 @@ import {stringTruncate } from "../../../helpers/utils";
 import Copy from "../../molecules/copy";
 import {Window as KeplrWindow} from "@keplr-wallet/types/build/window";
 import {useOnClickOutside} from "../../../customHooks/useOnClickOutside";
+import {useWindowSize} from "../../../customHooks/useWindowSize";
 
 declare global {
   interface Window extends KeplrWindow {
@@ -16,6 +17,7 @@ declare global {
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const {connect, isWalletConnected, persistenceAccountData} = useWallet()
+    const { isMobile } = useWindowSize();
 
   const connectHandler = async () =>{
    await connect();
@@ -55,7 +57,7 @@ export const LoginOptions = () => {
                   alt={"logo"}
                   className="w-[20px] h-[20px]"
                 />
-                <span className="ml-3">{stringTruncate(persistenceAccountData!.address)}</span>
+                <span className="ml-3">{stringTruncate(persistenceAccountData!.address, isMobile ? 3 : 7)}</span>
               </span>
               <span className="py-2 pr-3 pl-1.5">
                 <Copy id={persistenceAccountData!.address}/>
@@ -81,25 +83,25 @@ export const LoginOptions = () => {
            ref={ref}>
         {isWalletConnected ?
             <>
-              <div className="p-4 flex items-center" onClick={disconnectHandler}>
+              <div className="p-4 flex items-center md:py-3" onClick={disconnectHandler}>
                 <Icon
                     iconName="disconnect"
-                    viewClass="disconnect"
+                    viewClass="disconnect md:!w-[16px] md:!h-[16px]"
                 />
-                <span className="ml-4 text-light-high text-sm font-bold leading-normal uppercase">
+                <span className="ml-4 text-light-high text-sm font-bold leading-normal uppercase md:text-xsm md:ml-2">
                     Disconnect
                 </span>
               </div>
             </>
             :
             <div>
-              <div className="p-4 flex items-center" onClick={connectHandler}>
+              <div className="p-4 flex items-center md:py-3" onClick={connectHandler}>
                 <img
                     src={"/images/keplr_round.svg"}
                     alt={"logo"}
                     className="w-[20px] h-[20px]"
                 />
-                <span className="ml-4 text-light-high text-sm font-medium leading-normal">Keplr Wallet</span>
+                <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">Keplr Wallet</span>
               </div>
             </div>
         }

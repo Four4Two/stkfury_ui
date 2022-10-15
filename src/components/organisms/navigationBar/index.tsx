@@ -75,7 +75,7 @@ const NavigationBar = () => {
               </div>
               </div>
             }
-            className="button custom lg:hidden pointer-events-none !text-sm"
+            className="button custom lg:!hidden pointer-events-none !text-sm"
           />
           <div className="pl-5">
             <LoginOptions/>

@@ -82,27 +82,29 @@ const ClaimModal = () => {
     }
 
     return (
-        <Modal show={showModal} onClose={handleClose}  className="depositModal" header="Claim Unstaked ATOM">
+        <Modal show={showModal} onClose={handleClose}
+               className="depositModal" header="Claim Unstaked ATOM" closeButton={false} staticBackDrop={false}>
         <div className='mt-4'>
+            {activeClaims > 0 || claimableStkAtomBalance > 0 ?
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="block">
                         <div>
-                          <div className="flex justify-between items-center">
-                              <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
-                                  {decimalize(activeClaims)} ATOM
-                              </p>
-                              <div className="flex text-base text-light-mid leading-normal font-medium">
-                                  Completed Unstaking
-                                  <Tooltip placement="bottom" overlay=
-                                      {<span>Completed Unstaking.</span>}>
-                                      <button className="icon-button px-1">
-                                          <Icon
-                                              viewClass="arrow-right"
-                                              iconName="info"/>
-                                      </button>
-                                  </Tooltip>
-                              </div>
-                          </div>
+                            <div className="flex justify-between items-center">
+                                <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
+                                    {decimalize(activeClaims)} ATOM
+                                </p>
+                                <div className="flex text-base text-light-mid leading-normal font-medium">
+                                    Completed Unstaking
+                                    <Tooltip placement="bottom" overlay=
+                                        {<span>Completed Unstaking.</span>}>
+                                        <button className="icon-button px-1">
+                                            <Icon
+                                                viewClass="arrow-right"
+                                                iconName="info"/>
+                                        </button>
+                                    </Tooltip>
+                                </div>
+                            </div>
 
                             {claimableStkAtomBalance > 0 ?
                                 <div className="flex justify-between items-center mt-3">
@@ -126,12 +128,14 @@ const ClaimModal = () => {
                         </div>
                         <p className={`mt-3 claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
-                         ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none': ''}`}
+                         ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none' : ''}`}
                            onClick={claimHandler}>
                             {(name === CLAIM && inProgress) ? <Spinner size={"medium"}/> : 'Claim'}
                         </p>
                     </div>
                 </div>
+                : null
+            }
                 <div className="mt-5">
                     <p onClick={() => setExpand(!expand)}
                        className={`unStakeListHeader mb-4 cursor-pointer flex items-center justify-between ${expand ? "opened" : "closed"}`}>

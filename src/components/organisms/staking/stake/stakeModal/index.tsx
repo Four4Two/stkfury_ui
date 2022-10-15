@@ -14,12 +14,14 @@ import styles from "../styles.module.css";
 import Button from "../../../../atoms/button";
 import {resetTransaction} from "../../../../../store/reducers/transaction";
 import TransactionIcon from "../../../../molecules/transactionHelper/transactiosIcon";
+import {useWindowSize} from "../../../../../customHooks/useWindowSize";
 
 
 const StakeModal = () => {
     const dispatch = useDispatch();
     const {showModal, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
     const {amount} = useSelector((state:RootState) => state.stake);
+    const { isMobile } = useWindowSize();
 
     const handleClose = () => {
         dispatch(setStakeTxnStepNumber(0))
@@ -38,9 +40,9 @@ const StakeModal = () => {
         <Modal show={showModal} onClose={handleClose}
                className="stakeModal" staticBackDrop={false} closeButton={false}>
             <div className="flex items-center justify-center px-8 pt-8">
-               <div className="w-[60px] h-[60px] bg-[#000] rounded-full flex items-center justify-center">
+               <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
                    <img src={'/images/tokens/atom.svg'}
-                        className="logo w-[40px] h-[40px]"
+                        className="logo w-[40px] h-[40px] md:w-[26px] md:h-[26px]"
                         alt="atomIcon"
                    />
                </div>
@@ -48,19 +50,19 @@ const StakeModal = () => {
                     iconName="right-arrow-bold"
                     viewClass="icon-arrow mx-4"
                 />
-                <div className="w-[60px] h-[60px] bg-[#000] rounded-full flex items-center justify-center">
+                <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
                 <img src={'/images/tokens/stk_atom.svg'}
-                     className="logo w-[40px] h-[40px]"
+                     className="logo w-[40px] h-[40px] md:w-[26px] md:h-[26px]"
                      alt="atomIcon"
                 />
                 </div>
             </div>
-            <p className="text-light-high text-center font-semibold text-lg leading normal px-8">
+            <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base">
                 Liquid Staking {amount} ATOM
             </p>
             <div className={`${styles.stakeModalBody} p-8`}>
                 <div className="mb-8">
-                    <div className="flex items-center mb-5">
+                    <div className="flex items-center mb-5 md:mb-3">
                         <div className="mr-3">
                             {
                                 TransactionIcon(stepNumber, 1, txFailed)
@@ -70,7 +72,7 @@ const StakeModal = () => {
                             Approve wallet transfer
                         </p>
                     </div>
-                    <div className="flex items-center mb-5">
+                    <div className="flex items-center mb-5 md:mb-3">
                         <div className="mr-3">
                             {
                                 TransactionIcon(stepNumber, 2, txFailed)
@@ -80,7 +82,7 @@ const StakeModal = () => {
                             Send ATOM to pSTAKE via IBC
                         </p>
                     </div>
-                    <div className="flex items-center mb-5">
+                    <div className="flex items-center mb-5 md:mb-3">
                         <div className="mr-3">
                             {
                                 TransactionIcon(stepNumber, 3, txFailed)
@@ -90,7 +92,7 @@ const StakeModal = () => {
                             Approve staking with pSTAKE
                         </p>
                     </div>
-                    <div className="flex items-center mb-5">
+                    <div className="flex items-center mb-5 md:mb-3">
                         <div className="mr-3">
                             {
                                 TransactionIcon(stepNumber, 4, txFailed)
@@ -103,7 +105,7 @@ const StakeModal = () => {
                 </div>
 
                 {txFailed ?
-                    <p className="text-base text-light-high text-center font-semibold mb-4">
+                    <p className="text-base text-light-high text-center font-semibold mb-4 md:mb-3">
                         Transfer could not be completed.
                     </p> : null
                 }

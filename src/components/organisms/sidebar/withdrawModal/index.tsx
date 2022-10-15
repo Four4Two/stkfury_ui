@@ -35,9 +35,9 @@ const WithdrawModal = () => {
         <Modal show={showModal} onClose={handleClose}
                className="stakeModal" staticBackDrop={false} closeButton={false}>
             <div className="flex items-center justify-center px-8 pt-8">
-                <div className="w-[60px] h-[60px] bg-[#000] rounded-full flex items-center justify-center">
+                <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
                     <img src={'/images/tokens/stk_atom.svg'}
-                         className="logo w-[40px] h-[40px]"
+                         className="logo w-[40px] h-[40px] md:w-[26px] md:h-[26px]"
                          alt="atomIcon"
                     />
                 </div>
@@ -45,14 +45,14 @@ const WithdrawModal = () => {
                     iconName="right-arrow-bold"
                     viewClass="icon-arrow mx-4"
                 />
-                <div className="w-[60px] h-[60px] bg-[#000] rounded-full flex items-center justify-center">
+                <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
                     <img src={'/images/keplr_round.svg'}
-                         className="logo w-[40px] h-[40px]"
+                         className="logo w-[40px] h-[40px] md:w-[26px] md:h-[26px]"
                          alt="atomIcon"
                     />
                 </div>
             </div>
-            <p className="text-light-high text-center font-semibold text-lg leading normal px-8">
+            <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base">
                 Withdrawing {amount} ATOM from Peristence to your Keplr wallet
             </p>
             <div className={`${styles.stakeModalBody} p-8`}>

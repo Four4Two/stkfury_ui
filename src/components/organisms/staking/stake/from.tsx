@@ -47,8 +47,8 @@ const From = () => {
           <p className="mt-3 leading-normal text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(atomBalance, 3, 6)}</span>
-            {isWalletConnected ?
+              {formatNumber(atomBalance, 3, 2)}</span>
+            {isWalletConnected && atomBalance > 0?
                 <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>
                   Max
                 </span> : null}
@@ -63,14 +63,17 @@ const From = () => {
             required={true}
             name="stakeInput"
             onChange={inputHandler}
-            className={`${styles.Input} bg-transparent border-0
+            className={`bg-transparent border-0
              text-light-high leading-normal 
              box-shadow-none font-normal 
              text-3xl m-0 focus:border-0 
              focus:box-shadow-none text-right md:text-lg 
-             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal outline-none`}
+             p-0 mb-2 placeholder:text-light-mid 
+             placeholder:leading-normal placeholder:font-normal outline-none max-w-[160px] md:max-w-[100px]`}
           />
-          <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, 2)}</p>
+          <p className="text-light-low font-normal leading-normal text-right text-sm">
+            ${formatNumber(priceInDollars, 3, isMobile ? 2 : 6)}
+          </p>
         </div>
       </div>
     </div>

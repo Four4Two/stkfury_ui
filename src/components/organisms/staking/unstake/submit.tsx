@@ -44,7 +44,8 @@ const Submit = () => {
   return (
     isWalletConnected ?
       <Button
-        className={`${(name === UN_STAKE && inProgress) ? '!py-[0.8125rem]' : ''} button w-full  md:py-2 md:text-smx flex items-center justify-center`}
+        className={`${(name === UN_STAKE && inProgress) ? '!py-[0.8125rem]' : ''} button w-full 
+         md:py-2 md:text-sm flex items-center justify-center`}
         type="primary"
         size="large"
         disabled={!enable || (name === UN_STAKE && inProgress)}
@@ -56,7 +57,7 @@ const Submit = () => {
       />
       :
       <Button
-        className="button w-full  md:py-2 md:text-sm"
+        className="button w-full md:py-2 md:text-sm"
         type="primary"
         size="large"
         disabled={false}

@@ -18,16 +18,16 @@ const StakingTabs = () => {
     ' text-light-mid flex-1 px-4 py-2 md:px-2 md:py-1.5 md:text-base';
 
   return (
-    <div className={`${styles.tabsContainer} max-w-[616px] m-auto px-10 pb-10 md:px-3`}>
+    <div className={`${styles.tabsContainer} max-w-[616px] md:max-w-[500px] m-auto px-10 pb-10 md:px-3`}>
       <ul className="tabsHeaderList flex flex-wrap mb-4">
         <TabItem id="Stake" title={"Stake"} activeTab={activeTab} className={tabItemClasses} setActiveTab={setActiveTab}/>
         <TabItem id="Unstake" title={"Unstake"} activeTab={activeTab} className={tabItemClasses} setActiveTab={setActiveTab}/>
       </ul>
       <div>
-        <TabContent id="Stake" activeTab={activeTab} className="p-6 bg-tabContent rounded-md">
+        <TabContent id="Stake" activeTab={activeTab} className="p-6 md:p-4 bg-tabContent rounded-md">
           <Stake/>
         </TabContent>
-        <TabContent id="Unstake" activeTab={activeTab} className="p-6 bg-tabContent rounded-md">
+        <TabContent id="Unstake" activeTab={activeTab} className="p-6 md:p-4 bg-tabContent rounded-md">
           <UnStake/>
         </TabContent>
       </div>

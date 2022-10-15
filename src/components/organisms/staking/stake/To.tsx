@@ -29,7 +29,7 @@ const To = () => {
           </div>
           <p className="mt-3 leading-normal text-sm font-normal md:text-xsm">
             <span className="text-light-low">Available: </span>
-            <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, 6)}</span>
+            <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}</span>
           </p>
         </div>
         <div>
@@ -40,12 +40,13 @@ const To = () => {
             disable={true}
             required={true}
             name="stakeInput"
-            className={`${styles.Input} bg-transparent border-0
+            className={`bg-transparent border-0
              text-light-high leading-normal 
              box-shadow-none font-normal 
              text-3xl mb-1 focus:border-0 
              focus:box-shadow-none text-right md:text-lg
-             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal outline-none`}
+             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal 
+             placeholder:font-normal outline-none max-w-[160px] md:max-w-[100px]`}
           />
           <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, 2)}</p>
         </div>
