@@ -5,7 +5,6 @@ import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import { Icon } from "../../atoms/icon";
 import {stringTruncate } from "../../../helpers/utils";
 import Copy from "../../molecules/copy";
-import { useWindowSize } from "../../../customHooks/useWindowSize";
 import {Window as KeplrWindow} from "@keplr-wallet/types/build/window";
 import {useOnClickOutside} from "../../../customHooks/useOnClickOutside";
 
@@ -14,17 +13,14 @@ declare global {
   }
 }
 
-
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const {connect, isWalletConnected, persistenceAccountData} = useWallet()
-  const {isMobile} = useWindowSize();
 
   const connectHandler = async () =>{
    await connect();
    setDropdownOpen(false);
   }
-
 
   const disconnectHandler = async () =>{
     localStorage.clear();
@@ -51,7 +47,8 @@ export const LoginOptions = () => {
           type="custom"
           content={
             <span className="flex items-center">
-              <span className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'} flex items-center py-2.5 pr-1.5 pl-3`}
+              <span className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'} 
+              flex items-center py-2 pr-1.5 pl-3 !text-sm`}
                     onClick={()=>{setDropdownOpen(true)}}>
                 <img
                   src={"/images/keplr_round.svg"}
@@ -60,24 +57,27 @@ export const LoginOptions = () => {
                 />
                 <span className="ml-3">{stringTruncate(persistenceAccountData!.address)}</span>
               </span>
-              <span className="py-2.5 pr-3 pl-1.5">
+              <span className="py-2 pr-3 pl-1.5">
                 <Copy id={persistenceAccountData!.address}/>
               </span>
             </span>
 
           }
-          className="button custom connected md:text-xsm"
+          className="button custom connected md:text-xsm !text-sm"
         />
         :
           <Button
             size="medium"
             type="primary"
             content="Connect Wallet"
-            className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'} button md:text-xsm md:py-2 md:px-4`}
+            className={`${dropdownOpen ? 'pointer-events-none' : 'pointer-events-auto'}
+             button md:text-xsm md:py-2 md:px-4 !text-sm`}
             onClick={()=>{setDropdownOpen(true)}}
           />
       }
-      <div className={`${Styles.DropdownMenu} ${dropdownOpen && Styles.DropdownMenuActive} absolute bg-dropDown rounded-md`}
+      <div className={`${Styles.DropdownMenu} 
+      ${dropdownOpen && Styles.DropdownMenuActive} 
+      absolute bg-dropDown rounded-md`}
            ref={ref}>
         {isWalletConnected ?
             <>
@@ -86,7 +86,9 @@ export const LoginOptions = () => {
                     iconName="disconnect"
                     viewClass="disconnect"
                 />
-                <span className="ml-4 text-light-mid text-sm font-medium leading-normal">Disconnect</span>
+                <span className="ml-4 text-light-high text-sm font-bold leading-normal uppercase">
+                    Disconnect
+                </span>
               </div>
             </>
             :
@@ -97,7 +99,7 @@ export const LoginOptions = () => {
                     alt={"logo"}
                     className="w-[20px] h-[20px]"
                 />
-                <span className="ml-4 text-light-mid text-sm font-medium leading-normal">Keplr Wallet</span>
+                <span className="ml-4 text-light-high text-sm font-medium leading-normal">Keplr Wallet</span>
               </div>
             </div>
         }

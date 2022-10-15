@@ -6,6 +6,8 @@ import Stake from "../stake";
 import UnStake from "../unstake";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/reducers";
+import {Icon} from "../../../atoms/icon";
+import Tooltip from "rc-tooltip";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
@@ -31,9 +33,17 @@ const StakingTabs = () => {
       </div>
         <div className="p-4 bg-[#18181899] flex items-center mt-4 rounded-md">
             <div className="flex-1 border-r-[1px] border-solid border-[#2a2a2a]">
-                <p className="text-light-mid font-normal leading-normal text-sm text-center">
-                    APR
-                </p>
+                <div className="text-center">
+                    <span className="text-light-mid font-normal leading-normal text-sm text-center">APR</span>
+                    <Tooltip placement="bottom" overlay=
+                        {<span>APR is calculated based on base <br/> rate, incentives and commission<br/>  from validators.</span>}>
+                        <button className="icon-button px-1 align-middle mb-1">
+                            <Icon
+                                viewClass="arrow-right"
+                                iconName="info"/>
+                        </button>
+                    </Tooltip>
+                </div>
                 <p className="text-secondary font-semibold leading-normal text-2xl text-center">
                     {apr}%
                 </p>

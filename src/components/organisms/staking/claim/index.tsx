@@ -26,13 +26,15 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining, typ
                        {type === 'listedClaims' ?
                            unstakedOn
                            :
-                          "Tentative Unbond time -"+unstakedOn
+                          "Tentative Unbond time: "+unstakedOn
                        }
 
                    </p>
                </div>
                <div>
-                   <p className="leading-normal text-light-low text-xsm font-normal">{daysRemaining} days remaining</p>
+                   <p className="leading-normal text-light-low text-xsm font-normal">
+                       {daysRemaining} days remaining
+                   </p>
                </div>
            </div>
        </>
