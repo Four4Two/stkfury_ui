@@ -47,7 +47,7 @@ const From = () => {
           <p className="mt-3 leading-normal text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(atomBalance, 3, 2)}</span>
+              {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}</span>
             {isWalletConnected && atomBalance > 0?
                 <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>
                   Max
@@ -72,7 +72,7 @@ const From = () => {
              placeholder:leading-normal placeholder:font-normal outline-none max-w-[160px] md:max-w-[100px]`}
           />
           <p className="text-light-low font-normal leading-normal text-right text-sm">
-            ${formatNumber(priceInDollars, 3, isMobile ? 2 : 6)}
+            ${formatNumber(priceInDollars, 3, 2)}
           </p>
         </div>
       </div>

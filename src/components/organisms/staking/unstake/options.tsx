@@ -33,7 +33,7 @@ const Options = () => {
             </p>
             <p className={`${styles.amount} option-value font-medium m-0 text-light-mid
              text-2xl text-center text-right overflow-x-auto md:text-base`}>
-              {formatNumber(atomAmount, 3, isMobile ? 2 : 6)} ATOM
+              {truncateToFixedDecimalPlaces(atomAmount)} ATOM
             </p>
           </div>
         </div>
@@ -46,7 +46,7 @@ const Options = () => {
             </p>
             <p className={`${styles.amount} option-value font-medium m-0 text-light-mid 
             text-2xl text-center text-right overflow-x-auto md:text-base`}>
-              ~{formatNumber(atomAmount, 3, isMobile ? 2 : 6)} ATOM
+              ~{truncateToFixedDecimalPlaces(atomAmount)} ATOM
             </p>
           </div>
         </div>
