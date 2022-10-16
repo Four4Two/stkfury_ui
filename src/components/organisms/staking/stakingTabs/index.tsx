@@ -44,7 +44,7 @@ const StakingTabs = () => {
                         </button>
                     </Tooltip>
                 </div>
-                <p className="text-secondary font-semibold leading-normal text-2xl text-center">
+                <p className="text-secondary font-semibold leading-normal text-2xl text-center md:text-base">
                     {apr}%
                 </p>
             </div>
@@ -52,7 +52,7 @@ const StakingTabs = () => {
                 <p className="text-light-mid font-normal leading-normal text-sm text-center">
                     Total Value Unlocked(TVU)
                 </p>
-                <p className="text-light-emphasis font-semibold leading-normal text-2xl text-center">
+                <p className="text-light-emphasis font-semibold leading-normal text-2xl text-center md:text-base">
                     0 ATOM
                 </p>
             </div>
