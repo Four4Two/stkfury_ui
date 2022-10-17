@@ -193,7 +193,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
               .add(diff, "seconds")
               .format();
 
-            printConsole(actualTime, "actualTime");
+            printConsole(actualTime);
 
             const unStakedon = moment(unbondTime).format("DD MMM YYYY hh:mm A");
 
@@ -229,8 +229,6 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             .local()
             .format("DD MMM YYYY hh:mm A");
           const remainingTime = moment(tentativeTime).fromNow(true);
-          printConsole(tentativeTime, "tentativeTime");
-          printConsole(remainingTime, "remainingTime");
           filteredUnlistedPendingClaims.push({
             unbondAmount: item.amount?.amount,
             unStakedon: tentativeTime,
