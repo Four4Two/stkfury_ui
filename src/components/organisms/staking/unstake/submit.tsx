@@ -4,40 +4,61 @@ import Button from "../../../atoms/button";
 import { RootState } from "../../../../store/reducers";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../atoms/spinner";
-import { LiquidUnStakeMsg, RedeemMsg } from "../../../../helpers/protoMsg";
+import {LiquidUnStakeMsg, LiquidUnStakeMsgTypes, RedeemMsg} from "../../../../helpers/protoMsg";
 import {printConsole, unDecimalize} from "../../../../helpers/utils";
-import {INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
+import {COSMOS_CHAIN_ID, INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
+import {MakeIBCTransferMsg} from "../../../../helpers/transaction";
+import {IBCChainInfos, IBCConfiguration} from "../../../../helpers/config";
 
+const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const Submit = () => {
   const dispatch = useDispatch();
-  const {stkAtomBalance, ibcAtomBalance} = useSelector((state:RootState) => state.balances);
+  let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
+  const {stkAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount, type} = useSelector((state:RootState) => state.unStake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
-  const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData} = useWallet()
+  const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData,
+    cosmosAccountData, cosmosChainData} = useWallet()
+
+  const amountFee:number = Number(amount) - (Number(amount) * 0.1);
 
   const stakeHandler = async () => {
-    let messages;
+    let messages:LiquidUnStakeMsgTypes[];
     let pollingBalance;
+    dispatch(setTransactionProgress(UN_STAKE));
     if(type === INSTANT){
-       messages = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
-      pollingBalance = ibcAtomBalance;
+      const withDrawMsg = await MakeIBCTransferMsg({
+        channel: ibcInfo?.destinationChannelId,
+        fromAddress: persistenceAccountData?.address,
+        toAddress: cosmosAccountData?.address,
+        amount: unDecimalize(amountFee),
+        timeoutHeight: undefined,
+        timeoutTimestamp: undefined,
+        denom: ibcInfo?.coinDenom,
+        sourceRPCUrl: persistenceChainData?.rpc,
+        destinationRPCUrl: cosmosChainData?.rpc,
+        port: IBCConfiguration.ibcDefaultPort});
+        const redeemMsg = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
+      pollingBalance = atomBalance;
+        messages = [redeemMsg, withDrawMsg]
     }else{
-       messages = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
+      const liquidUnStakeMsg = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
       pollingBalance = stkAtomBalance;
+      messages = [liquidUnStakeMsg]
     }
-    printConsole(messages, 'stakeHandler msgs');
-    printConsole(type, 'stakeHandler type');
+
     dispatch(executeUnStakeTransactionSaga({
       persistenceSigner:persistenceSigner!,
       msg: messages,
       address: persistenceAccountData!.address,
       persistenceChainInfo:persistenceChainData!,
-      pollInitialBalance:pollingBalance
+      pollInitialBalance:pollingBalance,
+      cosmosAddress: cosmosAccountData?.address!,
+      cosmosChainInfo: cosmosChainData!
     }))
-      dispatch(setTransactionProgress(UN_STAKE));
   }
 
   const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(stkAtomBalance))

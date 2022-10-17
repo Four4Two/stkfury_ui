@@ -10,7 +10,7 @@ import {hideMobileSidebar} from "../../../store/reducers/sidebar";
 import {showClaimModal} from "../../../store/reducers/transactions/claim";
 import {setWithdrawAmount, showWithdrawModal} from "../../../store/reducers/transactions/withdraw";
 import {useWallet} from "../../../context/WalletConnect/WalletConnect";
-import {DEPOSIT, STAKE, WITHDRAW} from "../../../../AppConstants";
+import {WITHDRAW} from "../../../../AppConstants";
 import {Spinner} from "../../atoms/spinner";
 
 const BalanceList = () => {
@@ -45,6 +45,7 @@ const BalanceList = () => {
         setPendingList(pendingClaimList)
         setActiveStkAtomClaims(claimableStkAtomBalance)
         let totalPendingClaimableAmount:number = 0;
+
         if (pendingList.length) {
             pendingList.forEach((item:any) => {
                 totalPendingClaimableAmount += item.unbondAmount;
@@ -141,7 +142,7 @@ const BalanceList = () => {
                     <p className="text-light-mid text-sm font-medium leading-5">
                         {truncateToFixedDecimalPlaces(Number(decimalize(activeClaims)) +
                             Number(decimalize(totalPendingBalance)) +
-                            Number(activeStkAtomClaims))}
+                            Number(decimalize(activeStkAtomClaims))) + Number(decimalize(totalUnListedPendingClaims))}
                     </p>
                 </div>
                 {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0

@@ -36,7 +36,6 @@ export function * fetchPendingClaims({payload}: FetchPendingClaimSaga) {
   const {address, persistenceChainInfo}:any = payload
   // @ts-ignore
   const accountEpochs:any = yield fetchAllEpochEntries(address, persistenceChainInfo.rpc);
-  // printConsole(accountEpochs, 'accountEpochs');
   yield put(setClaimableBalance(accountEpochs.claimableAmount))
   yield put(setPendingClaimList(accountEpochs.filteredPendingClaims))
   yield put(setUnlistedPendingClaimList(accountEpochs.filteredUnlistedPendingClaims))

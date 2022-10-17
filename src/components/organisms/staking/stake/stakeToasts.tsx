@@ -5,6 +5,7 @@ import {displayToast} from "../../../molecules/toast";
 import {ToastType} from "../../../molecules/toast/types";
 import {setStakeTxnFailed, setStakeTxnStepNumber} from "../../../../store/reducers/transactions/stake";
 import {resetTransaction} from "../../../../store/reducers/transaction";
+import {toast} from "react-toastify";
 
 const StakeToasts = () => {
     const dispatch = useDispatch();
@@ -45,7 +46,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 3  && !txFailed?
+                        stepNumber === 3  && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Atom transferred to persistence chain successfully'

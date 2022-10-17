@@ -155,7 +155,6 @@ export async function pollAccountBalance(
         throw Error("Balance unchanged");
       }
     } catch (error: any) {
-      console.log(error.messae);
       console.log(
         "retrying in " + PollingConfig.scheduledTxHashQueryDelay + ": ",
         i,
