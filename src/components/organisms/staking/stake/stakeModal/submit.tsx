@@ -18,7 +18,7 @@ const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
     const dispatch = useDispatch();
     let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
-    const {atomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
+    const {atomBalance, stkAtomBalance, ibcAtomBalance} = useSelector((state:RootState) => state.balances);
     const {amount, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
     const {cosmosAccountData, cosmosChainData, cosmosSigner, persistenceAccountData,
@@ -50,7 +50,7 @@ const Submit = () => {
             persistenceAddress:persistenceAccountData!.address,
             depositMsg:depositMsg,
             stakeMsg:stakeMsg,
-            pollInitialDepositBalance:atomBalance,
+            pollInitialDepositBalance:ibcAtomBalance,
             pollInitialStakeBalance:stkAtomBalance,
             persistenceSigner:persistenceSigner!
         }))

@@ -2,11 +2,11 @@ import { put, select } from "@redux-saga/core/effects";
 import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
 import {resetTransaction, setTransactionProgress} from "../reducers/transaction";
 import {
-  COSMOS_CHAIN_ID, COSMOS_FEE, DEPOSIT, ERROR_WHILE_CLAIMING,
+  COSMOS_CHAIN_ID, COSMOS_FEE, ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
   ERROR_WHILE_UNSTAKING, FATAL, INSTANT,
-  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM, WITHDRAW
+  PERSISTENCE_FEE, STAKE, STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import {
   executeStakeTransactionSaga,
@@ -67,46 +67,45 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 
 export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayload) {
   try {
-    const {persistenceSigner, persistenceChainInfo, address, msg, pollInitialBalance} = payload
-    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
+    const {persistenceSigner, persistenceChainInfo, address, msg, pollInitialBalance,
+      cosmosAddress, cosmosChainInfo} = payload
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, msg, PERSISTENCE_FEE, "", persistenceChainInfo.rpc);
     printConsole(transaction ,'transaction unstake')
     yield put(setUnStakeAmount(""))
     if (transaction.code === 0) {
-      displayToast(
-        {
-          message: 'Transaction in progress'
-        },
-        ToastType.LOADING
-      );
       const state:RootState = yield select();
       const txnType:unStakeType = state?.unStake.type;
-
-      let balanceDenom:string;
-
       if (txnType === INSTANT) {
-         balanceDenom = ibcInfo!.coinDenom;
-      }else {
-        balanceDenom =  STK_ATOM_MINIMAL_DENOM;
-      }
-
-      printConsole(balanceDenom ,'balanceDenom in txn');
-      printConsole(pollInitialBalance,'availableAmount in txn');
-      printConsole(txnType,'txnType in txn');
-      const response:string = yield pollAccountBalance(address, balanceDenom, persistenceChainInfo.rpc, pollInitialBalance.toString());
-      if (response !== "0") {
-        toast.dismiss();
         displayToast(
-          {
-            message: 'Transaction Successful'
-          },
-          ToastType.SUCCESS
+            {
+              message: 'Transaction in progress'
+            },
+            ToastType.LOADING
         );
+        const response:string = yield pollAccountBalance(cosmosAddress, cosmosChainInfo?.stakeCurrency.coinMinimalDenom!,
+            cosmosChainInfo.rpc, pollInitialBalance.toString());
+        if (response !== "0") {
+          toast.dismiss();
+          displayToast(
+              {
+                message: 'Transaction Successful'
+              },
+              ToastType.SUCCESS
+          );
+        } else {
+          displayToast(
+              {
+                message: 'This transaction could not be completed'
+              },
+              ToastType.ERROR
+          );
+        }
       } else {
         displayToast(
-          {
-            message: 'This transaction could not be completed'
-          },
-          ToastType.ERROR
+            {
+              message: 'Transaction Successful'
+            },
+            ToastType.SUCCESS
         );
       }
       yield put(resetTransaction())
@@ -114,7 +113,6 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
       throw new Error(transaction.rawLog);
     }
   } catch (e:any) {
-    printConsole(e ,'transaction error')
     yield put(resetTransaction())
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL)
@@ -128,16 +126,27 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
 
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
-    const {persistenceSigner, persistenceChainInfo, address, msg} = payload
-    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg], COSMOS_FEE, "", persistenceChainInfo.rpc);
+    const {persistenceSigner, persistenceChainInfo, address,
+      msg, ibcTransferMsg, cosmosChainInfo, cosmosAddress, pollInitialIBCAtomBalance} = payload
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg, ibcTransferMsg], COSMOS_FEE, "", persistenceChainInfo.rpc);
     printConsole(transaction ,'transaction claim')
     if (transaction.code === 0) {
       displayToast(
-        {
-          message: 'Transaction Successful'
-        },
-        ToastType.SUCCESS
+          {
+            message: 'Transaction in progress'
+          },
+          ToastType.LOADING
       );
+      const response:string = yield pollAccountBalance(cosmosAddress, cosmosChainInfo?.stakeCurrency.coinMinimalDenom!,
+          cosmosChainInfo.rpc, pollInitialIBCAtomBalance.toString());
+      if (response !== "0") {
+        displayToast(
+            {
+              message: 'Transaction Successful'
+            },
+            ToastType.SUCCESS
+        );
+      }
       yield put(resetTransaction())
       yield  put(fetchPendingClaimsSaga({
         address:address,

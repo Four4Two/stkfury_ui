@@ -3,15 +3,19 @@ import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
 import {ClaimMsg} from "../../../../helpers/protoMsg";
-import {decimalize, printConsole} from "../../../../helpers/utils";
+import {decimalize} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
 import {executeClaimTransactionSaga, hideClaimModal} from "../../../../store/reducers/transactions/claim";
 import {RootState} from "../../../../store/reducers";
-import {CLAIM} from "../../../../../AppConstants";
+import {CLAIM, COSMOS_CHAIN_ID} from "../../../../../AppConstants";
 import {Spinner} from "../../../atoms/spinner";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
 import Modal from "../../../molecules/modal";
 import Tooltip from "rc-tooltip";
+import {MakeIBCTransferMsg} from "../../../../helpers/transaction";
+import {IBCChainInfos, IBCConfiguration} from "../../../../helpers/config";
+
+const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining, type}:any) => {
     return (
@@ -24,7 +28,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining, typ
                    </p>
                    <p className="leading-normal text-light-low text-xsm font-normal">
                        {type === 'listedClaims' ?
-                           unstakedOn
+                           "Unbond time: "+unstakedOn
                            :
                           "Tentative Unbond time: "+unstakedOn
                        }
@@ -33,7 +37,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining, typ
                </div>
                <div>
                    <p className="leading-normal text-light-low text-xsm font-normal">
-                       {daysRemaining} days remaining
+                       {daysRemaining} remaining
                    </p>
                </div>
            </div>
@@ -42,6 +46,7 @@ const IndividualUnstakingClaim = ({index, amount, unstakedOn, daysRemaining, typ
 }
 
 const ClaimModal = () => {
+    let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
     const [expand, setExpand] = useState(false);
     const {showModal} = useSelector((state:RootState) => state.claim);
 
@@ -49,7 +54,10 @@ const ClaimModal = () => {
 
     const dispatch = useDispatch();
 
-    const {persistenceAccountData, persistenceSigner, persistenceChainData} = useWallet();
+    const {persistenceAccountData, persistenceSigner, persistenceChainData,
+        cosmosChainData, cosmosAccountData} = useWallet();
+
+    const {atomBalance} = useSelector((state:RootState) => state.balances);
 
     const [activeClaims, setActiveClaims] = useState(0);
     const [pendingList, setPendingList] = useState<any>([]);
@@ -65,14 +73,31 @@ const ClaimModal = () => {
     },[claimableBalance, pendingClaimList, unlistedPendingClaimList])
 
     const claimHandler = async () => {
+        dispatch(setTransactionProgress(CLAIM));
+
+        const withDrawMsg = await MakeIBCTransferMsg({
+            channel: ibcInfo?.destinationChannelId,
+            fromAddress: persistenceAccountData?.address,
+            toAddress: cosmosAccountData?.address,
+            amount: activeClaims,
+            timeoutHeight: undefined,
+            timeoutTimestamp: undefined,
+            denom: ibcInfo?.coinDenom,
+            sourceRPCUrl: persistenceChainData?.rpc,
+            destinationRPCUrl: cosmosChainData?.rpc,
+            port: IBCConfiguration.ibcDefaultPort});
+
         const messages = ClaimMsg(persistenceAccountData!.address)
         dispatch(executeClaimTransactionSaga({
             persistenceSigner:persistenceSigner!,
             persistenceChainInfo:persistenceChainData!,
             msg: messages,
+            ibcTransferMsg:withDrawMsg,
+            cosmosAddress: cosmosAccountData?.address!,
             address: persistenceAccountData!.address,
+            cosmosChainInfo:cosmosChainData!,
+            pollInitialIBCAtomBalance:atomBalance,
         }))
-        dispatch(setTransactionProgress(CLAIM));
     }
 
     const enable = Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
@@ -130,7 +155,7 @@ const ClaimModal = () => {
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
                          ${(!enable || (name === CLAIM && inProgress)) ? 'opacity-50 pointer-events-none' : ''}`}
                            onClick={claimHandler}>
-                            {(name === CLAIM && inProgress) ? <Spinner size={"medium"}/> : 'Claim'}
+                            {(name === CLAIM && inProgress) ? <Spinner size={"small"}/> : 'Claim'}
                         </p>
                     </div>
                 </div>

@@ -45,7 +45,7 @@ const StakeToasts = () => {
                             ) : ""
                     }
                     {
-                        stepNumber === 3  && !txFailed?
+                        stepNumber === 3  && !txFailed ?
                             displayToast(
                                 {
                                     message: 'Atom transferred to persistence chain successfully'
