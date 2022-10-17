@@ -29,7 +29,8 @@ const Submit = () => {
   return (
     isWalletConnected ?
       <Button
-        className={`${((name === STAKE || name === DEPOSIT) && inProgress) ? '!py-[0.8125rem]' : ''} button w-full md:py-2 md:text-sm flex items-center justify-center`}
+        className={`${((name === STAKE || name === DEPOSIT) && inProgress) ? '!py-[0.8125rem]' : ''}
+         button w-full md:py-2 md:text-sm flex items-center justify-center`}
         type="primary"
         size="large"
         disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}

@@ -3,7 +3,6 @@ import InputText from "../../../atoms/input";
 import { formatNumber } from "../../../../helpers/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
-import styles from "./styles.module.css"
 import { setUnStakeAmount } from "../../../../store/reducers/transactions/unstake";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
@@ -43,8 +42,11 @@ const From = () => {
           </div>
           <p className="mt-3 leading-normal text-sm font-normal text-sm">
             <span className="text-light-low">Available: </span>
-            <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, 6)}</span>
-            {isWalletConnected ? <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>Max</span> : null}
+            <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}</span>
+            {isWalletConnected && stkAtomBalance > 0?
+                <span className="text-light-high ml-2 font-bold uppercase cursor-pointer" onClick={maxHandler}>
+                  Max
+                </span> : null}
           </p>
         </div>
         <div>
@@ -56,14 +58,15 @@ const From = () => {
             required={true}
             name="stakeInput"
             onChange={inputHandler}
-            className={`${styles.Input} bg-transparent border-0
+            className={`bg-transparent border-0
              text-light-high leading-normal 
              box-shadow-none font-normal 
              text-3xl focus:border-0 
              focus:box-shadow-none text-right md:text-lg
-             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal placeholder:font-normal outline-none`}
+             p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal
+              placeholder:font-normal outline-none max-w-[160px] md:max-w-[100px]`}
           />
-          <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, 2)}</p>
+          <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, isMobile ? 2 : 6)}</p>
         </div>
       </div>
     </div>

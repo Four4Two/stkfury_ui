@@ -241,11 +241,13 @@ input[type=number] {
    color: #f8f9fa!important;
 }
 
-.option-item.active{
+.option-item.active, .option-item:hover{
    border: 1px solid rgba(236, 236, 236, 0.7);
 }
-
-.option-item.active .option-heading, .option-item.active .option-value{
+.option-item:hover .option-heading,
+.option-item:hover .option-value,
+.option-item.active .option-heading,
+.option-item.active .option-value{
    color: #FCFCFC;
 }
 

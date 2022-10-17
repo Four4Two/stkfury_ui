@@ -25,11 +25,12 @@ const Modal = ({ children, show, header, onClose = emptyFunc, className, staticB
              }
              {
                header ?
-                 <div className="header text-2xl text-light-high font-semibold flex justify-between items-start px-8 pt-8 rounded-t dark:border-gray-600">
+                 <div className="header text-2xl text-light-high font-semibold
+                  flex justify-between md:text-lg items-start px-8 pt-8 md:px-6 md:pt-6 rounded-t dark:border-gray-600">
                    <p>{header}</p>
                  </div> : ""
              }
-         <div className="modalBody p-8 space-y-6">
+         <div className="modalBody p-8 space-y-6  md:p-6">
            {children}
          </div>
      </div>

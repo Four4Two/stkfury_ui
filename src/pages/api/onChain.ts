@@ -174,7 +174,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
 
           const daysRemaining = given.diff(currentDate, "days");
 
-          let unStakedon = given.utc().format("DD MMM YYYY hh:mm A UTC");
+          let unStakedon = given.local().format("DD MMM YYYY hh:mm A");
 
           filteredPendingClaims.push({
             unbondAmount:amount,
@@ -194,9 +194,8 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
           const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!
 
           const diff = ((nextEpochNumber - currentEpochNumber)+1)*drs
-          const tentativeTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').format();
-
-          printConsole(tentativeTime, "tentativeTime");
+          const tentativeTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').local().format("DD MMM YYYY hh:mm A");
+          printConsole(tentativeTime, "tentativeTime")
 
           filteredUnlistedPendingClaims.push({
             unbondAmount: item.amount?.amount,
