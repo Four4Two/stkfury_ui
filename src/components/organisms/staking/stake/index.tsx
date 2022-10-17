@@ -5,12 +5,8 @@ import { Icon } from "../../../atoms/icon";
 import styles from "./styles.module.css";
 import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/reducers";
-import StakeToasts from "./stakeToasts";
 
 const UnStake = () => {
-    const {showModal} = useSelector((state:RootState) => state.stake);
   return (
     <>
       <From />
@@ -35,9 +31,7 @@ const UnStake = () => {
       <div className="mt-4">
         <Submit />
       </div>
-        {!showModal ?
-            <StakeToasts/> : null
-        }
+
 
     </>
   );

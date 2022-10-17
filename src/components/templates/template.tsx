@@ -6,9 +6,12 @@ import MobileSideBar from "../organisms/sidebar/mobileSidebar";
 import ClaimModal from "../organisms/staking/claim";
 import StakeModal from "../organisms/staking/stake/stakeModal";
 import WithdrawModal from "../organisms/sidebar/withdrawModal";
+import StakeToasts from "../organisms/staking/stake/stakeToasts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/reducers";
 
 export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
-
+    const {showModal} = useSelector((state:RootState) => state.stake);
   return (
     <div>
       <Head>
@@ -24,6 +27,9 @@ export const PageTemplate = ({children, className, title }: { children: React.Re
         <ClaimModal/>
         <StakeModal/>
         <WithdrawModal/>
+        {!showModal ?
+            <StakeToasts/> : null
+        }
     </div>
   )
 }

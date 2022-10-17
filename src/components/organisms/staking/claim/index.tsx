@@ -120,7 +120,7 @@ const ClaimModal = () => {
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="block">
                         <div>
-                            {claimableStkAtomBalance > 0 ?
+                            {activeClaims > 0 ?
                                 <div className="flex justify-between items-center">
                                     <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
                                         {decimalize(activeClaims)} ATOM
