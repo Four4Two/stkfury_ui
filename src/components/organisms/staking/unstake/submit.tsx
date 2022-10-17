@@ -5,7 +5,7 @@ import { RootState } from "../../../../store/reducers";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../atoms/spinner";
 import {LiquidUnStakeMsg, LiquidUnStakeMsgTypes, RedeemMsg} from "../../../../helpers/protoMsg";
-import {printConsole, unDecimalize} from "../../../../helpers/utils";
+import {truncateToFixedDecimalPlaces, unDecimalize} from "../../../../helpers/utils";
 import {COSMOS_CHAIN_ID, INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
 import {setTransactionProgress} from "../../../../store/reducers/transaction";
@@ -20,16 +20,20 @@ const Submit = () => {
   const {stkAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
   const {amount, type} = useSelector((state:RootState) => state.unStake);
   const {inProgress, name} = useSelector((state:RootState) => state.transaction);
+  const {redeemFee, exchangeRate} = useSelector((state:RootState) => state.initialData)
+
+  const atomAmount = Number(amount) / exchangeRate
+
   const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData,
     cosmosAccountData, cosmosChainData} = useWallet()
 
-  const amountFee:number = Number(amount) - (Number(amount) * 0.1);
+  const amountFee:number = truncateToFixedDecimalPlaces(Number(atomAmount) - (Number(atomAmount) * redeemFee));
 
   const stakeHandler = async () => {
     let messages:LiquidUnStakeMsgTypes[];
     let pollingBalance;
     dispatch(setTransactionProgress(UN_STAKE));
-    if(type === INSTANT){
+    if(type === INSTANT) {
       const withDrawMsg = await MakeIBCTransferMsg({
         channel: ibcInfo?.destinationChannelId,
         fromAddress: persistenceAccountData?.address,

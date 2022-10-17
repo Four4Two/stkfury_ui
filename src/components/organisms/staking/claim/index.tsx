@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
-import {ClaimMsg} from "../../../../helpers/protoMsg";
+import {ClaimMsg, ClaimMsgTypes, LiquidUnStakeMsgTypes} from "../../../../helpers/protoMsg";
 import {decimalize} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
 import {executeClaimTransactionSaga, hideClaimModal} from "../../../../store/reducers/transactions/claim";
@@ -73,26 +73,32 @@ const ClaimModal = () => {
     },[claimableBalance, pendingClaimList, unlistedPendingClaimList])
 
     const claimHandler = async () => {
+        let messages:ClaimMsgTypes[];
         dispatch(setTransactionProgress(CLAIM));
+        if (activeClaims > 0) {
+            const withDrawMsg = await MakeIBCTransferMsg({
+                channel: ibcInfo?.destinationChannelId,
+                fromAddress: persistenceAccountData?.address,
+                toAddress: cosmosAccountData?.address,
+                amount: activeClaims,
+                timeoutHeight: undefined,
+                timeoutTimestamp: undefined,
+                denom: ibcInfo?.coinDenom,
+                sourceRPCUrl: persistenceChainData?.rpc,
+                destinationRPCUrl: cosmosChainData?.rpc,
+                port: IBCConfiguration.ibcDefaultPort
+            });
+            const claimMsg = ClaimMsg(persistenceAccountData!.address)
+            messages = [claimMsg, withDrawMsg]
+        }else {
+            const claimMsg = ClaimMsg(persistenceAccountData!.address)
+            messages = [claimMsg]
+        }
 
-        const withDrawMsg = await MakeIBCTransferMsg({
-            channel: ibcInfo?.destinationChannelId,
-            fromAddress: persistenceAccountData?.address,
-            toAddress: cosmosAccountData?.address,
-            amount: activeClaims,
-            timeoutHeight: undefined,
-            timeoutTimestamp: undefined,
-            denom: ibcInfo?.coinDenom,
-            sourceRPCUrl: persistenceChainData?.rpc,
-            destinationRPCUrl: cosmosChainData?.rpc,
-            port: IBCConfiguration.ibcDefaultPort});
-
-        const messages = ClaimMsg(persistenceAccountData!.address)
         dispatch(executeClaimTransactionSaga({
             persistenceSigner:persistenceSigner!,
             persistenceChainInfo:persistenceChainData!,
             msg: messages,
-            ibcTransferMsg:withDrawMsg,
             cosmosAddress: cosmosAccountData?.address!,
             address: persistenceAccountData!.address,
             cosmosChainInfo:cosmosChainData!,
@@ -114,23 +120,24 @@ const ClaimModal = () => {
                 <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
                     <div className="block">
                         <div>
-                            <div className="flex justify-between items-center">
-                                <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
-                                    {decimalize(activeClaims)} ATOM
-                                </p>
-                                <div className="flex text-base text-light-mid leading-normal font-medium">
-                                    Completed Unstaking
-                                    <Tooltip placement="bottom" overlay=
-                                        {<span>Completed Unstaking.</span>}>
-                                        <button className="icon-button px-1">
-                                            <Icon
-                                                viewClass="arrow-right"
-                                                iconName="info"/>
-                                        </button>
-                                    </Tooltip>
-                                </div>
-                            </div>
-
+                            {activeClaims > 0 ?
+                                <div className="flex justify-between items-center">
+                                    <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
+                                        {decimalize(activeClaims)} ATOM
+                                    </p>
+                                    <div className="flex text-base text-light-mid leading-normal font-medium">
+                                        Completed Unstaking
+                                        <Tooltip placement="bottom" overlay=
+                                            {<span>Completed Unstaking.</span>}>
+                                            <button className="icon-button px-1">
+                                                <Icon
+                                                    viewClass="arrow-right"
+                                                    iconName="info"/>
+                                            </button>
+                                        </Tooltip>
+                                    </div>
+                                </div> : null
+                            }
                             {claimableStkAtomBalance > 0 ?
                                 <div className="flex justify-between items-center mt-3">
                                     <p className="font-medium leading-normal text-3xl text-light-high md:text-base">

@@ -5,12 +5,8 @@ import { Icon } from "../../../atoms/icon";
 import styles from "./styles.module.css";
 import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/reducers";
-import StakeToasts from "./stakeToasts";
 
 const UnStake = () => {
-    const {showModal} = useSelector((state:RootState) => state.stake);
   return (
     <>
       <From />
@@ -32,20 +28,10 @@ const UnStake = () => {
           <ExchangeRate type={"stake"} />
         </p>
       </div>
-      <div className="flex items-center justify-between flex-wrap px-4 md:p-0">
-        <p className="font-normal text-sm leading-7 text-light-emphasis mb-2">
-          Fee
-        </p>
-        <p className="font-normal text-sm leading-7 text-light-emphasis text-right mb-2">
-          0%
-        </p>
-      </div>
       <div className="mt-4">
         <Submit />
       </div>
-        {!showModal ?
-            <StakeToasts/> : null
-        }
+
 
     </>
   );

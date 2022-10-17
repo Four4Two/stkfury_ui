@@ -1,6 +1,7 @@
 import {
   QueryAllBalancesResponse,
-  QueryClientImpl as BankQuery
+  QueryClientImpl as BankQuery,
+  QueryTotalSupplyResponse
 } from "cosmjs-types/cosmos/bank/v1beta1/query";
 import {
   decimalize,
@@ -24,7 +25,7 @@ import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
-import { PERSISTENCE_CHAIN_ID } from "../../../AppConstants";
+import { PERSISTENCE_CHAIN_ID, STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
 import { ExternalChains } from "../../helpers/config";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
@@ -117,6 +118,30 @@ export const getAPR = async () => {
   }
 };
 
+export const getTVU = async (rpc:string) => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const bankQueryService = new BankQuery(rpcClient);
+    const supplyResponse:QueryTotalSupplyResponse = await bankQueryService.TotalSupply({})
+    if (supplyResponse.supply.length) {
+      const token: Coin | undefined = supplyResponse.supply.find(
+          (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
+      );
+      return token?.amount;
+    }
+    return 0
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
+  }
+};
+
+
 export const fetchAllEpochEntries = async (address: string, rpc: string) => {
   try {
     const filteredPendingClaims: Array<any> = [];
@@ -168,7 +193,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
               .add(diff, "seconds")
               .format();
 
-            printConsole(actualTime, "actualTime");
+            printConsole(actualTime);
 
             const unStakedon = moment(unbondTime).format("DD MMM YYYY hh:mm A");
 
@@ -204,8 +229,6 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             .local()
             .format("DD MMM YYYY hh:mm A");
           const remainingTime = moment(tentativeTime).fromNow(true);
-          printConsole(tentativeTime, "tentativeTime");
-          printConsole(remainingTime, "remainingTime");
           filteredUnlistedPendingClaims.push({
             unbondAmount: item.amount?.amount,
             unStakedon: tentativeTime,
