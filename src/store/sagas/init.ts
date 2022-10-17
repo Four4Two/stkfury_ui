@@ -1,8 +1,8 @@
 import { FetchInitialDataSaga } from "../reducers/initialData/types";
-import {getAPR, getExchangeRate, getFee} from "../../pages/api/onChain";
+import {getAPR, getExchangeRate, getFee, getTVU} from "../../pages/api/onChain";
 import { fetchAtomPrice } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
-import {setAPR, setAtomPrice, setExchangeRate, setRedeemFee} from "../reducers/initialData";
+import {setAPR, setAtomPrice, setExchangeRate, setRedeemFee, setTVU} from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga) {
   const { persistenceChainInfo }: any = payload;
@@ -14,4 +14,6 @@ export function* fetchInit({ payload }: FetchInitialDataSaga) {
   yield put(setAtomPrice(atomPrice));
   const apr: number = yield getAPR();
   yield put(setAPR(apr));
+  const tvu: number = yield getTVU(persistenceChainInfo.rpc);
+  yield put(setTVU(tvu));
 }

@@ -8,11 +8,12 @@ import {useSelector} from "react-redux";
 import {RootState} from "../../../../store/reducers";
 import {Icon} from "../../../atoms/icon";
 import Tooltip from "rc-tooltip";
+import {decimalize, formatNumber} from "../../../../helpers/utils";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
-    const { apr } = useSelector((state: RootState) => state.initialData);
-
+    const { apr, tvu, exchangeRate } = useSelector((state: RootState) => state.initialData);
+    const inverseExchangeRate:number = 1/exchangeRate;
   const tabItemClasses = 'cursor-pointer w-full bg-tabHeader ' +
     'font-semibold text-lg leading-normal text-center' +
     ' text-light-mid flex-1 px-4 py-2 md:px-2 md:py-1.5 md:text-base';
@@ -53,7 +54,7 @@ const StakingTabs = () => {
                     Total Value Unlocked(TVU)
                 </p>
                 <p className="text-light-emphasis font-semibold leading-normal text-2xl text-center md:text-base">
-                    0 ATOM
+                    {formatNumber(Number(decimalize(tvu/inverseExchangeRate)), 3, 2)} ATOM
                 </p>
             </div>
         </div>

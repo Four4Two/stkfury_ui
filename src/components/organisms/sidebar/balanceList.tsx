@@ -12,6 +12,7 @@ import {setWithdrawAmount, showWithdrawModal} from "../../../store/reducers/tran
 import {useWallet} from "../../../context/WalletConnect/WalletConnect";
 import {WITHDRAW} from "../../../../AppConstants";
 import {Spinner} from "../../atoms/spinner";
+import {useWindowSize} from "../../../customHooks/useWindowSize";
 
 const BalanceList = () => {
     const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const BalanceList = () => {
     const {isWalletConnected} = useWallet()
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
     const {showModal} = useSelector((state:RootState) => state.withdraw);
+    const { isMobile } = useWindowSize();
 
     const {claimableBalance, pendingClaimList, claimableStkAtomBalance, unlistedPendingClaimList} =
         useSelector((state:RootState) => state.claimQueries);
@@ -81,7 +83,7 @@ const BalanceList = () => {
                 </span>
                     </div>
                     <p className="text-light-mid text-sm font-medium leading-5">
-                        {formatNumber(stkAtomBalance, 3, 6)}
+                        {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
                     </p>
                 </div>
                 {ibcAtomBalance > 0 ?
@@ -98,7 +100,9 @@ const BalanceList = () => {
                                     </button>
                                 </Tooltip>
                             </div>
-                            <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(ibcAtomBalance, 3, 6)}</p>
+                            <p className="text-light-mid text-sm font-medium leading-5">
+                                {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
+                            </p>
                         </div>
                         <div className={`m-auto w-[220px] md:w-auto`}>
                             <Button
@@ -140,9 +144,12 @@ const BalanceList = () => {
                         <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
                     </div>
                     <p className="text-light-mid text-sm font-medium leading-5">
-                        {truncateToFixedDecimalPlaces(Number(decimalize(activeClaims)) +
-                            Number(decimalize(totalPendingBalance)) +
-                            Number(decimalize(activeStkAtomClaims))) + Number(decimalize(totalUnListedPendingClaims))}
+                        {formatNumber((
+                            (Number(decimalize(activeClaims)) +
+                                Number(decimalize(totalPendingBalance)) +
+                                Number(decimalize(activeStkAtomClaims))) +
+                            Number(decimalize(totalUnListedPendingClaims))), 3, isMobile ? 2 : 6
+                        )}
                     </p>
                 </div>
                 {isWalletConnected && (activeClaims > 0 || totalPendingBalance > 0

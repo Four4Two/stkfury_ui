@@ -6,14 +6,12 @@ import { RootState } from "../../../../store/reducers";
 import { unStakeType } from "../../../../store/reducers/transactions/unstake/types";
 import { setUnStakeOption } from "../../../../store/reducers/transactions/unstake";
 import { INSTANT } from "../../../../../AppConstants";
-import {useWindowSize} from "../../../../customHooks/useWindowSize";
 
 const Options = () => {
   const dispatch = useDispatch();
   const {amount, type} = useSelector((state:RootState) => state.unStake);
   const {exchangeRate} = useSelector((state:RootState) => state.initialData)
   const atomAmount = Number(amount) / exchangeRate
-  const { isMobile } = useWindowSize();
 
   const optionHandler = (value: unStakeType) => {
     dispatch(setUnStakeOption(value))
