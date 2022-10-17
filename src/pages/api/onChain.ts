@@ -1,4 +1,7 @@
-import {QueryAllBalancesResponse, QueryClientImpl as BankQuery} from "cosmjs-types/cosmos/bank/v1beta1/query";
+import {
+  QueryAllBalancesResponse,
+  QueryClientImpl as BankQuery
+} from "cosmjs-types/cosmos/bank/v1beta1/query";
 import {
   decimalize,
   genericErrorHandler,
@@ -11,15 +14,13 @@ import {
 import {
   QueryAllDelegatorUnbondingEpochEntriesResponse,
   QueryClientImpl,
-  QueryUnbondingEpochCValueResponse,
+  QueryUnbondingEpochCValueResponse
 } from "../../helpers/proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
 
-import {
-  QueryClientImpl as EpochQueryClient,
-} from "../../helpers/proto-codecs/codec/persistence/epochs/v1beta1/query";
+import { QueryClientImpl as EpochQueryClient } from "../../helpers/proto-codecs/codec/persistence/epochs/v1beta1/query";
 
-import {Scope} from "@sentry/react";
-import {Coin} from "@cosmjs/proto-signing";
+import { Scope } from "@sentry/react";
+import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
@@ -79,13 +80,13 @@ export const getExchangeRate = async (rpc: string) => {
   }
 };
 
-
 export const getFee = async (rpc: string) => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const chainParamsResponse = await pstakeQueryService.HostChainParams({});
-    const fee = chainParamsResponse.hostChainParams?.pstakeParams?.pstakeRedemptionFee!
+    const fee =
+      chainParamsResponse.hostChainParams?.pstakeParams?.pstakeRedemptionFee!;
     return Number(Number(decimalize(fee, 18)).toFixed(6));
   } catch (e) {
     const customScope = new Scope();
@@ -104,7 +105,7 @@ export const getAPR = async () => {
     const commission = await getCommission();
     const incentives = await getIncentives();
     const apr = baseRate - (commission / 100) * baseRate + incentives;
-    return apr.toFixed(2);
+    return isNaN(apr) ? 0 : apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -126,42 +127,46 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
     const pstakeQueryService: QueryClientImpl = new QueryClientImpl(rpcClient);
 
     const epochEntriesResponse: QueryAllDelegatorUnbondingEpochEntriesResponse =
-        await pstakeQueryService.DelegatorUnbondingEpochEntries({
-          delegatorAddress: address
-        });
+      await pstakeQueryService.DelegatorUnbondingEpochEntries({
+        delegatorAddress: address
+      });
     if (epochEntriesResponse.delegatorUnbondingEpochEntries.length) {
       for (let item of epochEntriesResponse.delegatorUnbondingEpochEntries) {
         const epochNumber = item.epochNumber;
-        const unbondEpochResponse: QueryUnbondingEpochCValueResponse = await getUnbondingEpochCvalue(
+        const unbondEpochResponse: QueryUnbondingEpochCValueResponse =
+          await getUnbondingEpochCvalue(epochNumber, pstakeQueryService);
+        const isFailed: boolean =
+          unbondEpochResponse.unbondingEpochCValue?.isFailed!;
+        const isMatured: boolean =
+          unbondEpochResponse.unbondingEpochCValue?.isMatured!;
+        const cValueEpochNumber: Long =
+          unbondEpochResponse.unbondingEpochCValue?.epochNumber!;
+        const amount: string = item?.amount?.amount!;
+        // pending unbonding list
+        if (!isFailed && !isMatured && cValueEpochNumber.toNumber() > 0) {
+          const unbondTimeResponse: any = await getUnbondingTime(
             epochNumber,
             pstakeQueryService
-        );
-        const isFailed:boolean = unbondEpochResponse.unbondingEpochCValue?.isFailed!;
-        const isMatured:boolean = unbondEpochResponse.unbondingEpochCValue?.isMatured!;
-        const cValueEpochNumber:Long = unbondEpochResponse.unbondingEpochCValue?.epochNumber!;
-        const amount:string = item?.amount?.amount!;
-        // pending unbonding list
-        if (!isFailed && !isMatured && cValueEpochNumber.toNumber() > 0){
-          const unbondTimeResponse: any = await getUnbondingTime(
-              epochNumber,
-              pstakeQueryService
           );
 
           if (unbondTimeResponse) {
             const unbondTime =
-                unbondTimeResponse.hostAccountUndelegation.completionTime;
+              unbondTimeResponse.hostAccountUndelegation.completionTime;
 
             const epochInfo = await getEpochInfo(rpc);
             const currentEpochNumberResponse = await getCurrentEpoch(rpc);
 
-            const currentEpochNumber = currentEpochNumberResponse.currentEpoch.toNumber()
+            const currentEpochNumber =
+              currentEpochNumberResponse.currentEpoch.toNumber();
             const unbondEpochNumber = epochNumber.toNumber();
 
-            const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!
+            const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!;
 
-            const diff = ((unbondEpochNumber - currentEpochNumber) + 1) * drs
+            const diff = (unbondEpochNumber - currentEpochNumber + 1) * drs;
 
-            const actualTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').format();
+            const actualTime = moment(epochInfo.epochs[0].currentEpochStartTime)
+              .add(diff, "seconds")
+              .format();
 
             printConsole(actualTime, "actualTime");
 
@@ -175,24 +180,32 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
               daysRemaining: remainingTime
             });
           }
-
-        }else if (isFailed && cValueEpochNumber.toNumber() > 0){ // failed unbonding list
-            totalFailedUnbondAmount += Number(amount);
-        } else if (isMatured && cValueEpochNumber.toNumber() > 0){ // claimable unbonding list
+        } else if (isFailed && cValueEpochNumber.toNumber() > 0) {
+          // failed unbonding list
+          totalFailedUnbondAmount += Number(amount);
+        } else if (isMatured && cValueEpochNumber.toNumber() > 0) {
+          // claimable unbonding list
           claimableAmount += Number(amount);
-        }else { // unlisted pending unbonding list
-          const epochInfo =  await getEpochInfo(rpc);
+        } else {
+          // unlisted pending unbonding list
+          const epochInfo = await getEpochInfo(rpc);
           const currentEpochNumberResponse = await getCurrentEpoch(rpc);
-          const currentEpochNumber = currentEpochNumberResponse.currentEpoch.toNumber()
+          const currentEpochNumber =
+            currentEpochNumberResponse.currentEpoch.toNumber();
 
           const nextEpochNumber = epochNumber.toNumber();
-          const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!
+          const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!;
 
-          const diff = ((nextEpochNumber - currentEpochNumber)+1)*drs
-          const tentativeTime = moment(epochInfo.epochs[0].currentEpochStartTime).add(diff, 'seconds').local().format("DD MMM YYYY hh:mm A");
+          const diff = (nextEpochNumber - currentEpochNumber + 1) * drs;
+          const tentativeTime = moment(
+            epochInfo.epochs[0].currentEpochStartTime
+          )
+            .add(diff, "seconds")
+            .local()
+            .format("DD MMM YYYY hh:mm A");
           const remainingTime = moment(tentativeTime).fromNow(true);
-          printConsole(tentativeTime, "tentativeTime")
-          printConsole(remainingTime, "remainingTime")
+          printConsole(tentativeTime, "tentativeTime");
+          printConsole(remainingTime, "remainingTime");
           filteredUnlistedPendingClaims.push({
             unbondAmount: item.amount?.amount,
             unStakedon: tentativeTime,
@@ -215,10 +228,10 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
     });
     genericErrorHandler(error, customScope);
     return {
-      filteredPendingClaims:[],
-      totalFailedUnbondAmount:0,
-      claimableAmount:0,
-      filteredUnlistedPendingClaims:[]
+      filteredPendingClaims: [],
+      totalFailedUnbondAmount: 0,
+      claimableAmount: 0,
+      filteredUnlistedPendingClaims: []
     };
   }
 };
@@ -234,23 +247,23 @@ export const getUnbondingAmount = async (
   });
 };
 
-export const getEpochInfo = async (rpc:string) => {
+export const getEpochInfo = async (rpc: string) => {
   const rpcClient = await RpcClient(rpc);
   const persistenceQueryService = new EpochQueryClient(rpcClient);
   return await persistenceQueryService.EpochInfos({});
 };
 
-export const getCurrentEpoch = async (rpc:string) => {
+export const getCurrentEpoch = async (rpc: string) => {
   const rpcClient = await RpcClient(rpc);
   const persistenceQueryService = new EpochQueryClient(rpcClient);
   return await persistenceQueryService.CurrentEpoch({
-    identifier:'day'
+    identifier: "day"
   });
 };
 
 export const getUnbondingEpochCvalue = async (
-    epochNumber: Long,
-    queryService: QueryClientImpl
+  epochNumber: Long,
+  queryService: QueryClientImpl
 ) => {
   return await queryService.UnbondingEpochCValue({
     epochNumber: epochNumber
@@ -266,8 +279,6 @@ export const getUnbondingTime = async (
       epochNumber: epochNumber
     });
   } catch (error) {
-    printConsole(error , "unbond time error")
+    printConsole(error, "unbond time error");
   }
 };
-
-
