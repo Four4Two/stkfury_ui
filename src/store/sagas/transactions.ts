@@ -127,8 +127,8 @@ export function* executeUnStakeTransaction({ payload }: UnStakeTransactionPayloa
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
   try {
     const {persistenceSigner, persistenceChainInfo, address,
-      msg, ibcTransferMsg, cosmosChainInfo, cosmosAddress, pollInitialIBCAtomBalance} = payload
-    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, [msg, ibcTransferMsg], COSMOS_FEE, "", persistenceChainInfo.rpc);
+      msg, cosmosChainInfo, cosmosAddress, pollInitialIBCAtomBalance} = payload
+    const transaction:DeliverTxResponse = yield Transaction(persistenceSigner, address, msg, COSMOS_FEE, "", persistenceChainInfo.rpc);
     printConsole(transaction ,'transaction claim')
     if (transaction.code === 0) {
       displayToast(

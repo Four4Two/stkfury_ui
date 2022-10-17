@@ -11,8 +11,7 @@ export interface ClaimTransactionParams {
     persistenceSigner : OfflineSigner,
     persistenceChainInfo: ChainInfo,
     address:string,
-    msg:ClaimMsgTypes,
-    ibcTransferMsg:LiquidStakeMsgTypes,
+    msg:ClaimMsgTypes[],
     cosmosChainInfo: ChainInfo,
     cosmosAddress:string,
     pollInitialIBCAtomBalance:number
