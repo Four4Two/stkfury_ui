@@ -127,11 +127,7 @@ export const getTVU = async (rpc:string) => {
       const token: Coin | undefined = supplyResponse.supply.find(
           (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
-      if(token !== undefined){
-        return token?.amount;
-      }else {
-        return 0
-      }
+      return token?.amount;
     }
     return 0
   } catch (e) {
