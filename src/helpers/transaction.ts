@@ -71,3 +71,25 @@ export async function MakeIBCTransferMsg({channel, fromAddress, toAddress, amoun
     throw error;
   });
 }
+
+// export async function TransactionWithLedger( transaction, userAddress, callback) {
+//   const [wallet, address] = await LedgerWallet(makeHdPath(), comdex.prefix);
+//   if (userAddress !== address) {
+//     const error = "Connected account is not active in Keplr";
+//     callback(error);
+//     return;
+//   }
+//   const response = Transaction( wallet, address, [transaction?.message], transaction?.fee, transaction?.memo );
+//   response .then((result) => { callback(null, result); })
+//       .catch((error) => { callback(error && error.message); })
+//   ;}
+//
+// async function Transaction(wallet, signerAddress, msgs, fee, memo = "")
+// {
+//   const cosmJS = await SigningStargateClient.connectWithSigner(
+//     comdex.rpc, wallet, { registry: myRegistry, aminoTypes: aminoTypes } );
+//   const { accountNumber, sequence } = await cosmJS.getSequence(signerAddress);
+//   const clientChain = await cosmJS.getChainId();
+//   const txRaw = await cosmJS.sign(signerAddress, msgs, fee, memo, { accountNumber, sequence: Number(sequence), chainId: clientChain, });
+//   const txBytes = Uint8Array.from(TxRaw.encode(txRaw).finish()); return cosmJS.broadcastTx(txBytes);
+// }

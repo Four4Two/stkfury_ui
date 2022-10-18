@@ -3,7 +3,7 @@ import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
 import {ClaimMsg, ClaimMsgTypes, LiquidUnStakeMsgTypes} from "../../../../helpers/protoMsg";
-import {decimalize} from "../../../../helpers/utils";
+import {decimalize, truncateToFixedDecimalPlaces} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
 import {executeClaimTransactionSaga, hideClaimModal} from "../../../../store/reducers/transactions/claim";
 import {RootState} from "../../../../store/reducers";
@@ -80,7 +80,7 @@ const ClaimModal = () => {
                 channel: ibcInfo?.destinationChannelId,
                 fromAddress: persistenceAccountData?.address,
                 toAddress: cosmosAccountData?.address,
-                amount: activeClaims,
+                amount: truncateToFixedDecimalPlaces(activeClaims),
                 timeoutHeight: undefined,
                 timeoutTimestamp: undefined,
                 denom: ibcInfo?.coinDenom,

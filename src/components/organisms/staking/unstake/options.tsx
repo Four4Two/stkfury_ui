@@ -10,8 +10,10 @@ import { INSTANT } from "../../../../../AppConstants";
 const Options = () => {
   const dispatch = useDispatch();
   const {amount, type} = useSelector((state:RootState) => state.unStake);
-  const {exchangeRate} = useSelector((state:RootState) => state.initialData)
+  const {exchangeRate, redeemFee} = useSelector((state:RootState) => state.initialData)
   const atomAmount = Number(amount) / exchangeRate
+
+  const amountFee:number = truncateToFixedDecimalPlaces(Number(atomAmount) - (Number(atomAmount) * redeemFee));
 
   const optionHandler = (value: unStakeType) => {
     dispatch(setUnStakeOption(value))
@@ -31,7 +33,7 @@ const Options = () => {
             </p>
             <p className={`${styles.amount} option-value font-medium m-0 text-light-mid
              text-2xl text-center text-right overflow-x-auto md:text-base`}>
-              {truncateToFixedDecimalPlaces(atomAmount)} ATOM
+              {truncateToFixedDecimalPlaces(amountFee)} ATOM
             </p>
           </div>
         </div>

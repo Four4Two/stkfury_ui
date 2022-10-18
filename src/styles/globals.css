@@ -35,7 +35,7 @@ body{
 }
 
 .navItemActive .side-bar-icon{
-   fill: #811318
+   fill: #c73238
 }
 
 .navItemActive .text{
@@ -86,7 +86,7 @@ img, video{
 }
 
 .moreList a:hover .itemIcon{
-   fill: #811318
+   fill: #c73238
 }
 
 .socialLinks .socialIcon{

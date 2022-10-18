@@ -19,10 +19,7 @@ const TransactionIcon = (stepNumber:number, value:number, txFailed:boolean)=>{
                   <div className="spinnerSecondary relative flex items-center justify-center
                   w-[1.5rem] h-[1.5rem] after:content-[''] after:absolute after:left-0
                 after:top-0 after:w-full after:h-full md:!w-[1.3rem] md:!h-[1.3rem]">
-                    <Icon
-                        iconName="tick"
-                        viewClass="icon-arrow fill-[#787878]"
-                    />
+
                   </div>
               :
               <Icon

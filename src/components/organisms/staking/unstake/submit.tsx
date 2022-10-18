@@ -29,6 +29,7 @@ const Submit = () => {
 
   const amountFee:number = truncateToFixedDecimalPlaces(Number(atomAmount) - (Number(atomAmount) * redeemFee));
 
+  console.log(amountFee, "amountFee", atomAmount, (Number(atomAmount) * redeemFee))
   const stakeHandler = async () => {
     let messages:LiquidUnStakeMsgTypes[];
     let pollingBalance;
