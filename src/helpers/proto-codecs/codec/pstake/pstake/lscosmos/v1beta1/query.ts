@@ -10,6 +10,7 @@ import {
   UnbondingEpochCValue,
   HostAccountUndelegation,
   DelegatorUnbondingEpochEntry,
+  HostAccounts,
 } from "./pstake/lscosmos/v1beta1/lscosmos";
 import { Coin } from "./cosmos/base/v1beta1/coin";
 
@@ -139,6 +140,32 @@ export interface QueryRewardBoosterAccountRequest {}
 /** QueryRewardBoosterAccountResponse is a response for the Query/RewardsBoosterAccount methods. */
 export interface QueryRewardBoosterAccountResponse {
   balance?: Coin;
+}
+
+/** QueryHostAccountsRequest is a request for the Query/HostAccounts methods. */
+export interface QueryHostAccountsRequest {}
+
+/** QueryHostAccountsResponse is a response for the Query/HostAccounts methods. */
+export interface QueryHostAccountsResponse {
+  hostAccounts?: HostAccounts;
+}
+
+/** QueryDepositModuleAccountRequest is a request for the Query/DepositModuleAccount methods. */
+export interface QueryDepositModuleAccountRequest {}
+
+/** QueryDepositModuleAccountResponse is a response for the Query/DepositModuleAccount methods. */
+export interface QueryDepositModuleAccountResponse {
+  balance?: Coin;
+}
+
+/** QueryAllDelegatorUnbondingEpochEntriesRequest is a request for the Query/DelegatorUnbondingEpochEntries methods. */
+export interface QueryAllDelegatorUnbondingEpochEntriesRequest {
+  delegatorAddress: string;
+}
+
+/** QueryAllDelegatorUnbondingEpochEntriesResponse is a response for the Query/DelegatorUnbondingEpochEntries methods. */
+export interface QueryAllDelegatorUnbondingEpochEntriesResponse {
+  delegatorUnbondingEpochEntries: DelegatorUnbondingEpochEntry[];
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -1847,6 +1874,377 @@ export const QueryRewardBoosterAccountResponse = {
   },
 };
 
+function createBaseQueryHostAccountsRequest(): QueryHostAccountsRequest {
+  return {};
+}
+
+export const QueryHostAccountsRequest = {
+  encode(
+    _: QueryHostAccountsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryHostAccountsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryHostAccountsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryHostAccountsRequest {
+    return {};
+  },
+
+  toJSON(_: QueryHostAccountsRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryHostAccountsRequest>, I>>(
+    _: I
+  ): QueryHostAccountsRequest {
+    const message = createBaseQueryHostAccountsRequest();
+    return message;
+  },
+};
+
+function createBaseQueryHostAccountsResponse(): QueryHostAccountsResponse {
+  return { hostAccounts: undefined };
+}
+
+export const QueryHostAccountsResponse = {
+  encode(
+    message: QueryHostAccountsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.hostAccounts !== undefined) {
+      HostAccounts.encode(
+        message.hostAccounts,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryHostAccountsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryHostAccountsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.hostAccounts = HostAccounts.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryHostAccountsResponse {
+    return {
+      hostAccounts: isSet(object.hostAccounts)
+        ? HostAccounts.fromJSON(object.hostAccounts)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryHostAccountsResponse): unknown {
+    const obj: any = {};
+    message.hostAccounts !== undefined &&
+      (obj.hostAccounts = message.hostAccounts
+        ? HostAccounts.toJSON(message.hostAccounts)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryHostAccountsResponse>, I>>(
+    object: I
+  ): QueryHostAccountsResponse {
+    const message = createBaseQueryHostAccountsResponse();
+    message.hostAccounts =
+      object.hostAccounts !== undefined && object.hostAccounts !== null
+        ? HostAccounts.fromPartial(object.hostAccounts)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryDepositModuleAccountRequest(): QueryDepositModuleAccountRequest {
+  return {};
+}
+
+export const QueryDepositModuleAccountRequest = {
+  encode(
+    _: QueryDepositModuleAccountRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryDepositModuleAccountRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryDepositModuleAccountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryDepositModuleAccountRequest {
+    return {};
+  },
+
+  toJSON(_: QueryDepositModuleAccountRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryDepositModuleAccountRequest>, I>
+  >(_: I): QueryDepositModuleAccountRequest {
+    const message = createBaseQueryDepositModuleAccountRequest();
+    return message;
+  },
+};
+
+function createBaseQueryDepositModuleAccountResponse(): QueryDepositModuleAccountResponse {
+  return { balance: undefined };
+}
+
+export const QueryDepositModuleAccountResponse = {
+  encode(
+    message: QueryDepositModuleAccountResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.balance !== undefined) {
+      Coin.encode(message.balance, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryDepositModuleAccountResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryDepositModuleAccountResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.balance = Coin.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryDepositModuleAccountResponse {
+    return {
+      balance: isSet(object.balance)
+        ? Coin.fromJSON(object.balance)
+        : undefined,
+    };
+  },
+
+  toJSON(message: QueryDepositModuleAccountResponse): unknown {
+    const obj: any = {};
+    message.balance !== undefined &&
+      (obj.balance = message.balance
+        ? Coin.toJSON(message.balance)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<DeepPartial<QueryDepositModuleAccountResponse>, I>
+  >(object: I): QueryDepositModuleAccountResponse {
+    const message = createBaseQueryDepositModuleAccountResponse();
+    message.balance =
+      object.balance !== undefined && object.balance !== null
+        ? Coin.fromPartial(object.balance)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDelegatorUnbondingEpochEntriesRequest(): QueryAllDelegatorUnbondingEpochEntriesRequest {
+  return { delegatorAddress: "" };
+}
+
+export const QueryAllDelegatorUnbondingEpochEntriesRequest = {
+  encode(
+    message: QueryAllDelegatorUnbondingEpochEntriesRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.delegatorAddress !== "") {
+      writer.uint32(10).string(message.delegatorAddress);
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryAllDelegatorUnbondingEpochEntriesRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDelegatorUnbondingEpochEntriesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorAddress = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDelegatorUnbondingEpochEntriesRequest {
+    return {
+      delegatorAddress: isSet(object.delegatorAddress)
+        ? String(object.delegatorAddress)
+        : "",
+    };
+  },
+
+  toJSON(message: QueryAllDelegatorUnbondingEpochEntriesRequest): unknown {
+    const obj: any = {};
+    message.delegatorAddress !== undefined &&
+      (obj.delegatorAddress = message.delegatorAddress);
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<QueryAllDelegatorUnbondingEpochEntriesRequest>,
+      I
+    >
+  >(object: I): QueryAllDelegatorUnbondingEpochEntriesRequest {
+    const message = createBaseQueryAllDelegatorUnbondingEpochEntriesRequest();
+    message.delegatorAddress = object.delegatorAddress ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryAllDelegatorUnbondingEpochEntriesResponse(): QueryAllDelegatorUnbondingEpochEntriesResponse {
+  return { delegatorUnbondingEpochEntries: [] };
+}
+
+export const QueryAllDelegatorUnbondingEpochEntriesResponse = {
+  encode(
+    message: QueryAllDelegatorUnbondingEpochEntriesResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    for (const v of message.delegatorUnbondingEpochEntries) {
+      DelegatorUnbondingEpochEntry.encode(
+        v!,
+        writer.uint32(10).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): QueryAllDelegatorUnbondingEpochEntriesResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDelegatorUnbondingEpochEntriesResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.delegatorUnbondingEpochEntries.push(
+            DelegatorUnbondingEpochEntry.decode(reader, reader.uint32())
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDelegatorUnbondingEpochEntriesResponse {
+    return {
+      delegatorUnbondingEpochEntries: Array.isArray(
+        object?.delegatorUnbondingEpochEntries
+      )
+        ? object.delegatorUnbondingEpochEntries.map((e: any) =>
+            DelegatorUnbondingEpochEntry.fromJSON(e)
+          )
+        : [],
+    };
+  },
+
+  toJSON(message: QueryAllDelegatorUnbondingEpochEntriesResponse): unknown {
+    const obj: any = {};
+    if (message.delegatorUnbondingEpochEntries) {
+      obj.delegatorUnbondingEpochEntries =
+        message.delegatorUnbondingEpochEntries.map((e) =>
+          e ? DelegatorUnbondingEpochEntry.toJSON(e) : undefined
+        );
+    } else {
+      obj.delegatorUnbondingEpochEntries = [];
+    }
+    return obj;
+  },
+
+  fromPartial<
+    I extends Exact<
+      DeepPartial<QueryAllDelegatorUnbondingEpochEntriesResponse>,
+      I
+    >
+  >(object: I): QueryAllDelegatorUnbondingEpochEntriesResponse {
+    const message = createBaseQueryAllDelegatorUnbondingEpochEntriesResponse();
+    message.delegatorUnbondingEpochEntries =
+      object.delegatorUnbondingEpochEntries?.map((e) =>
+        DelegatorUnbondingEpochEntry.fromPartial(e)
+      ) || [];
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -1886,6 +2284,15 @@ export interface Query {
   RewardsBoosterAccount(
     request: QueryRewardBoosterAccountRequest
   ): Promise<QueryRewardBoosterAccountResponse>;
+  HostAccounts(
+    request: QueryHostAccountsRequest
+  ): Promise<QueryHostAccountsResponse>;
+  DepositModuleAccount(
+    request: QueryDepositModuleAccountRequest
+  ): Promise<QueryDepositModuleAccountResponse>;
+  DelegatorUnbondingEpochEntries(
+    request: QueryAllDelegatorUnbondingEpochEntriesRequest
+  ): Promise<QueryAllDelegatorUnbondingEpochEntriesResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -1907,6 +2314,10 @@ export class QueryClientImpl implements Query {
     this.DelegatorUnbondingEpochEntry =
       this.DelegatorUnbondingEpochEntry.bind(this);
     this.RewardsBoosterAccount = this.RewardsBoosterAccount.bind(this);
+    this.HostAccounts = this.HostAccounts.bind(this);
+    this.DepositModuleAccount = this.DepositModuleAccount.bind(this);
+    this.DelegatorUnbondingEpochEntries =
+      this.DelegatorUnbondingEpochEntries.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -2096,6 +2507,51 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryRewardBoosterAccountResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  HostAccounts(
+    request: QueryHostAccountsRequest
+  ): Promise<QueryHostAccountsResponse> {
+    const data = QueryHostAccountsRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "HostAccounts",
+      data
+    );
+    return promise.then((data) =>
+      QueryHostAccountsResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  DepositModuleAccount(
+    request: QueryDepositModuleAccountRequest
+  ): Promise<QueryDepositModuleAccountResponse> {
+    const data = QueryDepositModuleAccountRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "DepositModuleAccount",
+      data
+    );
+    return promise.then((data) =>
+      QueryDepositModuleAccountResponse.decode(new _m0.Reader(data))
+    );
+  }
+
+  DelegatorUnbondingEpochEntries(
+    request: QueryAllDelegatorUnbondingEpochEntriesRequest
+  ): Promise<QueryAllDelegatorUnbondingEpochEntriesResponse> {
+    const data =
+      QueryAllDelegatorUnbondingEpochEntriesRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "pstake.lscosmos.v1beta1.Query",
+      "DelegatorUnbondingEpochEntries",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllDelegatorUnbondingEpochEntriesResponse.decode(
+        new _m0.Reader(data)
+      )
     );
   }
 }

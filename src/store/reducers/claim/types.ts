@@ -6,6 +6,7 @@ export interface ClaimState {
     pendingClaimList: any[],
     claimableBalance:number,
     claimableStkAtomBalance:number,
+    unlistedPendingClaimList: any[],
 }
 
 export interface FetchPendingClaimSagaParams {

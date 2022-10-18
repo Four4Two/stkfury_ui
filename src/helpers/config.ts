@@ -37,7 +37,7 @@ export const IBCChainInfos:IBCChainData = {
             counterpartyChainId: 'gaiad-1',
             chainName: 'Cosmos Testnet',
             sourceChannelId: 'channel-0',
-            destinationChannelId: '',
+            destinationChannelId: 'channel-0',
             portID: 'transfer',
             coinDenom: 'ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2',
             prefix: 'cosmos'
@@ -81,7 +81,7 @@ export const ExternalChains:ExternalChainData = {
                 },
                 {
                     coinDenom: 'STKATOM',
-                    coinMinimalDenom: 'ustkatom',
+                    coinMinimalDenom: 'stk/uatom',
                     coinDecimals: 6,
                     coinGeckoId: 'persistence',
                 }

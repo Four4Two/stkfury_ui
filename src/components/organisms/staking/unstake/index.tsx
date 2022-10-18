@@ -29,16 +29,16 @@ const Stake = () => {
         </div>
         {
           type === INSTANT ?
-            ""
+              <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
+                  Redeem stkATOM and receive ATOM to your Cosmos wallet instantly.
+              </p>
             :
             <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
-              Your stkATOM will only be unbonded after an unbonding period of up to 21 days. If you
-              want
-              immediate
-              liquidity, you can swap stkATOM for ATOM on one of the DEXes listed in our &nbsp;
-              <Link href="/" passHref>
-                <a>DeFi section.</a>
-              </Link>
+                Your stkATOM will only be unbonded after an unbonding period of 21-25 days. If you want immediate
+                liquidity, you can swap stkATOM for ATOM on one of the DEXes listed in our&nbsp;
+                <Link href="/" passHref>
+                    <a>DeFi section.</a>
+                </Link>
             </p>
         }
       </>

@@ -19,7 +19,7 @@ export const IBC_DENOM =
 export const COIN_ATOM = "ATOM";
 export const COIN_ATOM_DENOM = "uatom";
 export const STK_ATOM_DENOM = "STKATOM";
-export const STK_ATOM_MINIMAL_DENOM = "ustkatom";
+export const STK_ATOM_MINIMAL_DENOM = "stk/uatom";
 export const ATOM_BALANCE = "AtomBalance";
 export const STK_ATOM_BALANCE = "stkATOMBalance";
 export const COSMOS_ATOM_BALANCE = "CosmosAtomBalance";
@@ -34,6 +34,7 @@ export const FATAL = "fatal";
 export const DEPOSIT = "deposit";
 export const FEES = "fees";
 export const POOL_LIQUIDITY = "pool_liquidity";
+export const WITHDRAW = "withdraw";
 
 export const MID_INTERVAL = 60000;
 

@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, {useState} from "react";
 import logo from "../../assets/images/logo.svg";
 import Link from "next/link";
 import { Icon } from "../../atoms/icon";
@@ -6,14 +6,13 @@ import {useDispatch, useSelector} from "react-redux";
 import { RootState } from "../../../store/reducers";
 import Styles from "./styles.module.css"
 import { useRouter } from "next/router";
-import {emptyFunc, formatNumber} from "../../../helpers/utils";
-import { useWallet } from "../../../context/WalletConnect/WalletConnect";
-import Button from "../../atoms/button";
-import { showDepositModal } from "../../../store/reducers/transactions/deposit";
-import { hideMobileSidebar } from "../../../store/reducers/sidebar";
+import { emptyFunc } from "../../../helpers/utils";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
 import Tooltip from "rc-tooltip";
 import 'rc-tooltip/assets/bootstrap.css';
+import WithdrawToasts from "./withdrawModal/withdrawToasts";
+import BalanceList from "./balanceList";
+import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 
 const socialList = [
   {
@@ -33,40 +32,35 @@ const socialList = [
   }
 ];
 
+const moreList = [
+  {
+    url: 'https://pstake.finance/',
+    name: 'pstake.finance',
+    icon: 'globe'
+  },
+  {
+    url: 'https://docs.pstake.finance/',
+    name: 'Docs',
+    icon: 'docs'
+  },
+  {
+    url: 'https://analytics.pstake.finance/',
+    name: 'Analytics',
+    icon: 'analytics'
+  },
+  {
+    url: 'https://forum.pstake.finance/',
+    name: 'Governance',
+    icon: 'governance'
+  }
+];
+
 const Sidebar = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const {atomBalance} = useSelector((state:RootState) => state.balances);
-  const {isWalletConnected} = useWallet()
+  const {showModal} = useSelector((state:RootState) => state.withdraw);
+
   const {isMobile} = useWindowSize();
-
-  const moreList = [
-    {
-      url: 'https://pstake.finance/',
-      name: 'pstake.finance',
-      icon: 'globe'
-    },
-    {
-      url: 'https://docs.pstake.finance/',
-      name: 'Docs',
-      icon: 'docs'
-    },
-    {
-      url: 'https://analytics.pstake.finance/',
-      name: 'Analytics',
-      icon: 'analytics'
-    },
-    {
-      url: 'https://forum.pstake.finance/',
-      name: 'Governance',
-      icon: 'governance'
-    }
-  ];
-
-  const depositHandler = async () => {
-    dispatch(hideMobileSidebar())
-    dispatch(showDepositModal())
-  }
 
   const closeSideHandler = () => {
     dispatch(hideMobileSidebar())
@@ -176,38 +170,8 @@ const Sidebar = () => {
           </div>
         </div>
         <div>
-          <div className={`${Styles.balanceList} p-6`}>
-            <h2 className="text-light-emphasis text-base flex items-center font-semibold leading-normal mb-4">Balances
-               <Tooltip placement="bottom" overlay={<span>Only showing balances of <br/> your assets staked via pSTAKE.</span>}>
-                 <button className="icon-button px-1">
-                   <Icon
-                       viewClass="arrow-right"
-                       iconName="info"/>
-                 </button>
-               </Tooltip>
-            </h2>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <img src={'/images/tokens/atom.svg'} width={24} height={24} alt="atom"/>
-                <span className="text-light-mid text-sm leading-5 ml-2.5">ATOM</span>
-              </div>
-              <p className="text-light-mid text-sm font-medium leading-5">{formatNumber(atomBalance, 3, 6)}</p>
-            </div>
-          </div>
-
-          {isWalletConnected ?
-            <div className={`${Styles.DepositButton} m-auto`}>
-              <Button
-                size="medium"
-                type="secondary"
-                content="Deposit"
-                className="w-full mb-4  md:text-xsm md:py-2 md:px-4"
-                onClick={depositHandler}/>
-            </div>
-            : ""
-          }
-
-          <div className={`${Styles.socialLinks} socialLinks flex py-3 px-6`}>
+        <BalanceList/>
+          <div className={`socialLinks flex pb-3 px-6`}>
               {
                 socialList.map((item, index) => (
                       <Tooltip placement="bottom" overlay={item.tooltip} key={index}>
@@ -227,6 +191,9 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
+      {!showModal ?
+        <WithdrawToasts/> : null
+      }
     </aside>
   )
 };

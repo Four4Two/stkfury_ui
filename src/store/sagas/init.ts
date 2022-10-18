@@ -2,7 +2,12 @@ import {
   FetchInitialDataSaga,
   InitialLiquidityFees
 } from "../reducers/initialData/types";
-import { getAPR, getExchangeRate, getFee } from "../../pages/api/onChain";
+import {
+  getAPR,
+  getExchangeRate,
+  getFee,
+  getTVU
+} from "../../pages/api/onChain";
 import {
   fetchAtomPrice,
   fetchOsmosisPoolInfo
@@ -13,7 +18,8 @@ import {
   setAtomPrice,
   setExchangeRate,
   setOsmosisInfo,
-  setRedeemFee
+  setRedeemFee,
+  setTVU
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga) {
@@ -28,4 +34,6 @@ export function* fetchInit({ payload }: FetchInitialDataSaga) {
   yield put(setAPR(apr));
   const osmosisInfo: InitialLiquidityFees = yield fetchOsmosisPoolInfo();
   yield put(setOsmosisInfo(osmosisInfo));
+  const tvu: number = yield getTVU(persistenceChainInfo.rpc);
+  yield put(setTVU(tvu));
 }

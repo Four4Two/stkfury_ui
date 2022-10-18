@@ -7,7 +7,8 @@ import {
   InitialDataState,
   SetAPR,
   SetRedeemFee,
-  InitialLiquidityFees
+  InitialLiquidityFees,
+  SetTVU
 } from "./types";
 
 const initialLiquidity_Fees: InitialLiquidityFees = {
@@ -20,7 +21,8 @@ const initialState: InitialDataState = {
   atomPrice: 0,
   apr: 0,
   redeemFee: 0,
-  osmosisInfo: initialLiquidity_Fees
+  osmosisInfo: initialLiquidity_Fees,
+  tvu: 0
 };
 
 const initData = createSlice({
@@ -42,6 +44,9 @@ const initData = createSlice({
     },
     setOsmosisInfo: (state, action) => {
       state.osmosisInfo = action.payload;
+    },
+    setTVU: (state, action: SetTVU) => {
+      state.tvu = action.payload;
     }
   }
 });
@@ -50,9 +55,10 @@ export const {
   setRedeemFee,
   setAPR,
   setAtomPrice,
-  setOsmosisInfo,
   fetchInitSaga,
-  setExchangeRate
+  setOsmosisInfo,
+  setExchangeRate,
+  setTVU
 } = initData.actions;
 
 export default initData.reducer;

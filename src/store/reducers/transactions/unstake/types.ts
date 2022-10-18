@@ -14,8 +14,10 @@ export interface UnStakeTransactionParams {
     persistenceSigner : OfflineSigner,
     persistenceChainInfo: ChainInfo,
     address:string,
-    msg:LiquidStakeMsgTypes,
-    pollInitialBalance:number
+    msg:LiquidStakeMsgTypes[],
+    pollInitialBalance:number,
+    cosmosChainInfo: ChainInfo,
+    cosmosAddress:string,
 }
 
 export type UnStakeTransactionPayload = PayloadAction<UnStakeTransactionParams>

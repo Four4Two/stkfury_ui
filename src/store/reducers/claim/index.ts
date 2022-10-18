@@ -10,7 +10,8 @@ import {
 const initialState: ClaimState = {
     pendingClaimList: [],
     claimableBalance: 0,
-    claimableStkAtomBalance: 0
+    claimableStkAtomBalance: 0,
+    unlistedPendingClaimList: []
 }
 
 const claimQueries = createSlice({
@@ -20,6 +21,9 @@ const claimQueries = createSlice({
         fetchPendingClaimsSaga: (state, action:FetchPendingClaimSaga)=>{},
         setPendingClaimList: (state, action: SetPendingClaimList) => {
             state.pendingClaimList = action.payload
+        },
+        setUnlistedPendingClaimList: (state, action: SetPendingClaimList) => {
+            state.unlistedPendingClaimList = action.payload
         },
         setClaimableBalance: (state, action: SetClaimableBalance) => {
             state.claimableBalance = action.payload
@@ -31,6 +35,7 @@ const claimQueries = createSlice({
     }
 })
 
-export const {fetchPendingClaimsSaga, setPendingClaimList, setClaimableBalance, setClaimableStkAtomBalance} = claimQueries.actions
+export const {fetchPendingClaimsSaga, setPendingClaimList, setClaimableBalance,
+    setClaimableStkAtomBalance, setUnlistedPendingClaimList} = claimQueries.actions
 
 export default claimQueries.reducer

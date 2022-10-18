@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import Sidebar from "./index";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
+import {useWindowSize} from "../../../customHooks/useWindowSize";
+import styles from "./styles.module.css"
 
 const MobileSideBar = () => {
   const dispatch = useDispatch();
@@ -12,13 +14,15 @@ const MobileSideBar = () => {
   const closeHandler = () =>{
     dispatch(hideMobileSidebar());
   }
+    const { isMobile } = useWindowSize();
 
-  const sideBarRef = useOnClickOutside(closeHandler)
+    const sideBarRef = useRef<HTMLDivElement>(null)
+    useOnClickOutside(sideBarRef, closeHandler)
 
   return(
-    <div className={`${show ? "show":"close"} offCanvas hidden md:block `}>
-      <div className={`backDrop fixed top-0 right-0 z-10 left-0 w-full h-full`}/>
-      <div className={`fixed z-40 bg-side-bar`} ref={sideBarRef}>
+    <div className={`${isMobile ? `${styles.mobileDropdownContainer} offCanvas`  : ""} ${show ? "show":"close"} w-[284px]`}>
+      <div className={`${isMobile ? styles.mobileSidebarBackdrop : ""} backDrop`}/>
+      <div className={`${isMobile ? styles.mobileSidebar : ""}`} ref={sideBarRef}>
         <Sidebar />
       </div>
     </div>

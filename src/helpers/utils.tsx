@@ -55,7 +55,7 @@ const recursiveReverse = (input: any): string => {
 export const sixDigitsNumber = (value: string, length = 6) => {
   let inputValue = value.toString();
   if (inputValue.length >= length) {
-    return inputValue.substr(0, 6);
+    return inputValue.substring(0, length);
   } else {
     const stringLength = length - inputValue.length;
     let newString = inputValue;
@@ -71,7 +71,11 @@ export const formatNumber = (v = 0, size = 3, decimalLength = 6) => {
   if (!str) return "NaN";
   let substr = str.split(".");
   if (substr[1] === undefined) {
-    substr.push("000000");
+    let newString = '0';
+    for (let i = 1; i < decimalLength; i++) {
+      newString += "0";
+    }
+    substr.push(newString);
   } else {
     substr[1] = sixDigitsNumber(substr[1], decimalLength);
   }
@@ -81,10 +85,10 @@ export const formatNumber = (v = 0, size = 3, decimalLength = 6) => {
   return `${recursiveReverse(arr)}${substr[1] ? `.${substr[1]}` : ""}`;
 };
 
-export const stringTruncate = (str: string) => {
+export const stringTruncate = (str: string, length = 7) => {
   if (str.length > 30) {
     return (
-      str.substring(0, 7) + "..." + str.substring(str.length - 7, str.length)
+      str.substring(0, length) + "..." + str.substring(str.length - length, str.length)
     );
   }
   return str;
@@ -114,7 +118,6 @@ export const decimalize = (valueString: string | number, decimals = 6) => {
   } else {
     truncate = valueString;
   }
-  printConsole(truncate, "truncate")
   return Decimal.fromAtomics(Math.trunc(truncate!).toString(), decimals).toString();
 };
 
@@ -141,7 +144,6 @@ export async function pollAccountBalance(
   } else {
     initialBalance = await fetchAccountBalance(address, denom, rpc);
   }
-
   printConsole(initialBalance + "initialBalance");
   await delay(PollingConfig.initialTxHashQueryDelay);
   for (let i = 0; i < PollingConfig.numberOfRetries; i++) {
@@ -153,7 +155,6 @@ export async function pollAccountBalance(
         throw Error("Balance unchanged");
       }
     } catch (error: any) {
-      console.log(error.messae);
       console.log(
         "retrying in " + PollingConfig.scheduledTxHashQueryDelay + ": ",
         i,
@@ -162,14 +163,7 @@ export async function pollAccountBalance(
       await delay(PollingConfig.scheduledTxHashQueryDelay);
     }
   }
-
-  // return;
-  return JSON.stringify({
-    txHash: address,
-    height: 0,
-    code: 111,
-    rawLog: "failed all retries"
-  });
+  throw new Error("failed all retries");
 }
 
 export const decodeTendermintClientStateAny = (clientState: any) => {

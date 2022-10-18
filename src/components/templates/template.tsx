@@ -3,37 +3,33 @@ import React from "react";
 import Sidebar from "../organisms/sidebar";
 import Topbar from "../organisms/navigationBar";
 import MobileSideBar from "../organisms/sidebar/mobileSidebar";
-import Deposit from "../organisms/deposit";
-import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
+import ClaimModal from "../organisms/staking/claim";
+import StakeModal from "../organisms/staking/stake/stakeModal";
+import WithdrawModal from "../organisms/sidebar/withdrawModal";
+import StakeToasts from "../organisms/staking/stake/stakeToasts";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store/reducers";
 
 export const PageTemplate = ({children, className, title }: { children: React.ReactNode, className: string, title:string }) => {
-
-    Sentry.init({
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-
-        integrations: [new Integrations.BrowserTracing()],
-
-        tracesSampleRate: 1.0, //lower the value in production
-
-    });
-
+    const {showModal} = useSelector((state:RootState) => state.stake);
   return (
     <div>
       <Head>
         <title>{title}</title>
       </Head>
       <div className="appLayout grid gap-6 md:block">
-        <div className="md:hidden">
-          <Sidebar />
-        </div>
         <MobileSideBar/>
         <div className={`mainContainer h-screen overflow-auto bg-no-repeat ` + className}>
           <Topbar/>
           {children}
         </div>
       </div>
-      <Deposit />
+        <ClaimModal/>
+        <StakeModal/>
+        <WithdrawModal/>
+        {!showModal ?
+            <StakeToasts/> : null
+        }
     </div>
   )
 }

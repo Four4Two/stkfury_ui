@@ -5,21 +5,18 @@ import { Icon } from "../../../atoms/icon";
 import styles from "./styles.module.css";
 import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/reducers";
 
 const UnStake = () => {
-  const { apr, atomPrice } = useSelector(
-    (state: RootState) => state.initialData
-  );
   return (
     <>
       <From />
       <div className="swap-icon flex w-full items-center justify-center relative">
         <div
-          className={`${styles.iconBox} icon-box rounded-full flex justify-center items-center absolute`}
+          className={`${styles.iconBox} icon-box 
+          rounded-full flex justify-center items-center absolute 
+          w-[40px] h-[40px] bg-[#1A1A1A] md:w-[28px] md:h-[28px]`}
         >
-          <Icon iconName="exchange-arrow" viewClass="search" />
+          <Icon iconName="exchange-arrow" viewClass="search !w-[14px] md:!w-[10px]" />
         </div>
       </div>
       <To />
@@ -31,17 +28,11 @@ const UnStake = () => {
           <ExchangeRate type={"stake"} />
         </p>
       </div>
-      <div className="flex items-center justify-between flex-wrap px-4 md:p-0">
-        <p className="font-normal text-sm leading-7 text-light-emphasis mb-2">
-          Staking APR
-        </p>
-        <p className="font-normal text-sm leading-7 text-light-emphasis text-right mb-2">
-          {apr}%
-        </p>
-      </div>
       <div className="mt-4">
         <Submit />
       </div>
+
+
     </>
   );
 };

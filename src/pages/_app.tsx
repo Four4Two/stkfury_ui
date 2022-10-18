@@ -9,8 +9,19 @@ import { store } from "../store"
 import {Provider} from "react-redux";
 import {ChainInfo} from "@keplr-wallet/types";
 import Maintenance from "./maintenance";
+import * as Sentry from "@sentry/react";
+import {Integrations} from "@sentry/tracing";
 
 function MyApp({Component, pageProps}: AppProps) {
+
+    Sentry.init({
+        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+
+        integrations: [new Integrations.BrowserTracing()],
+
+        tracesSampleRate: 1.0, //lower the value in production
+
+    });
 
     const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -22,7 +33,7 @@ function MyApp({Component, pageProps}: AppProps) {
     <Provider store={store}>
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={true}
           newestOnTop={false}
           closeOnClick

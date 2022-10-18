@@ -13,7 +13,7 @@ const BroadCastMsg = ({message}:any) => (
     </div>
 );
 
-const TransactionSuccess = ({message}:any) => (
+const TransactionSuccess = ({message, txHash}:any) => (
     <div>
         <div className="toast-content">
             <div className="title-section">
@@ -23,7 +23,11 @@ const TransactionSuccess = ({message}:any) => (
                 />
                 <p className="title">Transaction Successful</p>
             </div>
-            <p className="content flex items-center">Tx: {message}</p>
+            {txHash ?
+                <p className="content flex items-center">Tx:{txHash}</p>
+                :
+                <p className="content flex items-center">{message}</p>
+            }
         </div>
     </div>
 );
