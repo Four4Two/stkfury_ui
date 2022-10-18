@@ -12,7 +12,6 @@ import styles from "../../staking/stake/styles.module.css";
 import TransactionIcon from "../../../molecules/transactionHelper/transactiosIcon";
 import {resetTransaction} from "../../../../store/reducers/transaction";
 import Button from "../../../atoms/button";
-import Submit from "./submit";
 
 const WithdrawModal = () => {
     const dispatch = useDispatch();
@@ -99,7 +98,7 @@ const WithdrawModal = () => {
                             onClick={handleClose}
                         />
                         :
-                        <Submit/>
+                        null
                 }
             </div>
         </Modal>

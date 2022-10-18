@@ -1,10 +1,10 @@
 import { truncateToFixedDecimalPlaces } from "../../../../helpers/utils";
 import styles from "./styles.module.css";
-import React from "react";
+import React, {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { unStakeType } from "../../../../store/reducers/transactions/unstake/types";
-import { setUnStakeOption } from "../../../../store/reducers/transactions/unstake";
+import {setUnStakeAmount, setUnStakeOption} from "../../../../store/reducers/transactions/unstake";
 import { INSTANT } from "../../../../../AppConstants";
 
 const Options = () => {
@@ -15,7 +15,11 @@ const Options = () => {
 
   const amountFee:number = truncateToFixedDecimalPlaces(Number(atomAmount) - (Number(atomAmount) * redeemFee));
 
+
   const optionHandler = (value: unStakeType) => {
+    if (value === INSTANT){
+      dispatch(setUnStakeAmount(''))
+    }
     dispatch(setUnStakeOption(value))
   }
 

@@ -6,12 +6,13 @@ import { RootState } from "../../../../store/reducers";
 import { setUnStakeAmount } from "../../../../store/reducers/transactions/unstake";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
+import {INSTANT} from "../../../../../AppConstants";
 
 const From = () => {
   const dispatch = useDispatch();
   const {stkAtomBalance} = useSelector((state:RootState) => state.balances);
-  const {amount} = useSelector((state:RootState) => state.unStake);
-  const {atomPrice} = useSelector((state:RootState) => state.initialData)
+  const {amount, type} = useSelector((state:RootState) => state.unStake);
+  const {atomPrice, maxRedeem} = useSelector((state:RootState) => state.initialData)
   const priceInDollars = atomPrice * Number(amount)
   const { isMobile } = useWindowSize();
   const {isWalletConnected} = useWallet();
@@ -19,7 +20,18 @@ const From = () => {
   const inputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
     let rex = /^\d{0,10}(\.\d{0,6})?$/;
     if (rex.test(evt.target.value)) {
-      dispatch(setUnStakeAmount(evt.target.value))
+        dispatch(setUnStakeAmount(evt.target.value))
+    } else {
+      return false;
+    }
+  };
+
+  const redeemInputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
+    let rex = /^\d{0,10}(\.\d{0,6})?$/;
+    if (rex.test(evt.target.value)) {
+      if (Number(evt.target.value) < maxRedeem) {
+        dispatch(setUnStakeAmount(evt.target.value))
+      }else return false;
     } else {
       return false;
     }
@@ -57,7 +69,7 @@ const From = () => {
             disable={false}
             required={true}
             name="stakeInput"
-            onChange={inputHandler}
+            onChange={type === INSTANT ? redeemInputHandler : inputHandler}
             className={`bg-transparent border-0
              text-light-high leading-normal 
              box-shadow-none font-normal 

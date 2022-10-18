@@ -6,7 +6,8 @@ export interface InitialDataState {
   atomPrice: number;
   apr: number;
   redeemFee:number,
-  tvu: number
+  tvu: number,
+  maxRedeem: number
 }
 
 export interface FetchInitialDataSagaParams {
@@ -17,6 +18,7 @@ export type SetExchangeRate = PayloadAction<number>;
 export type SetAPR = PayloadAction<number>;
 export type SetAtomPrice = PayloadAction<number>;
 export type SetRedeemFee = PayloadAction<number>;
+export type SetMaxRedeem = PayloadAction<number>;
 export type SetTVU = PayloadAction<number>;
 
 export type FetchInitialDataSaga = PayloadAction<FetchInitialDataSagaParams>;
