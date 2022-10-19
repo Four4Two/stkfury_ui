@@ -10,6 +10,7 @@ export const fetchAtomPrice = async () => {
         if (res && res.data && res.data[0]) {
             return Number(res.data[0].current_price)
         }
+        return 1
     } catch (e) {
         const customScope = new Scope();
         customScope.setLevel("fatal")

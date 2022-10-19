@@ -3,7 +3,7 @@ import {Icon} from "../../../atoms/icon";
 import {useDispatch, useSelector} from "react-redux";
 import styles from './styles.module.css'
 import {ClaimMsg, ClaimMsgTypes, LiquidUnStakeMsgTypes} from "../../../../helpers/protoMsg";
-import {decimalize} from "../../../../helpers/utils";
+import {decimalize, truncateToFixedDecimalPlaces} from "../../../../helpers/utils";
 import {useWallet} from "../../../../context/WalletConnect/WalletConnect";
 import {executeClaimTransactionSaga, hideClaimModal} from "../../../../store/reducers/transactions/claim";
 import {RootState} from "../../../../store/reducers";
@@ -80,7 +80,7 @@ const ClaimModal = () => {
                 channel: ibcInfo?.destinationChannelId,
                 fromAddress: persistenceAccountData?.address,
                 toAddress: cosmosAccountData?.address,
-                amount: activeClaims,
+                amount: truncateToFixedDecimalPlaces(activeClaims),
                 timeoutHeight: undefined,
                 timeoutTimestamp: undefined,
                 denom: ibcInfo?.coinDenom,
@@ -127,14 +127,6 @@ const ClaimModal = () => {
                                     </p>
                                     <div className="flex text-base text-light-mid leading-normal font-medium">
                                         Completed Unstaking
-                                        <Tooltip placement="bottom" overlay=
-                                            {<span>Completed Unstaking.</span>}>
-                                            <button className="icon-button px-1">
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    iconName="info"/>
-                                            </button>
-                                        </Tooltip>
                                     </div>
                                 </div> : null
                             }
@@ -145,14 +137,6 @@ const ClaimModal = () => {
                                     </p>
                                     <div className="flex text-base text-light-mid leading-normal font-medium">
                                         Failed Unstaking
-                                        <Tooltip placement="bottom" overlay=
-                                            {<span> Failed Unstaking</span>}>
-                                            <button className="icon-button px-1">
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    iconName="info"/>
-                                            </button>
-                                        </Tooltip>
                                     </div>
                                 </div>
                                 : null

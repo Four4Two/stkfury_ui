@@ -69,7 +69,7 @@ export const getExchangeRate = async (rpc: string) => {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const cvalue = await pstakeQueryService.CValue({});
-    return Number(Number(decimalize(cvalue.cValue, 18)).toFixed(6));
+    return Number(decimalize(cvalue.cValue, 18));
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -127,7 +127,11 @@ export const getTVU = async (rpc:string) => {
       const token: Coin | undefined = supplyResponse.supply.find(
           (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
-      return token?.amount;
+      if(token !== undefined){
+        return token?.amount;
+      }else {
+        return 0
+      }
     }
     return 0
   } catch (e) {
@@ -160,13 +164,28 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
         const epochNumber = item.epochNumber;
         const unbondEpochResponse: QueryUnbondingEpochCValueResponse =
           await getUnbondingEpochCvalue(epochNumber, pstakeQueryService);
+
         const isFailed: boolean =
           unbondEpochResponse.unbondingEpochCValue?.isFailed!;
         const isMatured: boolean =
           unbondEpochResponse.unbondingEpochCValue?.isMatured!;
         const cValueEpochNumber: Long =
           unbondEpochResponse.unbondingEpochCValue?.epochNumber!;
-        const amount: string = item?.amount?.amount!;
+
+        let unbondAmount:number = 0;
+        if (cValueEpochNumber.toNumber() > 0){
+          const sTKBurnAmount: any =
+              unbondEpochResponse.unbondingEpochCValue?.sTKBurn?.amount!;
+          const amountUnbonded: any =
+              unbondEpochResponse.unbondingEpochCValue?.amountUnbonded?.amount!;
+
+          const amount: string = item?.amount?.amount!;
+          const cvalue: any =
+              Number(sTKBurnAmount) / Number(amountUnbonded);
+
+           unbondAmount = Number(amount) / Number(cvalue);
+        }
+
         // pending unbonding list
         if (!isFailed && !isMatured && cValueEpochNumber.toNumber() > 0) {
           const unbondTimeResponse: any = await getUnbondingTime(
@@ -200,17 +219,17 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             const remainingTime = moment(unStakedon).fromNow(true);
 
             filteredPendingClaims.push({
-              unbondAmount: amount,
+              unbondAmount: unbondAmount,
               unStakedon,
               daysRemaining: remainingTime
             });
           }
         } else if (isFailed && cValueEpochNumber.toNumber() > 0) {
           // failed unbonding list
-          totalFailedUnbondAmount += Number(amount);
+          totalFailedUnbondAmount += Number(unbondAmount);
         } else if (isMatured && cValueEpochNumber.toNumber() > 0) {
           // claimable unbonding list
-          claimableAmount += Number(amount);
+          claimableAmount += Number(unbondAmount);
         } else {
           // unlisted pending unbonding list
           const epochInfo = await getEpochInfo(rpc);
@@ -240,7 +259,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
     return {
       filteredPendingClaims,
       totalFailedUnbondAmount,
-      claimableAmount,
+      claimableAmount: claimableAmount > 2 ? claimableAmount-2 : claimableAmount,
       filteredUnlistedPendingClaims
     };
   } catch (error) {
@@ -303,5 +322,22 @@ export const getUnbondingTime = async (
     });
   } catch (error) {
     printConsole(error, "unbond time error");
+  }
+};
+
+export const getMaxRedeem = async (rpc :string) => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new QueryClientImpl(rpcClient);
+    const moduleAccountResponse = await pstakeQueryService.DepositModuleAccount({});
+    return moduleAccountResponse ? moduleAccountResponse.balance?.amount : 0;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
   }
 };

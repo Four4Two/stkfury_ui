@@ -91,7 +91,7 @@ export const TransferMsg = (channel:string, fromAddress:string, toAddress:string
     value: MsgTransfer.fromPartial({
       sourcePort: port,
       sourceChannel: channel,
-      token: coin(amount, denom),
+      token: coin(Math.trunc(Number(amount)), denom),
       sender: fromAddress,
       receiver: toAddress,
       timeoutHeight: {

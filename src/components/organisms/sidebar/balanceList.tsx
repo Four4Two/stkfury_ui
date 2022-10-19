@@ -4,15 +4,14 @@ import {RootState} from "../../../store/reducers";
 import Styles from "./styles.module.css";
 import Tooltip from "rc-tooltip";
 import {Icon} from "../../atoms/icon";
-import {decimalize, formatNumber, truncateToFixedDecimalPlaces} from "../../../helpers/utils";
+import {decimalize, formatNumber} from "../../../helpers/utils";
 import Button from "../../atoms/button";
 import {hideMobileSidebar} from "../../../store/reducers/sidebar";
 import {showClaimModal} from "../../../store/reducers/transactions/claim";
-import {setWithdrawAmount, showWithdrawModal} from "../../../store/reducers/transactions/withdraw";
 import {useWallet} from "../../../context/WalletConnect/WalletConnect";
-import {WITHDRAW} from "../../../../AppConstants";
-import {Spinner} from "../../atoms/spinner";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
+import WithdrawButton from "./withdrawModal/submit";
+import {STAKE, WITHDRAW} from "../../../../AppConstants";
 
 const BalanceList = () => {
     const dispatch = useDispatch();
@@ -22,9 +21,9 @@ const BalanceList = () => {
     const [totalPendingBalance, setTotalPendingBalance] = useState<number>(0);
     const [totalUnListedPendingClaims, setTotalUnlistedPendingClaims] = useState<number>(0);
     const {ibcAtomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
-    const {isWalletConnected} = useWallet()
     const {inProgress, name} = useSelector((state:RootState) => state.transaction);
-    const {showModal} = useSelector((state:RootState) => state.withdraw);
+
+    const {isWalletConnected} = useWallet()
     const { isMobile } = useWindowSize();
 
     const {claimableBalance, pendingClaimList, claimableStkAtomBalance, unlistedPendingClaimList} =
@@ -34,12 +33,6 @@ const BalanceList = () => {
     const claimHandler = async () => {
         dispatch(hideMobileSidebar())
         dispatch(showClaimModal())
-    }
-
-    const withdrawHandler = async () => {
-        dispatch(hideMobileSidebar())
-        dispatch(showWithdrawModal())
-        dispatch(setWithdrawAmount(ibcAtomBalance))
     }
 
     useEffect(()=> {
@@ -105,18 +98,7 @@ const BalanceList = () => {
                             </p>
                         </div>
                         <div className={`m-auto w-[220px] md:w-auto`}>
-                            <Button
-                                size="small"
-                                type="secondary"
-                                content={
-                                    (name === WITHDRAW && inProgress && !showModal) ?
-                                        <Spinner size={"small"}/>
-                                        :
-                                         'Withdraw'
-                                }
-                                disabled={(name === WITHDRAW && inProgress)}
-                                className="w-full mt-6 md:text-xsm md:py-2 md:px-4"
-                                onClick={withdrawHandler}/>
+                            <WithdrawButton/>
                         </div>
                     </>
 

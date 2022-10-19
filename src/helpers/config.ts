@@ -226,7 +226,7 @@ export const ExternalChains:ExternalChainData = {
 }
 
 export const PollingConfig = {
-    "initialTxHashQueryDelay": 10000,
-    "scheduledTxHashQueryDelay": 10000,
+    "initialTxHashQueryDelay": 5000,
+    "scheduledTxHashQueryDelay": 5000,
     "numberOfRetries": 60,
 }

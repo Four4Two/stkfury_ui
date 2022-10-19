@@ -12,7 +12,6 @@ import styles from "../../staking/stake/styles.module.css";
 import TransactionIcon from "../../../molecules/transactionHelper/transactiosIcon";
 import {resetTransaction} from "../../../../store/reducers/transaction";
 import Button from "../../../atoms/button";
-import Submit from "./submit";
 
 const WithdrawModal = () => {
     const dispatch = useDispatch();
@@ -90,16 +89,16 @@ const WithdrawModal = () => {
                     </p>
                 }
                 {
-                    (txFailed && stepNumber !== 1) || stepNumber === 3  ?
+                    txFailed || stepNumber === 3  ?
                         <Button
                             className="button w-full md:py-2 md:text-sm flex items-center justify-center w-[350px] mx-auto"
                             type="primary"
                             size="medium"
-                            content="Done"
+                            content="Close"
                             onClick={handleClose}
                         />
                         :
-                        <Submit/>
+                        null
                 }
             </div>
         </Modal>

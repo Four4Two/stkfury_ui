@@ -111,8 +111,8 @@ const Sidebar = () => {
               </Link>
             </li>
             <li className={`list-none`}>
-              <Link href="/" className="nav-link" passHref>
-                <p className={`${Styles.navBarLink } ${router.pathname == "/transaction" ? `${Styles.active} navItemActive` : "group"}
+              <Link href="/transactions" className="nav-link" passHref>
+                <p className={`${Styles.navBarLink } ${router.pathname == "/transactions" ? `${Styles.active} navItemActive` : "group"}
                  py-3 px-8 flex items-center cursor-pointer`}
                    onClick={isMobile ? closeSideHandler : emptyFunc}>
                   <Icon

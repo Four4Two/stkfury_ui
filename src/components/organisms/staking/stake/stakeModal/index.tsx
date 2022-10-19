@@ -9,19 +9,15 @@ import {
     setStakeTxnFailed,
     setStakeAmount
 } from "../../../../../store/reducers/transactions/stake";
-import Submit from "./submit";
 import styles from "../styles.module.css";
 import Button from "../../../../atoms/button";
 import {resetTransaction} from "../../../../../store/reducers/transaction";
 import TransactionIcon from "../../../../molecules/transactionHelper/transactiosIcon";
-import {useWindowSize} from "../../../../../customHooks/useWindowSize";
-
 
 const StakeModal = () => {
     const dispatch = useDispatch();
     const {showModal, txFailed, stepNumber} = useSelector((state:RootState) => state.stake);
     const {amount} = useSelector((state:RootState) => state.stake);
-    const { isMobile } = useWindowSize();
 
     const handleClose = () => {
         dispatch(setStakeTxnStepNumber(0))
@@ -116,16 +112,16 @@ const StakeModal = () => {
                     </p>
                 }
                 {
-                   (txFailed && stepNumber !== 1) || stepNumber === 5  ?
+                   (txFailed) || stepNumber === 5  ?
                         <Button
                             className="button w-full md:py-2 md:text-sm flex items-center justify-center w-[350px] mx-auto"
                             type="primary"
                             size="medium"
-                            content="Done"
+                            content="Close"
                             onClick={handleClose}
                         />
                         :
-                        <Submit/>
+                        null
                 }
                
             </div>

@@ -10,8 +10,8 @@ import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 const From = () => {
   const dispatch = useDispatch();
   const {stkAtomBalance} = useSelector((state:RootState) => state.balances);
-  const {amount} = useSelector((state:RootState) => state.unStake);
-  const {atomPrice} = useSelector((state:RootState) => state.initialData)
+  const {amount, type} = useSelector((state:RootState) => state.unStake);
+  const {atomPrice, maxRedeem} = useSelector((state:RootState) => state.initialData)
   const priceInDollars = atomPrice * Number(amount)
   const { isMobile } = useWindowSize();
   const {isWalletConnected} = useWallet();
@@ -19,7 +19,7 @@ const From = () => {
   const inputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
     let rex = /^\d{0,10}(\.\d{0,6})?$/;
     if (rex.test(evt.target.value)) {
-      dispatch(setUnStakeAmount(evt.target.value))
+        dispatch(setUnStakeAmount(evt.target.value))
     } else {
       return false;
     }

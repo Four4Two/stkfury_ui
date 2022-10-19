@@ -1,17 +1,20 @@
-import { formatNumber, truncateToFixedDecimalPlaces } from "../../../../helpers/utils";
+import { truncateToFixedDecimalPlaces } from "../../../../helpers/utils";
 import styles from "./styles.module.css";
-import React from "react";
+import React, {useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { unStakeType } from "../../../../store/reducers/transactions/unstake/types";
-import { setUnStakeOption } from "../../../../store/reducers/transactions/unstake";
+import {setUnStakeAmount, setUnStakeOption} from "../../../../store/reducers/transactions/unstake";
 import { INSTANT } from "../../../../../AppConstants";
 
 const Options = () => {
   const dispatch = useDispatch();
   const {amount, type} = useSelector((state:RootState) => state.unStake);
-  const {exchangeRate} = useSelector((state:RootState) => state.initialData)
+  const {exchangeRate, redeemFee} = useSelector((state:RootState) => state.initialData)
   const atomAmount = Number(amount) / exchangeRate
+
+  const amountFee:number = truncateToFixedDecimalPlaces(Number(atomAmount) - (Number(atomAmount) * redeemFee));
+
 
   const optionHandler = (value: unStakeType) => {
     dispatch(setUnStakeOption(value))
@@ -31,7 +34,7 @@ const Options = () => {
             </p>
             <p className={`${styles.amount} option-value font-medium m-0 text-light-mid
              text-2xl text-center text-right overflow-x-auto md:text-base`}>
-              {truncateToFixedDecimalPlaces(atomAmount)} ATOM
+              {truncateToFixedDecimalPlaces(amountFee)} ATOM
             </p>
           </div>
         </div>
