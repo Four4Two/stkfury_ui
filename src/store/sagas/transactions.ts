@@ -172,26 +172,34 @@ export function* executeDepositTransaction({ payload }: DepositTransactionPayloa
     yield put(setStakeTxnStepNumber(1))
     const {persistenceChainInfo, cosmosSigner, cosmosChainInfo, depositMsg, persistenceSigner, stakeMsg,
       persistenceAddress, cosmosAddress, pollInitialDepositBalance, pollInitialStakeBalance} = payload
-    const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [depositMsg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
-    yield put(setStakeTxnStepNumber(2))
-    printConsole(transaction ,'transaction deposit')
-    yield put(setDepositAmount(""))
-    if (transaction.code === 0) {
-      const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, pollInitialDepositBalance.toString());
-      if (response !== "0") {
-        yield put(setStakeTxnStepNumber(3))
-        yield put(executeStakeTransactionSaga({
-          persistenceSigner:persistenceSigner!,
-          msg: stakeMsg,
-          account: persistenceAddress,
-          persistenceChainInfo:persistenceChainInfo!,
-          pollInitialBalance: pollInitialStakeBalance
-        }))
-        yield put(setTransactionProgress(STAKE));
-      }
-    } else {
-      throw new Error(transaction.rawLog);
-    }
+    yield put(executeStakeTransactionSaga({
+      persistenceSigner:persistenceSigner!,
+      msg: stakeMsg,
+      account: persistenceAddress,
+      persistenceChainInfo:persistenceChainInfo!,
+      pollInitialBalance: pollInitialStakeBalance
+    }))
+    yield put(setTransactionProgress(STAKE));
+    // const transaction:DeliverTxResponse = yield Transaction(cosmosSigner, cosmosAddress, [depositMsg], PERSISTENCE_FEE, "", cosmosChainInfo.rpc);
+    // yield put(setStakeTxnStepNumber(2))
+    // printConsole(transaction ,'transaction deposit')
+    // yield put(setDepositAmount(""))
+    // if (transaction.code === 0) {
+    //   const response:string = yield pollAccountBalance(persistenceAddress, ibcInfo!.coinDenom, persistenceChainInfo.rpc, pollInitialDepositBalance.toString());
+    //   if (response !== "0") {
+    //     yield put(setStakeTxnStepNumber(3))
+    //     yield put(executeStakeTransactionSaga({
+    //       persistenceSigner:persistenceSigner!,
+    //       msg: stakeMsg,
+    //       account: persistenceAddress,
+    //       persistenceChainInfo:persistenceChainInfo!,
+    //       pollInitialBalance: pollInitialStakeBalance
+    //     }))
+    //     yield put(setTransactionProgress(STAKE));
+    //   }
+    // } else {
+    //   throw new Error(transaction.rawLog);
+    // }
   } catch (e:any) {
     yield put(setStakeTxnFailed(true))
     const customScope = new Sentry.Scope();

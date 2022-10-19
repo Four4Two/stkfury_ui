@@ -4,7 +4,7 @@ import {
   MsgLiquidUnstake,
   MsgRedeem
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
-import { GasPrice } from "@cosmjs/stargate";
+import {AminoTypes, GasPrice} from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import { COSMOS_LIQUID_STAKE_URL, COSMOS_LIQUID_UN_STAKE_URL, REDEEM_URL,CLAIM_URL } from "../../AppConstants";
 import { OfflineSigner } from "@cosmjs/launchpad";
@@ -14,6 +14,9 @@ import { decodeTendermintClientStateAny, decodeTendermintConsensusStateAny } fro
 import { QueryChannelClientStateResponse } from "cosmjs-types/ibc/core/channel/v1/query";
 import { TransferMsg } from "./protoMsg";
 import Long from "long";
+import {customAminoTypes} from "./aminoConvter";
+
+const aminoTypes = new AminoTypes(customAminoTypes)
 
 const tendermintRPC = require("@cosmjs/tendermint-rpc");
 const {SigningStargateClient, QueryClient, setupIbcExtension} = require("@cosmjs/stargate");
@@ -30,7 +33,8 @@ export async function Transaction(signer:OfflineSigner, signerAddress:string, ms
         [REDEEM_URL, MsgRedeem],
           [CLAIM_URL, MsgClaim]
       ]),
-      gasPrice: GasPrice.fromString(gasPrice)
+      gasPrice: GasPrice.fromString(gasPrice),
+      aminoTypes:aminoTypes
     }
   );
   return await client.signAndBroadcast(signerAddress, msgs, "auto", memo);
