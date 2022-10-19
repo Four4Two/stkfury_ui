@@ -17,9 +17,6 @@ const Options = () => {
 
 
   const optionHandler = (value: unStakeType) => {
-    if (value === INSTANT){
-      dispatch(setUnStakeAmount(''))
-    }
     dispatch(setUnStakeOption(value))
   }
 

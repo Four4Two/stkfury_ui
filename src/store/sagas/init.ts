@@ -7,6 +7,7 @@ import {setAPR, setAtomPrice, setExchangeRate, setMaxRedeem, setRedeemFee, setTV
 export function* fetchInit({ payload }: FetchInitialDataSaga) {
   const { persistenceChainInfo }: any = payload;
   const exchangeRate: number = yield getExchangeRate(persistenceChainInfo.rpc);
+  console.log(exchangeRate, "exchangeRate")
   const fee: number = yield getFee(persistenceChainInfo.rpc);
   const atomPrice: number = yield fetchAtomPrice();
   yield put(setRedeemFee(fee));

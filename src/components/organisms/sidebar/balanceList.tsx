@@ -11,6 +11,7 @@ import {showClaimModal} from "../../../store/reducers/transactions/claim";
 import {useWallet} from "../../../context/WalletConnect/WalletConnect";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
 import WithdrawButton from "./withdrawModal/submit";
+import {WITHDRAW} from "../../../../AppConstants";
 const BalanceList = () => {
     const dispatch = useDispatch();
     const [activeClaims, setActiveClaims] = useState<number>(0);
@@ -19,6 +20,8 @@ const BalanceList = () => {
     const [totalPendingBalance, setTotalPendingBalance] = useState<number>(0);
     const [totalUnListedPendingClaims, setTotalUnlistedPendingClaims] = useState<number>(0);
     const {ibcAtomBalance, stkAtomBalance} = useSelector((state:RootState) => state.balances);
+    const {inProgress, name} = useSelector((state:RootState) => state.transaction);
+
     const {isWalletConnected} = useWallet()
     const { isMobile } = useWindowSize();
 

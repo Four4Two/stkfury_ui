@@ -127,14 +127,6 @@ const ClaimModal = () => {
                                     </p>
                                     <div className="flex text-base text-light-mid leading-normal font-medium">
                                         Completed Unstaking
-                                        <Tooltip placement="bottom" overlay=
-                                            {<span>Completed Unstaking.</span>}>
-                                            <button className="icon-button px-1">
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    iconName="info"/>
-                                            </button>
-                                        </Tooltip>
                                     </div>
                                 </div> : null
                             }
@@ -145,14 +137,6 @@ const ClaimModal = () => {
                                     </p>
                                     <div className="flex text-base text-light-mid leading-normal font-medium">
                                         Failed Unstaking
-                                        <Tooltip placement="bottom" overlay=
-                                            {<span> Failed Unstaking</span>}>
-                                            <button className="icon-button px-1">
-                                                <Icon
-                                                    viewClass="arrow-right"
-                                                    iconName="info"/>
-                                            </button>
-                                        </Tooltip>
                                     </div>
                                 </div>
                                 : null

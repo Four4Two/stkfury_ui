@@ -117,7 +117,7 @@ const StakeModal = () => {
                             className="button w-full md:py-2 md:text-sm flex items-center justify-center w-[350px] mx-auto"
                             type="primary"
                             size="medium"
-                            content="Done"
+                            content="Close"
                             onClick={handleClose}
                         />
                         :

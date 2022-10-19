@@ -25,17 +25,17 @@ const From = () => {
       return false;
     }
   };
-
-  const redeemInputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
-    let rex = /^\d{0,10}(\.\d{0,6})?$/;
-    if (rex.test(evt.target.value)) {
-      if (Number(evt.target.value) < maxRedeem) {
-        dispatch(setUnStakeAmount(evt.target.value))
-      }else return false;
-    } else {
-      return false;
-    }
-  };
+  //
+  // const redeemInputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
+  //   let rex = /^\d{0,10}(\.\d{0,6})?$/;
+  //   if (rex.test(evt.target.value)) {
+  //     if (Number(evt.target.value) < maxRedeem) {
+  //       dispatch(setUnStakeAmount(evt.target.value))
+  //     }else return false;
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   const maxHandler = () => {
     dispatch(setUnStakeAmount(stkAtomBalance.toString()))
@@ -69,7 +69,7 @@ const From = () => {
             disable={false}
             required={true}
             name="stakeInput"
-            onChange={type === INSTANT ? redeemInputHandler : inputHandler}
+            onChange={inputHandler}
             className={`bg-transparent border-0
              text-light-high leading-normal 
              box-shadow-none font-normal 

@@ -10,6 +10,7 @@ import { useWindowSize } from "../../../customHooks/useWindowSize";
 import {useWallet} from "../../../context/WalletConnect/WalletConnect";
 import {fetchBalanceSaga} from "../../../store/reducers/balances";
 import {fetchPendingClaimsSaga} from "../../../store/reducers/claim";
+import {fetchInitSaga} from "../../../store/reducers/initialData";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const NavigationBar = () => {
           address:persistenceAccountData!.address,
           persistenceChainInfo: persistenceChainData!,
         }));
+        dispatch(fetchInitSaga({ persistenceChainInfo: persistenceChainData! }));
       }
     }, SHORT_INTERVAL)
     return () => clearInterval(interval)
