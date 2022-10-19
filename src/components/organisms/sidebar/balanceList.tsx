@@ -11,7 +11,8 @@ import {showClaimModal} from "../../../store/reducers/transactions/claim";
 import {useWallet} from "../../../context/WalletConnect/WalletConnect";
 import {useWindowSize} from "../../../customHooks/useWindowSize";
 import WithdrawButton from "./withdrawModal/submit";
-import {WITHDRAW} from "../../../../AppConstants";
+import {STAKE, WITHDRAW} from "../../../../AppConstants";
+
 const BalanceList = () => {
     const dispatch = useDispatch();
     const [activeClaims, setActiveClaims] = useState<number>(0);

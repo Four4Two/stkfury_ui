@@ -69,7 +69,6 @@ export const getExchangeRate = async (rpc: string) => {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const cvalue = await pstakeQueryService.CValue({});
-    console.log(cvalue, "cvalue");
     return Number(decimalize(cvalue.cValue, 18));
   } catch (e) {
     const customScope = new Scope();

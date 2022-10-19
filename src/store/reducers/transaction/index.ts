@@ -3,7 +3,7 @@ import {TransactionState, TransactionPayload} from "./types";
 
 const initialState: TransactionState = {
   inProgress: false,
-  name: "stake"
+  name: ""
 }
 
 const transaction = createSlice({

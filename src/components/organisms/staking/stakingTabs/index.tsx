@@ -13,6 +13,7 @@ import {decimalize, formatNumber} from "../../../../helpers/utils";
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake")
     const { apr, tvu, exchangeRate } = useSelector((state: RootState) => state.initialData);
+
     const inverseExchangeRate:number = 1/exchangeRate;
   const tabItemClasses = 'cursor-pointer w-full bg-tabHeader ' +
     'font-semibold text-lg leading-normal text-center' +
