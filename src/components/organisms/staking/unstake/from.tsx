@@ -6,7 +6,6 @@ import { RootState } from "../../../../store/reducers";
 import { setUnStakeAmount } from "../../../../store/reducers/transactions/unstake";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
-import {INSTANT} from "../../../../../AppConstants";
 
 const From = () => {
   const dispatch = useDispatch();
@@ -25,17 +24,6 @@ const From = () => {
       return false;
     }
   };
-  //
-  // const redeemInputHandler = (evt:ChangeEvent<HTMLInputElement>) => {
-  //   let rex = /^\d{0,10}(\.\d{0,6})?$/;
-  //   if (rex.test(evt.target.value)) {
-  //     if (Number(evt.target.value) < maxRedeem) {
-  //       dispatch(setUnStakeAmount(evt.target.value))
-  //     }else return false;
-  //   } else {
-  //     return false;
-  //   }
-  // };
 
   const maxHandler = () => {
     dispatch(setUnStakeAmount(stkAtomBalance.toString()))

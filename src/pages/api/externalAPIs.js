@@ -6,10 +6,10 @@ export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/markets?vs
 
 export const fetchAtomPrice = async () => {
     try {
-        // const res = await Axios.get(ATOM_PRICE_URL)
-        // if (res && res.data && res.data[0]) {
-        //     return Number(res.data[0].current_price)
-        // }
+        const res = await Axios.get(ATOM_PRICE_URL)
+        if (res && res.data && res.data[0]) {
+            return Number(res.data[0].current_price)
+        }
         return 1
     } catch (e) {
         const customScope = new Scope();
