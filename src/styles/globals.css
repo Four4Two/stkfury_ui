@@ -313,6 +313,11 @@ opacity: 0.5;
    transition:max-height 0.4s ease;
 }
 
+.unStakeListContainer{
+   max-height: 300px;
+   overflow-x: auto;
+}
+
 .unStakeListHeader.opened .collapseIcon{
    transform: rotate(90deg);
 }
@@ -369,7 +374,13 @@ opacity: 0.5;
 .stakeModal .modalDialog{
    max-width: 577px;
 }
-.stakeModal .modalBody{
+
+/* overriding default modal style for claim modal */
+.claimModal .modalDialog{
+   max-width: 600px;
+}
+
+.stakeModal .modalBody, .claimModal .modalBody{
    padding: 0;
 }
 

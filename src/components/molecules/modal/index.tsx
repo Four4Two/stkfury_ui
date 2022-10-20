@@ -57,7 +57,7 @@ const Modal = ({
             ) : (
               ""
             )}
-            <div className="modalBody p-8 space-y-6  md:p-6">{children}</div>
+            <div className="modalBody p-8 space-y-6 md:p-6">{children}</div>
           </div>
         </div>
       </div>

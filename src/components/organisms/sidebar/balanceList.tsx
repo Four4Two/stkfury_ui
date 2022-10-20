@@ -11,7 +11,7 @@ import { showClaimModal } from "../../../store/reducers/transactions/claim";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
 import WithdrawButton from "./withdrawModal/submit";
-import { STAKE, WITHDRAW } from "../../../../AppConstants";
+import { MIN_BALANCE_CHECK, STAKE, WITHDRAW } from "../../../../AppConstants";
 
 const BalanceList = () => {
   const dispatch = useDispatch();
@@ -102,7 +102,7 @@ const BalanceList = () => {
             {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
           </p>
         </div>
-        {ibcAtomBalance > 0 ? (
+        {ibcAtomBalance > MIN_BALANCE_CHECK ? (
           <>
             <div className="flex justify-between items-center mt-4">
               <div className="flex items-center">

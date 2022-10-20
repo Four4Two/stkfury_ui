@@ -1,7 +1,7 @@
 .iconBox{
     border: 2px solid #272727;
     transform: translateX(0%) translateY(-50%);
-    top: 0;
+    top: 3;
     z-index: 1;
     left: auto;
 }

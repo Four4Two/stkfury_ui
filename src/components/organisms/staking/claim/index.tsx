@@ -64,7 +64,7 @@ const ClaimModal = () => {
   let ibcInfo = IBCChainInfos[env].find(
     (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
   );
-  const [expand, setExpand] = useState(false);
+  const [expand, setExpand] = useState(true);
   const { showModal } = useSelector((state: RootState) => state.claim);
 
   const { inProgress, name } = useSelector(
@@ -147,14 +147,14 @@ const ClaimModal = () => {
     <Modal
       show={showModal}
       onClose={handleClose}
-      className="depositModal"
+      className="claimModal"
       header="Claim Unstaked ATOM"
       closeButton={false}
       staticBackDrop={false}
     >
-      <div className="mt-4">
+      <div className="px-8 pb-4 pt-4 md:px-7">
         {activeClaims > 0 || claimableStkAtomBalance > 0 ? (
-          <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6">
+          <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6 mb-4">
             <div className="block">
               <div>
                 {activeClaims > 0 ? (
@@ -179,7 +179,7 @@ const ClaimModal = () => {
                 ) : null}
               </div>
               <p
-                className={`mt-3 claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
+                className={`mt-4 claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
                          ${
                            !enable || (name === CLAIM && inProgress)
@@ -197,7 +197,7 @@ const ClaimModal = () => {
             </div>
           </div>
         ) : null}
-        <div className="mt-5">
+        <div>
           <p
             onClick={() => setExpand(!expand)}
             className={`unStakeListHeader mb-4 cursor-pointer flex items-center justify-between ${
@@ -209,7 +209,11 @@ const ClaimModal = () => {
             </span>
             <Icon
               iconName="right-arrow"
-              viewClass={`${styles.collapseIcon} collapseIcon`}
+              viewClass={`${
+                styles.collapseIcon
+              } collapseIcon !w-[16px] !h[16px] ${
+                expand ? "fill-[#fcfcfc]" : "fill-[#A6A6A6]"
+              }`}
             />
           </p>
           <div
@@ -217,37 +221,39 @@ const ClaimModal = () => {
               expand ? "active" : ""
             } unStakeList overflow-hidden max-h-0`}
           >
-            {unListedPendingClaims.length
-              ? unListedPendingClaims.map((item: any, index: number) => {
-                  return (
-                    <IndividualUnstakingClaim
-                      key={index}
-                      amount={item.unbondAmount}
-                      unstakedOn={item.unStakedon}
-                      daysRemaining={item.daysRemaining}
-                      type={"unListedClaims"}
-                    />
-                  );
-                })
-              : null}
-            {pendingList.length
-              ? pendingList.map((item: any, index: number) => {
-                  return (
-                    <IndividualUnstakingClaim
-                      key={index}
-                      amount={item.unbondAmount}
-                      unstakedOn={item.unStakedon}
-                      daysRemaining={item.daysRemaining}
-                      type={"listedClaims"}
-                    />
-                  );
-                })
-              : null}
-            {!unListedPendingClaims.length && !pendingList.length ? (
-              <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
-                No pending unbondings found
-              </p>
-            ) : null}
+            <div className="unStakeListContainer">
+              {unListedPendingClaims.length
+                ? unListedPendingClaims.map((item: any, index: number) => {
+                    return (
+                      <IndividualUnstakingClaim
+                        key={index}
+                        amount={item.unbondAmount}
+                        unstakedOn={item.unStakedon}
+                        daysRemaining={item.daysRemaining}
+                        type={"unListedClaims"}
+                      />
+                    );
+                  })
+                : null}
+              {pendingList.length
+                ? pendingList.map((item: any, index: number) => {
+                    return (
+                      <IndividualUnstakingClaim
+                        key={index}
+                        amount={item.unbondAmount}
+                        unstakedOn={item.unStakedon}
+                        daysRemaining={item.daysRemaining}
+                        type={"listedClaims"}
+                      />
+                    );
+                  })
+                : null}
+              {!unListedPendingClaims.length && !pendingList.length ? (
+                <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
+                  No pending unbondings found
+                </p>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>

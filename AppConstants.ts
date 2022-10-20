@@ -12,8 +12,7 @@ export const REDEEM_URL = "/pstake.lscosmos.v1beta1.MsgRedeem";
 export const CLAIM_URL = "/pstake.lscosmos.v1beta1.MsgClaim";
 export const IBC_TRANSFER_URL = "/ibc.applications.transfer.v1.MsgTransfer";
 export const SHORT_INTERVAL = 10000;
-export const IBC_DENOM =
-  "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2";
+export const MIN_BALANCE_CHECK = 0.00003;
 
 // Key works
 export const COIN_ATOM = "ATOM";
