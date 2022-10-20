@@ -16,7 +16,10 @@ const UnStake = () => {
           rounded-full flex justify-center items-center absolute 
           w-[40px] h-[40px] bg-[#1A1A1A] md:w-[28px] md:h-[28px]`}
         >
-          <Icon iconName="exchange-arrow" viewClass="search !w-[14px] md:!w-[10px]" />
+          <Icon
+            iconName="exchange-arrow"
+            viewClass="search !w-[14px] md:!w-[10px]"
+          />
         </div>
       </div>
       <To />
@@ -31,8 +34,6 @@ const UnStake = () => {
       <div className="mt-4">
         <Submit />
       </div>
-
-
     </>
   );
 };

@@ -5,9 +5,9 @@ export interface InitialDataState {
   exchangeRate: number;
   atomPrice: number;
   apr: number;
-  redeemFee:number,
-  tvu: number,
-  maxRedeem: number
+  redeemFee: number;
+  tvu: number;
+  maxRedeem: number;
 }
 
 export interface FetchInitialDataSagaParams {

@@ -71,7 +71,7 @@ export const formatNumber = (v = 0, size = 3, decimalLength = 6) => {
   if (!str) return "NaN";
   let substr = str.split(".");
   if (substr[1] === undefined) {
-    let newString = '0';
+    let newString = "0";
     for (let i = 1; i < decimalLength; i++) {
       newString += "0";
     }
@@ -88,7 +88,9 @@ export const formatNumber = (v = 0, size = 3, decimalLength = 6) => {
 export const stringTruncate = (str: string, length = 7) => {
   if (str.length > 30) {
     return (
-      str.substring(0, length) + "..." + str.substring(str.length - length, str.length)
+      str.substring(0, length) +
+      "..." +
+      str.substring(str.length - length, str.length)
     );
   }
   return str;
@@ -111,14 +113,16 @@ export const truncateToFixedDecimalPlaces = (
 export const emptyFunc = () => ({});
 
 export const decimalize = (valueString: string | number, decimals = 6) => {
-  let truncate:number
-  if (typeof valueString === "string")
-  {
+  let truncate: number;
+  if (typeof valueString === "string") {
     truncate = Number(valueString);
   } else {
     truncate = valueString;
   }
-  return Decimal.fromAtomics(Math.trunc(truncate!).toString(), decimals).toString();
+  return Decimal.fromAtomics(
+    Math.trunc(truncate!).toString(),
+    decimals
+  ).toString();
 };
 
 export const unDecimalize = (valueString: string | number, decimals = 6) => {

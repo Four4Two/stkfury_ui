@@ -1,17 +1,17 @@
-import styles from './styles.module.css'
+import styles from "./styles.module.css";
 import React from "react";
 import { ButtonLinkProps } from "./types";
-import {emptyFunc} from "../../../helpers/utils";
+import { emptyFunc } from "../../../helpers/utils";
 
 export const ButtonLink = ({
-                          link = '',
-                          content,
-                          className,
-                          type = "primary",
-                          size = "medium",
-                           onClick = emptyFunc,
-    target = '_blank'
-                       }: ButtonLinkProps) => {
+  link = "",
+  content,
+  className,
+  type = "primary",
+  size = "medium",
+  onClick = emptyFunc,
+  target = "_blank"
+}: ButtonLinkProps) => {
   return (
     <a
       href={link}
@@ -21,7 +21,7 @@ export const ButtonLink = ({
     >
       {content}
     </a>
-  )
-}
+  );
+};
 
-export default ButtonLink
+export default ButtonLink;

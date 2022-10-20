@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 import { InputTextTypes } from "./types";
 import { emptyFunc } from "../../../helpers/utils";
 
 const InputText = ({
-                     autofocus = false,
-                     className,
-                     error,
-                     name,
-                     placeholder,
-                     required = true,
-                     type = 'text',
-                     value,
-                     onChange = emptyFunc,
-                     disable= false
-                   }: InputTextTypes) => {
-    return (
+  autofocus = false,
+  className,
+  error,
+  name,
+  placeholder,
+  required = true,
+  type = "text",
+  value,
+  onChange = emptyFunc,
+  disable = false
+}: InputTextTypes) => {
+  return (
     <div className="flex flex-1 justify-end">
       <input
         type={type}
@@ -33,4 +33,3 @@ const InputText = ({
   );
 };
 export default InputText;
-

@@ -1,37 +1,49 @@
-import {createSlice} from "@reduxjs/toolkit";
-import { SetStakeAmount, StakeAmount, StakeTransactionPayload, SetTransactionFailedStatus, SetTransactionStep } from "./types";
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  SetStakeAmount,
+  StakeAmount,
+  StakeTransactionPayload,
+  SetTransactionFailedStatus,
+  SetTransactionStep
+} from "./types";
 
 const initialState: StakeAmount = {
-  amount: '',
+  amount: "",
   showModal: false,
   txFailed: false,
   stepNumber: 0
-}
+};
 
 const stake = createSlice({
   name: "Stake",
   initialState,
   reducers: {
-    executeStakeTransactionSaga: (state, action:StakeTransactionPayload)=>{},
+    executeStakeTransactionSaga: (state, action: StakeTransactionPayload) => {},
     setStakeAmount: (state, { payload }: SetStakeAmount) => {
-      state.amount = payload
+      state.amount = payload;
     },
     hideStakeModal: (state) => {
-      state.showModal = false
+      state.showModal = false;
     },
     showStakeModal: (state) => {
-      state.showModal = true
+      state.showModal = true;
     },
-    setStakeTxnFailed: (state, {payload}: SetTransactionFailedStatus) => {
-      state.txFailed = payload
+    setStakeTxnFailed: (state, { payload }: SetTransactionFailedStatus) => {
+      state.txFailed = payload;
     },
-    setStakeTxnStepNumber: (state, {payload}: SetTransactionStep) => {
-      state.stepNumber = payload
-    },
+    setStakeTxnStepNumber: (state, { payload }: SetTransactionStep) => {
+      state.stepNumber = payload;
+    }
   }
-})
+});
 
-export const {setStakeAmount, executeStakeTransactionSaga, hideStakeModal,
-  showStakeModal, setStakeTxnFailed, setStakeTxnStepNumber} = stake.actions
+export const {
+  setStakeAmount,
+  executeStakeTransactionSaga,
+  hideStakeModal,
+  showStakeModal,
+  setStakeTxnFailed,
+  setStakeTxnStepNumber
+} = stake.actions;
 
-export default stake.reducer
+export default stake.reducer;

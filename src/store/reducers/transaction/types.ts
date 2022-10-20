@@ -1,11 +1,15 @@
-import {PayloadAction} from "@reduxjs/toolkit";
-import { ChainInfo } from "@keplr-wallet/types";
-import { LiquidStakeMsgTypes } from "../../../helpers/protoMsg";
-export type TransactionType = "stake" | "unstake" | "claim" | "deposit" | "withdraw" | ""
+import { PayloadAction } from "@reduxjs/toolkit";
+export type TransactionType =
+  | "stake"
+  | "unstake"
+  | "claim"
+  | "deposit"
+  | "withdraw"
+  | "";
 
 export interface TransactionState {
-    inProgress: boolean,
-    name: TransactionType
+  inProgress: boolean;
+  name: TransactionType;
 }
 
-export type TransactionPayload = PayloadAction<TransactionType>
+export type TransactionPayload = PayloadAction<TransactionType>;
