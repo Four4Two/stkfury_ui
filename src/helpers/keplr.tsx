@@ -86,7 +86,7 @@ export const KeplrWallet = async (
   // If you don't request enabling before usage, there is no guarantee that other methods will work.
   await window.keplr.enable(chainId);
 
-  const offlineSigner = window.getOfflineSigner(chainId);
+  const offlineSigner = await window.getOfflineSignerAuto(chainId);
   // You can get the address/public keys by `getAccounts` method.
   // It can return the array of address/public key.
   // But, currently, Keplr extension manages only one address/public key pair.
