@@ -41,7 +41,7 @@ const WithdrawModal = () => {
       staticBackDrop={false}
       closeButton={false}
     >
-      <div className="flex items-center justify-center px-8 pt-8 md:px-6 md:pt-6">
+      <div className="flex items-center justify-center px-10 pt-10 md:px-7 md:pt-7">
         <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
           <img
             src={"/images/tokens/stk_atom.svg"}
@@ -58,11 +58,11 @@ const WithdrawModal = () => {
           />
         </div>
       </div>
-      <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base">
+      <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base md:px-7">
         Withdrawing {amount} ATOM from Persistence to your Keplr wallet
       </p>
-      <div className={`${styles.stakeModalBody} px-8 pt-8 md:px-6 md:pt-6`}>
-        <div className="mb-8 md:mb-6">
+      <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
+        <div className="mb-10 md:mb-7">
           <div className="flex items-center mb-5">
             <div className="mr-3">
               {TransactionIcon(stepNumber, 1, txFailed)}
@@ -89,19 +89,19 @@ const WithdrawModal = () => {
           </div>
         </div>
         {txFailed ? (
-          <p className="text-base text-light-high text-center font-semibold mb-4">
+          <p className="text-base text-light-high text-center font-semibold mb-4 md:text-sm">
             Transfer could not be completed.
           </p>
         ) : null}
         {stepNumber === 3 && (
-          <p className="text-base text-light-high text-center font-semibold mb-4 animate-pulse">
-            You withdrew {amount} ATOM on pSTAKE successfully!
+          <p className="text-base text-light-high text-center font-semibold mb-4 md:text-sm">
+            {amount} ATOM was withdrawn successfully!
           </p>
         )}
         {txFailed || stepNumber === 3 ? (
           <Button
             className="button w-full md:py-2 md:text-sm flex items-center
-             justify-center w-[350px] md:w-[200px] mx-auto mb-8 md:mb-6"
+             justify-center w-[350px] md:w-[200px] mx-auto mb-10 md:mb-7"
             type="primary"
             size="medium"
             content="Close"

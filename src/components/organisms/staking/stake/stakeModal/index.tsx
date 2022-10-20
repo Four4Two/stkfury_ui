@@ -42,7 +42,7 @@ const StakeModal = () => {
       staticBackDrop={false}
       closeButton={false}
     >
-      <div className="flex items-center justify-center px-8 pt-8 md:px-6 md:pt-6">
+      <div className="flex items-center justify-center px-10 pt-10 md:px-7 md:pt-7">
         <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
           <img
             src={"/images/tokens/atom.svg"}
@@ -59,11 +59,11 @@ const StakeModal = () => {
           />
         </div>
       </div>
-      <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base">
+      <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base md:px-7">
         Liquid Staking {amount} ATOM
       </p>
-      <div className={`${styles.stakeModalBody} px-8 pt-8 md:px-6 md:pt-6`}>
-        <div className="mb-8 md:mb-6">
+      <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
+        <div className="mb-10 md:mb-7">
           <div className="flex items-center mb-5 md:mb-3">
             <div className="mr-3">
               {TransactionIcon(stepNumber, 1, txFailed)}
@@ -115,19 +115,19 @@ const StakeModal = () => {
         </div>
 
         {txFailed ? (
-          <p className="text-base text-light-high text-center font-semibold mb-4 md:mb-3">
+          <p className="text-base text-light-high text-center font-semibold mb-4 md:mb-3 md:text-sm">
             Transfer could not be completed.
           </p>
         ) : null}
         {stepNumber === 5 && (
-          <p className="text-base text-light-high text-center font-semibold mb-4 animate-pulse">
+          <p className="text-base text-light-high text-center font-semibold mb-4 md:text-sm">
             You staked {amount} ATOM on pSTAKE successfully!
           </p>
         )}
         {txFailed || stepNumber === 5 ? (
           <Button
             className="button w-full md:py-2 md:text-sm flex items-center
-            justify-center w-[350px]  md:w-[200px]  mx-auto mb-8 md:mb-6"
+            justify-center w-[350px]  md:w-[200px]  mx-auto mb-10 md:mb-7"
             type="primary"
             size="medium"
             content="Close"
