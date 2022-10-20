@@ -6,16 +6,16 @@ import {
   InitialDataState,
   SetAPR,
   SetRedeemFee,
-    SetTVU,
-    SetMaxRedeem
+  SetTVU,
+  SetMaxRedeem
 } from "./types";
 
 const initialState: InitialDataState = {
   exchangeRate: 1,
   atomPrice: 0,
   apr: 0,
-  redeemFee:0,
-  tvu:0,
+  redeemFee: 0,
+  tvu: 0,
   maxRedeem: 0
 };
 
@@ -41,11 +41,18 @@ const initData = createSlice({
     },
     setMaxRedeem: (state, action: SetMaxRedeem) => {
       state.maxRedeem = action.payload;
-    },
+    }
   }
 });
 
-export const { setRedeemFee, setAPR, setAtomPrice, fetchInitSaga, setExchangeRate,setTVU, setMaxRedeem } =
-  initData.actions;
+export const {
+  setRedeemFee,
+  setAPR,
+  setAtomPrice,
+  fetchInitSaga,
+  setExchangeRate,
+  setTVU,
+  setMaxRedeem
+} = initData.actions;
 
 export default initData.reducer;

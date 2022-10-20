@@ -1,11 +1,11 @@
 export interface Alert {
   message: any;
-  txHash?:string
+  txHash?: string;
 }
 
 export const enum ToastType {
   SUCCESS,
   ERROR,
   LOADING,
-  INFO,
+  INFO
 }

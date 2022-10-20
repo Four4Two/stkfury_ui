@@ -1,7 +1,7 @@
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import React, {useState} from 'react';
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, { useState } from "react";
 import { Icon } from "../../atoms/icon";
-import Styles from "./styles.module.css"
+import Styles from "./styles.module.css";
 import { IconTypes } from "./types";
 
 const Copy = ({ id }: IconTypes) => {
@@ -16,9 +16,7 @@ const Copy = ({ id }: IconTypes) => {
     <span className="relative flex">
       <CopyToClipboard onCopy={onCopy} text={id}>
         <span className={Styles.copyButton}>
-          <Icon
-          viewClass={Styles.copyIcon}
-          iconName="copy"/>
+          <Icon viewClass={Styles.copyIcon} iconName="copy" />
         </span>
       </CopyToClipboard>
       <section className={`${Styles.copyResult} absolute`}>
@@ -27,6 +25,5 @@ const Copy = ({ id }: IconTypes) => {
     </span>
   );
 };
-
 
 export default Copy;
