@@ -1,9 +1,10 @@
 import { ChainInfo } from "@keplr-wallet/types";
 import { OfflineSigner } from "@cosmjs/launchpad";
+import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 
 export const KeplrWallet = async (
   chain: ChainInfo
-): Promise<OfflineSigner | null> => {
+): Promise<OfflineSigner | OfflineDirectSigner> => {
   // Keplr extension injects the offline signer that is compatible with cosmJS.
   // You can get this offline signer from `window.getOfflineSigner(chainId:string)` after load event.
   // And it also injects the helper function to `window.keplr`.
@@ -86,7 +87,7 @@ export const KeplrWallet = async (
   // If you don't request enabling before usage, there is no guarantee that other methods will work.
   await window.keplr.enable(chainId);
 
-  const offlineSigner = await window.getOfflineSignerAuto(chainId);
+  const offlineSigner = await window.getOfflineSignerAuto!(chainId);
   // You can get the address/public keys by `getAccounts` method.
   // It can return the array of address/public key.
   // But, currently, Keplr extension manages only one address/public key pair.

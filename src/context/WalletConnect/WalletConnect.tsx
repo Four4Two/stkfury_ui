@@ -16,6 +16,7 @@ import { fetchInitSaga } from "../../store/reducers/initialData";
 import { printConsole } from "../../helpers/utils";
 import { fetchPendingClaimsSaga } from "../../store/reducers/claim";
 import useLocalStorage from "../../customHooks/useLocalStorage";
+import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -48,9 +49,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   );
   const [persistenceChainData, setPersistenceChainData] =
     useState<ChainInfo | null>(null);
-  const [cosmosSigner, setCosmosSigner] = useState<OfflineSigner | null>(null);
-  const [persistenceSigner, setPersistenceSigner] =
-    useState<OfflineSigner | null>(null);
+  const [cosmosSigner, setCosmosSigner] = useState<
+    OfflineSigner | OfflineDirectSigner | null
+  >(null);
+  const [persistenceSigner, setPersistenceSigner] = useState<
+    OfflineSigner | OfflineDirectSigner | null
+  >(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [persistenceAccountData, setPersistenceAccountData] =
     useState<AccountData | null>(null);

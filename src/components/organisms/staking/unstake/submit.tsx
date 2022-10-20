@@ -24,6 +24,7 @@ import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transa
 import { setTransactionProgress } from "../../../../store/reducers/transaction";
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
 import { IBCChainInfos, IBCConfiguration } from "../../../../helpers/config";
+import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -42,6 +43,7 @@ const Submit = () => {
   const { redeemFee, exchangeRate, maxRedeem } = useSelector(
     (state: RootState) => state.initialData
   );
+  const { isMobile } = useWindowSize();
   const {
     connect,
     isWalletConnected,
@@ -121,7 +123,7 @@ const Submit = () => {
       }
       content={
         name === UN_STAKE && inProgress ? (
-          <Spinner size={"medium"} />
+          <Spinner size={isMobile ? "small" : "medium"} />
         ) : Number(amount) > Number(stkAtomBalance) ? (
           "Insufficient balance"
         ) : type === INSTANT ? (

@@ -5,7 +5,7 @@ import {
   MsgRedeem
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
 import { AminoConverters, AminoTypes, GasPrice } from "@cosmjs/stargate";
-import { Registry } from "@cosmjs/proto-signing";
+import { OfflineDirectSigner, Registry } from "@cosmjs/proto-signing";
 import {
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
@@ -57,7 +57,7 @@ const {
 const { defaultRegistryTypes } = require("@cosmjs/stargate");
 
 export async function Transaction(
-  signer: OfflineSigner,
+  signer: OfflineSigner | OfflineDirectSigner,
   signerAddress: string,
   msgs: any,
   gasPrice: string,
