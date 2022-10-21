@@ -1,18 +1,24 @@
-import React  from "react";
+import React from "react";
 import InputText from "../../../atoms/input";
-import { formatNumber, truncateToFixedDecimalPlaces } from "../../../../helpers/utils";
-  import { useDispatch, useSelector } from "react-redux";
+import {
+  formatNumber,
+  truncateToFixedDecimalPlaces
+} from "../../../../helpers/utils";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
-import styles from "./styles.module.css"
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const To = () => {
-  const {stkAtomBalance} = useSelector((state:RootState) => state.balances);
-  const {amount} = useSelector((state:RootState) => state.stake);
-  const {atomPrice, exchangeRate} = useSelector((state:RootState) => state.initialData)
-  const stkATOMAmount = truncateToFixedDecimalPlaces(Number(amount)*exchangeRate)
+  const { stkAtomBalance } = useSelector((state: RootState) => state.balances);
+  const { amount } = useSelector((state: RootState) => state.stake);
+  const { atomPrice, exchangeRate } = useSelector(
+    (state: RootState) => state.initialData
+  );
+  const stkATOMAmount = truncateToFixedDecimalPlaces(
+    Number(amount) * exchangeRate
+  );
 
-  const priceInDollars = atomPrice * Number(stkATOMAmount)
+  const priceInDollars = atomPrice * Number(stkATOMAmount);
   const { isMobile } = useWindowSize();
 
   return (
@@ -20,16 +26,22 @@ const To = () => {
       <div className="p-6 bg-input border rounded-md border-solid border-[#1b1b1b99] flex-wrap flex md:p-3">
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
-            <img src={'/images/tokens/stk_atom.svg'}
-                   width={isMobile ? 20 : 32} height={isMobile ? 20 : 32}
-                   className="logo"
-                   alt="atomIcon"
-                   />
-            <span className="text-light-high text-3xl font-normal ml-2 md:text-lg">stkATOM</span>
+            <img
+              src={"/images/tokens/stk_atom.svg"}
+              width={isMobile ? 20 : 32}
+              height={isMobile ? 20 : 32}
+              className="logo"
+              alt="atomIcon"
+            />
+            <span className="text-light-high text-3xl font-normal ml-2 md:text-lg">
+              stkATOM
+            </span>
           </div>
           <p className="mt-3 leading-normal text-sm font-normal md:text-xsm">
             <span className="text-light-low">Available: </span>
-            <span className="text-light-mid">{formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}</span>
+            <span className="text-light-mid">
+              {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+            </span>
           </p>
         </div>
         <div>
@@ -48,12 +60,13 @@ const To = () => {
              p-0 mb-2 placeholder:text-light-mid placeholder:leading-normal 
              placeholder:font-normal outline-none max-w-[160px] md:max-w-[100px]`}
           />
-          <p className="text-light-low font-normal leading-normal text-right text-sm">${formatNumber(priceInDollars, 3, 2)}</p>
+          <p className="text-light-low font-normal leading-normal text-right text-sm">
+            ${formatNumber(priceInDollars, 3, 2)}
+          </p>
         </div>
       </div>
     </div>
   );
 };
-
 
 export default To;

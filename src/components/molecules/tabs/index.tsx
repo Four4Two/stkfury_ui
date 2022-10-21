@@ -3,14 +3,27 @@ import TabItem from "./tabItem";
 import TabContent from "./tabContent";
 
 const Tabs = () => {
-  const [activeTab, setActiveTab] = useState("tab1")
+  const [activeTab, setActiveTab] = useState("tab1");
 
   return (
     <div>
-      <ul className="flex flex-wrap -mb-px text-sm font-medium text-center"
-          data-tabs-toggle="#myTabContent" role="tablist">
-        <TabItem id="tab1" title={"tab1"} activeTab={activeTab} setActiveTab={setActiveTab}/>
-        <TabItem id="tab2" title={"tab2"} activeTab={activeTab} setActiveTab={setActiveTab}/>
+      <ul
+        className="flex flex-wrap -mb-px text-sm font-medium text-center"
+        data-tabs-toggle="#myTabContent"
+        role="tablist"
+      >
+        <TabItem
+          id="tab1"
+          title={"tab1"}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
+        <TabItem
+          id="tab2"
+          title={"tab2"}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+        />
       </ul>
       <div>
         <TabContent id="tab1" activeTab={activeTab}>
@@ -23,6 +36,5 @@ const Tabs = () => {
     </div>
   );
 };
-
 
 export default Tabs;

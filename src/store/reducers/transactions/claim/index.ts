@@ -1,24 +1,25 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { ClaimTransactionPayload, ClaimState } from "./types";
 
 const initialState: ClaimState = {
   showModal: false
-}
+};
 
 const claim = createSlice({
   name: "Claim",
   initialState,
   reducers: {
-    executeClaimTransactionSaga: (state, action:ClaimTransactionPayload)=>{},
+    executeClaimTransactionSaga: (state, action: ClaimTransactionPayload) => {},
     hideClaimModal: (state) => {
-      state.showModal = false
+      state.showModal = false;
     },
     showClaimModal: (state) => {
-      state.showModal = true
-    },
+      state.showModal = true;
+    }
   }
-})
+});
 
-export const { executeClaimTransactionSaga, showClaimModal, hideClaimModal } = claim.actions
+export const { executeClaimTransactionSaga, showClaimModal, hideClaimModal } =
+  claim.actions;
 
-export default claim.reducer
+export default claim.reducer;

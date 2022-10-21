@@ -1,5 +1,5 @@
-import {combineReducers} from "redux";
-import balances from "./balances"
+import { combineReducers } from "redux";
+import balances from "./balances";
 import stake from "./transactions/stake";
 import initialData from "./initialData";
 import transaction from "./transaction";
@@ -11,18 +11,18 @@ import claimQueries from "./claim";
 import withdraw from "./transactions/withdraw";
 
 const reducers = combineReducers({
-    balances,
-    stake,
-    initialData,
-    transaction,
-    unStake,
-    deposit,
-    mobileSidebar,
-    claimQueries,
-    claim,
-    withdraw
-})
+  balances,
+  stake,
+  initialData,
+  transaction,
+  unStake,
+  deposit,
+  mobileSidebar,
+  claimQueries,
+  claim,
+  withdraw
+});
 
 export default reducers;
 
-export type RootState = ReturnType<typeof reducers>
+export type RootState = ReturnType<typeof reducers>;

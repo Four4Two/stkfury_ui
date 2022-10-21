@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./styles.module.css";
 import TabItem from "../../../molecules/tabs/tabItem";
 import TabContent from "../../../molecules/tabs/tabContent";
@@ -76,7 +76,7 @@ const StakingTabs = () => {
                 </span>
               }
             >
-              <button className="icon-button px-1 align-middle mb-0">
+              <button className="icon-button px-1 align-middle mb-1">
                 <Icon viewClass="arrow-right" iconName="info" />
               </button>
             </Tooltip>
