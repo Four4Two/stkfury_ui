@@ -2,6 +2,7 @@ import { AccountData } from "@cosmjs/launchpad/build/signer";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { GasPrice } from "@cosmjs/stargate";
 import { ChainInfo } from "@keplr-wallet/types";
+import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 
 export interface IBCChainInfo {
   counterpartyChainId: string;
@@ -31,8 +32,8 @@ export interface WalletState {
   persistenceAccountData: AccountData | null;
   cosmosAccountData: AccountData | null;
   cosmosChainData: ChainInfo | null;
-  cosmosSigner: OfflineSigner | null;
-  persistenceSigner: OfflineSigner | null;
+  cosmosSigner: OfflineSigner | OfflineDirectSigner | null;
+  persistenceSigner: OfflineSigner | OfflineDirectSigner | null;
   persistenceChainData: ChainInfo | null;
   connect: () => Promise<boolean>;
 }

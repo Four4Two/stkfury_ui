@@ -15,11 +15,13 @@ import {
 import { setTransactionProgress } from "../../../../store/reducers/transaction";
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
 import { executeDepositTransactionSaga } from "../../../../store/reducers/transactions/deposit";
+import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const Submit = () => {
   const dispatch = useDispatch();
+  const { isMobile } = useWindowSize();
   let ibcInfo = IBCChainInfos[env].find(
     (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
   );
@@ -97,7 +99,7 @@ const Submit = () => {
       disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
       content={
         (name === STAKE || name === DEPOSIT) && inProgress && !showModal ? (
-          <Spinner size={"medium"} />
+          <Spinner size={isMobile ? "small" : "medium"} />
         ) : (
           "Liquid Stake"
         )

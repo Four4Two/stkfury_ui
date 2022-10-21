@@ -4,8 +4,8 @@ import {
   MsgLiquidUnstake,
   MsgRedeem
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
-import { GasPrice } from "@cosmjs/stargate";
-import { Registry } from "@cosmjs/proto-signing";
+import { AminoConverters, AminoTypes, GasPrice } from "@cosmjs/stargate";
+import { OfflineDirectSigner, Registry } from "@cosmjs/proto-signing";
 import {
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
@@ -22,6 +22,31 @@ import {
 import { QueryChannelClientStateResponse } from "cosmjs-types/ibc/core/channel/v1/query";
 import { TransferMsg } from "./protoMsg";
 import Long from "long";
+import { createLSCosmosAminoConverters } from "./aminoConvter";
+import {
+  createAuthzAminoConverters,
+  createBankAminoConverters,
+  createDistributionAminoConverters,
+  createFeegrantAminoConverters,
+  createGovAminoConverters,
+  createIbcAminoConverters,
+  createStakingAminoConverters,
+  createVestingAminoConverters
+} from "@cosmjs/stargate";
+
+function createAminoTypes(prefix: string): AminoConverters {
+  return {
+    ...createAuthzAminoConverters(),
+    ...createBankAminoConverters(),
+    ...createDistributionAminoConverters(),
+    ...createGovAminoConverters(),
+    ...createStakingAminoConverters(prefix),
+    ...createIbcAminoConverters(),
+    ...createFeegrantAminoConverters(),
+    ...createVestingAminoConverters(),
+    ...createLSCosmosAminoConverters()
+  };
+}
 
 const tendermintRPC = require("@cosmjs/tendermint-rpc");
 const {
@@ -32,7 +57,7 @@ const {
 const { defaultRegistryTypes } = require("@cosmjs/stargate");
 
 export async function Transaction(
-  signer: OfflineSigner,
+  signer: OfflineSigner | OfflineDirectSigner,
   signerAddress: string,
   msgs: any,
   gasPrice: string,
@@ -47,7 +72,8 @@ export async function Transaction(
       [REDEEM_URL, MsgRedeem],
       [CLAIM_URL, MsgClaim]
     ]),
-    gasPrice: GasPrice.fromString(gasPrice)
+    gasPrice: GasPrice.fromString(gasPrice),
+    aminoTypes: new AminoTypes(createAminoTypes(signerAddress.split("1")[0]))
   });
   return await client.signAndBroadcast(signerAddress, msgs, "auto", memo);
 }

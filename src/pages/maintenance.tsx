@@ -18,14 +18,14 @@ const Maintenance: NextPage = () => (
           href={
             "https://twitter.com/pstake_cosmos?s=11&t=E_q2T3rK9Bwiywy_YCvo5A"
           }
-          className="text-[#c73238] font-semibold"
+          className="text-[#0d6efd] font-semibold"
         >
           Twitter
         </a>{" "}
         for updates, otherwise we’ll be back up shortly!
       </p>
       <p className="text-light-emphasis text-base font-semibold leading-normal mb-4">
-        — The Persistence Team
+        — The pSTAKE Team
       </p>
     </div>
   </div>

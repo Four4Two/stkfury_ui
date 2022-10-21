@@ -3,6 +3,7 @@ import { ChainInfo } from "@keplr-wallet/types";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { LiquidStakeMsgTypes } from "../../../../helpers/protoMsg";
 import { TransactionSteps } from "../stake/types";
+import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 
 export interface WithdrawState {
   amount: number;
@@ -18,7 +19,7 @@ export interface WithdrawTransactionParams {
   persistenceAddress: string;
   withdrawMsg: LiquidStakeMsgTypes;
   pollInitialIBCAtomBalance: number;
-  persistenceSigner: OfflineSigner;
+  persistenceSigner: OfflineSigner | OfflineDirectSigner;
 }
 
 export type SetWithdrawAmount = PayloadAction<number>;
