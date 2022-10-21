@@ -26,6 +26,8 @@ import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
 import {
+  APR_BASE_RATE,
+  APR_DEFAULT,
   PERSISTENCE_CHAIN_ID,
   STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
@@ -105,11 +107,11 @@ export const getFee = async (rpc: string) => {
 
 export const getAPR = async () => {
   try {
-    const baseRate = 18.92;
+    const baseRate = APR_BASE_RATE;
     const commission = await getCommission();
     const incentives = await getIncentives();
     const apr = baseRate - (commission / 100) * baseRate + incentives;
-    return isNaN(apr) ? 0 : apr.toFixed(2);
+    return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -117,7 +119,7 @@ export const getAPR = async () => {
       "Error while fetching exchange rate": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
-    return 0;
+    return -1;
   }
 };
 
