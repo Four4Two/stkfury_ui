@@ -25,7 +25,12 @@ import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
-import { PERSISTENCE_CHAIN_ID, STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
+import {
+  APR_BASE_RATE,
+  APR_DEFAULT,
+  PERSISTENCE_CHAIN_ID,
+  STK_ATOM_MINIMAL_DENOM
+} from "../../../AppConstants";
 import { ExternalChains } from "../../helpers/config";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
@@ -102,11 +107,11 @@ export const getFee = async (rpc: string) => {
 
 export const getAPR = async () => {
   try {
-    const baseRate = 18.92;
+    const baseRate = APR_BASE_RATE;
     const commission = await getCommission();
     const incentives = await getIncentives();
     const apr = baseRate - (commission / 100) * baseRate + incentives;
-    return isNaN(apr) ? 0 : apr.toFixed(2);
+    return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -114,26 +119,27 @@ export const getAPR = async () => {
       "Error while fetching exchange rate": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
-    return 0;
+    return -1;
   }
 };
 
-export const getTVU = async (rpc:string) => {
+export const getTVU = async (rpc: string) => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
-    const supplyResponse:QueryTotalSupplyResponse = await bankQueryService.TotalSupply({})
+    const supplyResponse: QueryTotalSupplyResponse =
+      await bankQueryService.TotalSupply({});
     if (supplyResponse.supply.length) {
       const token: Coin | undefined = supplyResponse.supply.find(
-          (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
+        (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
-      if(token !== undefined){
+      if (token !== undefined) {
         return token?.amount;
-      }else {
-        return 0
+      } else {
+        return 0;
       }
     }
-    return 0
+    return 0;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -144,7 +150,6 @@ export const getTVU = async (rpc:string) => {
     return 0;
   }
 };
-
 
 export const fetchAllEpochEntries = async (address: string, rpc: string) => {
   try {
@@ -172,18 +177,17 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
         const cValueEpochNumber: Long =
           unbondEpochResponse.unbondingEpochCValue?.epochNumber!;
 
-        let unbondAmount:number = 0;
-        if (cValueEpochNumber.toNumber() > 0){
+        let unbondAmount: number = 0;
+        if (cValueEpochNumber.toNumber() > 0) {
           const sTKBurnAmount: any =
-              unbondEpochResponse.unbondingEpochCValue?.sTKBurn?.amount!;
+            unbondEpochResponse.unbondingEpochCValue?.sTKBurn?.amount!;
           const amountUnbonded: any =
-              unbondEpochResponse.unbondingEpochCValue?.amountUnbonded?.amount!;
+            unbondEpochResponse.unbondingEpochCValue?.amountUnbonded?.amount!;
 
           const amount: string = item?.amount?.amount!;
-          const cvalue: any =
-              Number(sTKBurnAmount) / Number(amountUnbonded);
+          const cvalue: any = Number(sTKBurnAmount) / Number(amountUnbonded);
 
-           unbondAmount = Number(amount) / Number(cvalue);
+          unbondAmount = Number(amount) / Number(cvalue);
         }
 
         // pending unbonding list
@@ -259,7 +263,8 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
     return {
       filteredPendingClaims,
       totalFailedUnbondAmount,
-      claimableAmount: claimableAmount > 2 ? claimableAmount-2 : claimableAmount,
+      claimableAmount:
+        claimableAmount > 2 ? claimableAmount - 2 : claimableAmount,
       filteredUnlistedPendingClaims
     };
   } catch (error) {
@@ -325,11 +330,13 @@ export const getUnbondingTime = async (
   }
 };
 
-export const getMaxRedeem = async (rpc :string) => {
+export const getMaxRedeem = async (rpc: string) => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
-    const moduleAccountResponse = await pstakeQueryService.DepositModuleAccount({});
+    const moduleAccountResponse = await pstakeQueryService.DepositModuleAccount(
+      {}
+    );
     return moduleAccountResponse ? moduleAccountResponse.balance?.amount : 0;
   } catch (e) {
     const customScope = new Scope();

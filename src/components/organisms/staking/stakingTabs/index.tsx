@@ -10,6 +10,7 @@ import { Icon } from "../../../atoms/icon";
 import Tooltip from "rc-tooltip";
 import { decimalize, formatNumber } from "../../../../helpers/utils";
 import { Spinner } from "../../../atoms/spinner";
+import { APR_DEFAULT } from "../../../../../AppConstants";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake");
@@ -82,7 +83,7 @@ const StakingTabs = () => {
           </div>
           {apr !== 0 ? (
             <p className="text-secondary font-semibold leading-normal text-2xl text-center md:text-base">
-              {apr}%
+              {apr === -1 ? APR_DEFAULT : apr}%
             </p>
           ) : (
             <div className="text-center mt-1">

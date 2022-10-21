@@ -38,6 +38,9 @@ export const MID_INTERVAL = 60000;
 
 export const LONG_INTERVAL = 3600000;
 
+export const APR_BASE_RATE = 18.92;
+export const APR_DEFAULT = 15.86;
+
 //error msgs
 export const ERROR_WHILE_CLAIMING = "ERROR_WHILE_CLAIMING";
 export const ERROR_WHILE_STAKING = "ERROR_WHILE_STAKING";
