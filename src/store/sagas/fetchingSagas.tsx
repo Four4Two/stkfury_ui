@@ -9,9 +9,9 @@ import {
   setIbcAtomBalance,
   setStkAtomBalance
 } from "../reducers/balances";
-import { decimalize, printConsole } from "../../helpers/utils";
-import { IBCChainInfos } from "../../helpers/config";
-import { COSMOS_CHAIN_ID, STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
+import { decimalize } from "../../helpers/utils";
+import { CHAIN_ID, IBCChainInfos } from "../../helpers/config";
+import { STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
 import { FetchPendingClaimSaga } from "../reducers/claim/types";
 import {
   setClaimableBalance,
@@ -23,7 +23,7 @@ import {
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 let IBCInfo = IBCChainInfos[env].find(
-  (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
+  (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
 );
 
 export function* fetchBalance({ payload }: FetchBalanceSaga) {

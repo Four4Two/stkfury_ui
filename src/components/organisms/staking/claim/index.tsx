@@ -22,7 +22,11 @@ import { Spinner } from "../../../atoms/spinner";
 import { setTransactionProgress } from "../../../../store/reducers/transaction";
 import Modal from "../../../molecules/modal";
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
-import { IBCChainInfos, IBCConfiguration } from "../../../../helpers/config";
+import {
+  CHAIN_ID,
+  IBCChainInfos,
+  IBCConfiguration
+} from "../../../../helpers/config";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -62,7 +66,7 @@ const IndividualUnstakingClaim = ({
 
 const ClaimModal = () => {
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
   );
   const [expand, setExpand] = useState(true);
   const { showModal } = useSelector((state: RootState) => state.claim);

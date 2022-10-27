@@ -5,12 +5,8 @@ import { Decimal } from "@cosmjs/math";
 import { Scope } from "@sentry/react";
 import * as Sentry from "@sentry/react";
 import { fetchAccountBalance } from "../pages/api/onChain";
-import { ExternalChains, PollingConfig } from "./config";
-import {
-  COSMOS_CHAIN_ID,
-  PERSISTENCE_CHAIN_ID,
-  TEST_NET
-} from "../../AppConstants";
+import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
+import { TEST_NET } from "../../AppConstants";
 import {
   QueryAllowListedValidatorsResponse,
   QueryClientImpl,
@@ -26,11 +22,11 @@ const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermi
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const persistenceChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
 const cosmosChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === COSMOS_CHAIN_ID
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].cosmosChainID
 );
 
 export async function RpcClient(rpc: string) {

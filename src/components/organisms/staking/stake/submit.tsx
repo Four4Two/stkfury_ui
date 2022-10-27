@@ -6,13 +6,20 @@ import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../atoms/spinner";
 import { LiquidStakeMsg } from "../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../helpers/utils";
-import { IBCChainInfos, IBCConfiguration } from "../../../../helpers/config";
-import { COSMOS_CHAIN_ID, DEPOSIT, STAKE } from "../../../../../AppConstants";
+import {
+  CHAIN_ID,
+  IBCChainInfos,
+  IBCConfiguration
+} from "../../../../helpers/config";
+import { DEPOSIT, MIN_STAKE_FEE, STAKE } from "../../../../../AppConstants";
 import {
   setStakeTxnFailed,
   showStakeModal
 } from "../../../../store/reducers/transactions/stake";
-import { setTransactionProgress } from "../../../../store/reducers/transaction";
+import {
+  resetTransaction,
+  setTransactionProgress
+} from "../../../../store/reducers/transaction";
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
 import { executeDepositTransactionSaga } from "../../../../store/reducers/transactions/deposit";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
@@ -22,8 +29,9 @@ const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   const { isMobile } = useWindowSize();
+  const { minDeposit } = useSelector((state: RootState) => state.initialData);
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
   );
   const { atomBalance, stkAtomBalance, ibcAtomBalance } = useSelector(
     (state: RootState) => state.balances
@@ -43,48 +51,62 @@ const Submit = () => {
     connect
   } = useWallet();
 
+  const diff = Number((atomBalance - Number(amount)).toFixed(6));
+
+  const stakeAmount =
+    diff < MIN_STAKE_FEE
+      ? (Number(amount) - Number((MIN_STAKE_FEE - diff).toFixed(6))).toFixed(6)
+      : amount;
+
   const stakeHandler = async () => {
-    dispatch(setStakeTxnFailed(false));
-    dispatch(setTransactionProgress(DEPOSIT));
+    try {
+      dispatch(setStakeTxnFailed(false));
+      dispatch(setTransactionProgress(DEPOSIT));
+      const depositMsg = await MakeIBCTransferMsg({
+        channel: ibcInfo?.sourceChannelId,
+        fromAddress: cosmosAccountData?.address,
+        toAddress: persistenceAccountData?.address,
+        amount: unDecimalize(stakeAmount),
+        timeoutHeight: undefined,
+        timeoutTimestamp: undefined,
+        denom: cosmosChainData?.stakeCurrency.coinMinimalDenom,
+        sourceRPCUrl: cosmosChainData?.rpc,
+        destinationRPCUrl: persistenceChainData?.rpc,
+        port: IBCConfiguration.ibcDefaultPort
+      });
 
-    const depositMsg = await MakeIBCTransferMsg({
-      channel: ibcInfo?.sourceChannelId,
-      fromAddress: cosmosAccountData?.address,
-      toAddress: persistenceAccountData?.address,
-      amount: unDecimalize(amount),
-      timeoutHeight: undefined,
-      timeoutTimestamp: undefined,
-      denom: cosmosChainData?.stakeCurrency.coinMinimalDenom,
-      sourceRPCUrl: cosmosChainData?.rpc,
-      destinationRPCUrl: persistenceChainData?.rpc,
-      port: IBCConfiguration.ibcDefaultPort
-    });
+      const stakeMsg = LiquidStakeMsg(
+        persistenceAccountData!.address,
+        unDecimalize(stakeAmount),
+        ibcInfo!.coinDenom
+      );
 
-    const stakeMsg = LiquidStakeMsg(
-      persistenceAccountData!.address,
-      unDecimalize(amount),
-      ibcInfo!.coinDenom
-    );
-
-    dispatch(
-      executeDepositTransactionSaga({
-        cosmosSigner: cosmosSigner!,
-        cosmosChainInfo: cosmosChainData!,
-        persistenceChainInfo: persistenceChainData!,
-        cosmosAddress: cosmosAccountData!.address,
-        persistenceAddress: persistenceAccountData!.address,
-        depositMsg: depositMsg,
-        stakeMsg: stakeMsg,
-        pollInitialDepositBalance: ibcAtomBalance,
-        pollInitialStakeBalance: stkAtomBalance,
-        persistenceSigner: persistenceSigner!
-      })
-    );
-    dispatch(showStakeModal());
+      dispatch(
+        executeDepositTransactionSaga({
+          cosmosSigner: cosmosSigner!,
+          cosmosChainInfo: cosmosChainData!,
+          persistenceChainInfo: persistenceChainData!,
+          cosmosAddress: cosmosAccountData!.address,
+          persistenceAddress: persistenceAccountData!.address,
+          depositMsg: depositMsg,
+          stakeMsg: stakeMsg,
+          pollInitialDepositBalance: ibcAtomBalance,
+          pollInitialStakeBalance: stkAtomBalance,
+          persistenceSigner: persistenceSigner!
+        })
+      );
+      dispatch(showStakeModal());
+    } catch (e) {
+      dispatch(setStakeTxnFailed(true));
+      dispatch(resetTransaction());
+    }
   };
 
   const enable =
-    amount && Number(amount) > 0 && Number(amount) <= Number(atomBalance);
+    amount &&
+    Number(amount) > 0 &&
+    Number(amount) <= Number(atomBalance) &&
+    minDeposit < Number(amount);
 
   return isWalletConnected ? (
     <Button
@@ -100,6 +122,8 @@ const Submit = () => {
       content={
         (name === STAKE || name === DEPOSIT) && inProgress && !showModal ? (
           <Spinner size={isMobile ? "small" : "medium"} />
+        ) : minDeposit <= Number(amount) ? (
+          "Liquid Stake"
         ) : (
           "Liquid Stake"
         )

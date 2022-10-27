@@ -23,7 +23,11 @@ import {
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
 import { setTransactionProgress } from "../../../../store/reducers/transaction";
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
-import { IBCChainInfos, IBCConfiguration } from "../../../../helpers/config";
+import {
+  CHAIN_ID,
+  IBCChainInfos,
+  IBCConfiguration
+} from "../../../../helpers/config";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
@@ -31,7 +35,7 @@ const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
   );
   const { stkAtomBalance, atomBalance } = useSelector(
     (state: RootState) => state.balances

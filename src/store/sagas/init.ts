@@ -1,6 +1,7 @@
 import { FetchInitialDataSaga } from "../reducers/initialData/types";
 import {
   getAPR,
+  getChainStatus,
   getExchangeRate,
   getFee,
   getMaxRedeem,
@@ -16,9 +17,10 @@ import {
   setRedeemFee,
   setTVU
 } from "../reducers/initialData";
+import { printConsole } from "../../helpers/utils";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga) {
-  const { persistenceChainInfo }: any = payload;
+  const { persistenceChainInfo, cosmosChainInfo }: any = payload;
   const exchangeRate: number = yield getExchangeRate(persistenceChainInfo.rpc);
   const fee: number = yield getFee(persistenceChainInfo.rpc);
   const atomPrice: number = yield fetchAtomPrice();
@@ -30,5 +32,10 @@ export function* fetchInit({ payload }: FetchInitialDataSaga) {
   const tvu: number = yield getTVU(persistenceChainInfo.rpc);
   yield put(setTVU(tvu));
   const maxRedeem: number = yield getMaxRedeem(persistenceChainInfo.rpc);
+  const status: boolean = yield getChainStatus(
+    persistenceChainInfo.rpc,
+    cosmosChainInfo.rpc
+  );
+  printConsole(status, "status");
   yield put(setMaxRedeem(maxRedeem));
 }

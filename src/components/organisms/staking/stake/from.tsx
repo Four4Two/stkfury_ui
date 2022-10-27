@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 import InputText from "../../../atoms/input";
-import { COIN_ATOM } from "../../../../../AppConstants";
-import { formatNumber } from "../../../../helpers/utils";
+import { COIN_ATOM, MIN_STAKE_FEE } from "../../../../../AppConstants";
+import { decimalize, formatNumber } from "../../../../helpers/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { setStakeAmount } from "../../../../store/reducers/transactions/stake";
@@ -13,6 +13,7 @@ const From = () => {
   const { atomBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.stake);
   const { atomPrice } = useSelector((state: RootState) => state.initialData);
+  const { minDeposit } = useSelector((state: RootState) => state.initialData);
   const priceInDollars = atomPrice * Number(amount);
 
   const { isWalletConnected } = useWallet();
@@ -28,7 +29,7 @@ const From = () => {
   };
 
   const maxHandler = () => {
-    dispatch(setStakeAmount(atomBalance.toString()));
+    dispatch(setStakeAmount((Number(atomBalance) - MIN_STAKE_FEE).toString()));
   };
 
   return (
@@ -52,7 +53,8 @@ const From = () => {
             <span className="text-light-mid">
               {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}
             </span>
-            {isWalletConnected && atomBalance > 0 ? (
+            {isWalletConnected &&
+            Number(atomBalance) > MIN_STAKE_FEE + minDeposit ? (
               <span
                 className="text-light-high ml-2 font-bold uppercase cursor-pointer"
                 onClick={maxHandler}

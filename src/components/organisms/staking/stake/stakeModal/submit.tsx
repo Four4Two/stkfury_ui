@@ -6,7 +6,11 @@ import { useWallet } from "../../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../../atoms/spinner";
 import { LiquidStakeMsg } from "../../../../../helpers/protoMsg";
 import { unDecimalize } from "../../../../../helpers/utils";
-import { IBCChainInfos, IBCConfiguration } from "../../../../../helpers/config";
+import {
+  CHAIN_ID,
+  IBCChainInfos,
+  IBCConfiguration
+} from "../../../../../helpers/config";
 import {
   COSMOS_CHAIN_ID,
   DEPOSIT,
@@ -22,7 +26,7 @@ const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
   );
   const { atomBalance, stkAtomBalance, ibcAtomBalance } = useSelector(
     (state: RootState) => state.balances

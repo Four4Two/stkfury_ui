@@ -5,7 +5,6 @@ import {
   setTransactionProgress
 } from "../reducers/transaction";
 import {
-  COSMOS_CHAIN_ID,
   COSMOS_FEE,
   ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
@@ -40,7 +39,7 @@ import {
 } from "../reducers/transactions/unstake/types";
 import { toast } from "react-toastify";
 import { DepositTransactionPayload } from "../reducers/transactions/deposit/types";
-import { IBCChainInfos } from "../../helpers/config";
+import { CHAIN_ID, IBCChainInfos } from "../../helpers/config";
 import { RootState } from "../reducers";
 import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
 import { setDepositAmount } from "../reducers/transactions/deposit";
@@ -55,7 +54,7 @@ import {
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 let ibcInfo = IBCChainInfos[env].find(
-  (chain) => chain.counterpartyChainId === COSMOS_CHAIN_ID
+  (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
 );
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {

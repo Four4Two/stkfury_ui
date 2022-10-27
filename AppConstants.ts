@@ -13,6 +13,8 @@ export const CLAIM_URL = "/pstake.lscosmos.v1beta1.MsgClaim";
 export const IBC_TRANSFER_URL = "/ibc.applications.transfer.v1.MsgTransfer";
 export const SHORT_INTERVAL = 10000;
 export const MIN_BALANCE_CHECK = 0.00003;
+export const MIN_DEPOSIT = 0.01;
+export const MIN_STAKE_FEE = 0.01;
 
 // Key works
 export const COIN_ATOM = "ATOM";

@@ -46,7 +46,10 @@ const NavigationBar = () => {
           })
         );
         dispatch(
-          fetchInitSaga({ persistenceChainInfo: persistenceChainData! })
+          fetchInitSaga({
+            persistenceChainInfo: persistenceChainData!,
+            cosmosChainInfo: cosmosChainData!
+          })
         );
       }
     }, SHORT_INTERVAL);

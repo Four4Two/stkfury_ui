@@ -1,11 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { ExternalChains } from "../helpers/config";
-import {
-  COSMOS_CHAIN_ID,
-  PERSISTENCE_CHAIN_ID,
-  TEST_NET
-} from "../../AppConstants";
+import { CHAIN_ID, ExternalChains } from "../helpers/config";
 import WalletProvider from "../context/WalletConnect/WalletConnect";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,11 +23,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
   let persistenceChainInfo = ExternalChains[env].find(
-    (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+    (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
   );
 
   let cosmosChainInfo = ExternalChains[env].find(
-    (chain: ChainInfo) => chain.chainId === COSMOS_CHAIN_ID
+    (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].cosmosChainID
   );
 
   return (

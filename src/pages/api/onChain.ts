@@ -3,6 +3,7 @@ import {
   QueryClientImpl as BankQuery,
   QueryTotalSupplyResponse
 } from "cosmjs-types/cosmos/bank/v1beta1/query";
+
 import {
   decimalize,
   genericErrorHandler,
@@ -25,16 +26,14 @@ import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
-import {
-  PERSISTENCE_CHAIN_ID,
-  STK_ATOM_MINIMAL_DENOM
-} from "../../../AppConstants";
-import { ExternalChains } from "../../helpers/config";
+import { STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
+import { CHAIN_ID, ExternalChains } from "../../helpers/config";
+import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const persistenceChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
 export const fetchAccountBalance = async (
@@ -344,5 +343,35 @@ export const getMaxRedeem = async (rpc: string) => {
     });
     genericErrorHandler(e, customScope);
     return 0;
+  }
+};
+
+export const getChainStatus = async (
+  cosmosRpc: string,
+  persistenceRpc: string
+) => {
+  try {
+    const tmClient: Tendermint34Client = await Tendermint34Client.connect(
+      cosmosRpc
+    );
+    const status: StatusResponse = await tmClient.status();
+    const latestBlockTime = status.syncInfo.latestBlockTime;
+    const startTime = moment.utc(latestBlockTime.toUTCString());
+    const endTime = moment.utc();
+    const startTimeMoment = moment(startTime, "DD-MM-YYYY hh:mm:ss");
+    const endTimeMoment = moment(endTime, "DD-MM-YYYY hh:mm:ss");
+    const duration = moment.duration(endTimeMoment.diff(startTimeMoment));
+    const seconds = duration.asSeconds();
+    printConsole(seconds, "seconds");
+    return seconds > 60;
+  } catch (e) {
+    printConsole(e, "error123");
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": cosmosRpc
+    });
+    genericErrorHandler(e, customScope);
+    return false;
   }
 };

@@ -1,6 +1,8 @@
 import { IBCChainInfo } from "../context/WalletConnect/types";
 import { ChainInfo } from "@keplr-wallet/types";
 
+const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+
 interface ExternalChainData {
   [index: string]: ChainInfo[];
 }
@@ -30,8 +32,23 @@ export const IBCConfiguration = {
   ibcDefaultPort: "transfer"
 };
 
+export const CHAIN_ID: any = {
+  Devnet: {
+    cosmosChainID: "gaiad-1",
+    persistenceChainID: "pstaked-1"
+  },
+  Testnet: {
+    cosmosChainID: "theta-testnet-001",
+    persistenceChainID: "test-core-1"
+  },
+  Mainnet: {
+    cosmosChainID: "cosmoshub-4",
+    persistenceChainID: "core-1"
+  }
+};
+
 export const IBCChainInfos: IBCChainData = {
-  Testnet: [
+  Devnet: [
     {
       counterpartyChainId: "gaiad-1",
       chainName: "Cosmos Testnet",
@@ -40,6 +57,18 @@ export const IBCChainInfos: IBCChainData = {
       portID: "transfer",
       coinDenom:
         "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
+      prefix: "cosmos"
+    }
+  ],
+  Testnet: [
+    {
+      counterpartyChainId: "theta-testnet-001",
+      chainName: "pStake Cosmos Testnet",
+      sourceChannelId: "channel-667",
+      destinationChannelId: "channel-105",
+      portID: "transfer",
+      coinDenom:
+        "ibc/4A17832B26BF318D052563EFFE677C1DE11DF8CE104F00204860F3E3439818B2",
       prefix: "cosmos"
     }
   ],
@@ -57,7 +86,7 @@ export const IBCChainInfos: IBCChainData = {
 };
 
 export const ExternalChains: ExternalChainData = {
-  Testnet: [
+  Devnet: [
     {
       rpc: "https://rpc.devnet.persistence.pstake.finance",
       rest: "https://rest.devnet.persistence.pstake.finance",
@@ -108,6 +137,92 @@ export const ExternalChains: ExternalChainData = {
       rest: "https://rest.devnet.cosmos.pstake.finance",
       chainId: "gaiad-1",
       chainName: "pStake Cosmos Devnet",
+      stakeCurrency: {
+        coinDenom: "ATOM",
+        coinMinimalDenom: "uatom",
+        coinDecimals: 6,
+        coinGeckoId: "cosmos"
+      },
+      bip44: {
+        coinType: 118
+      },
+      currencies: [
+        {
+          coinDenom: "ATOM",
+          coinMinimalDenom: "uatom",
+          coinDecimals: 6,
+          coinGeckoId: "cosmos"
+        }
+      ],
+      feeCurrencies: [
+        {
+          coinDenom: "ATOM",
+          coinMinimalDenom: "uatom",
+          coinDecimals: 6,
+          coinGeckoId: "cosmos"
+        }
+      ],
+      bech32Config: {
+        bech32PrefixAccAddr: "cosmos",
+        bech32PrefixAccPub: "cosmospub",
+        bech32PrefixValAddr: "cosmosvaloper",
+        bech32PrefixValPub: "cosmosvaloperpub",
+        bech32PrefixConsAddr: "cosmosvalcons",
+        bech32PrefixConsPub: "persistencevalconspub"
+      }
+    }
+  ],
+  Testnet: [
+    {
+      rpc: "https://rpc.testnet.persistence.one",
+      rest: "https://rest.testnet.persistence.one/",
+      chainId: "test-core-1",
+      chainName: "Persistence test-net",
+      stakeCurrency: {
+        coinDenom: "XPRT",
+        coinMinimalDenom: "uxprt",
+        coinDecimals: 6,
+        coinGeckoId: "persistence"
+      },
+      bip44: {
+        coinType: 118
+      },
+      currencies: [
+        {
+          coinDenom: "XPRT",
+          coinMinimalDenom: "uxprt",
+          coinDecimals: 6,
+          coinGeckoId: "persistence"
+        },
+        {
+          coinDenom: "STKATOM",
+          coinMinimalDenom: "stk/uatom",
+          coinDecimals: 6,
+          coinGeckoId: "persistence"
+        }
+      ],
+      feeCurrencies: [
+        {
+          coinDenom: "XPRT",
+          coinMinimalDenom: "uxprt",
+          coinDecimals: 6,
+          coinGeckoId: "persistence"
+        }
+      ],
+      bech32Config: {
+        bech32PrefixAccAddr: "persistence",
+        bech32PrefixAccPub: "persistencepub",
+        bech32PrefixValAddr: "persistencevaloper",
+        bech32PrefixValPub: "persistencevaloperpub",
+        bech32PrefixConsAddr: "persistencevalcons",
+        bech32PrefixConsPub: "persistencevalconspub"
+      }
+    },
+    {
+      rpc: "https://rpc.testnet-cosmos.audit.one",
+      rest: "https://rest.testnet-cosmos.audit.one",
+      chainId: "theta-testnet-001",
+      chainName: "pStake Cosmos Testnet",
       stakeCurrency: {
         coinDenom: "ATOM",
         coinMinimalDenom: "uatom",

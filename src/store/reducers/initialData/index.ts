@@ -7,8 +7,10 @@ import {
   SetAPR,
   SetRedeemFee,
   SetTVU,
-  SetMaxRedeem
+  SetMaxRedeem,
+  SetMinRedeem
 } from "./types";
+import { MIN_DEPOSIT } from "../../../../AppConstants";
 
 const initialState: InitialDataState = {
   exchangeRate: 1,
@@ -16,7 +18,8 @@ const initialState: InitialDataState = {
   apr: 0,
   redeemFee: 0,
   tvu: 0,
-  maxRedeem: 0
+  maxRedeem: 0,
+  minDeposit: MIN_DEPOSIT
 };
 
 const initData = createSlice({
@@ -41,6 +44,9 @@ const initData = createSlice({
     },
     setMaxRedeem: (state, action: SetMaxRedeem) => {
       state.maxRedeem = action.payload;
+    },
+    setMinDeposit: (state, action: SetMinRedeem) => {
+      state.minDeposit = action.payload;
     }
   }
 });
@@ -52,7 +58,8 @@ export const {
   fetchInitSaga,
   setExchangeRate,
   setTVU,
-  setMaxRedeem
+  setMaxRedeem,
+  setMinDeposit
 } = initData.actions;
 
 export default initData.reducer;

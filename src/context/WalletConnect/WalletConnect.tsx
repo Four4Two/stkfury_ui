@@ -71,8 +71,13 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   }, [walletConnected]);
 
   useEffect(() => {
-    dispatch(fetchInitSaga({ persistenceChainInfo: persistenceChainInfo! }));
-  }, [persistenceChainInfo, dispatch]);
+    dispatch(
+      fetchInitSaga({
+        persistenceChainInfo: persistenceChainInfo!,
+        cosmosChainInfo: cosmosChainInfo!
+      })
+    );
+  }, [persistenceChainInfo, dispatch, cosmosChainInfo]);
 
   useEffect(() => {
     setCosmosChainData(cosmosChainInfo);
