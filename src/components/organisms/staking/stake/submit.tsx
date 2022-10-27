@@ -106,7 +106,8 @@ const Submit = () => {
     amount &&
     Number(amount) > 0 &&
     Number(amount) <= Number(atomBalance) &&
-    minDeposit < Number(amount);
+    minDeposit <= Number(amount) &&
+    MIN_STAKE_FEE < Number(amount);
 
   return isWalletConnected ? (
     <Button

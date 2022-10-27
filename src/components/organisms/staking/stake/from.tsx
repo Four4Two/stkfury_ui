@@ -29,7 +29,7 @@ const From = () => {
   };
 
   const maxHandler = () => {
-    dispatch(setStakeAmount((Number(atomBalance) - MIN_STAKE_FEE).toString()));
+    dispatch(setStakeAmount((Number(atomBalance) - MIN_STAKE_FEE).toFixed(6)));
   };
 
   return (
