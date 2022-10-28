@@ -8,7 +8,8 @@ import {
   SetRedeemFee,
   SetTVU,
   SetMaxRedeem,
-  SetMinRedeem
+  SetMinRedeem,
+  SetChainStatus
 } from "./types";
 import { MIN_DEPOSIT } from "../../../../AppConstants";
 
@@ -19,7 +20,9 @@ const initialState: InitialDataState = {
   redeemFee: 0,
   tvu: 0,
   maxRedeem: 0,
-  minDeposit: MIN_DEPOSIT
+  minDeposit: MIN_DEPOSIT,
+  cosmosChainStatus: false,
+  persistenceChainStatus: false
 };
 
 const initData = createSlice({
@@ -47,6 +50,12 @@ const initData = createSlice({
     },
     setMinDeposit: (state, action: SetMinRedeem) => {
       state.minDeposit = action.payload;
+    },
+    setCosmosChainStatus: (state, action: SetChainStatus) => {
+      state.cosmosChainStatus = action.payload;
+    },
+    setPersistenceChainStatus: (state, action: SetChainStatus) => {
+      state.persistenceChainStatus = action.payload;
     }
   }
 });
@@ -59,7 +68,9 @@ export const {
   setExchangeRate,
   setTVU,
   setMaxRedeem,
-  setMinDeposit
+  setMinDeposit,
+  setCosmosChainStatus,
+  setPersistenceChainStatus
 } = initData.actions;
 
 export default initData.reducer;

@@ -44,7 +44,6 @@ import { RootState } from "../reducers";
 import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
 import { setDepositAmount } from "../reducers/transactions/deposit";
 import { setUnStakeAmount } from "../reducers/transactions/unstake";
-import { fetchPendingClaimsSaga } from "../reducers/claim";
 import { WithdrawTransactionPayload } from "../reducers/transactions/withdraw/types";
 import {
   setWithdrawTxnFailed,
@@ -224,12 +223,6 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
         );
       }
       yield put(resetTransaction());
-      yield put(
-        fetchPendingClaimsSaga({
-          address: address,
-          persistenceChainInfo: persistenceChainInfo!
-        })
-      );
     } else {
       throw new Error(transaction.rawLog);
     }

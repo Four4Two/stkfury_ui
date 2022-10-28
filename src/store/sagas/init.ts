@@ -12,30 +12,41 @@ import { put } from "@redux-saga/core/effects";
 import {
   setAPR,
   setAtomPrice,
+  setCosmosChainStatus,
   setExchangeRate,
   setMaxRedeem,
+  setPersistenceChainStatus,
   setRedeemFee,
   setTVU
 } from "../reducers/initialData";
-import { printConsole } from "../../helpers/utils";
 
-export function* fetchInit({ payload }: FetchInitialDataSaga) {
+export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const { persistenceChainInfo, cosmosChainInfo }: any = payload;
-  const exchangeRate: number = yield getExchangeRate(persistenceChainInfo.rpc);
-  const fee: number = yield getFee(persistenceChainInfo.rpc);
-  const atomPrice: number = yield fetchAtomPrice();
-  yield put(setRedeemFee(fee));
+  const [
+    cosmosChainStatus,
+    persistenceChainStatus,
+    exchangeRate,
+    fee,
+    atomPrice,
+    tvu,
+    maxRedeem
+  ] = yield Promise.all([
+    getChainStatus(cosmosChainInfo.rpc),
+    getChainStatus(persistenceChainInfo.rpc),
+    getExchangeRate(persistenceChainInfo.rpc),
+    getFee(persistenceChainInfo.rpc),
+    fetchAtomPrice(),
+    getTVU(persistenceChainInfo.rpc),
+    getMaxRedeem(persistenceChainInfo.rpc)
+  ]);
+  console.log(cosmosChainStatus, "cosmosChainStatus");
   yield put(setExchangeRate(exchangeRate));
+  yield put(setRedeemFee(fee));
   yield put(setAtomPrice(atomPrice));
   const apr: number = yield getAPR();
   yield put(setAPR(apr));
-  const tvu: number = yield getTVU(persistenceChainInfo.rpc);
   yield put(setTVU(tvu));
-  const maxRedeem: number = yield getMaxRedeem(persistenceChainInfo.rpc);
-  const status: boolean = yield getChainStatus(
-    persistenceChainInfo.rpc,
-    cosmosChainInfo.rpc
-  );
-  printConsole(status, "status");
   yield put(setMaxRedeem(maxRedeem));
+  yield put(setCosmosChainStatus(cosmosChainStatus));
+  yield put(setPersistenceChainStatus(persistenceChainStatus));
 }

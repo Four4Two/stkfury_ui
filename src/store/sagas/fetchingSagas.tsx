@@ -39,6 +39,7 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     IBCInfo!.coinDenom,
     persistenceChainInfo.rpc
   );
+  //stk atom balance
   const stkAtomBalance: number = yield fetchAccountBalance(
     persistenceAddress,
     STK_ATOM_MINIMAL_DENOM,

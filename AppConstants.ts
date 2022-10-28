@@ -1,6 +1,7 @@
 export const PERSISTENCE_CHAIN_ID = "pstaked-1";
 export const COSMOS_CHAIN_ID = "gaiad-1";
 export const TEST_NET = "Testnet";
+export const DEV_NET = "Devnet";
 export const DEPOSIT_ADDRESS = "cosmos16vhhczel0jzdf6kxxk62uwzkay763p9cryp7we";
 export const PERSISTENCE_FEE = "0uxprt";
 export const COSMOS_FEE = "0uatom";

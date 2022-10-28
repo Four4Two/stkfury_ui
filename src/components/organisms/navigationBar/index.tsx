@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import LoginOptions from "./loginOptions";
 import Button from "../../atoms/button";
-import { SHORT_INTERVAL, TEST_NET } from "../../../../AppConstants";
+import { DEV_NET, SHORT_INTERVAL, TEST_NET } from "../../../../AppConstants";
 import { Icon } from "../../atoms/icon";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { showMobileSidebar } from "../../../store/reducers/sidebar";
 import Link from "next/link";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
@@ -11,6 +11,8 @@ import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import { fetchBalanceSaga } from "../../../store/reducers/balances";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 import { fetchInitSaga } from "../../../store/reducers/initialData";
+import { RootState } from "../../../store/reducers";
+import { useRouter } from "next/router";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -63,6 +65,17 @@ const NavigationBar = () => {
     cosmosChainData
   ]);
 
+  const { cosmosChainStatus, persistenceChainStatus } = useSelector(
+    (state: RootState) => state.initialData
+  );
+  const router = useRouter();
+
+  useEffect(() => {
+    if (cosmosChainStatus || persistenceChainStatus) {
+      console.log("chain halted");
+    }
+  }, [router, cosmosChainStatus, persistenceChainStatus]);
+
   return (
     <div className="flex mb-10 py-6 px-7 md:px-3">
       <div className="flex items-center flex-1">
@@ -91,6 +104,8 @@ const NavigationBar = () => {
                   <span className="ml-3">
                     {process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET
                       ? "Persistence Testnet"
+                      : process.env.NEXT_PUBLIC_ENVIRONMENT === DEV_NET
+                      ? "Persistence Devnet"
                       : "Persistence Mainnet"}
                   </span>
                 </div>

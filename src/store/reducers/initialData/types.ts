@@ -9,6 +9,8 @@ export interface InitialDataState {
   tvu: number;
   maxRedeem: number;
   minDeposit: number;
+  cosmosChainStatus: boolean;
+  persistenceChainStatus: boolean;
 }
 
 export interface FetchInitialDataSagaParams {
@@ -23,5 +25,6 @@ export type SetRedeemFee = PayloadAction<number>;
 export type SetMaxRedeem = PayloadAction<number>;
 export type SetMinRedeem = PayloadAction<number>;
 export type SetTVU = PayloadAction<number>;
+export type SetChainStatus = PayloadAction<boolean>;
 
 export type FetchInitialDataSaga = PayloadAction<FetchInitialDataSagaParams>;

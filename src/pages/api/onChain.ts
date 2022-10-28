@@ -4,6 +4,8 @@ import {
   QueryTotalSupplyResponse
 } from "cosmjs-types/cosmos/bank/v1beta1/query";
 
+import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1beta1/query";
+
 import {
   decimalize,
   genericErrorHandler,
@@ -66,7 +68,7 @@ export const fetchAccountBalance = async (
   }
 };
 
-export const getExchangeRate = async (rpc: string) => {
+export const getExchangeRate = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
@@ -83,7 +85,7 @@ export const getExchangeRate = async (rpc: string) => {
   }
 };
 
-export const getFee = async (rpc: string) => {
+export const getFee = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
@@ -120,7 +122,7 @@ export const getAPR = async () => {
   }
 };
 
-export const getTVU = async (rpc: string) => {
+export const getTVU = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
@@ -131,7 +133,7 @@ export const getTVU = async (rpc: string) => {
         (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
       if (token !== undefined) {
-        return token?.amount;
+        return Number(token?.amount);
       } else {
         return 0;
       }
@@ -327,14 +329,16 @@ export const getUnbondingTime = async (
   }
 };
 
-export const getMaxRedeem = async (rpc: string) => {
+export const getMaxRedeem = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const moduleAccountResponse = await pstakeQueryService.DepositModuleAccount(
       {}
     );
-    return moduleAccountResponse ? moduleAccountResponse.balance?.amount : 0;
+    return moduleAccountResponse
+      ? Number(moduleAccountResponse.balance?.amount)
+      : 0;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -346,32 +350,49 @@ export const getMaxRedeem = async (rpc: string) => {
   }
 };
 
-export const getChainStatus = async (
-  cosmosRpc: string,
-  persistenceRpc: string
-) => {
+export const getChainStatus = async (rpc: string): Promise<boolean> => {
   try {
-    const tmClient: Tendermint34Client = await Tendermint34Client.connect(
-      cosmosRpc
-    );
+    const tmClient: Tendermint34Client = await Tendermint34Client.connect(rpc);
     const status: StatusResponse = await tmClient.status();
     const latestBlockTime = status.syncInfo.latestBlockTime;
-    const startTime = moment.utc(latestBlockTime.toUTCString());
-    const endTime = moment.utc();
-    const startTimeMoment = moment(startTime, "DD-MM-YYYY hh:mm:ss");
-    const endTimeMoment = moment(endTime, "DD-MM-YYYY hh:mm:ss");
-    const duration = moment.duration(endTimeMoment.diff(startTimeMoment));
+    const startTime = moment(latestBlockTime.toString()).format(
+      "DD-MM-YYYY hh:mm:ss"
+    );
+    const endTime = moment().local().format("DD-MM-YYYY hh:mm:ss");
+    const ms = moment(endTime, "DD/MM/YYYY HH:mm:ss").diff(
+      moment(startTime, "DD/MM/YYYY HH:mm:ss")
+    );
+    const duration = moment.duration(ms);
     const seconds = duration.asSeconds();
-    printConsole(seconds, "seconds");
     return seconds > 60;
   } catch (e) {
-    printConsole(e, "error123");
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate": cosmosRpc
+      "Error while fetching exchange rate": rpc
     });
     genericErrorHandler(e, customScope);
     return false;
+  }
+};
+
+export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new StakeQuery(rpcClient);
+    const chainParamsResponse = await pstakeQueryService.Params({});
+    console.log(chainParamsResponse, "chainParamsResponse");
+    if (chainParamsResponse.params?.unbondingTime?.seconds) {
+      return chainParamsResponse.params?.unbondingTime?.seconds.toNumber();
+    }
+    return 0;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching cosmos unbond time": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
   }
 };
