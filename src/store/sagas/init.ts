@@ -39,7 +39,6 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
     getTVU(persistenceChainInfo.rpc),
     getMaxRedeem(persistenceChainInfo.rpc)
   ]);
-  console.log(cosmosChainStatus, "cosmosChainStatus");
   yield put(setExchangeRate(exchangeRate));
   yield put(setRedeemFee(fee));
   yield put(setAtomPrice(atomPrice));

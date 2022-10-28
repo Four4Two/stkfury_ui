@@ -12,7 +12,7 @@ import { fetchBalanceSaga } from "../../../store/reducers/balances";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
-import { useRouter } from "next/router";
+import { printConsole } from "../../../helpers/utils";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -68,13 +68,10 @@ const NavigationBar = () => {
   const { cosmosChainStatus, persistenceChainStatus } = useSelector(
     (state: RootState) => state.initialData
   );
-  const router = useRouter();
 
-  useEffect(() => {
-    if (cosmosChainStatus || persistenceChainStatus) {
-      console.log("chain halted");
-    }
-  }, [router, cosmosChainStatus, persistenceChainStatus]);
+  if (cosmosChainStatus || persistenceChainStatus) {
+    printConsole("chain halted");
+  }
 
   return (
     <div className="flex mb-10 py-6 px-7 md:px-3">

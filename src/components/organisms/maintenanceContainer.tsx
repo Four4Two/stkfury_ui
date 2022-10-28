@@ -10,7 +10,6 @@ const MaintenanceContainer = () => {
   );
 
   useEffect(() => {
-    console.log(router.pathname, "persistenceChainStatus");
     if (
       process.env.NEXT_PUBLIC_MAINTENANCE === "false" &&
       router.pathname === "/maintenance" &&
@@ -30,7 +29,7 @@ const MaintenanceContainer = () => {
           className="m-auto w-[86px]"
         />
         <h6 className="text-light-high text-3xl font-normal md:text-lg md:text-lg py-8">
-          {"We'll back soon"}
+          {"We'll be back soon"}
         </h6>
         <p className="font-normal text-sm leading-7 text-light-emphasis mb-4">
           Sorry for the inconvenience. We’re performing some maintenance at the

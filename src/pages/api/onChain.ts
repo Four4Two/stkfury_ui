@@ -381,7 +381,6 @@ export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new StakeQuery(rpcClient);
     const chainParamsResponse = await pstakeQueryService.Params({});
-    console.log(chainParamsResponse, "chainParamsResponse");
     if (chainParamsResponse.params?.unbondingTime?.seconds) {
       return chainParamsResponse.params?.unbondingTime?.seconds.toNumber();
     }
