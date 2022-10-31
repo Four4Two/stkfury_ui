@@ -66,10 +66,7 @@ const From = () => {
             Number(amount) > 0 &&
             Number(atomBalance) <= MIN_STAKE_FEE + minDeposit &&
             Number(amount) < MIN_STAKE_FEE + minDeposit ? (
-              <span
-                className="text-light-high ml-2 font-semibold cursor-pointer"
-                onClick={maxHandler}
-              >
+              <span className="text-light-high ml-2 font-semibold">
                 Min Stake: {MIN_STAKE_FEE}
               </span>
             ) : null}
