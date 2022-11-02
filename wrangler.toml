@@ -6,6 +6,6 @@ main = "workers-site/index.js"
 compatibility_date = "2022-06-06"
 
 [env.staging]
-routes = ['https://staging.persistence-assets.pstake.finance/*']
+routes = ['https://staging.cosmos.finance/*']
 
 
