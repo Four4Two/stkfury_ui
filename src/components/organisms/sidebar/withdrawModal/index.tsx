@@ -84,7 +84,7 @@ const WithdrawModal = () => {
                 stepNumber >= 2 ? "text-light-emphasis" : "text-light-low"
               } text-base font-normal`}
             >
-              Send ATOM to your Keplr wallet
+              Send ATOM to your Cosmos wallet
             </p>
           </div>
         </div>
