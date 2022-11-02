@@ -79,7 +79,8 @@ export const IBCChainInfos: IBCChainData = {
       sourceChannelId: "channel-190",
       destinationChannelId: "channel-24",
       portID: "transfer",
-      coinDenom: "uatom",
+      coinDenom:
+        "ibc/C8A74ABBE2AF892E15680D916A7C22130585CE5704F9B17A10F184A90D53BECA",
       prefix: "cosmos"
     }
   ]
@@ -261,7 +262,7 @@ export const ExternalChains: ExternalChainData = {
   Mainnet: [
     {
       rpc: "https://rpc.cosmoshub-4.audit.one/",
-      rest: "https://rpc.cosmoshub-4.audit.one/",
+      rest: "https://rest.cosmoshub-4.audit.one/",
       chainId: "cosmoshub-4",
       chainName: "Cosmos Hub",
       stakeCurrency: {
@@ -300,7 +301,7 @@ export const ExternalChains: ExternalChainData = {
     },
     {
       rpc: "https://rpc.core.persistence.one/",
-      rest: "https://rpc.core.persistence.one/",
+      rest: "https://rest.core.persistence.one/",
       chainId: "core-1",
       chainName: "Persistence",
       stakeCurrency: {
