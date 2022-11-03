@@ -4,7 +4,7 @@ import DefiList from "../../components/organisms/defi";
 
 const Defi: NextPage = () => {
   return (
-    <PageTemplate className="stake" title="Defi">
+    <PageTemplate className="defi" title="Defi">
       <DefiList />
     </PageTemplate>
   );

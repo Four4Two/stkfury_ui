@@ -4,7 +4,7 @@ import TransactionsTable from "../../components/organisms/transactions";
 
 const Transactions: NextPage = () => {
   return (
-    <PageTemplate className="stake" title="Defi">
+    <PageTemplate className="transactions" title="Transactions">
       <TransactionsTable />
     </PageTemplate>
   );

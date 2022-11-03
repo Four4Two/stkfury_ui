@@ -36,6 +36,8 @@ export const FATAL = "fatal";
 export const DEPOSIT = "deposit";
 export const WITHDRAW = "withdraw";
 
+export const COSMOS_UNBOND_TIME =
+  process.env.NEXT_PUBLIC_ENVIRONMENT === "Mainnet" ? 1814400 : 300;
 export const MID_INTERVAL = 60000;
 
 export const LONG_INTERVAL = 3600000;
@@ -48,3 +50,5 @@ export const ERROR_WHILE_CLAIMING = "ERROR_WHILE_CLAIMING";
 export const ERROR_WHILE_STAKING = "ERROR_WHILE_STAKING";
 export const ERROR_WHILE_DEPOSITING = "ERROR_WHILE_DEPOSITING";
 export const ERROR_WHILE_UNSTAKING = "ERROR_WHILE_UNSTAKING";
+export const EMPTY_POOL_ERROR =
+  "Query failed with (6): rpc error: code = Unknown desc = failed to execute message; message index: 0: Delegated amount: 0uatom is less than total undelegations for the epoch:";

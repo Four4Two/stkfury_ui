@@ -28,7 +28,12 @@ import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
-import { STK_ATOM_MINIMAL_DENOM, APR_BASE_RATE,  APR_DEFAULT} from "../../../AppConstants";
+import {
+  STK_ATOM_MINIMAL_DENOM,
+  APR_BASE_RATE,
+  APR_DEFAULT,
+  COSMOS_UNBOND_TIME
+} from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
 
@@ -200,23 +205,6 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             const unbondTime =
               unbondTimeResponse.hostAccountUndelegation.completionTime;
 
-            const epochInfo = await getEpochInfo(rpc);
-            const currentEpochNumberResponse = await getCurrentEpoch(rpc);
-
-            const currentEpochNumber =
-              currentEpochNumberResponse.currentEpoch.toNumber();
-            const unbondEpochNumber = epochNumber.toNumber();
-
-            const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!;
-
-            const diff = (unbondEpochNumber - currentEpochNumber + 1) * drs;
-
-            const actualTime = moment(epochInfo.epochs[0].currentEpochStartTime)
-              .add(diff, "seconds")
-              .format();
-
-            printConsole(actualTime);
-
             const unStakedon = moment(unbondTime).format("DD MMM YYYY hh:mm A");
 
             const remainingTime = moment(unStakedon).fromNow(true);
@@ -247,7 +235,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
           const tentativeTime = moment(
             epochInfo.epochs[0].currentEpochStartTime
           )
-            .add(diff, "seconds")
+            .add(diff + COSMOS_UNBOND_TIME, "seconds")
             .local()
             .format("DD MMM YYYY hh:mm A");
           const remainingTime = moment(tentativeTime).fromNow(true);
