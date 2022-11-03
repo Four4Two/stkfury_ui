@@ -66,7 +66,11 @@ const StakeModal = () => {
         <div className="mb-10 md:mb-7">
           <div className="flex items-center mb-5 md:mb-3">
             <div className="mr-3">
-              {TransactionIcon(stepNumber, 1, txFailed)}
+              {TransactionIcon(
+                stepNumber === 1 || stepNumber === 2 ? 1 : stepNumber,
+                1,
+                txFailed
+              )}
             </div>
             <p
               className={`${
@@ -78,19 +82,11 @@ const StakeModal = () => {
           </div>
           <div className="flex items-center mb-5 md:mb-3">
             <div className="mr-3">
-              {TransactionIcon(stepNumber, 2, txFailed)}
-            </div>
-            <p
-              className={`${
-                stepNumber >= 2 ? "text-light-emphasis" : "text-light-low"
-              } text-base font-normal`}
-            >
-              Send ATOM to pSTAKE via IBC
-            </p>
-          </div>
-          <div className="flex items-center mb-5 md:mb-3">
-            <div className="mr-3">
-              {TransactionIcon(stepNumber, 3, txFailed)}
+              {TransactionIcon(
+                stepNumber === 3 || stepNumber === 4 ? 3 : stepNumber,
+                3,
+                txFailed
+              )}
             </div>
             <p
               className={`${
@@ -98,18 +94,6 @@ const StakeModal = () => {
               } text-base font-normal`}
             >
               Approve staking with pSTAKE
-            </p>
-          </div>
-          <div className="flex items-center mb-5 md:mb-3">
-            <div className="mr-3">
-              {TransactionIcon(stepNumber, 4, txFailed)}
-            </div>
-            <p
-              className={`${
-                stepNumber >= 4 ? "text-light-emphasis" : "text-light-low"
-              } text-base font-normal`}
-            >
-              Liquid Stake ATOM and get stkATOM
             </p>
           </div>
         </div>
