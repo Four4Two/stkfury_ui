@@ -6,6 +6,7 @@ import {
 } from "../reducers/transaction";
 import {
   COSMOS_FEE,
+  EMPTY_POOL_ERROR,
   ERROR_WHILE_CLAIMING,
   ERROR_WHILE_DEPOSITING,
   ERROR_WHILE_STAKING,
@@ -177,7 +178,17 @@ export function* executeUnStakeTransaction({
       [ERROR_WHILE_UNSTAKING]: payload.address
     });
     genericErrorHandler(e, customScope);
-    yield failedTransactionActions("");
+    if (e.message && e.message.include(EMPTY_POOL_ERROR)) {
+      displayToast(
+        {
+          message: "This transaction could not be completed"
+        },
+        ToastType.ERROR
+      );
+      yield put(resetTransaction());
+    } else {
+      yield failedTransactionActions("");
+    }
   }
 }
 
