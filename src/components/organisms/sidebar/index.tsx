@@ -75,14 +75,14 @@ const Sidebar = () => {
         <div>
           <div className="text-center py-[2.1875rem]">
             <Link href="/" className="nav-link" passHref>
-              <div className="text-center">
+              <a className="text-center">
                 <img
                   src={"/images/logo.svg"}
                   alt={"logo"}
                   className="m-auto"
                   width={isMobile ? 90 : 124}
                 />
-              </div>
+              </a>
             </Link>
           </div>
           <div>

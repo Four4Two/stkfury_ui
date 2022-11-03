@@ -121,7 +121,7 @@ const StakeModal = () => {
         ) : null}
         {stepNumber === 5 && (
           <p className="text-base text-light-high text-center font-semibold mb-4 md:text-sm">
-            You staked {amount} ATOM on pSTAKE successfully!
+            You&apos;ve successfully staked ATOM on pSTAKE
           </p>
         )}
         {txFailed || stepNumber === 5 ? (
