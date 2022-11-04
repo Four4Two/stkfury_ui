@@ -92,11 +92,11 @@ const listShow = (item: any, index: number) => (
                 target={"_blank"}
                 className="button button-primary mb-3 md:py-2 md:px-4 md:text-xsm"
                 content={
-                  <div className="flex justify-center">
+                  <div className="flex justify-center items-center">
                     Swap
-                    <img
-                      src="/images/arrow-up-right.svg"
-                      alt="arrow-up-right"
+                    <Icon
+                      iconName="arrow-redirect-white"
+                      viewClass="redirect stroke-[#fcfcfc] !w-[10px] !h-[10px] ml-1"
                     />
                   </div>
                 }
@@ -107,11 +107,11 @@ const listShow = (item: any, index: number) => (
                 type="secondary"
                 className="button button-primary px-4 md:py-2 md:px-4 md:text-xsm"
                 content={
-                  <div className="flex justify-center">
+                  <div className="flex justify-center items-center">
                     Add Liquidity
-                    <img
-                      src="/images/arrow-up-right.svg"
-                      alt="arrow-up-right"
+                    <Icon
+                      iconName="arrow-redirect-white"
+                      viewClass="redirect stroke-[#fcfcfc] !w-[10px] !h-[10px] ml-1"
                     />
                   </div>
                 }
