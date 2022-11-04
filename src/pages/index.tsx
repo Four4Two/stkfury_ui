@@ -5,10 +5,9 @@ import StakingTabs from "../components/organisms/staking/stakingTabs";
 const Home: NextPage = () => {
   return (
     <PageTemplate className="stake" title="Stake">
-        <StakingTabs/>
+      <StakingTabs />
     </PageTemplate>
   );
 };
 
 export default Home;
-

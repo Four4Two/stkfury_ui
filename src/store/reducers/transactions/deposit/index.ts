@@ -1,28 +1,40 @@
-import {createSlice} from "@reduxjs/toolkit";
-import { SetDepositAmount, DepositState, DepositTransactionPayload } from "./types";
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  SetDepositAmount,
+  DepositState,
+  DepositTransactionPayload
+} from "./types";
 
 const initialState: DepositState = {
-  amount: '',
+  amount: "",
   showModal: false
-}
+};
 
 const deposit = createSlice({
   name: "Deposit",
   initialState,
   reducers: {
-    executeDepositTransactionSaga: (state, action:DepositTransactionPayload)=>{},
+    executeDepositTransactionSaga: (
+      state,
+      action: DepositTransactionPayload
+    ) => {},
     setDepositAmount: (state, { payload }: SetDepositAmount) => {
-      state.amount = payload
+      state.amount = payload;
     },
     hideDepositModal: (state) => {
-      state.showModal = false
+      state.showModal = false;
     },
     showDepositModal: (state) => {
-      state.showModal = true
-    },
+      state.showModal = true;
+    }
   }
-})
+});
 
-export const {executeDepositTransactionSaga, setDepositAmount, showDepositModal, hideDepositModal} = deposit.actions
+export const {
+  executeDepositTransactionSaga,
+  setDepositAmount,
+  showDepositModal,
+  hideDepositModal
+} = deposit.actions;
 
-export default deposit.reducer
+export default deposit.reducer;

@@ -1,16 +1,16 @@
-import styles from './styles.module.css'
+import styles from "./styles.module.css";
 import React from "react";
 import { ButtonProps } from "./types";
-import {emptyFunc} from "../../../helpers/utils";
+import { emptyFunc } from "../../../helpers/utils";
 
 export const Button = ({
-                          onClick = emptyFunc,
-                          content,
-                          disabled = false,
-                          className,
-                          type = "primary",
-                          size = "medium"
-                       }: ButtonProps) => {
+  onClick = emptyFunc,
+  content,
+  disabled = false,
+  className,
+  type = "primary",
+  size = "medium"
+}: ButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -19,7 +19,7 @@ export const Button = ({
     >
       {content}
     </button>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

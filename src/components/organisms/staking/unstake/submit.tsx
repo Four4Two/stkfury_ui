@@ -1,98 +1,157 @@
-import React from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../../../atoms/button";
 import { RootState } from "../../../../store/reducers";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 import { Spinner } from "../../../atoms/spinner";
-import {LiquidUnStakeMsg, LiquidUnStakeMsgTypes, RedeemMsg} from "../../../../helpers/protoMsg";
-import {truncateToFixedDecimalPlaces, unDecimalize} from "../../../../helpers/utils";
-import {COSMOS_CHAIN_ID, INSTANT, STK_ATOM_MINIMAL_DENOM, UN_STAKE} from "../../../../../AppConstants";
+import {
+  LiquidUnStakeMsg,
+  LiquidUnStakeMsgTypes,
+  RedeemMsg
+} from "../../../../helpers/protoMsg";
+import {
+  decimalize,
+  truncateToFixedDecimalPlaces,
+  unDecimalize
+} from "../../../../helpers/utils";
+import {
+  COSMOS_CHAIN_ID,
+  INSTANT,
+  STK_ATOM_MINIMAL_DENOM,
+  UN_STAKE
+} from "../../../../../AppConstants";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
-import {setTransactionProgress} from "../../../../store/reducers/transaction";
-import {MakeIBCTransferMsg} from "../../../../helpers/transaction";
-import {IBCChainInfos, IBCConfiguration} from "../../../../helpers/config";
+import { setTransactionProgress } from "../../../../store/reducers/transaction";
+import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
+import {
+  CHAIN_ID,
+  IBCChainInfos,
+  IBCConfiguration
+} from "../../../../helpers/config";
+import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
-const env:string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
+const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const Submit = () => {
   const dispatch = useDispatch();
-  let ibcInfo = IBCChainInfos[env].find(chain => chain.counterpartyChainId === COSMOS_CHAIN_ID);
-  const {stkAtomBalance, atomBalance} = useSelector((state:RootState) => state.balances);
-  const {amount, type} = useSelector((state:RootState) => state.unStake);
-  const {inProgress, name} = useSelector((state:RootState) => state.transaction);
-  const {redeemFee, exchangeRate} = useSelector((state:RootState) => state.initialData)
+  let ibcInfo = IBCChainInfos[env].find(
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+  );
+  const { stkAtomBalance, atomBalance } = useSelector(
+    (state: RootState) => state.balances
+  );
+  const { amount, type } = useSelector((state: RootState) => state.unStake);
+  const { inProgress, name } = useSelector(
+    (state: RootState) => state.transaction
+  );
+  const { redeemFee, exchangeRate, maxRedeem } = useSelector(
+    (state: RootState) => state.initialData
+  );
+  const { isMobile } = useWindowSize();
+  const {
+    connect,
+    isWalletConnected,
+    persistenceAccountData,
+    persistenceSigner,
+    persistenceChainData,
+    cosmosAccountData,
+    cosmosChainData
+  } = useWallet();
 
-  const atomAmount = Number(amount) / exchangeRate
-
-  const {connect, isWalletConnected, persistenceAccountData, persistenceSigner , persistenceChainData,
-    cosmosAccountData, cosmosChainData} = useWallet()
-
-  const amountFee:number = truncateToFixedDecimalPlaces(Number(atomAmount) - (Number(atomAmount) * redeemFee));
+  const stkAtomAmount = Number(amount) - Number(amount) * redeemFee;
+  const atomAmount = Number(stkAtomAmount) / exchangeRate;
+  const redeemAmount: number = truncateToFixedDecimalPlaces(atomAmount);
 
   const stakeHandler = async () => {
-    let messages:LiquidUnStakeMsgTypes[];
+    let messages: LiquidUnStakeMsgTypes[];
     let pollingBalance;
     dispatch(setTransactionProgress(UN_STAKE));
-    if(type === INSTANT) {
+    if (type === INSTANT) {
       const withDrawMsg = await MakeIBCTransferMsg({
         channel: ibcInfo?.destinationChannelId,
         fromAddress: persistenceAccountData?.address,
         toAddress: cosmosAccountData?.address,
-        amount: unDecimalize(amountFee),
+        amount: unDecimalize(redeemAmount),
         timeoutHeight: undefined,
         timeoutTimestamp: undefined,
         denom: ibcInfo?.coinDenom,
         sourceRPCUrl: persistenceChainData?.rpc,
         destinationRPCUrl: cosmosChainData?.rpc,
-        port: IBCConfiguration.ibcDefaultPort});
-        const redeemMsg = RedeemMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
+        port: IBCConfiguration.ibcDefaultPort
+      });
+      const redeemMsg = RedeemMsg(
+        persistenceAccountData!.address,
+        unDecimalize(amount),
+        STK_ATOM_MINIMAL_DENOM
+      );
       pollingBalance = atomBalance;
-        messages = [redeemMsg, withDrawMsg]
-    }else{
-      const liquidUnStakeMsg = LiquidUnStakeMsg(persistenceAccountData!.address, unDecimalize(amount), STK_ATOM_MINIMAL_DENOM)
+      messages = [redeemMsg, withDrawMsg];
+    } else {
+      const liquidUnStakeMsg = LiquidUnStakeMsg(
+        persistenceAccountData!.address,
+        unDecimalize(amount),
+        STK_ATOM_MINIMAL_DENOM
+      );
       pollingBalance = stkAtomBalance;
-      messages = [liquidUnStakeMsg]
+      messages = [liquidUnStakeMsg];
     }
 
-    dispatch(executeUnStakeTransactionSaga({
-      persistenceSigner:persistenceSigner!,
-      msg: messages,
-      address: persistenceAccountData!.address,
-      persistenceChainInfo:persistenceChainData!,
-      pollInitialBalance:pollingBalance,
-      cosmosAddress: cosmosAccountData?.address!,
-      cosmosChainInfo: cosmosChainData!
-    }))
-  }
+    dispatch(
+      executeUnStakeTransactionSaga({
+        persistenceSigner: persistenceSigner!,
+        msg: messages,
+        address: persistenceAccountData!.address,
+        persistenceChainInfo: persistenceChainData!,
+        pollInitialBalance: pollingBalance,
+        cosmosAddress: cosmosAccountData?.address!,
+        cosmosChainInfo: cosmosChainData!
+      })
+    );
+  };
 
-  const enable = amount && (Number(amount) > 0) && (Number(amount) <= Number(stkAtomBalance))
-  return (
-    isWalletConnected ?
-      <Button
-        className={`${(name === UN_STAKE && inProgress) ? '!py-[0.8125rem]' : ''} button w-full 
+  const enable =
+    amount && Number(amount) > 0 && Number(amount) <= Number(stkAtomBalance);
+
+  return isWalletConnected ? (
+    <Button
+      className={`${
+        name === UN_STAKE && inProgress ? "!py-[0.8125rem]" : ""
+      } button w-full 
          md:py-2 md:text-sm flex items-center justify-center`}
-        type="primary"
-        size="large"
-        disabled={!enable || (name === UN_STAKE && inProgress)}
-        content={(name === UN_STAKE && inProgress) ? <Spinner size={"medium"} /> :
-          type === INSTANT ?
-            "Redeem Instantly" : "Unstake"
+      type="primary"
+      size="large"
+      disabled={
+        !enable ||
+        (name === UN_STAKE && inProgress) ||
+        (type === INSTANT && Number(amount) > Number(decimalize(maxRedeem)))
       }
-        onClick={stakeHandler}
-      />
-      :
-      <Button
-        className="button w-full md:py-2 md:text-sm"
-        type="primary"
-        size="large"
-        disabled={false}
-        onClick={connect}
-        content="Connect wallet"
-      />
-
+      content={
+        name === UN_STAKE && inProgress ? (
+          <Spinner size={isMobile ? "small" : "medium"} />
+        ) : Number(amount) > Number(stkAtomBalance) ? (
+          "Insufficient balance"
+        ) : type === INSTANT ? (
+          Number(amount) > Number(decimalize(maxRedeem)) ? (
+            "Not enough liquidity"
+          ) : (
+            "Redeem Instantly"
+          )
+        ) : (
+          "Unstake"
+        )
+      }
+      onClick={stakeHandler}
+    />
+  ) : (
+    <Button
+      className="button w-full md:py-2 md:text-sm"
+      type="primary"
+      size="large"
+      disabled={false}
+      onClick={connect}
+      content="Connect wallet"
+    />
   );
 };
 
-
 export default Submit;
-

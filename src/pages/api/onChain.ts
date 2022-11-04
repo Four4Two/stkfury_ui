@@ -3,6 +3,9 @@ import {
   QueryClientImpl as BankQuery,
   QueryTotalSupplyResponse
 } from "cosmjs-types/cosmos/bank/v1beta1/query";
+
+import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1beta1/query";
+
 import {
   decimalize,
   genericErrorHandler,
@@ -25,13 +28,19 @@ import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
-import { PERSISTENCE_CHAIN_ID, STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
-import { ExternalChains } from "../../helpers/config";
+import {
+  STK_ATOM_MINIMAL_DENOM,
+  APR_BASE_RATE,
+  APR_DEFAULT,
+  COSMOS_UNBOND_TIME
+} from "../../../AppConstants";
+import { CHAIN_ID, ExternalChains } from "../../helpers/config";
+import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const persistenceChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
 export const fetchAccountBalance = async (
@@ -64,12 +73,12 @@ export const fetchAccountBalance = async (
   }
 };
 
-export const getExchangeRate = async (rpc: string) => {
+export const getExchangeRate = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
     const cvalue = await pstakeQueryService.CValue({});
-    return Number(Number(decimalize(cvalue.cValue, 18)).toFixed(6));
+    return Number(decimalize(cvalue.cValue, 18));
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -81,7 +90,7 @@ export const getExchangeRate = async (rpc: string) => {
   }
 };
 
-export const getFee = async (rpc: string) => {
+export const getFee = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const pstakeQueryService = new QueryClientImpl(rpcClient);
@@ -102,11 +111,11 @@ export const getFee = async (rpc: string) => {
 
 export const getAPR = async () => {
   try {
-    const baseRate = 18.92;
+    const baseRate = APR_BASE_RATE;
     const commission = await getCommission();
     const incentives = await getIncentives();
     const apr = baseRate - (commission / 100) * baseRate + incentives;
-    return isNaN(apr) ? 0 : apr.toFixed(2);
+    return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -114,22 +123,27 @@ export const getAPR = async () => {
       "Error while fetching exchange rate": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
-    return 0;
+    return -1;
   }
 };
 
-export const getTVU = async (rpc:string) => {
+export const getTVU = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
-    const supplyResponse:QueryTotalSupplyResponse = await bankQueryService.TotalSupply({})
+    const supplyResponse: QueryTotalSupplyResponse =
+      await bankQueryService.TotalSupply({});
     if (supplyResponse.supply.length) {
       const token: Coin | undefined = supplyResponse.supply.find(
-          (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
+        (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
-      return token?.amount;
+      if (token !== undefined) {
+        return Number(token?.amount);
+      } else {
+        return 0;
+      }
     }
-    return 0
+    return 0;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -140,7 +154,6 @@ export const getTVU = async (rpc:string) => {
     return 0;
   }
 };
-
 
 export const fetchAllEpochEntries = async (address: string, rpc: string) => {
   try {
@@ -160,13 +173,27 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
         const epochNumber = item.epochNumber;
         const unbondEpochResponse: QueryUnbondingEpochCValueResponse =
           await getUnbondingEpochCvalue(epochNumber, pstakeQueryService);
+
         const isFailed: boolean =
           unbondEpochResponse.unbondingEpochCValue?.isFailed!;
         const isMatured: boolean =
           unbondEpochResponse.unbondingEpochCValue?.isMatured!;
         const cValueEpochNumber: Long =
           unbondEpochResponse.unbondingEpochCValue?.epochNumber!;
-        const amount: string = item?.amount?.amount!;
+
+        let unbondAmount: number = 0;
+        if (cValueEpochNumber.toNumber() > 0) {
+          const sTKBurnAmount: any =
+            unbondEpochResponse.unbondingEpochCValue?.sTKBurn?.amount!;
+          const amountUnbonded: any =
+            unbondEpochResponse.unbondingEpochCValue?.amountUnbonded?.amount!;
+
+          const amount: string = item?.amount?.amount!;
+          const cvalue: any = Number(sTKBurnAmount) / Number(amountUnbonded);
+
+          unbondAmount = Number(amount) / Number(cvalue);
+        }
+
         // pending unbonding list
         if (!isFailed && !isMatured && cValueEpochNumber.toNumber() > 0) {
           const unbondTimeResponse: any = await getUnbondingTime(
@@ -178,39 +205,22 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             const unbondTime =
               unbondTimeResponse.hostAccountUndelegation.completionTime;
 
-            const epochInfo = await getEpochInfo(rpc);
-            const currentEpochNumberResponse = await getCurrentEpoch(rpc);
-
-            const currentEpochNumber =
-              currentEpochNumberResponse.currentEpoch.toNumber();
-            const unbondEpochNumber = epochNumber.toNumber();
-
-            const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!;
-
-            const diff = (unbondEpochNumber - currentEpochNumber + 1) * drs;
-
-            const actualTime = moment(epochInfo.epochs[0].currentEpochStartTime)
-              .add(diff, "seconds")
-              .format();
-
-            printConsole(actualTime);
-
             const unStakedon = moment(unbondTime).format("DD MMM YYYY hh:mm A");
 
             const remainingTime = moment(unStakedon).fromNow(true);
 
             filteredPendingClaims.push({
-              unbondAmount: amount,
+              unbondAmount: unbondAmount,
               unStakedon,
               daysRemaining: remainingTime
             });
           }
         } else if (isFailed && cValueEpochNumber.toNumber() > 0) {
           // failed unbonding list
-          totalFailedUnbondAmount += Number(amount);
+          totalFailedUnbondAmount += Number(unbondAmount);
         } else if (isMatured && cValueEpochNumber.toNumber() > 0) {
           // claimable unbonding list
-          claimableAmount += Number(amount);
+          claimableAmount += Number(unbondAmount);
         } else {
           // unlisted pending unbonding list
           const epochInfo = await getEpochInfo(rpc);
@@ -225,7 +235,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
           const tentativeTime = moment(
             epochInfo.epochs[0].currentEpochStartTime
           )
-            .add(diff, "seconds")
+            .add(diff + COSMOS_UNBOND_TIME, "seconds")
             .local()
             .format("DD MMM YYYY hh:mm A");
           const remainingTime = moment(tentativeTime).fromNow(true);
@@ -240,7 +250,8 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
     return {
       filteredPendingClaims,
       totalFailedUnbondAmount,
-      claimableAmount,
+      claimableAmount:
+        claimableAmount > 2 ? claimableAmount - 2 : claimableAmount,
       filteredUnlistedPendingClaims
     };
   } catch (error) {
@@ -303,5 +314,72 @@ export const getUnbondingTime = async (
     });
   } catch (error) {
     printConsole(error, "unbond time error");
+  }
+};
+
+export const getMaxRedeem = async (rpc: string): Promise<number> => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new QueryClientImpl(rpcClient);
+    const moduleAccountResponse = await pstakeQueryService.DepositModuleAccount(
+      {}
+    );
+    return moduleAccountResponse
+      ? Number(moduleAccountResponse.balance?.amount)
+      : 0;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
+  }
+};
+
+export const getChainStatus = async (rpc: string): Promise<boolean> => {
+  try {
+    const tmClient: Tendermint34Client = await Tendermint34Client.connect(rpc);
+    const status: StatusResponse = await tmClient.status();
+    const latestBlockTime = status.syncInfo.latestBlockTime;
+    const startTime = moment(latestBlockTime.toString()).format(
+      "DD-MM-YYYY hh:mm:ss"
+    );
+    const endTime = moment().local().format("DD-MM-YYYY hh:mm:ss");
+    const ms = moment(endTime, "DD/MM/YYYY HH:mm:ss").diff(
+      moment(startTime, "DD/MM/YYYY HH:mm:ss")
+    );
+    const duration = moment.duration(ms);
+    const seconds = duration.asSeconds();
+    return seconds > 60;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return false;
+  }
+};
+
+export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
+  try {
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new StakeQuery(rpcClient);
+    const chainParamsResponse = await pstakeQueryService.Params({});
+    if (chainParamsResponse.params?.unbondingTime?.seconds) {
+      return chainParamsResponse.params?.unbondingTime?.seconds.toNumber();
+    }
+    return 0;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching cosmos unbond time": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
   }
 };

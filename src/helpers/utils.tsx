@@ -5,12 +5,8 @@ import { Decimal } from "@cosmjs/math";
 import { Scope } from "@sentry/react";
 import * as Sentry from "@sentry/react";
 import { fetchAccountBalance } from "../pages/api/onChain";
-import { ExternalChains, PollingConfig } from "./config";
-import {
-  COSMOS_CHAIN_ID,
-  PERSISTENCE_CHAIN_ID,
-  TEST_NET
-} from "../../AppConstants";
+import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
+import { TEST_NET } from "../../AppConstants";
 import {
   QueryAllowListedValidatorsResponse,
   QueryClientImpl,
@@ -26,11 +22,11 @@ const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermi
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const persistenceChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === PERSISTENCE_CHAIN_ID
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
 const cosmosChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === COSMOS_CHAIN_ID
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].cosmosChainID
 );
 
 export async function RpcClient(rpc: string) {
@@ -71,7 +67,7 @@ export const formatNumber = (v = 0, size = 3, decimalLength = 6) => {
   if (!str) return "NaN";
   let substr = str.split(".");
   if (substr[1] === undefined) {
-    let newString = '0';
+    let newString = "0";
     for (let i = 1; i < decimalLength; i++) {
       newString += "0";
     }
@@ -88,7 +84,9 @@ export const formatNumber = (v = 0, size = 3, decimalLength = 6) => {
 export const stringTruncate = (str: string, length = 7) => {
   if (str.length > 30) {
     return (
-      str.substring(0, length) + "..." + str.substring(str.length - length, str.length)
+      str.substring(0, length) +
+      "..." +
+      str.substring(str.length - length, str.length)
     );
   }
   return str;
@@ -111,14 +109,16 @@ export const truncateToFixedDecimalPlaces = (
 export const emptyFunc = () => ({});
 
 export const decimalize = (valueString: string | number, decimals = 6) => {
-  let truncate:number
-  if (typeof valueString === "string")
-  {
+  let truncate: number;
+  if (typeof valueString === "string") {
     truncate = Number(valueString);
   } else {
     truncate = valueString;
   }
-  return Decimal.fromAtomics(Math.trunc(truncate!).toString(), decimals).toString();
+  return Decimal.fromAtomics(
+    Math.trunc(truncate!).toString(),
+    decimals
+  ).toString();
 };
 
 export const unDecimalize = (valueString: string | number, decimals = 6) => {

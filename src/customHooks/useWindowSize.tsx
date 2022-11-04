@@ -5,7 +5,7 @@ export const enum Breakpoint {
   MD = 768,
   LG = 1024,
   XL = 1280,
-  XXL = 1536,
+  XXL = 1536
 }
 
 export interface WindowSize {
@@ -20,14 +20,14 @@ export function useWindowSize(
   const [windowSize, setWindowSize] = useState<WindowSize>({
     width: 0,
     height: 0,
-    isMobile: false,
+    isMobile: false
   });
   useEffect(() => {
     function handleResize() {
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,
-        isMobile: window.innerWidth <= maxMobileWidth,
+        isMobile: window.innerWidth <= maxMobileWidth
       });
     }
 

@@ -8,8 +8,12 @@ import {
   SetAPR,
   SetRedeemFee,
   InitialLiquidityFees,
-  SetTVU
+  SetTVU,
+  SetMaxRedeem,
+  SetMinRedeem,
+  SetChainStatus
 } from "./types";
+import { MIN_DEPOSIT } from "../../../../AppConstants";
 
 const initialLiquidity_Fees: InitialLiquidityFees = {
   [POOL_LIQUIDITY]: 0,
@@ -22,7 +26,11 @@ const initialState: InitialDataState = {
   apr: 0,
   redeemFee: 0,
   osmosisInfo: initialLiquidity_Fees,
-  tvu: 0
+  tvu: 0,
+  maxRedeem: 0,
+  minDeposit: MIN_DEPOSIT,
+  cosmosChainStatus: false,
+  persistenceChainStatus: false
 };
 
 const initData = createSlice({
@@ -47,6 +55,18 @@ const initData = createSlice({
     },
     setTVU: (state, action: SetTVU) => {
       state.tvu = action.payload;
+    },
+    setMaxRedeem: (state, action: SetMaxRedeem) => {
+      state.maxRedeem = action.payload;
+    },
+    setMinDeposit: (state, action: SetMinRedeem) => {
+      state.minDeposit = action.payload;
+    },
+    setCosmosChainStatus: (state, action: SetChainStatus) => {
+      state.cosmosChainStatus = action.payload;
+    },
+    setPersistenceChainStatus: (state, action: SetChainStatus) => {
+      state.persistenceChainStatus = action.payload;
     }
   }
 });
@@ -58,7 +78,11 @@ export const {
   fetchInitSaga,
   setOsmosisInfo,
   setExchangeRate,
-  setTVU
+  setTVU,
+  setMaxRedeem,
+  setMinDeposit,
+  setCosmosChainStatus,
+  setPersistenceChainStatus
 } = initData.actions;
 
 export default initData.reducer;

@@ -10,7 +10,7 @@ const listData = (label: any, value: any) => (
     >
       {label}
     </p>
-    <h3 className="font-semibold text-[#ECECEC] text-2xl leading-normal whitespace-nowrap flex">
+    <h3 className="font-medium text-base leading-normal text-light-mid whitespace-nowrap flex">
       {value}
     </h3>
   </div>

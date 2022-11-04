@@ -11,7 +11,7 @@ import {
   MsgLiquidUnstake,
   MsgRedeem
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
-import {MsgTransfer} from "cosmjs-types/ibc/applications/transfer/v1/tx";
+import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import { coin } from "@cosmjs/amino";
 import Long from "long";
 
@@ -35,70 +35,89 @@ export interface ClaimMsgTypes {
   value?: MsgClaim;
 }
 
-export const LiquidStakeMsg = (address:string, amount:string, denom:string):LiquidStakeMsgTypes => {
+export const LiquidStakeMsg = (
+  address: string,
+  amount: string,
+  denom: string
+): LiquidStakeMsgTypes => {
   return {
     typeUrl: COSMOS_LIQUID_STAKE_URL,
     value: MsgLiquidStake.fromPartial({
       delegatorAddress: address,
       amount: {
         denom: denom,
-        amount: String(amount),
-      },
-    }),
+        amount: String(amount)
+      }
+    })
   };
-}
+};
 
-export const LiquidUnStakeMsg = (address:string, amount:string, denom:string):LiquidUnStakeMsgTypes => {
+export const LiquidUnStakeMsg = (
+  address: string,
+  amount: string,
+  denom: string
+): LiquidUnStakeMsgTypes => {
   return {
     typeUrl: COSMOS_LIQUID_UN_STAKE_URL,
     value: MsgLiquidUnstake.fromPartial({
       delegatorAddress: address,
       amount: {
         denom: denom,
-        amount: String(amount),
-      },
-    }),
+        amount: String(amount)
+      }
+    })
   };
-}
+};
 
-export const RedeemMsg = (address:string, amount:string, denom:string):LiquidUnStakeMsgTypes => {
+export const RedeemMsg = (
+  address: string,
+  amount: string,
+  denom: string
+): LiquidUnStakeMsgTypes => {
   return {
     typeUrl: REDEEM_URL,
     value: MsgRedeem.fromPartial({
       delegatorAddress: address,
       amount: {
         denom: denom,
-        amount: String(amount),
-      },
-    }),
+        amount: String(amount)
+      }
+    })
   };
-}
+};
 
-export const ClaimMsg = (address:string):ClaimMsgTypes => {
+export const ClaimMsg = (address: string): ClaimMsgTypes => {
   return {
     typeUrl: CLAIM_URL,
     value: MsgClaim.fromPartial({
-      delegatorAddress: address,
-    }),
+      delegatorAddress: address
+    })
   };
-}
+};
 
-
-export const TransferMsg = (channel:string, fromAddress:string, toAddress:string, amount:string,
-  timeoutHeight:any, timeoutTimestamp:string | number | Long.Long | undefined, denom:string, port = "transfer"):TransferMsgTypes => {
+export const TransferMsg = (
+  channel: string,
+  fromAddress: string,
+  toAddress: string,
+  amount: string,
+  timeoutHeight: any,
+  timeoutTimestamp: string | number | Long.Long | undefined,
+  denom: string,
+  port = "transfer"
+): TransferMsgTypes => {
   return {
     typeUrl: IBC_TRANSFER_URL,
     value: MsgTransfer.fromPartial({
       sourcePort: port,
       sourceChannel: channel,
-      token: coin(amount, denom),
+      token: coin(Math.trunc(Number(amount)), denom),
       sender: fromAddress,
       receiver: toAddress,
       timeoutHeight: {
         revisionNumber: timeoutHeight?.revisionNumber,
-        revisionHeight: timeoutHeight?.revisionHeight,
+        revisionHeight: timeoutHeight?.revisionHeight
       },
-      timeoutTimestamp: timeoutTimestamp,
-    }),
+      timeoutTimestamp: timeoutTimestamp
+    })
   };
-}
+};
