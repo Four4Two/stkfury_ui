@@ -1,19 +1,26 @@
-import { FetchInitialDataSaga } from "../reducers/initialData/types";
+import {
+  FetchInitialDataSaga,
+  InitialLiquidityFees
+} from "../reducers/initialData/types";
 import {
   getAPR,
-  getChainStatus,
   getExchangeRate,
-  getFee,
+  getChainStatus,
   getMaxRedeem,
+  getFee,
   getTVU
 } from "../../pages/api/onChain";
-import { fetchAtomPrice } from "../../pages/api/externalAPIs";
+import {
+  fetchAtomPrice,
+  fetchOsmosisPoolInfo
+} from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
   setAPR,
   setAtomPrice,
-  setCosmosChainStatus,
   setExchangeRate,
+  setOsmosisInfo,
+  setCosmosChainStatus,
   setMaxRedeem,
   setPersistenceChainStatus,
   setRedeemFee,
@@ -44,6 +51,8 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   yield put(setAtomPrice(atomPrice));
   const apr: number = yield getAPR();
   yield put(setAPR(apr));
+  const osmosisInfo: InitialLiquidityFees = yield fetchOsmosisPoolInfo();
+  yield put(setOsmosisInfo(osmosisInfo));
   yield put(setTVU(tvu));
   yield put(setMaxRedeem(maxRedeem));
   yield put(setCosmosChainStatus(cosmosChainStatus));

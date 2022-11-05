@@ -35,12 +35,6 @@ const Filters = ({ setSortActive, sortActive, searchHandler }: any) => {
         >
           Decentralized Exchanges
         </button>
-        <button
-          className={`${sortActive["lending"] ? "active" : ""} ` + buttonClass}
-          onClick={() => handleSort("lending")}
-        >
-          Borrow & Lend
-        </button>
       </div>
       <div>
         <div className={`w-[196px] relative my-2`}>
