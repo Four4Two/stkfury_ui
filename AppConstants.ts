@@ -16,6 +16,7 @@ export const SHORT_INTERVAL = 10000;
 export const MIN_BALANCE_CHECK = 0.00003;
 export const MIN_DEPOSIT = 0.01;
 export const MIN_STAKE_FEE = 0.01;
+export const MIN_REDEEM = 0.01;
 
 // Key works
 export const COIN_ATOM = "ATOM";

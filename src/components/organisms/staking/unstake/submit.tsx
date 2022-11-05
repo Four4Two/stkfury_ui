@@ -17,6 +17,7 @@ import {
 import {
   COSMOS_CHAIN_ID,
   INSTANT,
+  MIN_REDEEM,
   STK_ATOM_MINIMAL_DENOM,
   UN_STAKE
 } from "../../../../../AppConstants";
@@ -60,7 +61,14 @@ const Submit = () => {
 
   const stkAtomAmount = Number(amount) - Number(amount) * redeemFee;
   const atomAmount = Number(stkAtomAmount) / exchangeRate;
-  const redeemAmount: number = truncateToFixedDecimalPlaces(atomAmount);
+
+  let redeemAmount: number = 0;
+
+  if (Number(amount) > MIN_REDEEM) {
+    redeemAmount = truncateToFixedDecimalPlaces(atomAmount);
+  } else {
+    redeemAmount = Number(atomAmount.toFixed(18).match(/^\d+(?:\.\d{0,6})?/));
+  }
 
   const stakeHandler = async () => {
     let messages: LiquidUnStakeMsgTypes[];
@@ -123,7 +131,8 @@ const Submit = () => {
       disabled={
         !enable ||
         (name === UN_STAKE && inProgress) ||
-        (type === INSTANT && Number(amount) > Number(decimalize(maxRedeem)))
+        (type === INSTANT && Number(amount) > Number(decimalize(maxRedeem))) ||
+        (type === INSTANT && redeemAmount <= 0)
       }
       content={
         name === UN_STAKE && inProgress ? (
