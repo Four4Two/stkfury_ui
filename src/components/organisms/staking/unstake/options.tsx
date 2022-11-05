@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { unStakeType } from "../../../../store/reducers/transactions/unstake/types";
 import { setUnStakeOption } from "../../../../store/reducers/transactions/unstake";
-import { INSTANT } from "../../../../../AppConstants";
+import { INSTANT, MIN_REDEEM } from "../../../../../AppConstants";
 
 const Options = () => {
   const dispatch = useDispatch();
@@ -13,11 +13,17 @@ const Options = () => {
   const { exchangeRate, redeemFee } = useSelector(
     (state: RootState) => state.initialData
   );
-  const atomAmount = Number(amount) / exchangeRate;
 
-  const redeemAmount: number = truncateToFixedDecimalPlaces(
-    Number(atomAmount) - Number(atomAmount) * redeemFee
-  );
+  const stkAtomAmount = Number(amount) - Number(amount) * redeemFee;
+  const atomAmount = Number(stkAtomAmount) / exchangeRate;
+
+  let redeemAmount: number;
+
+  if (Number(amount) > MIN_REDEEM) {
+    redeemAmount = truncateToFixedDecimalPlaces(atomAmount);
+  } else {
+    redeemAmount = Number(atomAmount.toFixed(18).match(/^\d+(?:\.\d{0,6})?/));
+  }
 
   const optionHandler = (value: unStakeType) => {
     dispatch(setUnStakeOption(value));
@@ -65,7 +71,7 @@ const Options = () => {
             className={`${styles.amount} option-value font-medium m-0 text-light-mid 
             text-2xl text-center text-right overflow-x-auto md:text-base`}
           >
-            ~{truncateToFixedDecimalPlaces(atomAmount)} ATOM
+            ~{truncateToFixedDecimalPlaces(Number(amount) / exchangeRate)} ATOM
           </p>
         </div>
       </div>

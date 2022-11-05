@@ -16,19 +16,19 @@ import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 
 const socialList = [
   {
-    url: "https://twitter.com/pStakeFinance",
+    url: "https://twitter.com/pSTAKE_Cosmos",
     iconName: "twitter-logo",
-    tooltip: "twitter"
+    tooltip: "Twitter"
   },
   {
-    url: "https://twitter.com/pstake_cosmos?s=11&t=E_q2T3rK9Bwiywy_YCvo5A",
+    url: " https://t.me/pstakefinancechat",
     iconName: "telegram-plane",
-    tooltip: "telegram"
+    tooltip: "Telegram"
   },
   {
-    url: "https://blog.pstake.finance/",
+    url: "https://blog.pstake.finance/category/stkatom/",
     iconName: "medium-m",
-    tooltip: "medium"
+    tooltip: "Medium"
   }
 ];
 
@@ -42,11 +42,6 @@ const moreList = [
     url: "https://docs.pstake.finance/",
     name: "Docs",
     icon: "docs"
-  },
-  {
-    url: "https://analytics.pstake.finance/",
-    name: "Analytics",
-    icon: "analytics"
   },
   {
     url: "https://forum.pstake.finance/",

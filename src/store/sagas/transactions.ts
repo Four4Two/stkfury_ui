@@ -178,7 +178,7 @@ export function* executeUnStakeTransaction({
       [ERROR_WHILE_UNSTAKING]: payload.address
     });
     genericErrorHandler(e, customScope);
-    if (e.message && e.message.include(EMPTY_POOL_ERROR)) {
+    if (e.message && e.message.includes(EMPTY_POOL_ERROR)) {
       displayToast(
         {
           message: "This transaction could not be completed"
