@@ -201,6 +201,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             pstakeQueryService
           );
 
+          console.log(unbondTimeResponse, "unbondTimeResponse");
           if (unbondTimeResponse) {
             const unbondTime =
               unbondTimeResponse.hostAccountUndelegation.completionTime;
