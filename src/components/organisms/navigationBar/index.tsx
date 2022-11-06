@@ -13,10 +13,12 @@ import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
 import { printConsole } from "../../../helpers/utils";
+import { useRouter } from "next/router";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
   const { isMobile } = useWindowSize();
+  const router = useRouter();
 
   const handleMenu = () => {
     dispatch(showMobileSidebar());
@@ -70,7 +72,7 @@ const NavigationBar = () => {
   );
 
   if (cosmosChainStatus || persistenceChainStatus) {
-    printConsole("chain halted");
+    router.push("/maintenance");
   }
 
   return (

@@ -3,6 +3,8 @@ import styles from "./styles.module.css";
 import Filters from "./filter";
 import { defiSwapList, defiBorrowLendingList } from "./defiData";
 import CardList from "./cardList";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/reducers";
 
 const DefiList = () => {
   const [sortActive, setSortActive] = useState<any>({
@@ -15,20 +17,26 @@ const DefiList = () => {
   const [lendingData, setLendingData] = useState<any>([]);
   const [allData, setAllData] = useState<any>([]);
 
+  const initData = useSelector((state: RootState) => state.initialData);
+
   useEffect(() => {
-    setDefiData(defiSwapList);
+    const defiList = defiSwapList(initData.osmosisInfo);
+    setDefiData(defiList);
     setLendingData(defiBorrowLendingList);
-    const totalData: any = [...defiSwapList, ...defiBorrowLendingList];
+    const totalData: any = [
+      ...defiSwapList(initData.osmosisInfo),
+      ...defiBorrowLendingList
+    ];
     const sortedData = totalData.sort((a: any, b: any) => a.id - b.id);
     setAllData(sortedData);
-  }, []);
+  }, [initData.osmosisInfo]);
 
   const searchHandler = (evt: any) => {
     const searchTerm = evt.target.value;
     let newDefiList;
     let newLendingList;
 
-    newDefiList = defiSwapList.filter((val) => {
+    newDefiList = defiSwapList(initData.osmosisInfo).filter((val) => {
       return (
         val.inputToken.toLowerCase().includes(searchTerm.toLowerCase()) ||
         val.platform.toLowerCase().includes(searchTerm.toLowerCase())

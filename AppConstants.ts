@@ -16,6 +16,7 @@ export const SHORT_INTERVAL = 10000;
 export const MIN_BALANCE_CHECK = 0.00003;
 export const MIN_DEPOSIT = 0.01;
 export const MIN_STAKE_FEE = 0.01;
+export const MIN_REDEEM = 0.01;
 
 // Key works
 export const COIN_ATOM = "ATOM";
@@ -34,6 +35,8 @@ export const UN_STAKE = "unstake";
 export const CLAIM = "claim";
 export const FATAL = "fatal";
 export const DEPOSIT = "deposit";
+export const FEES = "fees";
+export const POOL_LIQUIDITY = "pool_liquidity";
 export const WITHDRAW = "withdraw";
 
 export const COSMOS_UNBOND_TIME =

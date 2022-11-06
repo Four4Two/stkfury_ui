@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { Icon } from "../../atoms/icon";
 import ButtonLink from "../../atoms/buttonLink";
@@ -54,8 +55,8 @@ const listShow = (item: any, index: number) => (
           )}
           {item.type === "defi" ? (
             <>
-              {listData("APY", `${item.apy}%`)}
-              {listData("TVL", `$${item.tvl}`)}
+              {listData("Swap Fee", `${item.fees}`)}
+              {listData("Pool Liquidity", `$${item.pool_liquidity}`)}
             </>
           ) : (
             <>
@@ -89,29 +90,30 @@ const listShow = (item: any, index: number) => (
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
-                className="button button-primary md:py-2 md:px-4 md:text-xsm"
+                className="button button-primary mb-3 md:py-2 md:px-4 md:text-xsm"
                 content={
-                  <>
+                  <div className="flex justify-center items-center">
                     Swap
                     <Icon
                       iconName="arrow-redirect-white"
-                      viewClass="redirect"
+                      viewClass="redirect stroke-[#fcfcfc] !w-[10px] !h-[10px] ml-1"
                     />
-                  </>
+                  </div>
                 }
               />
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
-                className="button button-primary md:py-2 md:px-4 md:text-xsm"
+                type="secondary"
+                className="button button-primary px-4 md:py-2 md:px-4 md:text-xsm"
                 content={
-                  <>
+                  <div className="flex justify-center items-center">
                     Add Liquidity
                     <Icon
                       iconName="arrow-redirect-white"
-                      viewClass="redirect"
+                      viewClass="redirect stroke-[#fcfcfc] !w-[10px] !h-[10px] ml-1"
                     />
-                  </>
+                  </div>
                 }
               />
             </div>
