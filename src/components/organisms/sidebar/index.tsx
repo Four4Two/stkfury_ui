@@ -35,11 +35,11 @@ const socialList = [
 const moreList = [
   {
     url: "https://pstake.finance/",
-    name: "pstake.finance",
+    name: "Website'",
     icon: "globe"
   },
   {
-    url: "https://docs.pstake.finance/",
+    url: "https://docs.pstake.finance/stkATOM_Introduction/",
     name: "Docs",
     icon: "docs"
   },
