@@ -24,7 +24,7 @@ export const LoginOptions = () => {
   };
 
   const disconnectHandler = async () => {
-    localStorage.clear();
+    localStorage.removeItem("wallet");
     window.location.reload();
   };
 
@@ -87,7 +87,7 @@ export const LoginOptions = () => {
           className={`${
             dropdownOpen ? "pointer-events-none" : "pointer-events-auto"
           }
-             button md:text-xsm md:py-2 md:px-4 !text-sm`}
+             button md:text-xsm md:py-2 md:px-4 !text-sm !px-6`}
           onClick={() => {
             setDropdownOpen(true);
           }}

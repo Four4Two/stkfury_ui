@@ -98,7 +98,6 @@ export const KeplrWallet = async (
   //     tendermintRPC,
   //     offlineSigner,
   // );
-  localStorage.setItem("keplrAddress", accounts[0].address);
 
   return offlineSigner;
 };

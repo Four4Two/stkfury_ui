@@ -328,6 +328,10 @@ input[type="number"] {
   max-width: 600px;
 }
 
+.termsModal .modalDialog {
+  max-width: 700px;
+}
+
 .inputContainer:focus-within {
   border: 1px solid rgba(252, 252, 252, 0.7);
   box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
