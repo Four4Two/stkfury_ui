@@ -63,9 +63,9 @@ const DefiList = () => {
           DeFi
         </h1>
         <h6 className="text-base text-light-high text-center leading-normal md:text-sm">
-          Utilise your stkATOM and explore additional yield while still earning
-          staking
-          <br /> rewards across the COSMOS ecosystem
+          Put your stkATOM to work in the Cosmos DeFi Ecosystem with additional
+          <br />
+          yield while still earning ATOM staking rewards
         </h6>
       </div>
       <Filters
