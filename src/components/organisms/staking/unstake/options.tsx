@@ -6,6 +6,7 @@ import { RootState } from "../../../../store/reducers";
 import { unStakeType } from "../../../../store/reducers/transactions/unstake/types";
 import { setUnStakeOption } from "../../../../store/reducers/transactions/unstake";
 import { INSTANT, MIN_REDEEM } from "../../../../../AppConstants";
+import { Icon } from "../../../atoms/icon";
 
 const Options = () => {
   const dispatch = useDispatch();
@@ -45,8 +46,9 @@ const Options = () => {
           Preferred option
         </p>
         <div className="flex items-center">
-          <p className="option-heading m-0 font-normal text-base text-light-disabled leading-normal flex-1 md:text-sm">
+          <p className="option-heading m-0 font-normal text-base text-light-disabled leading-normal flex-1 md:text-sm flex items-center">
             Redeem Instantly
+            <Icon iconName="lightning" viewClass="lightning" />
           </p>
           <p
             className={`${styles.amount} option-value font-medium m-0 text-light-mid

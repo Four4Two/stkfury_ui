@@ -13,6 +13,7 @@ import "rc-tooltip/assets/bootstrap.css";
 import WithdrawToasts from "./withdrawModal/withdrawToasts";
 import BalanceList from "./balanceList";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
+import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 
 const socialList = [
   {
@@ -54,6 +55,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const { showModal } = useSelector((state: RootState) => state.withdraw);
+  const { persistenceAccountData } = useWallet();
 
   const { isMobile } = useWindowSize();
 
@@ -124,24 +126,25 @@ const Sidebar = () => {
               </Link>
             </li>
             <li className={`list-none`}>
-              <Link href="/transactions" className="nav-link" passHref>
-                <p
-                  className={`${Styles.navBarLink} ${
-                    router.pathname == "/transactions"
-                      ? `${Styles.active} navItemActive`
-                      : "group"
-                  }
-                 py-3 px-8 flex items-center cursor-pointer`}
+              <Link
+                href={`https://www.mintscan.io/persistence/account/${persistenceAccountData?.address}`}
+                className="nav-link"
+                passHref
+              >
+                <a
+                  target={"_blank"}
+                  rel="noopener noreferrer"
+                  className={`${Styles.navBarLink} group py-3 px-8 flex items-center cursor-pointer`}
                   onClick={isMobile ? closeSideHandler : emptyFunc}
                 >
                   <Icon
-                    iconName="transactions"
-                    viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
+                    iconName="new-tab"
+                    viewClass={`!w-[16px] !h-[16px] side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
                   />
                   <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
                     Transactions
                   </span>
-                </p>
+                </a>
               </Link>
             </li>
             <li className={`list-none`}>
@@ -165,7 +168,7 @@ const Sidebar = () => {
               </p>
               <div
                 id="more-list"
-                className={`${open ? "" : "active"} moreList h-[180px] 
+                className={`${open ? "" : "active"} moreList h-[140px] 
               overflow-hidden relative bg-[#1B1B1B]`}
               >
                 {moreList.map((item, index) => (
