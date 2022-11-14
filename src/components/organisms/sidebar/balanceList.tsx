@@ -190,7 +190,7 @@ const BalanceList = () => {
               size="small"
               type="secondary"
               content="Claim"
-              className="w-full mt-4 md:text-xsm md:py-2 md:px-4"
+              className="w-full mt-4 md:text-xsm md:py-1 md:px-2"
               onClick={claimHandler}
             />
           </div>
