@@ -44,7 +44,7 @@ const From = () => {
               className="tokenImage"
               alt="atomIcon"
             />
-            <span className="text-light-high text-3xl font-normal ml-2 md:text-lg md:text-lg">
+            <span className="text-light-high text-3xl font-normal ml-2 md:text-lg md:text-lg lg:text-lg">
               {COIN_ATOM}
             </span>
           </div>

@@ -41,7 +41,7 @@ const From = () => {
               className="logo"
               alt="atomIcon"
             />
-            <span className="text-light-high text-3xl font-normal ml-2 md:text-lg">
+            <span className="text-light-high text-3xl font-normal ml-2 md:text-lg lg:text-lg">
               stkATOM
             </span>
           </div>
