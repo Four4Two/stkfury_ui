@@ -170,6 +170,11 @@ export const ExternalChains: ExternalChainData = {
         bech32PrefixValPub: "cosmosvaloperpub",
         bech32PrefixConsAddr: "cosmosvalcons",
         bech32PrefixConsPub: "persistencevalconspub"
+      },
+      gasPriceStep: {
+        low: 0.0,
+        average: 0.0,
+        high: 0.0
       }
     }
   ],
@@ -217,6 +222,11 @@ export const ExternalChains: ExternalChainData = {
         bech32PrefixValPub: "persistencevaloperpub",
         bech32PrefixConsAddr: "persistencevalcons",
         bech32PrefixConsPub: "persistencevalconspub"
+      },
+      gasPriceStep: {
+        low: 0.0,
+        average: 0.01,
+        high: 0.025
       }
     },
     {
@@ -342,6 +352,11 @@ export const ExternalChains: ExternalChainData = {
         bech32PrefixValPub: "persistencevaloperpub",
         bech32PrefixConsAddr: "persistencevalcons",
         bech32PrefixConsPub: "persistencevalconspub"
+      },
+      gasPriceStep: {
+        low: 0.0,
+        average: 0.0,
+        high: 0.0
       }
     }
   ]

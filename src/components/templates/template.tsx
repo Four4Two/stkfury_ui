@@ -8,7 +8,6 @@ import WithdrawModal from "../organisms/sidebar/withdrawModal";
 import StakeToasts from "../organisms/staking/stake/stakeToasts";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
-import TermsModal from "../organisms/termsModal";
 
 export const PageTemplate = ({
   children,
@@ -39,7 +38,6 @@ export const PageTemplate = ({
       <ClaimModal />
       <StakeModal />
       <WithdrawModal />
-      <TermsModal />
       {!showModal ? <StakeToasts /> : null}
     </div>
   );
