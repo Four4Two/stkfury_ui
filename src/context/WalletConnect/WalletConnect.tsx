@@ -17,6 +17,8 @@ import { printConsole } from "../../helpers/utils";
 import { fetchPendingClaimsSaga } from "../../store/reducers/claim";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
+import { displayToast } from "../../components/molecules/toast";
+import { ToastType } from "../../components/molecules/toast/types";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -111,6 +113,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       setWalletConnected("connected");
     } catch (e: any) {
       printConsole(e);
+      displayToast(
+        {
+          message: e.message!
+        },
+        ToastType.ERROR
+      );
       console.error(e);
       return false;
     }
