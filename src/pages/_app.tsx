@@ -10,6 +10,8 @@ import { ChainInfo } from "@keplr-wallet/types";
 import Maintenance from "./maintenance";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
+import TermsModal from "../components/organisms/termsModal";
+import React from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   Sentry.init({
@@ -32,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <Provider store={store}>
+      <TermsModal />
       <ToastContainer
         position="top-right"
         autoClose={3000}
