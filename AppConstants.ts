@@ -40,7 +40,7 @@ export const POOL_LIQUIDITY = "pool_liquidity";
 export const WITHDRAW = "withdraw";
 
 export const COSMOS_UNBOND_TIME =
-  process.env.NEXT_PUBLIC_ENVIRONMENT === "Mainnet" ? 1814400 : 300;
+  process.env.NEXT_PUBLIC_ENVIRONMENT !== "Devnet" ? 1814400 : 300;
 export const MID_INTERVAL = 60000;
 
 export const LONG_INTERVAL = 3600000;
