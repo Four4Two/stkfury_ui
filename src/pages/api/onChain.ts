@@ -218,7 +218,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
           }
         } else if (isFailed && cValueEpochNumber.toNumber() > 0) {
           // failed unbonding list
-          totalFailedUnbondAmount += Number(unbondAmount);
+          totalFailedUnbondAmount += Number(item?.amount?.amount);
         } else if (isMatured && cValueEpochNumber.toNumber() > 0) {
           // claimable unbonding list
           claimableAmount += Number(unbondAmount);
