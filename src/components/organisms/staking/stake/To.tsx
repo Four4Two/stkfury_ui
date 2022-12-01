@@ -18,7 +18,7 @@ const To = () => {
     Number(amount) * exchangeRate
   );
 
-  const priceInDollars = atomPrice * Number(stkATOMAmount);
+  const priceInDollars = atomPrice * Number(amount);
   const { isMobile } = useWindowSize();
 
   return (
