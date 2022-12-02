@@ -23,6 +23,8 @@ import {
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
 import { executeDepositTransactionSaga } from "../../../../store/reducers/transactions/deposit";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
+import { displayToast } from "../../../molecules/toast";
+import { ToastType } from "../../../molecules/toast/types";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -128,7 +130,14 @@ const Submit = () => {
           "Liquid Stake"
         )
       }
-      onClick={stakeHandler}
+      onClick={() =>
+        displayToast(
+          {
+            message: "Liquid staking is temporarily paused"
+          },
+          ToastType.INFO
+        )
+      }
     />
   ) : (
     <Button
