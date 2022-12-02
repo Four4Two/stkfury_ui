@@ -130,13 +130,16 @@ const Submit = () => {
           "Liquid Stake"
         )
       }
-      onClick={() =>
-        displayToast(
-          {
-            message: "Liquid staking is temporarily paused"
-          },
-          ToastType.INFO
-        )
+      onClick={
+        env === "Mainnet"
+          ? () =>
+              displayToast(
+                {
+                  message: "Liquid staking is temporarily paused"
+                },
+                ToastType.INFO
+              )
+          : stakeHandler
       }
     />
   ) : (
