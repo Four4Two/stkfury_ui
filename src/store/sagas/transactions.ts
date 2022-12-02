@@ -201,7 +201,8 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
       msg,
       cosmosChainInfo,
       cosmosAddress,
-      pollInitialIBCAtomBalance
+      pollInitialIBCAtomBalance,
+      claimType
     } = payload;
     const transaction: DeliverTxResponse = yield Transaction(
       persistenceSigner,
@@ -219,12 +220,18 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
         },
         ToastType.LOADING
       );
+
       const response: string = yield pollAccountBalance(
-        cosmosAddress,
-        cosmosChainInfo?.stakeCurrency.coinMinimalDenom!,
-        cosmosChainInfo.rpc,
+        claimType === "claimAll" ? cosmosAddress : address,
+        claimType === "claimAll"
+          ? cosmosChainInfo?.stakeCurrency.coinMinimalDenom!
+          : STK_ATOM_MINIMAL_DENOM,
+        claimType === "claimAll"
+          ? cosmosChainInfo.rpc
+          : persistenceChainInfo.rpc,
         pollInitialIBCAtomBalance.toString()
       );
+
       if (response !== "0") {
         displayToast(
           {

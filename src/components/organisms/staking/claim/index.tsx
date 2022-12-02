@@ -27,6 +27,7 @@ import {
   IBCChainInfos,
   IBCConfiguration
 } from "../../../../helpers/config";
+import { claimType } from "../../../../store/reducers/transactions/claim/types";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -85,7 +86,9 @@ const ClaimModal = () => {
     cosmosAccountData
   } = useWallet();
 
-  const { atomBalance } = useSelector((state: RootState) => state.balances);
+  const { atomBalance, stkAtomBalance } = useSelector(
+    (state: RootState) => state.balances
+  );
 
   const [activeClaims, setActiveClaims] = useState(0);
   const [pendingList, setPendingList] = useState<any>([]);
@@ -106,6 +109,8 @@ const ClaimModal = () => {
 
   const claimHandler = async () => {
     let messages: ClaimMsgTypes[];
+    let pollBalance: any;
+    let claimType: claimType;
     dispatch(setTransactionProgress(CLAIM));
     if (activeClaims > 0) {
       const withDrawMsg = await MakeIBCTransferMsg({
@@ -120,11 +125,15 @@ const ClaimModal = () => {
         destinationRPCUrl: cosmosChainData?.rpc,
         port: IBCConfiguration.ibcDefaultPort
       });
+      pollBalance = atomBalance;
       const claimMsg = ClaimMsg(persistenceAccountData!.address);
       messages = [claimMsg, withDrawMsg];
+      claimType = "claimAll";
     } else {
+      pollBalance = stkAtomBalance;
       const claimMsg = ClaimMsg(persistenceAccountData!.address);
       messages = [claimMsg];
+      claimType = "claimStkAtom";
     }
 
     dispatch(
@@ -135,7 +144,8 @@ const ClaimModal = () => {
         cosmosAddress: cosmosAccountData?.address!,
         address: persistenceAccountData!.address,
         cosmosChainInfo: cosmosChainData!,
-        pollInitialIBCAtomBalance: atomBalance
+        pollInitialIBCAtomBalance: pollBalance,
+        claimType: claimType
       })
     );
   };
