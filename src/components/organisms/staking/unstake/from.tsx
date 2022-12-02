@@ -21,7 +21,7 @@ const From = () => {
   const { isWalletConnected } = useWallet();
 
   const stkATOMAmount = truncateToFixedDecimalPlaces(
-    Number(amount) * exchangeRate
+    Number(amount) * (1 / exchangeRate)
   );
 
   const priceInDollars = atomPrice * Number(stkATOMAmount);

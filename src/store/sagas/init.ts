@@ -49,12 +49,12 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   yield put(setExchangeRate(exchangeRate));
   yield put(setRedeemFee(fee));
   yield put(setAtomPrice(atomPrice));
-  const apr: number = yield getAPR();
-  yield put(setAPR(apr));
+  yield put(setTVU(tvu));
   const osmosisInfo: InitialLiquidityFees = yield fetchOsmosisPoolInfo();
   yield put(setOsmosisInfo(osmosisInfo));
-  yield put(setTVU(tvu));
   yield put(setMaxRedeem(maxRedeem));
   yield put(setCosmosChainStatus(cosmosChainStatus));
   yield put(setPersistenceChainStatus(persistenceChainStatus));
+  const apr: number = yield getAPR();
+  yield put(setAPR(apr));
 }
