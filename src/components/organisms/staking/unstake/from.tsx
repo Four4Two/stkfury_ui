@@ -1,6 +1,9 @@
 import React, { ChangeEvent } from "react";
 import InputText from "../../../atoms/input";
-import { formatNumber } from "../../../../helpers/utils";
+import {
+  formatNumber,
+  truncateToFixedDecimalPlaces
+} from "../../../../helpers/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { setUnStakeAmount } from "../../../../store/reducers/transactions/unstake";
@@ -11,10 +14,17 @@ const From = () => {
   const dispatch = useDispatch();
   const { stkAtomBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.unStake);
-  const { atomPrice } = useSelector((state: RootState) => state.initialData);
-  const priceInDollars = atomPrice * Number(amount);
+  const { atomPrice, exchangeRate } = useSelector(
+    (state: RootState) => state.initialData
+  );
   const { isMobile } = useWindowSize();
   const { isWalletConnected } = useWallet();
+
+  const stkATOMAmount = truncateToFixedDecimalPlaces(
+    Number(amount) * exchangeRate
+  );
+
+  const priceInDollars = atomPrice * Number(stkATOMAmount);
 
   const inputHandler = (evt: ChangeEvent<HTMLInputElement>) => {
     let rex = /^\d{0,10}(\.\d{0,6})?$/;
