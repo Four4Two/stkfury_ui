@@ -22,7 +22,7 @@ const TermsModal = () => {
       onClose={handleClose}
       header="Terms & Privacy policy"
       className="termsModal"
-      staticBackDrop={false}
+      staticBackDrop={true}
       closeButton={false}
     >
       <div className="content max-h-[400px] overflow-auto">
