@@ -55,7 +55,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const { showModal } = useSelector((state: RootState) => state.withdraw);
-  const { persistenceAccountData } = useWallet();
+  const { persistenceAccountData, isWalletConnected } = useWallet();
 
   const { isMobile } = useWindowSize();
 
@@ -125,28 +125,30 @@ const Sidebar = () => {
                 </p>
               </Link>
             </li>
-            <li className={`list-none`}>
-              <Link
-                href={`https://www.mintscan.io/persistence/account/${persistenceAccountData?.address}`}
-                className="nav-link"
-                passHref
-              >
-                <a
-                  target={"_blank"}
-                  rel="noopener noreferrer"
-                  className={`${Styles.navBarLink} group py-3 px-8 flex items-center cursor-pointer`}
-                  onClick={isMobile ? closeSideHandler : emptyFunc}
+            {isWalletConnected ? (
+              <li className={`list-none`}>
+                <Link
+                  href={`https://www.mintscan.io/persistence/account/${persistenceAccountData?.address}`}
+                  className="nav-link"
+                  passHref
                 >
-                  <Icon
-                    iconName="new-tab"
-                    viewClass={`!w-[16px] !h-[16px] side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
-                  />
-                  <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
-                    Transactions
-                  </span>
-                </a>
-              </Link>
-            </li>
+                  <a
+                    target={"_blank"}
+                    rel="noopener noreferrer"
+                    className={`${Styles.navBarLink} group py-3 px-8 flex items-center cursor-pointer`}
+                    onClick={isMobile ? closeSideHandler : emptyFunc}
+                  >
+                    <Icon
+                      iconName="new-tab"
+                      viewClass={`!w-[16px] !h-[16px] side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
+                    />
+                    <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
+                      Transactions
+                    </span>
+                  </a>
+                </Link>
+              </li>
+            ) : null}
             <li className={`list-none`}>
               <p
                 onClick={() => setOpen(!open)}
