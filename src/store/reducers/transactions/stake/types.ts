@@ -20,6 +20,8 @@ export interface StakeTransactionParams {
   account: string;
   msg: LiquidStakeMsgTypes;
   pollInitialBalance: number;
+  cosmosAddress: string;
+  cosmosChainInfo: ChainInfo;
 }
 
 export type StakeTransactionPayload = PayloadAction<StakeTransactionParams>;

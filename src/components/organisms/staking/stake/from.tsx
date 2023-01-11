@@ -12,7 +12,7 @@ const From = () => {
   const dispatch = useDispatch();
   const { atomBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.stake);
-  const { atomPrice } = useSelector((state: RootState) => state.initialData);
+  const { atomPrice } = useSelector((state: RootState) => state.liveData);
   const { minDeposit } = useSelector((state: RootState) => state.initialData);
   const priceInDollars = atomPrice * Number(amount);
 

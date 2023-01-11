@@ -14,9 +14,8 @@ const From = () => {
   const dispatch = useDispatch();
   const { stkAtomBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.unStake);
-  const { atomPrice, exchangeRate } = useSelector(
-    (state: RootState) => state.initialData
-  );
+  const { exchangeRate } = useSelector((state: RootState) => state.initialData);
+  const { atomPrice } = useSelector((state: RootState) => state.liveData);
   const { isMobile } = useWindowSize();
   const { isWalletConnected } = useWallet();
 

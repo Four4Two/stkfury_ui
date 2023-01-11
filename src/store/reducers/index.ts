@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import balances from "./balances";
 import stake from "./transactions/stake";
 import initialData from "./initialData";
+import liveData from "./liveData";
 import transaction from "./transaction";
 import unStake from "./transactions/unstake";
 import deposit from "./transactions/deposit";
@@ -20,7 +21,8 @@ const reducers = combineReducers({
   mobileSidebar,
   claimQueries,
   claim,
-  withdraw
+  withdraw,
+  liveData
 });
 
 export default reducers;
