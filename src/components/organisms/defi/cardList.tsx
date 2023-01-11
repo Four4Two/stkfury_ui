@@ -65,7 +65,7 @@ const listShow = (item: any, index: number) => (
           </div>
           {item.type === "defi" ? (
             <>
-              {listData("Swap Fee", `${item.fees}%`)}
+              {listData("Swap Fee", `${item.fees}`)}
               {listData("Pool Liquidity", `$${item.pool_liquidity}`)}
             </>
           ) : (

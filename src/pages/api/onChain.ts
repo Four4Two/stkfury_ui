@@ -10,7 +10,6 @@ import {
   decimalize,
   genericErrorHandler,
   getCommission,
-  getIncentives,
   printConsole,
   RpcClient
 } from "../../helpers/utils";
@@ -113,7 +112,7 @@ export const getAPR = async () => {
   try {
     const baseRate = APR_BASE_RATE;
     const commission = await getCommission();
-    const incentives = await getIncentives();
+    const incentives = 0;
     const apr = baseRate - (commission / 100) * baseRate + incentives;
     return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
