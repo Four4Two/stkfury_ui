@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import LoginOptions from "./loginOptions";
 import Button from "../../atoms/button";
-import { DEV_NET, SHORT_INTERVAL, TEST_NET } from "../../../../AppConstants";
+import {
+  DEV_NET,
+  MID_INTERVAL,
+  SHORT_INTERVAL,
+  TEST_NET
+} from "../../../../AppConstants";
 import { Icon } from "../../atoms/icon";
 import { useDispatch, useSelector } from "react-redux";
 import { showMobileSidebar } from "../../../store/reducers/sidebar";
@@ -14,6 +19,7 @@ import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
 import { printConsole } from "../../../helpers/utils";
 import { useRouter } from "next/router";
+import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -36,13 +42,19 @@ const NavigationBar = () => {
     const interval = setInterval(() => {
       if (isWalletConnected) {
         dispatch(
-          fetchBalanceSaga({
-            persistenceAddress: persistenceAccountData!.address,
-            cosmosAddress: cosmosAccountData!.address,
+          fetchLiveDataSaga({
             persistenceChainInfo: persistenceChainData!,
             cosmosChainInfo: cosmosChainData!
           })
         );
+      }
+    }, SHORT_INTERVAL);
+    return () => clearInterval(interval);
+  }, [isWalletConnected, dispatch, persistenceChainData, cosmosChainData]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isWalletConnected) {
         dispatch(
           fetchPendingClaimsSaga({
             address: persistenceAccountData!.address,
@@ -55,20 +67,28 @@ const NavigationBar = () => {
             cosmosChainInfo: cosmosChainData!
           })
         );
+        dispatch(
+          fetchBalanceSaga({
+            persistenceAddress: persistenceAccountData!.address,
+            cosmosAddress: cosmosAccountData!.address,
+            persistenceChainInfo: persistenceChainData!,
+            cosmosChainInfo: cosmosChainData!
+          })
+        );
       }
-    }, SHORT_INTERVAL);
+    }, MID_INTERVAL);
     return () => clearInterval(interval);
   }, [
-    isWalletConnected,
-    dispatch,
     persistenceAccountData,
     cosmosAccountData,
+    isWalletConnected,
+    dispatch,
     persistenceChainData,
     cosmosChainData
   ]);
 
   const { cosmosChainStatus, persistenceChainStatus } = useSelector(
-    (state: RootState) => state.initialData
+    (state: RootState) => state.liveData
   );
 
   if (cosmosChainStatus || persistenceChainStatus) {

@@ -6,7 +6,7 @@ import { RootState } from "../../store/reducers";
 const MaintenanceContainer = () => {
   const router = useRouter();
   const { cosmosChainStatus, persistenceChainStatus } = useSelector(
-    (state: RootState) => state.initialData
+    (state: RootState) => state.liveData
   );
 
   useEffect(() => {

@@ -32,7 +32,10 @@ import {
   pollAccountBalance,
   printConsole
 } from "../../helpers/utils";
-import { failedTransactionActions } from "./sagaHelpers";
+import {
+  failedTransactionActions,
+  postTransactionActions
+} from "./sagaHelpers";
 import * as Sentry from "@sentry/react";
 import {
   UnStakeTransactionPayload,
@@ -58,14 +61,16 @@ let ibcInfo = IBCChainInfos[env].find(
 );
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
+  const {
+    persistenceSigner,
+    persistenceChainInfo,
+    account,
+    msg,
+    pollInitialBalance,
+    cosmosAddress,
+    cosmosChainInfo
+  } = payload;
   try {
-    const {
-      persistenceSigner,
-      persistenceChainInfo,
-      account,
-      msg,
-      pollInitialBalance
-    } = payload;
     const transaction: DeliverTxResponse = yield Transaction(
       persistenceSigner,
       account,
@@ -86,6 +91,13 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
       );
       if (response !== "0") {
         yield put(setStakeTxnStepNumber(5));
+        yield postTransactionActions(
+          "stake",
+          account,
+          cosmosAddress,
+          persistenceChainInfo,
+          cosmosChainInfo
+        );
       }
       yield put(resetTransaction());
     } else {
@@ -99,6 +111,13 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     customScope.setTags({
       [ERROR_WHILE_STAKING]: payload.account
     });
+    yield postTransactionActions(
+      "stake",
+      account,
+      cosmosAddress,
+      persistenceChainInfo,
+      cosmosChainInfo
+    );
     genericErrorHandler(e, customScope);
   }
 }
@@ -106,16 +125,16 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
 export function* executeUnStakeTransaction({
   payload
 }: UnStakeTransactionPayload) {
+  const {
+    persistenceSigner,
+    persistenceChainInfo,
+    address,
+    msg,
+    pollInitialBalance,
+    cosmosAddress,
+    cosmosChainInfo
+  } = payload;
   try {
-    const {
-      persistenceSigner,
-      persistenceChainInfo,
-      address,
-      msg,
-      pollInitialBalance,
-      cosmosAddress,
-      cosmosChainInfo
-    } = payload;
     const transaction: DeliverTxResponse = yield Transaction(
       persistenceSigner,
       address,
@@ -144,6 +163,13 @@ export function* executeUnStakeTransaction({
         );
         if (response !== "0") {
           toast.dismiss();
+          yield postTransactionActions(
+            "unstake",
+            address,
+            cosmosAddress,
+            persistenceChainInfo,
+            cosmosChainInfo
+          );
           displayToast(
             {
               message: "Transaction Successful"
@@ -159,6 +185,13 @@ export function* executeUnStakeTransaction({
           );
         }
       } else {
+        yield postTransactionActions(
+          "unstake",
+          address,
+          cosmosAddress,
+          persistenceChainInfo,
+          cosmosChainInfo
+        );
         displayToast(
           {
             message: "Transaction Successful"
@@ -178,6 +211,13 @@ export function* executeUnStakeTransaction({
       [ERROR_WHILE_UNSTAKING]: payload.address
     });
     genericErrorHandler(e, customScope);
+    yield postTransactionActions(
+      "unstake",
+      address,
+      cosmosAddress,
+      persistenceChainInfo,
+      cosmosChainInfo
+    );
     if (e.message && e.message.includes(EMPTY_POOL_ERROR)) {
       displayToast(
         {
@@ -193,17 +233,17 @@ export function* executeUnStakeTransaction({
 }
 
 export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
+  const {
+    persistenceSigner,
+    persistenceChainInfo,
+    address,
+    msg,
+    cosmosChainInfo,
+    cosmosAddress,
+    pollInitialIBCAtomBalance,
+    claimType
+  } = payload;
   try {
-    const {
-      persistenceSigner,
-      persistenceChainInfo,
-      address,
-      msg,
-      cosmosChainInfo,
-      cosmosAddress,
-      pollInitialIBCAtomBalance,
-      claimType
-    } = payload;
     const transaction: DeliverTxResponse = yield Transaction(
       persistenceSigner,
       address,
@@ -233,6 +273,13 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
       );
 
       if (response !== "0") {
+        yield postTransactionActions(
+          "claim",
+          address,
+          cosmosAddress,
+          persistenceChainInfo,
+          cosmosChainInfo
+        );
         displayToast(
           {
             message: "Transaction Successful"
@@ -252,6 +299,13 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
       [ERROR_WHILE_CLAIMING]: payload.address
     });
     genericErrorHandler(e, customScope);
+    yield postTransactionActions(
+      "claim",
+      address,
+      cosmosAddress,
+      persistenceChainInfo,
+      cosmosChainInfo
+    );
     yield failedTransactionActions("");
   }
 }
@@ -259,20 +313,20 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
 export function* executeDepositTransaction({
   payload
 }: DepositTransactionPayload) {
+  const {
+    persistenceChainInfo,
+    cosmosSigner,
+    cosmosChainInfo,
+    depositMsg,
+    persistenceSigner,
+    stakeMsg,
+    persistenceAddress,
+    cosmosAddress,
+    pollInitialDepositBalance,
+    pollInitialStakeBalance
+  } = payload;
   try {
     yield put(setStakeTxnStepNumber(1));
-    const {
-      persistenceChainInfo,
-      cosmosSigner,
-      cosmosChainInfo,
-      depositMsg,
-      persistenceSigner,
-      stakeMsg,
-      persistenceAddress,
-      cosmosAddress,
-      pollInitialDepositBalance,
-      pollInitialStakeBalance
-    } = payload;
     const transaction: DeliverTxResponse = yield Transaction(
       cosmosSigner,
       cosmosAddress,
@@ -292,6 +346,13 @@ export function* executeDepositTransaction({
         pollInitialDepositBalance.toString()
       );
       if (response !== "0") {
+        yield postTransactionActions(
+          "deposit",
+          persistenceAddress,
+          cosmosAddress,
+          persistenceChainInfo,
+          cosmosChainInfo
+        );
         yield put(setStakeTxnStepNumber(3));
         yield put(
           executeStakeTransactionSaga({
@@ -299,7 +360,9 @@ export function* executeDepositTransaction({
             msg: stakeMsg,
             account: persistenceAddress,
             persistenceChainInfo: persistenceChainInfo!,
-            pollInitialBalance: pollInitialStakeBalance
+            pollInitialBalance: pollInitialStakeBalance,
+            cosmosAddress,
+            cosmosChainInfo
           })
         );
         yield put(setTransactionProgress(STAKE));
@@ -314,6 +377,13 @@ export function* executeDepositTransaction({
     customScope.setTags({
       [ERROR_WHILE_DEPOSITING]: payload.persistenceAddress
     });
+    yield postTransactionActions(
+      "deposit",
+      persistenceAddress,
+      cosmosAddress,
+      persistenceChainInfo,
+      cosmosChainInfo
+    );
     genericErrorHandler(e, customScope);
   }
 }
@@ -321,16 +391,16 @@ export function* executeDepositTransaction({
 export function* executeWithdrawTransaction({
   payload
 }: WithdrawTransactionPayload) {
+  const {
+    persistenceChainInfo,
+    cosmosChainInfo,
+    withdrawMsg,
+    persistenceAddress,
+    cosmosAddress,
+    persistenceSigner,
+    pollInitialIBCAtomBalance
+  } = payload;
   try {
-    const {
-      persistenceChainInfo,
-      cosmosChainInfo,
-      withdrawMsg,
-      persistenceAddress,
-      cosmosAddress,
-      persistenceSigner,
-      pollInitialIBCAtomBalance
-    } = payload;
     yield put(setWithdrawTxnStepNumber(1));
     const transaction: DeliverTxResponse = yield Transaction(
       persistenceSigner,
@@ -351,6 +421,13 @@ export function* executeWithdrawTransaction({
       );
       if (response !== "0") {
         yield put(setWithdrawTxnStepNumber(3));
+        yield postTransactionActions(
+          "withdraw",
+          persistenceAddress,
+          cosmosAddress,
+          persistenceChainInfo,
+          cosmosChainInfo
+        );
       }
       yield put(resetTransaction());
     } else {
@@ -364,6 +441,13 @@ export function* executeWithdrawTransaction({
     customScope.setTags({
       [ERROR_WHILE_DEPOSITING]: payload.persistenceAddress
     });
+    yield postTransactionActions(
+      "withdraw",
+      persistenceAddress,
+      cosmosAddress,
+      persistenceChainInfo,
+      cosmosChainInfo
+    );
     genericErrorHandler(e, customScope);
   }
 }

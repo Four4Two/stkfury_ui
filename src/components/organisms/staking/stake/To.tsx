@@ -11,9 +11,8 @@ import { useWindowSize } from "../../../../customHooks/useWindowSize";
 const To = () => {
   const { stkAtomBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.stake);
-  const { atomPrice, exchangeRate } = useSelector(
-    (state: RootState) => state.initialData
-  );
+  const { exchangeRate } = useSelector((state: RootState) => state.initialData);
+  const { atomPrice } = useSelector((state: RootState) => state.liveData);
   const stkATOMAmount = truncateToFixedDecimalPlaces(
     Number(amount) * exchangeRate
   );

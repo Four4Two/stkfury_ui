@@ -67,7 +67,7 @@ export const fetchAccountBalance = async (
       return "0";
     }
   } catch (error) {
-    console.log(error);
+    printConsole(error);
     return "0";
   }
 };
@@ -200,7 +200,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             pstakeQueryService
           );
 
-          console.log(unbondTimeResponse, "unbondTimeResponse");
+          printConsole(unbondTimeResponse, "unbondTimeResponse");
           if (unbondTimeResponse) {
             const unbondTime =
               unbondTimeResponse.hostAccountUndelegation.completionTime;
