@@ -9,8 +9,7 @@ import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
 import { TEST_NET } from "../../AppConstants";
 import {
   QueryAllowListedValidatorsResponse,
-  QueryClientImpl,
-  QueryDelegationStateResponse
+  QueryClientImpl
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
 import {
   QueryClientImpl as StakingQueryClient,
@@ -260,45 +259,6 @@ export const getCommission = async () => {
     customScope.setLevel("fatal");
     customScope.setTags({
       "Error while fetching commission": persistenceChainInfo?.rpc
-    });
-    genericErrorHandler(e, customScope);
-    return 0;
-  }
-};
-
-/**
- * It fetches the incentives for the delegator
- * @returns the incentives for the delegator.
- */
-export const getIncentives = async () => {
-  try {
-    let incentives: number = 0;
-    const rpcClient = await RpcClient(persistenceChainInfo?.rpc!);
-    const pstakeQueryService = new QueryClientImpl(rpcClient);
-    const delegationState: QueryDelegationStateResponse =
-      await pstakeQueryService.DelegationState({});
-    const hostAccountDelegations =
-      delegationState?.delegationState?.hostAccountDelegations;
-
-    let stakedAmount: number = 0;
-    if (hostAccountDelegations) {
-      for (const amount of hostAccountDelegations) {
-        stakedAmount += parseInt(amount?.amount?.amount!, 10);
-      }
-    }
-
-    const balance = (await pstakeQueryService.RewardsBoosterAccount({})).balance
-      ?.amount;
-
-    if (balance) {
-      incentives = (parseInt(balance, 10) * 365) / stakedAmount;
-    }
-    return incentives;
-  } catch (e) {
-    const customScope = new Scope();
-    customScope.setLevel("fatal");
-    customScope.setTags({
-      "Error while fetching incentives": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
     return 0;
