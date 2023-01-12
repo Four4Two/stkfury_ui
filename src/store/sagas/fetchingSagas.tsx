@@ -2,7 +2,8 @@ import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
   fetchAllEpochEntries,
-  getChainStatus
+  getChainStatus,
+  getTVU
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
@@ -26,7 +27,8 @@ import { FetchLiveDataSaga } from "../reducers/liveData/types";
 import {
   setAtomPrice,
   setCosmosChainStatus,
-  setPersistenceChainStatus
+  setPersistenceChainStatus,
+  setTVU
 } from "../reducers/liveData";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
@@ -83,13 +85,15 @@ export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
 // @ts-ignore
 export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
   const { persistenceChainInfo, cosmosChainInfo }: any = payload;
-  const [cosmosChainStatus, persistenceChainStatus, atomPrice] =
+  const [tvu, cosmosChainStatus, persistenceChainStatus, atomPrice] =
     yield Promise.all([
+      getTVU(persistenceChainInfo.rpc),
       getChainStatus(cosmosChainInfo.rpc),
       getChainStatus(persistenceChainInfo.rpc),
       fetchAtomPrice()
     ]);
   yield put(setAtomPrice(atomPrice));
+  yield put(setTVU(tvu));
   yield put(setCosmosChainStatus(cosmosChainStatus));
   yield put(setPersistenceChainStatus(persistenceChainStatus));
 }

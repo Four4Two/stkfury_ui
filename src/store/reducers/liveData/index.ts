@@ -3,11 +3,13 @@ import {
   SetAtomPrice,
   FetchLiveDataSaga,
   InitialDataState,
-  SetChainStatus
+  SetChainStatus,
+  SetTVU
 } from "./types";
 
 const initialState: InitialDataState = {
   atomPrice: 0,
+  tvu: 0,
   cosmosChainStatus: false,
   persistenceChainStatus: false
 };
@@ -23,6 +25,9 @@ const initData = createSlice({
     setCosmosChainStatus: (state, action: SetChainStatus) => {
       state.cosmosChainStatus = action.payload;
     },
+    setTVU: (state, action: SetTVU) => {
+      state.tvu = action.payload;
+    },
     setPersistenceChainStatus: (state, action: SetChainStatus) => {
       state.persistenceChainStatus = action.payload;
     }
@@ -32,6 +37,7 @@ const initData = createSlice({
 export const {
   fetchLiveDataSaga,
   setAtomPrice,
+  setTVU,
   setCosmosChainStatus,
   setPersistenceChainStatus
 } = initData.actions;

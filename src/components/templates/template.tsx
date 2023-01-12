@@ -21,9 +21,6 @@ export const PageTemplate = ({
   const { showModal } = useSelector((state: RootState) => state.stake);
   return (
     <div>
-      <Head>
-        <title>{title}</title>
-      </Head>
       <div className="appLayout grid gap-6 md:block">
         <MobileSideBar />
         <div

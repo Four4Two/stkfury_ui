@@ -12,6 +12,7 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import TermsModal from "../components/organisms/termsModal";
 import React from "react";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   Sentry.init({
@@ -33,30 +34,61 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 
   return (
-    <Provider store={store}>
-      <TermsModal />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <WalletProvider
-        persistenceChainInfo={persistenceChainInfo!}
-        cosmosChainInfo={cosmosChainInfo!}
-      >
-        {process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? (
-          <Maintenance />
-        ) : (
-          <Component {...pageProps} />
-        )}
-      </WalletProvider>
-    </Provider>
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta
+          name="description"
+          content="Liquid Staking for The Internet of Blockchains"
+        />
+        <meta
+          name="keywords"
+          content="liquid staking, pstake, $pstake, cosmos, persistence, xprt, atom"
+        />
+        {/*Open Graph Tags*/}
+        <meta content="pSTAKE | ATOM Liquid Staking" property="og:title" />
+        <meta property="og:image" content="/og.jpg" />
+        <meta
+          property="og:description"
+          content="Liquid Staking for The Internet of Blockchains"
+        />
+        {/*Twitter Tags*/}
+        <meta content="pSTAKE | ATOM Liquid Staking" property="twitter:title" />
+        <meta
+          content="Liquid Staking for The Internet of Blockchains"
+          property="twitter:description"
+        />
+        <meta content="/ogimage.jpeg" property="twitter:image" />
+        <title>pSTAKE | ATOM Liquid Staking</title>
+      </Head>
+      <Provider store={store}>
+        <TermsModal />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <WalletProvider
+          persistenceChainInfo={persistenceChainInfo!}
+          cosmosChainInfo={cosmosChainInfo!}
+        >
+          {process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? (
+            <Maintenance />
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </WalletProvider>
+      </Provider>
+    </>
   );
 }
 

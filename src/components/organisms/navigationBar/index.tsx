@@ -17,7 +17,6 @@ import { fetchBalanceSaga } from "../../../store/reducers/balances";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
-import { printConsole } from "../../../helpers/utils";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
 
@@ -40,17 +39,15 @@ const NavigationBar = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (isWalletConnected) {
-        dispatch(
-          fetchLiveDataSaga({
-            persistenceChainInfo: persistenceChainData!,
-            cosmosChainInfo: cosmosChainData!
-          })
-        );
-      }
+      dispatch(
+        fetchLiveDataSaga({
+          persistenceChainInfo: persistenceChainData!,
+          cosmosChainInfo: cosmosChainData!
+        })
+      );
     }, SHORT_INTERVAL);
     return () => clearInterval(interval);
-  }, [isWalletConnected, dispatch, persistenceChainData, cosmosChainData]);
+  }, [dispatch, persistenceChainData, cosmosChainData]);
 
   useEffect(() => {
     const interval = setInterval(() => {
