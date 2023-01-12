@@ -17,7 +17,6 @@ import { fetchBalanceSaga } from "../../../store/reducers/balances";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
-import { printConsole } from "../../../helpers/utils";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
 
