@@ -1,6 +1,6 @@
 {
   "short_name": "pSTAKE",
-  "name": "pSTAKE | ATOM Liquid Staking",
+  "name": "ATOM Liquid Staking",
   "icons": [
     {
       "src": "/favicons/android-chrome-192x192.png",
@@ -15,7 +15,7 @@
       "density": "4.0"
     }
   ],
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
