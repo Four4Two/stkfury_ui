@@ -11,8 +11,12 @@ import Maintenance from "./maintenance";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import TermsModal from "../components/organisms/termsModal";
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
+import Script from "next/script";
+import { useRouter } from "next/router";
+import * as gtag from "../helpers/gtag";
+import { GA_TRACKING_ID } from "../../AppConstants";
 
 function MyApp({ Component, pageProps }: AppProps) {
   Sentry.init({
@@ -22,6 +26,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     tracesSampleRate: 1.0 //lower the value in production
   });
+
+  const router = useRouter();
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      gtag.pageview(url);
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
   const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -35,6 +50,24 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+      />
+      {/* eslint-disable-next-line @next/next/inline-script-id */}
+      <Script
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `
+        }}
+      />
       <Head>
         <link
           rel="apple-touch-icon"
