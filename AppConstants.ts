@@ -40,7 +40,7 @@ export const DEPOSIT = "deposit";
 export const FEES = "fees";
 export const POOL_LIQUIDITY = "pool_liquidity";
 export const WITHDRAW = "withdraw";
-
+export const GA_TRACKING_ID = "G-2KP73MV1DJ";
 export const COSMOS_UNBOND_TIME =
   process.env.NEXT_PUBLIC_ENVIRONMENT !== "Devnet" ? 1814400 : 300;
 export const MID_INTERVAL = 180000;
