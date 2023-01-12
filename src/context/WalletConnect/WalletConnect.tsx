@@ -80,6 +80,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         cosmosChainInfo: cosmosChainInfo!
       })
     );
+    dispatch(
+      fetchLiveDataSaga({
+        persistenceChainInfo: persistenceChainInfo!,
+        cosmosChainInfo: cosmosChainInfo!
+      })
+    );
   }, [persistenceChainInfo, dispatch, cosmosChainInfo]);
 
   useEffect(() => {
@@ -101,12 +107,6 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         fetchBalanceSaga({
           persistenceAddress: persistenceAccounts[0]!.address,
           cosmosAddress: cosmosAccounts[0]!.address,
-          persistenceChainInfo: persistenceChainInfo!,
-          cosmosChainInfo: cosmosChainInfo!
-        })
-      );
-      dispatch(
-        fetchLiveDataSaga({
           persistenceChainInfo: persistenceChainInfo!,
           cosmosChainInfo: cosmosChainInfo!
         })
