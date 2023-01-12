@@ -70,9 +70,8 @@ const StakingTabs = () => {
               placement="bottom"
               overlay={
                 <span>
-                  APR is calculated based on base <br /> rate, incentives and
-                  commission
-                  <br /> from validators.
+                  APR is calculated based on the base <br /> rate after
+                  deducting the commission <br /> from validators.
                 </span>
               }
             >
