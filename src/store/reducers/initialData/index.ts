@@ -7,7 +7,6 @@ import {
   SetAPR,
   SetRedeemFee,
   InitialLiquidityFees,
-  SetTVU,
   SetMaxRedeem,
   SetMinRedeem
 } from "./types";
@@ -23,7 +22,6 @@ const initialState: InitialDataState = {
   apr: 0,
   redeemFee: 0,
   osmosisInfo: initialLiquidity_Fees,
-  tvu: 0,
   maxRedeem: 0,
   minDeposit: MIN_DEPOSIT
 };
@@ -45,9 +43,6 @@ const initData = createSlice({
     setOsmosisInfo: (state, action) => {
       state.osmosisInfo = action.payload;
     },
-    setTVU: (state, action: SetTVU) => {
-      state.tvu = action.payload;
-    },
     setMaxRedeem: (state, action: SetMaxRedeem) => {
       state.maxRedeem = action.payload;
     },
@@ -63,7 +58,6 @@ export const {
   fetchInitSaga,
   setOsmosisInfo,
   setExchangeRate,
-  setTVU,
   setMaxRedeem,
   setMinDeposit
 } = initData.actions;
