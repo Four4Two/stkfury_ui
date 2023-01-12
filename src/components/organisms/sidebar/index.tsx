@@ -152,8 +152,6 @@ const Sidebar = () => {
             <li className={`list-none`}>
               <p
                 onClick={() => setOpen(!open)}
-                aria-controls="more-list"
-                aria-expanded={open}
                 className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
                  ${open ? "opened" : "closed"} py-3 px-8 group`}
               >
