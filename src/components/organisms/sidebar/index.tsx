@@ -35,7 +35,7 @@ const socialList = [
 
 const moreList = [
   {
-    url: "https://pstake.finance/",
+    url: "https://pstake.finance/atom",
     name: "Website",
     icon: "globe"
   },
