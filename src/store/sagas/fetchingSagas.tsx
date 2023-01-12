@@ -1,7 +1,9 @@
 import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
-  fetchAllEpochEntries
+  fetchAllEpochEntries,
+  getChainStatus,
+  getTVU
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
@@ -19,6 +21,15 @@ import {
   setPendingClaimList,
   setUnlistedPendingClaimList
 } from "../reducers/claim";
+import { fetchAtomPrice } from "../../pages/api/externalAPIs";
+
+import { FetchLiveDataSaga } from "../reducers/liveData/types";
+import {
+  setAtomPrice,
+  setCosmosChainStatus,
+  setPersistenceChainStatus,
+  setTVU
+} from "../reducers/liveData";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -69,4 +80,20 @@ export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
     setUnlistedPendingClaimList(accountEpochs.filteredUnlistedPendingClaims)
   );
   yield put(setClaimableStkAtomBalance(accountEpochs.totalFailedUnbondAmount));
+}
+
+// @ts-ignore
+export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
+  const { persistenceChainInfo, cosmosChainInfo }: any = payload;
+  const [tvu, cosmosChainStatus, persistenceChainStatus, atomPrice] =
+    yield Promise.all([
+      getTVU(persistenceChainInfo.rpc),
+      getChainStatus(cosmosChainInfo.rpc),
+      getChainStatus(persistenceChainInfo.rpc),
+      fetchAtomPrice()
+    ]);
+  yield put(setAtomPrice(atomPrice));
+  yield put(setTVU(tvu));
+  yield put(setCosmosChainStatus(cosmosChainStatus));
+  yield put(setPersistenceChainStatus(persistenceChainStatus));
 }

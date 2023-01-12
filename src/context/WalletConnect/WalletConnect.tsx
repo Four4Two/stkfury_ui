@@ -19,6 +19,7 @@ import useLocalStorage from "../../customHooks/useLocalStorage";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
+import { fetchLiveDataSaga } from "../../store/reducers/liveData";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -75,6 +76,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   useEffect(() => {
     dispatch(
       fetchInitSaga({
+        persistenceChainInfo: persistenceChainInfo!,
+        cosmosChainInfo: cosmosChainInfo!
+      })
+    );
+    dispatch(
+      fetchLiveDataSaga({
         persistenceChainInfo: persistenceChainInfo!,
         cosmosChainInfo: cosmosChainInfo!
       })

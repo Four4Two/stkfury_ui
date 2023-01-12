@@ -14,10 +14,10 @@ import { APR_DEFAULT } from "../../../../../AppConstants";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake");
-  const { apr, tvu, exchangeRate } = useSelector(
+  const { apr, exchangeRate } = useSelector(
     (state: RootState) => state.initialData
   );
-
+  const { tvu } = useSelector((state: RootState) => state.liveData);
   const inverseExchangeRate: number = 1 / exchangeRate;
   const tabItemClasses =
     "cursor-pointer w-full bg-tabHeader " +

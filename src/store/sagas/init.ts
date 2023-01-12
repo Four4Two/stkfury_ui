@@ -5,56 +5,32 @@ import {
 import {
   getAPR,
   getExchangeRate,
-  getChainStatus,
   getMaxRedeem,
   getFee,
   getTVU
 } from "../../pages/api/onChain";
-import {
-  fetchAtomPrice,
-  fetchOsmosisPoolInfo
-} from "../../pages/api/externalAPIs";
+import { fetchOsmosisPoolInfo } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
   setAPR,
-  setAtomPrice,
   setExchangeRate,
   setOsmosisInfo,
-  setCosmosChainStatus,
   setMaxRedeem,
-  setPersistenceChainStatus,
-  setRedeemFee,
-  setTVU
+  setRedeemFee
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
-  const { persistenceChainInfo, cosmosChainInfo }: any = payload;
-  const [
-    cosmosChainStatus,
-    persistenceChainStatus,
-    exchangeRate,
-    fee,
-    atomPrice,
-    tvu,
-    maxRedeem
-  ] = yield Promise.all([
-    getChainStatus(cosmosChainInfo.rpc),
-    getChainStatus(persistenceChainInfo.rpc),
+  const { persistenceChainInfo }: any = payload;
+  const [exchangeRate, fee, maxRedeem] = yield Promise.all([
     getExchangeRate(persistenceChainInfo.rpc),
     getFee(persistenceChainInfo.rpc),
-    fetchAtomPrice(),
-    getTVU(persistenceChainInfo.rpc),
     getMaxRedeem(persistenceChainInfo.rpc)
   ]);
   yield put(setExchangeRate(exchangeRate));
   yield put(setRedeemFee(fee));
-  yield put(setAtomPrice(atomPrice));
-  yield put(setTVU(tvu));
   const osmosisInfo: InitialLiquidityFees = yield fetchOsmosisPoolInfo();
   yield put(setOsmosisInfo(osmosisInfo));
   yield put(setMaxRedeem(maxRedeem));
-  yield put(setCosmosChainStatus(cosmosChainStatus));
-  yield put(setPersistenceChainStatus(persistenceChainStatus));
   const apr: number = yield getAPR();
   yield put(setAPR(apr));
 }

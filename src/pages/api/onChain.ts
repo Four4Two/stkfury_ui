@@ -10,7 +10,6 @@ import {
   decimalize,
   genericErrorHandler,
   getCommission,
-  getIncentives,
   printConsole,
   RpcClient
 } from "../../helpers/utils";
@@ -68,7 +67,7 @@ export const fetchAccountBalance = async (
       return "0";
     }
   } catch (error) {
-    console.log(error);
+    printConsole(error);
     return "0";
   }
 };
@@ -113,7 +112,7 @@ export const getAPR = async () => {
   try {
     const baseRate = APR_BASE_RATE;
     const commission = await getCommission();
-    const incentives = await getIncentives();
+    const incentives = 0;
     const apr = baseRate - (commission / 100) * baseRate + incentives;
     return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
@@ -201,7 +200,7 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             pstakeQueryService
           );
 
-          console.log(unbondTimeResponse, "unbondTimeResponse");
+          printConsole(unbondTimeResponse, "unbondTimeResponse");
           if (unbondTimeResponse) {
             const unbondTime =
               unbondTimeResponse.hostAccountUndelegation.completionTime;
