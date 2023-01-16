@@ -79,7 +79,6 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
       "",
       persistenceChainInfo.rpc
     );
-    yield put(setStakeAmount(""));
     yield put(setStakeTxnStepNumber(4));
     printConsole(transaction, "transaction stake");
     if (transaction.code === 0) {
@@ -99,6 +98,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
           cosmosChainInfo
         );
       }
+      yield put(setStakeAmount(""));
       yield put(resetTransaction());
     } else {
       throw new Error(transaction.rawLog);

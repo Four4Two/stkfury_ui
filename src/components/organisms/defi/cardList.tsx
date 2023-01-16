@@ -52,7 +52,7 @@ const listShow = (item: any, index: number) => (
           </Tooltip>
         </div>
         <div className="flex flex-wrap md:mb-2">
-          <div className="md:hidden">
+          <div className="md:hidden flex-1">
             {listData(
               "Platform",
               <>
@@ -65,8 +65,8 @@ const listShow = (item: any, index: number) => (
           </div>
           {item.type === "defi" ? (
             <>
-              {listData("Swap Fee", `0.3%`)}
-              {listData("Pool Liquidity", `$0`)}
+              {listData("Swap Fee", `${item.fees}`)}
+              {listData("Pool Liquidity", `$${item.pool_liquidity}`)}
             </>
           ) : (
             <>
@@ -92,10 +92,29 @@ const listShow = (item: any, index: number) => (
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
-                className="button button-primary mb-3 md:py-2 md:px-4 md:text-xsm md:flex-1 md:mb-0 md:mr-2 pointer-events-none"
+                className="button button-primary mb-3 md:py-2 md:px-4 md:text-xsm md:flex-1 md:mb-0 md:mr-2"
                 content={
                   <div className="flex justify-center items-center">
-                    Coming Soon
+                    Swap
+                    <Icon
+                      iconName="arrow-redirect-white"
+                      viewClass="redirect stroke-[#fcfcfc] !w-[10px] !h-[10px] ml-1"
+                    />
+                  </div>
+                }
+              />
+              <ButtonLink
+                link={item.swap_link}
+                target={"_blank"}
+                type="secondary"
+                className="button button-primary px-4 md:py-2 md:px-4 md:text-xsm md:flex-1"
+                content={
+                  <div className="flex justify-center items-center">
+                    Add Liquidity
+                    <Icon
+                      iconName="arrow-redirect-white"
+                      viewClass="redirect stroke-[#fcfcfc] !w-[10px] !h-[10px] ml-1"
+                    />
                   </div>
                 }
               />
