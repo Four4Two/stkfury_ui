@@ -118,7 +118,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           content="Liquid Staking for The Internet of Blockchains"
           property="twitter:description"
         />
-        <meta content="/ogimage.jpeg" property="twitter:image" />
+        <meta content="/og.jpg" property="twitter:image" />
         <title>pSTAKE | ATOM Liquid Staking</title>
       </Head>
       <Provider store={store}>

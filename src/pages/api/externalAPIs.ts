@@ -5,7 +5,7 @@ import { FEES, POOL_LIQUIDITY } from "../../../AppConstants";
 
 export const ATOM_PRICE_URL =
   "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=cosmos&order=market_cap_desc&per_page=100&page=1&sparkline=false";
-export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/843";
+export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
 
 const initialLiquidity_Fees = { [POOL_LIQUIDITY]: 0, [FEES]: 0 };
 
@@ -33,7 +33,7 @@ export const fetchOsmosisPoolInfo = async () => {
     const res = await Axios.get(OSMOSIS_POOL_URL);
     if (res && res.data) {
       return {
-        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity),
+        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity).toLocaleString(),
         [FEES]: res.data[0].fees
       };
     }
