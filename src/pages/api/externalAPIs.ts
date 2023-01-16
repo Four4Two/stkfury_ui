@@ -33,7 +33,7 @@ export const fetchOsmosisPoolInfo = async () => {
     const res = await Axios.get(OSMOSIS_POOL_URL);
     if (res && res.data) {
       return {
-        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity),
+        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity).toLocaleString(),
         [FEES]: res.data[0].fees
       };
     }

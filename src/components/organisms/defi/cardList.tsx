@@ -104,7 +104,7 @@ const listShow = (item: any, index: number) => (
                 }
               />
               <ButtonLink
-                link={item.swap_link}
+                link={item.pool_link}
                 target={"_blank"}
                 type="secondary"
                 className="button button-primary px-4 md:py-2 md:px-4 md:text-xsm md:flex-1"

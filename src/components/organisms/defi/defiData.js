@@ -10,7 +10,7 @@ export const defiSwapList = (osmosisInfo) => [
     swap_fee: "-",
     apr: "--",
     value_locked: "12321",
-    swap_link: "https://frontier.osmosis.zone/pool/886",
+    swap_link: "https://frontier.osmosis.zone/?from=stkATOM&to=ATOM",
     pool_link: "https://frontier.osmosis.zone/pool/886",
     launched: true,
     type: "defi",
