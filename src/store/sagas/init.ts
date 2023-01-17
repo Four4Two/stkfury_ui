@@ -6,13 +6,11 @@ import {
   getAPR,
   getExchangeRate,
   getMaxRedeem,
-  getFee,
-  getTVU
+  getFee
 } from "../../pages/api/onChain";
 import { fetchOsmosisPoolInfo } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
-  setAPR,
   setExchangeRate,
   setOsmosisInfo,
   setMaxRedeem,
@@ -31,6 +29,4 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const osmosisInfo: InitialLiquidityFees = yield fetchOsmosisPoolInfo();
   yield put(setOsmosisInfo(osmosisInfo));
   yield put(setMaxRedeem(maxRedeem));
-  const apr: number = yield getAPR();
-  yield put(setAPR(apr));
 }
