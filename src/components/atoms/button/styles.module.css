@@ -8,17 +8,29 @@
     justify-content: center;
 }
 
+/*.appButton:hover{*/
+/*    cursor: pointer;*/
+/*}*/
+
 .primary {
     background: #c73238;
     color: #fcfcfc;
     border: 0 solid;
 }
 
+/*.primary:hover{*/
+/*    background: #cb575bfa;*/
+/*}*/
+
 .secondary {
     background: transparent;
     color: #fcfcfc;
     border: 3px solid #C73238;
 }
+
+/*.secondary:hover{*/
+/*    background: #C73238;*/
+/*}*/
 
 .tertiary {
     background: transparent;
