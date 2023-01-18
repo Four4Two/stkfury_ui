@@ -28,9 +28,9 @@
     border: 3px solid #C73238;
 }
 
-.secondary:hover{
-    background: #C73238;
-}
+/*.secondary:hover{*/
+/*    background: #C73238;*/
+/*}*/
 
 .tertiary {
     background: transparent;
