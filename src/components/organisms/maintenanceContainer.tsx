@@ -1,13 +1,31 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
+import { fetchLiveDataSaga } from "../../store/reducers/liveData";
+import { SHORT_INTERVAL } from "../../../AppConstants";
+import { useWallet } from "../../context/WalletConnect/WalletConnect";
 
 const MaintenanceContainer = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { cosmosChainStatus, persistenceChainStatus } = useSelector(
     (state: RootState) => state.liveData
   );
+
+  const { cosmosChainData, persistenceChainData } = useWallet();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(
+        fetchLiveDataSaga({
+          persistenceChainInfo: persistenceChainData!,
+          cosmosChainInfo: cosmosChainData!
+        })
+      );
+    }, SHORT_INTERVAL);
+    return () => clearInterval(interval);
+  }, [dispatch, persistenceChainData, cosmosChainData]);
 
   useEffect(() => {
     if (

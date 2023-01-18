@@ -98,7 +98,6 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
           cosmosChainInfo
         );
       }
-      yield put(setStakeAmount(""));
       yield put(resetTransaction());
     } else {
       throw new Error(transaction.rawLog);

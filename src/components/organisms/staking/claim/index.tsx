@@ -45,18 +45,18 @@ const IndividualUnstakingClaim = ({
         key={index}
       >
         <div>
-          <p className="amount text-light-low font-normal leading-normal text-lg mb-2">
+          <p className="amount text-light-mid font-normal leading-normal text-lg mb-2">
             {decimalize(amount)}
             {type === "listedClaims" ? " ATOM" : " stkATOM"}
           </p>
-          <p className="leading-normal text-light-low text-xsm font-normal">
+          <p className="leading-normal text-light-mid text-xsm font-normal">
             {type === "listedClaims"
               ? "Unbond time: " + unstakedOn
               : "Tentative Unbond time: " + unstakedOn}
           </p>
         </div>
         <div>
-          <p className="leading-normal text-light-low text-xsm font-normal">
+          <p className="leading-normal text-light-mid text-xsm font-normal">
             {daysRemaining} remaining
           </p>
         </div>
@@ -263,7 +263,7 @@ const ClaimModal = () => {
                   })
                 : null}
               {!unListedPendingClaims.length && !pendingList.length ? (
-                <p className="mb-3 text-light-low text-sm leading-normal font-normal md:text-xsm">
+                <p className="mb-3 text-light-mid text-sm leading-normal font-normal md:text-xsm">
                   No pending unbondings found
                 </p>
               ) : null}
