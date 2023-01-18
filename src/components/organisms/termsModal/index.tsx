@@ -3,11 +3,13 @@ import Modal from "../../molecules/modal";
 import Button from "../../atoms/button";
 
 const TermsModal = () => {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("terms") === "disabled") {
       setShow(false);
+    } else {
+      setShow(true);
     }
   }, []);
 
