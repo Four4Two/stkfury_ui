@@ -22,7 +22,7 @@ body {
 .mainContainer.transactions {
   background-image: url("/images/bg/bg_round1.svg"),
     url("/images/bg/bg_round2.svg"), url("/images/bg/bg_round3.svg");
-  background-position: bottom right, top right, left center;
+  background-position: bottom right, top right, 0 500px;
 }
 
 .box-shadow-none {
