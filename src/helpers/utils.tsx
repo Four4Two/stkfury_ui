@@ -13,9 +13,12 @@ import {
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
 import {
   QueryClientImpl as StakingQueryClient,
-  QueryValidatorResponse
+  QueryValidatorResponse,
+  QueryValidatorsResponse
 } from "cosmjs-types/cosmos/staking/v1beta1/query";
 import { ChainInfo } from "@keplr-wallet/types";
+import { AllowListedValidator } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/pstake/lscosmos/v1beta1/lscosmos";
+import Long from "long";
 const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
@@ -224,32 +227,50 @@ export const getCommission = async () => {
       await pstakeQueryService.AllowListedValidators({});
     const cosmosRpcClient = await RpcClient(cosmosChainInfo?.rpc!);
     const cosmosQueryService = new StakingQueryClient(cosmosRpcClient);
-    const validators =
+    const validators: AllowListedValidator[] | undefined =
       allowListedValidators?.allowListedValidators?.allowListedValidators;
     const commissionRates: number[] = [];
 
-    if (validators && validators?.length !== 0) {
-      // keep the commission rates of validators in an array
-      for (const addr of validators) {
-        const validator: QueryValidatorResponse =
-          await cosmosQueryService.Validator({
-            validatorAddr: addr.validatorAddress
-          });
-        let commissionRate =
-          parseFloat(
-            decimalize(
-              validator.validator!.commission
-                ? validator.validator!.commission.commissionRates!.rate
-                : 0,
-              18
-            )
-          ) * 100;
-        commissionRates.push(commissionRate);
+    let key: any = new Uint8Array();
+    let cosmosValidators = [];
+
+    do {
+      const validatorCommission: QueryValidatorsResponse =
+        await cosmosQueryService.Validators({
+          status: "BOND_STATUS_BONDED",
+          pagination: {
+            key: key,
+            offset: Long.fromNumber(0, true),
+            limit: Long.fromNumber(0, true),
+            countTotal: true,
+            reverse: false
+          }
+        });
+      key = validatorCommission?.pagination?.nextKey;
+      cosmosValidators.push(...validatorCommission.validators);
+    } while (key.length !== 0);
+
+    if (cosmosValidators?.length !== 0) {
+      for (const validator of cosmosValidators) {
+        const listedValidator: any = validators?.find(
+          (item: any) => item?.validatorAddress === validator.operatorAddress
+        );
+        if (listedValidator) {
+          let commissionRate =
+            parseFloat(
+              decimalize(
+                validator!.commission
+                  ? validator!.commission.commissionRates!.rate
+                  : 0,
+                18
+              )
+            ) * 100;
+          commissionRates.push(commissionRate);
+        }
       }
-      /* Calculating the average commission rate of all the validators in the network. */
       commission =
         (weight * commissionRates.reduce((a, b) => a + b, 0)) /
-        validators.length;
+        validators!.length;
     } else {
       commission = 0;
     }
