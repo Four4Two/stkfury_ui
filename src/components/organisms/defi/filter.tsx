@@ -42,7 +42,8 @@ const Filters = ({ setSortActive, sortActive, searchHandler }: any) => {
             type="text"
             className={
               "bg-[#161616] py-2 pr-8 pl-4 text-sm text-light-high b-[#070B09] " +
-              "rounded-md font-normal border border-solid md:py:1.5 pl-2.5 w-full"
+              "rounded-md font-normal border border-solid border-transparent outline-none md:py:1.5 pl-2.5 w-full " +
+              "focus:border-[#a6a6a687]"
             }
             placeholder={"Search"}
             autoFocus={false}
