@@ -8,11 +8,11 @@ const listData = (label: any, value: any) => (
   <div className="pr-5 flex-1 md:py-2">
     <p
       className="font-normal text-base
-         leading-normal mb-2 text-light-emphasis lg:whitespace-nowrap md:mb-1"
+         leading-normal mb-2 text-light-mid lg:whitespace-nowrap md:mb-1"
     >
       {label}
     </p>
-    <h3 className="font-medium text-base leading-normal text-light-mid whitespace-nowrap flex">
+    <h3 className="font-medium text-lg leading-normal text-light-emphasis whitespace-nowrap flex items-center">
       {value}
     </h3>
   </div>
