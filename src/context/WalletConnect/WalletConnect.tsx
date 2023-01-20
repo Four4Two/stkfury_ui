@@ -12,7 +12,7 @@ import { OfflineSigner } from "@cosmjs/launchpad";
 import KeplrWallet from "../../helpers/keplr";
 import { fetchBalanceSaga } from "../../store/reducers/balances";
 import { useDispatch } from "react-redux";
-import { fetchInitSaga, setAPR } from "../../store/reducers/initialData";
+import { fetchInitSaga, setAPY } from "../../store/reducers/initialData";
 import { printConsole } from "../../helpers/utils";
 import { fetchPendingClaimsSaga } from "../../store/reducers/claim";
 import useLocalStorage from "../../customHooks/useLocalStorage";
@@ -20,7 +20,7 @@ import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
 import { fetchLiveDataSaga } from "../../store/reducers/liveData";
-import { getAPR } from "../../pages/api/onChain";
+import { getAPY } from "../../pages/api/onChain";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -90,11 +90,11 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   }, [persistenceChainInfo, dispatch, cosmosChainInfo]);
 
   useEffect(() => {
-    const fetchApr = async () => {
-      const apr: any = await getAPR();
-      dispatch(setAPR(apr));
+    const fetchApy = async () => {
+      const apy: any = await getAPY();
+      dispatch(setAPY(apy));
     };
-    fetchApr();
+    fetchApy();
   }, []);
 
   useEffect(() => {

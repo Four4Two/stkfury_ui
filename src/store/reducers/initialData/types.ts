@@ -9,7 +9,7 @@ export interface InitialLiquidityFees {
 
 export interface InitialDataState {
   exchangeRate: number;
-  apr: number;
+  apy: number;
   redeemFee: number;
   osmosisInfo: InitialLiquidityFees;
   maxRedeem: number;

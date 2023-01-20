@@ -19,7 +19,7 @@ const initialLiquidity_Fees: InitialLiquidityFees = {
 
 const initialState: InitialDataState = {
   exchangeRate: 1,
-  apr: 0,
+  apy: 0,
   redeemFee: 0,
   osmosisInfo: initialLiquidity_Fees,
   maxRedeem: 0,
@@ -34,8 +34,8 @@ const initData = createSlice({
     setExchangeRate: (state, action: SetExchangeRate) => {
       state.exchangeRate = action.payload;
     },
-    setAPR: (state, action: SetAPR) => {
-      state.apr = action.payload;
+    setAPY: (state, action: SetAPR) => {
+      state.apy = action.payload;
     },
     setRedeemFee: (state, action: SetRedeemFee) => {
       state.redeemFee = action.payload;
@@ -54,7 +54,7 @@ const initData = createSlice({
 
 export const {
   setRedeemFee,
-  setAPR,
+  setAPY,
   fetchInitSaga,
   setOsmosisInfo,
   setExchangeRate,
