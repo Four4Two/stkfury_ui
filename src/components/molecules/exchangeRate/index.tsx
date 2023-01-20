@@ -12,10 +12,10 @@ const ExchangeRate = ({ type }: ExchangeRateTypes) => {
   return (
     <>
       {type === "stake"
-        ? !reverseExchangeRate
+        ? reverseExchangeRate
           ? `1 stkATOM = ${formatNumber(1 / exchangeRate)} ATOM`
           : `1 ATOM = ${formatNumber(exchangeRate)} stkATOM`
-        : !reverseExchangeRate
+        : reverseExchangeRate
         ? `1 ATOM = ${formatNumber(exchangeRate)} stkATOM`
         : `1 stkATOM = ${formatNumber(1 / exchangeRate)} ATOM`}
 
