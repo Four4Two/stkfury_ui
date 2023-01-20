@@ -1,6 +1,6 @@
 on:
   pull_request_review:
-    branches: [main, develop]
+    branches: [main]
     types: [submitted]
 jobs:
   deploy:
@@ -22,8 +22,8 @@ jobs:
       - run: npm run build --if-present
         env:
           # Add your environment variables here
-          NEXT_PUBLIC_ENVIRONMENT: 'Testnet'
-          NEXT_PUBLIC_SENTRY_DSN: 'https://cd10a90d7ae74502a1bd0400b14799f6@o1057883.ingest.sentry.io/6605624'
+          NEXT_PUBLIC_ENVIRONMENT: 'Mainnet'
+          NEXT_PUBLIC_SENTRY_DSN: 'https://eebd093474b947fba683a9bc268e775e@o1083089.ingest.sentry.io/4504531325026304'
           NEXT_PUBLIC_MAINTENANCE: 'false'
       - run: npm run export --if-present
       - name: Publish
