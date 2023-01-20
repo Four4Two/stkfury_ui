@@ -14,7 +14,7 @@ import { APR_DEFAULT } from "../../../../../AppConstants";
 
 const StakingTabs = () => {
   const [activeTab, setActiveTab] = useState("Stake");
-  const { apr, exchangeRate } = useSelector(
+  const { apy, exchangeRate } = useSelector(
     (state: RootState) => state.initialData
   );
   const { tvu } = useSelector((state: RootState) => state.liveData);
@@ -64,25 +64,20 @@ const StakingTabs = () => {
         <div className="flex-1 border-r-[1px] border-solid border-[#2a2a2a]">
           <div className="text-center">
             <span className="text-light-mid font-normal leading-normal text-sm text-center">
-              APR
+              APY
             </span>
             <Tooltip
               placement="bottom"
-              overlay={
-                <span>
-                  APR is calculated based on the base <br /> rate after
-                  deducting the commission <br /> from validators.
-                </span>
-              }
+              overlay={<span>Rewards are auto-compounded daily</span>}
             >
               <button className="icon-button px-1 align-middle mb-1">
                 <Icon viewClass="arrow-right" iconName="info" />
               </button>
             </Tooltip>
           </div>
-          {apr !== 0 ? (
+          {apy !== 0 ? (
             <p className="text-secondary font-semibold leading-normal text-2xl text-center md:text-base">
-              {apr === -1 ? APR_DEFAULT : apr}%
+              {apy === -1 ? APR_DEFAULT : apy}%
             </p>
           ) : (
             <div className="text-center mt-1">
