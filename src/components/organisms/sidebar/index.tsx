@@ -94,10 +94,12 @@ const Sidebar = () => {
                 py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}
                   onClick={isMobile ? closeSideHandler : emptyFunc}
                 >
-                  <Icon
-                    iconName="staking"
-                    viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
-                  />
+                  <span className={"mr-8 md:mr-4 "}>
+                    <Icon
+                      iconName="staking"
+                      viewClass={`${Styles.navBarLinkIcon} side-bar-icon group-hover:fill-[#fcfcfc]`}
+                    />
+                  </span>
                   <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
                     Staking
                   </span>
@@ -115,10 +117,12 @@ const Sidebar = () => {
                 py-3 px-8 flex items-center cursor-pointer`}
                   onClick={isMobile ? closeSideHandler : emptyFunc}
                 >
-                  <Icon
-                    iconName="defi"
-                    viewClass={`${Styles.navBarLinkIcon} side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
-                  />
+                  <span className={"mr-8 md:mr-4 "}>
+                    <Icon
+                      iconName="defi"
+                      viewClass={`${Styles.navBarLinkIcon} side-bar-icon group-hover:fill-[#fcfcfc]`}
+                    />
+                  </span>
                   <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
                     DeFi
                   </span>
@@ -138,17 +142,21 @@ const Sidebar = () => {
                     className={`${Styles.navBarLink} group py-3 px-8 flex items-center cursor-pointer`}
                     onClick={isMobile ? closeSideHandler : emptyFunc}
                   >
-                    <Icon
-                      iconName="transactions"
-                      viewClass={`!w-[16px] !h-[16px] side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
-                    />
+                    <span className={"mr-8 md:mr-4 "}>
+                      <Icon
+                        iconName="transactions"
+                        viewClass={`!w-[16px] !h-[16px] side-bar-icon  group-hover:fill-[#fcfcfc]`}
+                      />
+                    </span>
                     <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
                       Transactions
                     </span>
-                    <Icon
-                      iconName="new-tab"
-                      viewClass={`!w-[8px] !h-[8px] side-bar-icon -mb-0.5 mr-8 ml-1.5 group-hover:fill-[#fcfcfc]`}
-                    />
+                    <span>
+                      <Icon
+                        iconName="new-tab"
+                        viewClass={`!w-[8px] !h-[8px] side-bar-icon -mb-0.5 mr-8 ml-1.5 group-hover:fill-[#fcfcfc]`}
+                      />
+                    </span>
                   </a>
                 </Link>
               </li>
