@@ -139,12 +139,16 @@ const Sidebar = () => {
                     onClick={isMobile ? closeSideHandler : emptyFunc}
                   >
                     <Icon
-                      iconName="new-tab"
+                      iconName="transactions"
                       viewClass={`!w-[16px] !h-[16px] side-bar-icon mr-8 md:mr-4 group-hover:fill-[#fcfcfc]`}
                     />
                     <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
                       Transactions
                     </span>
+                    <Icon
+                      iconName="new-tab"
+                      viewClass={`!w-[8px] !h-[8px] side-bar-icon -mb-0.5 mr-8 ml-1.5 group-hover:fill-[#fcfcfc]`}
+                    />
                   </a>
                 </Link>
               </li>
