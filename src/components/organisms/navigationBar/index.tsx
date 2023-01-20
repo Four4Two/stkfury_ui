@@ -89,7 +89,7 @@ const NavigationBar = () => {
   );
 
   if (cosmosChainStatus || persistenceChainStatus) {
-    // router.push("/maintenance");
+    router.push("/maintenance");
   }
 
   return (
