@@ -126,6 +126,16 @@ export const getAPR = async () => {
   }
 };
 
+export const getAPY = async () => {
+  try {
+    const apr = await getAPR();
+    const apy = ((1 + Number(apr) / 36500) ** 365 - 1) * 100;
+    return apy.toFixed(2);
+  } catch (e) {
+    return -1;
+  }
+};
+
 export const getTVU = async (rpc: string): Promise<number> => {
   try {
     const rpcClient = await RpcClient(rpc);
