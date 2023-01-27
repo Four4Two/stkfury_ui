@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     replaysOnErrorSampleRate: 1.0,
 
-    integrations: [new Integrations.BrowserTracing(), new Sentry.Replay()],
+    integrations: [new Sentry.Replay()],
     tracesSampleRate: 1.0
   });
 
