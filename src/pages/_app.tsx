@@ -22,11 +22,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-    replaysSessionSampleRate: 0.1,
+     integrations: [new Integrations.BrowserTracing()],
 
-    replaysOnErrorSampleRate: 1.0,
-
-    integrations: [new Sentry.Replay()],
     tracesSampleRate: 1.0
   });
 
