@@ -23,6 +23,7 @@
     "@keplr-wallet/types": "^0.10.24",
     "@reduxjs/toolkit": "^1.8.5",
     "@sentry/browser": "^7.34.0",
+    "@sentry/nextjs": "^7.34.0",
     "@sentry/react": "^7.34.0",
     "@sentry/tracing": "^7.34.0",
     "@sentry/types": "^7.34.0",
