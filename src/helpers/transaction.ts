@@ -14,7 +14,7 @@ import {
 } from "../../AppConstants";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { IBCConfiguration } from "./config";
-import * as Sentry from "@sentry/react";
+import * as Sentry from "@sentry/nextjs";
 import {
   decodeTendermintClientStateAny,
   decodeTendermintConsensusStateAny

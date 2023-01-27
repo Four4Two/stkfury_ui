@@ -22,7 +22,7 @@ import {
 
 import { QueryClientImpl as EpochQueryClient } from "../../helpers/proto-codecs/codec/persistence/epochs/v1beta1/query";
 
-import { Scope } from "@sentry/react";
+import { Scope } from "@sentry/nextjs";
 import { Coin } from "@cosmjs/proto-signing";
 import Long from "long";
 import moment from "moment";
