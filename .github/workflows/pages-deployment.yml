@@ -25,6 +25,7 @@ jobs:
           NEXT_PUBLIC_ENVIRONMENT: 'Mainnet'
           NEXT_PUBLIC_SENTRY_DSN: 'https://eebd093474b947fba683a9bc268e775e@o1083089.ingest.sentry.io/4504531325026304'
           NEXT_PUBLIC_MAINTENANCE: 'false'
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       - run: npm run export --if-present
       - name: Publish
         id: publish
