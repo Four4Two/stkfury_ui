@@ -24,12 +24,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     replaysSessionSampleRate: 0.1,
 
-    // If the entire session is not sampled, use the below sample rate to sample
-    // sessions when an error occurs.
     replaysOnErrorSampleRate: 1.0,
 
     integrations: [new Integrations.BrowserTracing(), new Sentry.Replay()],
-    tracesSampleRate: 1.0 //lower the value in production
+    tracesSampleRate: 1.0
   });
 
   const router = useRouter();
