@@ -1,8 +1,6 @@
-# Frontend Starter Repo Template
+# stkATOM WebApp 
 
-Use this template to kickstart any frontend repo.
-
-### Features
+### Tools and Technologies
 
 - NextJS
 - TypeScript
