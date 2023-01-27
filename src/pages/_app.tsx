@@ -22,9 +22,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-    integrations: [new Integrations.BrowserTracing()],
+    replaysSessionSampleRate: 0.1,
 
-    tracesSampleRate: 1.0 //lower the value in production
+    replaysOnErrorSampleRate: 1.0,
+
+    integrations: [new Integrations.BrowserTracing(), new Sentry.Replay()],
+    tracesSampleRate: 1.0
   });
 
   const router = useRouter();
