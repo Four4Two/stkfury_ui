@@ -36,7 +36,7 @@ import {
   failedTransactionActions,
   postTransactionActions
 } from "./sagaHelpers";
-import * as Sentry from "@sentry/react";
+import * as Sentry from "@sentry/nextjs";
 import {
   UnStakeTransactionPayload,
   unStakeType

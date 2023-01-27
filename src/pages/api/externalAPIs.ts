@@ -1,6 +1,6 @@
 import Axios from "axios";
 import { genericErrorHandler } from "../../helpers/utils";
-import { Scope } from "@sentry/react";
+import { Scope } from "@sentry/nextjs";
 import { FEES, POOL_LIQUIDITY } from "../../../AppConstants";
 
 export const ATOM_PRICE_URL =
