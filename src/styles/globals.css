@@ -73,7 +73,7 @@ video {
 }
 
 .moreList.active {
-  height: 0;
+  /*height: 0;*/
   transition: height 0.35s ease;
 }
 

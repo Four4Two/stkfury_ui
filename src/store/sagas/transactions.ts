@@ -108,7 +108,8 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL);
     customScope.setTags({
-      [ERROR_WHILE_STAKING]: payload.account
+      [ERROR_WHILE_STAKING]: payload.account,
+      cosmosAddress
     });
     yield postTransactionActions(
       "stake",

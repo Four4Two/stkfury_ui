@@ -37,7 +37,7 @@ const moreList = [
   {
     url: "https://pstake.finance/atom",
     name: "Website",
-    icon: "globe"
+    icon: "website"
   },
   {
     url: "https://docs.pstake.finance/stkATOM_Introduction/",
@@ -139,13 +139,13 @@ const Sidebar = () => {
                   <a
                     target={"_blank"}
                     rel="noopener noreferrer"
-                    className={`${Styles.navBarLink} group py-3 px-8 flex items-center cursor-pointer`}
+                    className={`${Styles.navBarLink} group py-3 sm:pt-3 sm:pb-6 -xl:pt-3 -xl:pb-6 px-8 flex items-center cursor-pointer`}
                     onClick={isMobile ? closeSideHandler : emptyFunc}
                   >
                     <span className={"mr-8 md:mr-4 "}>
                       <Icon
                         iconName="transactions"
-                        viewClass={`!w-[16px] !h-[16px] side-bar-icon  group-hover:fill-[#fcfcfc]`}
+                        viewClass={`!w-[18px] !h-[18px] side-bar-icon  group-hover:fill-[#fcfcfc]`}
                       />
                     </span>
                     <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
@@ -165,7 +165,9 @@ const Sidebar = () => {
               <p
                 onClick={() => setOpen(!open)}
                 className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
-                 ${open ? "opened" : "closed"} py-3 px-8 group`}
+                 ${
+                   open ? "opened" : "closed"
+                 } py-3 px-8 group sm:hidden -xl:hidden  `}
               >
                 <span className="flex items-center">
                   <Icon
@@ -180,28 +182,37 @@ const Sidebar = () => {
               </p>
               <div
                 id="more-list"
-                className={`${open ? "" : "active"} moreList h-[140px] 
-              overflow-hidden relative bg-[#1B1B1B]`}
+                className={`${
+                  open ? "h-[140px]" : "active h-0"
+                } moreList -xl:h-[140px] sm:h-[140px]  
+              overflow-hidden relative bg-[#1B1B1B] -xl:pt-2 -xl:bg-transparent sm:pt-2 sm:bg-transparent
+               -xl:border-t -xl:border-solid -xl:border-[#2b2b2b] sm:border-t sm:border-solid sm:border-[#2b2b2b] transition-height duration-200 ease-in-out`}
               >
                 {moreList.map((item, index) => (
                   <a
-                    className="pr-8 py-2 pl-12 flex items-center text-light-mid"
+                    className="pr-8 py-2 pl-12 sm:py-3 sm:px-8 -xl:py-3 -xl:px-8 flex items-center text-light-mid"
                     href={item.url}
                     target={"_blank"}
                     key={index}
                     rel="noopener noreferrer"
                     onClick={isMobile ? closeSideHandler : emptyFunc}
                   >
-                    <span>
-                      <Icon iconName={item.icon} viewClass="itemIcon" />
+                    <span className="sm:mr-4 -xl:mr-8">
+                      <Icon
+                        iconName={item.icon}
+                        viewClass="itemIcon md:!w-[14px] md:!h-[14px] "
+                      />
                     </span>
-                    <span className="ml-2 text-base md:text-sm">
+                    <span className="ml-2 sm:ml-0 -xl:ml-0 text-base md:text-sm">
                       {item.name}
                     </span>
-                    <Icon
-                      iconName="arrow-redirect-white"
-                      viewClass="redirect"
-                    />
+                    <span>
+                      <Icon
+                        iconName="new-tab"
+                        viewClass={`!w-[8px] !h-[8px] side-bar-icon 
+                        -mb-0.5 mr-8 ml-1.5 group-hover:fill-[#fcfcfc]`}
+                      />
+                    </span>
                   </a>
                 ))}
               </div>
