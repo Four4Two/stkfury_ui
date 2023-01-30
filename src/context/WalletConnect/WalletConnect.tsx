@@ -19,8 +19,13 @@ import useLocalStorage from "../../customHooks/useLocalStorage";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
-import { fetchLiveDataSaga } from "../../store/reducers/liveData";
-import { getAPY } from "../../pages/api/onChain";
+import {
+  fetchLiveDataSaga,
+  setCosmosChainStatus,
+  setPersistenceChainStatus
+} from "../../store/reducers/liveData";
+import { getAPY, getChainStatus } from "../../pages/api/onChain";
+import { put } from "@redux-saga/core/effects";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -91,8 +96,15 @@ export const WalletProvider: FC<WalletProviderProps> = ({
 
   useEffect(() => {
     const fetchApy = async () => {
-      const apy: any = await getAPY();
+      const [apy, cosmosChainStatus, persistenceChainStatus] =
+        await Promise.all([
+          getAPY(),
+          getChainStatus(cosmosChainInfo.rpc),
+          getChainStatus(persistenceChainInfo.rpc)
+        ]);
       dispatch(setAPY(apy));
+      dispatch(setCosmosChainStatus(cosmosChainStatus));
+      dispatch(setPersistenceChainStatus(persistenceChainStatus));
     };
     fetchApy();
   }, []);
