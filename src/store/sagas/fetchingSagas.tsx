@@ -84,16 +84,11 @@ export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
 
 // @ts-ignore
 export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
-  const { persistenceChainInfo, cosmosChainInfo }: any = payload;
-  const [tvu, cosmosChainStatus, persistenceChainStatus, atomPrice] =
-    yield Promise.all([
-      getTVU(persistenceChainInfo.rpc),
-      getChainStatus(cosmosChainInfo.rpc),
-      getChainStatus(persistenceChainInfo.rpc),
-      fetchAtomPrice()
-    ]);
+  const { persistenceChainInfo }: any = payload;
+  const [tvu, atomPrice] = yield Promise.all([
+    getTVU(persistenceChainInfo.rpc),
+    fetchAtomPrice()
+  ]);
   yield put(setAtomPrice(atomPrice));
   yield put(setTVU(tvu));
-  yield put(setCosmosChainStatus(cosmosChainStatus));
-  yield put(setPersistenceChainStatus(persistenceChainStatus));
 }
