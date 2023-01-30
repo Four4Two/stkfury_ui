@@ -53,6 +53,7 @@ const MaintenanceContainer = () => {
             href={"https://t.me/pstakefinancechat"}
             className="text-[#0d6efd] font-semibold"
             target={"_blank"}
+            rel="noreferrer"
           >
             here
           </a>{" "}
