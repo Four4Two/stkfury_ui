@@ -93,7 +93,7 @@ const NavigationBar = () => {
   }
 
   return (
-    <div className="flex mb-10 py-6 px-7 md:px-3">
+    <div className="flex mb-10 py-6 pl-7 pr-14 md:px-3">
       <div className="flex items-center flex-1">
         <div className="hidden md:block">
           <Link href="/" className="nav-link" passHref>
@@ -129,7 +129,7 @@ const NavigationBar = () => {
             }
             className="button custom lg:!hidden pointer-events-none !text-sm"
           />
-          <div className="pl-5">
+          <div className="pl-4">
             <LoginOptions />
           </div>
           <button className="md:block hidden pl-2" onClick={handleMenu}>

@@ -70,7 +70,7 @@ const Sidebar = () => {
         className={`${Styles.sideBarContent} flex flex-col justify-between overflow-y-auto sticky`}
       >
         <div>
-          <div className="text-center py-[2.1875rem]">
+          <div className="text-center pt-8 pb-[1.9rem]">
             <Link href="/" className="nav-link" passHref>
               <a className="text-center">
                 <img
@@ -82,7 +82,7 @@ const Sidebar = () => {
               </a>
             </Link>
           </div>
-          <div>
+          <div className="pb-4">
             <li className={`list-none`}>
               <Link href="/" passHref>
                 <p
@@ -91,7 +91,7 @@ const Sidebar = () => {
                       ? `${Styles.active} navItemActive`
                       : "group"
                   } 
-                py-3 px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}
+                py-[0.625rem] px-8 flex items-center active:bg-sideBar-navLinkActive cursor-pointer`}
                   onClick={isMobile ? closeSideHandler : emptyFunc}
                 >
                   <span className={"mr-8 md:mr-4 "}>
@@ -114,7 +114,7 @@ const Sidebar = () => {
                       ? `${Styles.active} navItemActive`
                       : "group"
                   } 
-                py-3 px-8 flex items-center cursor-pointer`}
+                py-[0.625rem] px-8 flex items-center cursor-pointer`}
                   onClick={isMobile ? closeSideHandler : emptyFunc}
                 >
                   <span className={"mr-8 md:mr-4 "}>
@@ -139,7 +139,7 @@ const Sidebar = () => {
                   <a
                     target={"_blank"}
                     rel="noopener noreferrer"
-                    className={`${Styles.navBarLink} group py-3 sm:pt-3 sm:pb-6 -xl:pt-3 -xl:pb-6 px-8 flex items-center cursor-pointer`}
+                    className={`${Styles.navBarLink} group py-[0.625rem] sm:pb-6 px-8 flex items-center cursor-pointer`}
                     onClick={isMobile ? closeSideHandler : emptyFunc}
                   >
                     <span className={"mr-8 md:mr-4 "}>
@@ -161,6 +161,34 @@ const Sidebar = () => {
                 </Link>
               </li>
             ) : null}
+            {moreList.map((item, index) => (
+              <li className={`list-none`} key={index}>
+                <a
+                  className="group py-[0.625rem] sm:pb-6 px-8 flex items-center cursor-pointer"
+                  href={item.url}
+                  target={"_blank"}
+                  rel="noopener noreferrer"
+                  onClick={isMobile ? closeSideHandler : emptyFunc}
+                >
+                  <span className={"mr-8 md:mr-4 "}>
+                    <Icon
+                      iconName={item.icon}
+                      viewClass={`!w-[18px] !h-[18px] side-bar-icon  group-hover:fill-[#fcfcfc]`}
+                    />
+                  </span>
+                  <span className="text text-light-mid leading-6 text-base md:text-sm group-hover:text-light-high">
+                    {item.name}
+                  </span>
+                  <span>
+                    <Icon
+                      iconName="new-tab"
+                      viewClass={`!w-[8px] !h-[8px] side-bar-icon 
+                        -mb-0.5 mr-8 ml-1.5 group-hover:fill-[#fcfcfc]`}
+                    />
+                  </span>
+                </a>
+              </li>
+            ))}
             <li className={`list-none`}>
               <p
                 onClick={() => setOpen(!open)}

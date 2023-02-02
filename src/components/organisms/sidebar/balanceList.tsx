@@ -98,7 +98,10 @@ const BalanceList = () => {
               stkATOM
             </span>
           </div>
-          <p className="text-light-mid text-sm font-medium leading-5">
+          <p
+            className="text-light-mid text-sm font-medium leading-5"
+            title={formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+          >
             {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
           </p>
         </div>
