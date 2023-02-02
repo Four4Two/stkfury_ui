@@ -4,7 +4,7 @@ export const TEST_NET = "Testnet";
 export const DEV_NET = "Devnet";
 export const DEPOSIT_ADDRESS = "cosmos16vhhczel0jzdf6kxxk62uwzkay763p9cryp7we";
 export const PERSISTENCE_FEE = "0uxprt";
-export const COSMOS_FEE = "0uatom";
+export const COSMOS_FEE = "0.0025uatom";
 export const COSMOS_LIQUID_STAKE_URL =
   "/pstake.lscosmos.v1beta1.MsgLiquidStake";
 export const COSMOS_LIQUID_UN_STAKE_URL =

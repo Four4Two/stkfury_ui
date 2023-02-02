@@ -8,6 +8,9 @@ import Copy from "../../molecules/copy";
 import { Window as KeplrWindow } from "@keplr-wallet/types/build/window";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
+import { walletType } from "../../../context/WalletConnect/types";
+import { getStorageValue } from "../../../customHooks/useLocalStorage";
+import { cosmos } from "@cosmostation/extension-client";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -17,9 +20,10 @@ export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { connect, isWalletConnected, persistenceAccountData } = useWallet();
   const { isMobile } = useWindowSize();
+  const walletName = getStorageValue("walletName", "");
 
-  const connectHandler = async () => {
-    await connect();
+  const connectHandler = async (wallet: walletType) => {
+    await connect(wallet);
     setDropdownOpen(false);
   };
 
@@ -29,19 +33,33 @@ export const LoginOptions = () => {
   };
 
   useEffect(() => {
-    {
-      isWalletConnected
+    const fetchApi = async () => {
+      const provider = await cosmos();
+      isWalletConnected && walletName === "keplr"
         ? window.addEventListener("keplr_keystorechange", async () => {
-            await connect();
+            await connect("keplr");
           })
         : null;
-    }
-  }, [isWalletConnected, connect]);
+      isWalletConnected && walletName === "cosmosStation"
+        ? await provider.onAccountChanged(async () => {
+            await connect("cosmosStation");
+          })
+        : null;
+    };
+    fetchApi();
+  }, [walletName, isWalletConnected, connect]);
 
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => {
     setDropdownOpen(false);
   });
+
+  const loginIcon =
+    walletName === "cosmosStation"
+      ? "cosmos_station"
+      : walletName === "keplr"
+      ? "keplr_round"
+      : "cosmos_station";
 
   return (
     <div className="inline-block w-fit cursor-pointer relative">
@@ -61,7 +79,7 @@ export const LoginOptions = () => {
                 }}
               >
                 <img
-                  src={"/images/keplr_round.svg"}
+                  src={`/images/wallets/${loginIcon}.svg`}
                   alt={"logo"}
                   className="w-[20px] h-[20px]"
                 />
@@ -96,7 +114,7 @@ export const LoginOptions = () => {
       <div
         className={`${Styles.DropdownMenu} 
       ${dropdownOpen && Styles.DropdownMenuActive} 
-      absolute bg-dropDown rounded-md`}
+      absolute bg-dropDown rounded-md w-fit min-w-full`}
         ref={ref}
       >
         {isWalletConnected ? (
@@ -118,15 +136,28 @@ export const LoginOptions = () => {
           <div>
             <div
               className="p-4 flex items-center md:py-3"
-              onClick={connectHandler}
+              onClick={() => connectHandler("keplr")}
             >
               <img
-                src={"/images/keplr_round.svg"}
+                src={"/images/wallets/keplr_round.svg"}
                 alt={"logo"}
                 className="w-[20px] h-[20px]"
               />
               <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
                 Keplr Wallet
+              </span>
+            </div>
+            <div
+              className="p-4 flex items-center md:py-3"
+              onClick={() => connectHandler("cosmosStation")}
+            >
+              <img
+                src={"/images/wallets/cosmos_station.svg"}
+                alt={"logo"}
+                className="w-[20px] h-[20px]"
+              />
+              <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
+                CosmosStation
               </span>
             </div>
           </div>

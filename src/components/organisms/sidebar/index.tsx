@@ -184,7 +184,7 @@ const Sidebar = () => {
                 id="more-list"
                 className={`${
                   open ? "h-[140px]" : "active h-0"
-                } moreList -xl:h-[140px] sm:h-[140px]  
+                } moreList -xl:h-[165px] sm:h-[140px]  
               overflow-hidden relative bg-[#1B1B1B] -xl:pt-2 -xl:bg-transparent sm:pt-2 sm:bg-transparent
                -xl:border-t -xl:border-solid -xl:border-[#2b2b2b] sm:border-t sm:border-solid sm:border-[#2b2b2b] transition-height duration-200 ease-in-out`}
               >

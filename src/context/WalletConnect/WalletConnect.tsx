@@ -26,6 +26,7 @@ import {
 } from "../../store/reducers/liveData";
 import { getAPY, getChainStatus } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
+import CosmosStationWallet from "../../helpers/CosmosStation";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -70,14 +71,19 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   const [cosmosAccountData, setCosmosAccountData] =
     useState<AccountData | null>(null);
   const [walletConnected, setWalletConnected] = useLocalStorage("wallet", "");
+  const [walletName, setWalletName] = useLocalStorage("walletName", "");
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (walletConnected) {
-      connect();
+      if (walletName === "keplr") {
+        connect("keplr");
+      } else {
+        connect("cosmosStation");
+      }
     }
-  }, [walletConnected]);
+  }, [walletConnected, walletName]);
 
   useEffect(() => {
     dispatch(
@@ -114,30 +120,42 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     setPersistenceChainData(persistenceChainInfo);
   }, [cosmosChainInfo, persistenceChainInfo]);
 
-  const connect = async (): Promise<boolean> => {
+  const connect = async (walletType: string): Promise<boolean> => {
     try {
-      const persistenceSigner = await KeplrWallet(persistenceChainInfo);
-      const cosmosSigner = await KeplrWallet(cosmosChainInfo);
-      const cosmosAccounts = await cosmosSigner!.getAccounts();
-      setCosmosAccountData(cosmosAccounts[0]);
-      setCosmosSigner(cosmosSigner);
-      const persistenceAccounts = await persistenceSigner!.getAccounts();
-      setPersistenceAccountData(persistenceAccounts[0]);
-      setPersistenceSigner(persistenceSigner);
+      let persistenceSignerData: any =
+        walletType === "keplr"
+          ? await KeplrWallet(persistenceChainInfo)
+          : await CosmosStationWallet(persistenceChainInfo);
+
+      let cosmosSignerData: any =
+        walletType === "keplr"
+          ? await KeplrWallet(cosmosChainInfo)
+          : await CosmosStationWallet(cosmosChainInfo);
+
+      let persistenceAddressData: any =
+        await persistenceSignerData!.getAccounts();
+      let cosmosAddressData: any = await cosmosSignerData!.getAccounts();
+
+      setCosmosAccountData(cosmosAddressData[0]);
+      setCosmosSigner(cosmosSignerData);
+      setPersistenceAccountData(persistenceAddressData[0]);
+      setPersistenceSigner(persistenceSignerData);
+
       dispatch(
         fetchBalanceSaga({
-          persistenceAddress: persistenceAccounts[0]!.address,
-          cosmosAddress: cosmosAccounts[0]!.address,
+          persistenceAddress: persistenceAddressData[0]!.address,
+          cosmosAddress: cosmosAddressData[0]!.address,
           persistenceChainInfo: persistenceChainInfo!,
           cosmosChainInfo: cosmosChainInfo!
         })
       );
       dispatch(
         fetchPendingClaimsSaga({
-          address: persistenceAccounts[0]!.address,
+          address: persistenceAddressData[0]!.address,
           persistenceChainInfo: persistenceChainInfo!
         })
       );
+      setWalletName(walletType);
       setWalletConnected("connected");
     } catch (e: any) {
       printConsole(e);
@@ -147,7 +165,6 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         },
         ToastType.ERROR
       );
-      console.error(e);
       return false;
     }
     setIsWalletConnected(true);

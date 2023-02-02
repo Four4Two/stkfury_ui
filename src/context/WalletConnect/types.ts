@@ -27,6 +27,8 @@ export interface WalletProviderProps {
   children: JSX.Element;
 }
 
+export type walletType = "keplr" | "cosmosStation";
+
 export interface WalletState {
   isWalletConnected: boolean;
   persistenceAccountData: AccountData | null;
@@ -35,5 +37,5 @@ export interface WalletState {
   cosmosSigner: OfflineSigner | OfflineDirectSigner | null;
   persistenceSigner: OfflineSigner | OfflineDirectSigner | null;
   persistenceChainData: ChainInfo | null;
-  connect: () => Promise<boolean>;
+  connect: (walletType: walletType) => Promise<boolean>;
 }
