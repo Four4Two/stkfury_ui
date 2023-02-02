@@ -12,7 +12,6 @@ const MobileSideBar = () => {
   const { show } = useSelector((state: RootState) => state.mobileSidebar);
 
   const closeHandler = () => {
-    console.log("cicked");
     dispatch(hideMobileSidebar());
   };
   const { isMobile } = useWindowSize();

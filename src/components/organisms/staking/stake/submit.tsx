@@ -137,8 +137,7 @@ const Submit = () => {
       className="button w-full md:py-2 md:text-sm"
       type="primary"
       size="large"
-      disabled={false}
-      onClick={connect}
+      disabled={true}
       content="Connect wallet"
     />
   );

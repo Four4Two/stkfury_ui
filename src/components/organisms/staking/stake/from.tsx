@@ -10,7 +10,9 @@ import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const From = () => {
   const dispatch = useDispatch();
-  const { atomBalance } = useSelector((state: RootState) => state.balances);
+  const { atomBalance, ibcAtomBalance } = useSelector(
+    (state: RootState) => state.balances
+  );
   const { amount } = useSelector((state: RootState) => state.stake);
   const { atomPrice } = useSelector((state: RootState) => state.liveData);
   const { minDeposit } = useSelector((state: RootState) => state.initialData);
@@ -51,7 +53,7 @@ const From = () => {
           <p className="mt-3 leading-normal text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}
+              {formatNumber(atomBalance + ibcAtomBalance, 3, isMobile ? 2 : 6)}
             </span>
             {isWalletConnected &&
             Number(atomBalance) > MIN_STAKE_FEE + minDeposit ? (
