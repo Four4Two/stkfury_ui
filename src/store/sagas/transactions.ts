@@ -331,7 +331,7 @@ export function* executeDepositTransaction({
       cosmosSigner,
       cosmosAddress,
       [depositMsg],
-      PERSISTENCE_FEE,
+      COSMOS_FEE,
       "",
       cosmosChainInfo.rpc
     );

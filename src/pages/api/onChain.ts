@@ -28,10 +28,10 @@ import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
 import {
-  STK_ATOM_MINIMAL_DENOM,
   APR_BASE_RATE,
   APR_DEFAULT,
-  COSMOS_UNBOND_TIME
+  COSMOS_UNBOND_TIME,
+  STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
@@ -42,30 +42,31 @@ const persistenceChainInfo = ExternalChains[env].find(
   (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
-export const fetchAccountBalance = async (
-  address: string,
-  tokenDenom: string,
-  rpc: string
+export const getTokenBalance = (
+  balances: QueryAllBalancesResponse,
+  tokenDenom: string
 ) => {
+  if (balances && balances!.balances!.length) {
+    const token: Coin | undefined = balances.balances.find(
+      (item: Coin) => item.denom === tokenDenom
+    );
+    if (token === undefined) {
+      return "0";
+    } else {
+      return token!.amount;
+    }
+  } else {
+    return "0";
+  }
+};
+
+export const fetchAccountBalance = async (address: string, rpc: string) => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
-    const balances: QueryAllBalancesResponse =
-      await bankQueryService.AllBalances({
-        address: address
-      });
-    if (balances.balances.length) {
-      const token: Coin | undefined = balances.balances.find(
-        (item: Coin) => item.denom === tokenDenom
-      );
-      if (token === undefined) {
-        return "0";
-      } else {
-        return token!.amount;
-      }
-    } else {
-      return "0";
-    }
+    return await bankQueryService.AllBalances({
+      address: address
+    });
   } catch (error) {
     printConsole(error);
     return "0";

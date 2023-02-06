@@ -2,14 +2,15 @@ import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
   fetchAllEpochEntries,
-  getChainStatus,
+  getTokenBalance,
   getTVU
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
   setAtomBalance,
   setIbcAtomBalance,
-  setStkAtomBalance
+  setStkAtomBalance,
+  setXprtBalance
 } from "../reducers/balances";
 import { decimalize } from "../../helpers/utils";
 import { CHAIN_ID, IBCChainInfos } from "../../helpers/config";
@@ -44,25 +45,46 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     persistenceChainInfo,
     cosmosChainInfo
   }: any = payload;
-  //atom balance on persistence chain
-  const ibcAtomBalance: number = yield fetchAccountBalance(
+  //balances on persistence chain
+  // @ts-ignore
+  const persistenceBalances: any = yield fetchAccountBalance(
     persistenceAddress,
-    IBCInfo!.coinDenom,
     persistenceChainInfo.rpc
   );
-  //stk atom balance
-  const stkAtomBalance: number = yield fetchAccountBalance(
-    persistenceAddress,
-    STK_ATOM_MINIMAL_DENOM,
-    persistenceChainInfo.rpc
-  );
-  //atom balance on cosmos chain
-  const atomBalance: number = yield fetchAccountBalance(
+
+  //balances cosmos chain
+  // @ts-ignore
+  const cosmosBalances: any = yield fetchAccountBalance(
     cosmosAddress,
-    cosmosChainInfo.stakeCurrency.coinMinimalDenom,
     cosmosChainInfo.rpc
   );
+
+  //atom balance on persistence chain
+  const ibcAtomBalance = getTokenBalance(
+    persistenceBalances,
+    IBCInfo!.coinDenom
+  );
+
+  //stk atom balance on persistence chain
+  const stkAtomBalance = getTokenBalance(
+    persistenceBalances,
+    STK_ATOM_MINIMAL_DENOM
+  );
+
+  //xprt balance on persistence chain
+  const xprtBalance = getTokenBalance(
+    persistenceBalances,
+    persistenceChainInfo.stakeCurrency.coinMinimalDenom
+  );
+
+  //atom balance on cosmos chain
+  const atomBalance = getTokenBalance(
+    cosmosBalances,
+    cosmosChainInfo.stakeCurrency.coinMinimalDenom
+  );
+
   yield put(setIbcAtomBalance(Number(decimalize(ibcAtomBalance))));
+  yield put(setXprtBalance(Number(decimalize(xprtBalance))));
   yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
   yield put(setAtomBalance(Number(decimalize(atomBalance))));
 }

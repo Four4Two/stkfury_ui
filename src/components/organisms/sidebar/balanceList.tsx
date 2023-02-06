@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
-import Styles from "./styles.module.css";
 import Tooltip from "rc-tooltip";
 import { Icon } from "../../atoms/icon";
 import { decimalize, formatNumber } from "../../../helpers/utils";
@@ -11,19 +10,23 @@ import { showClaimModal } from "../../../store/reducers/transactions/claim";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
 import WithdrawButton from "./withdrawModal/submit";
-import { MIN_BALANCE_CHECK, STAKE, WITHDRAW } from "../../../../AppConstants";
+import { MIN_BALANCE_CHECK } from "../../../../AppConstants";
 
 const BalanceList = () => {
   const dispatch = useDispatch();
   const [activeClaims, setActiveClaims] = useState<number>(0);
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState<number>(0);
   const [pendingList, setPendingList] = useState<any>([]);
+  const [open, setOpen] = useState<any>({
+    persistenceBalance: true,
+    cosmosBalance: false,
+    unStaking: false
+  });
   const [totalPendingBalance, setTotalPendingBalance] = useState<number>(0);
   const [totalUnListedPendingClaims, setTotalUnlistedPendingClaims] =
     useState<number>(0);
-  const { ibcAtomBalance, stkAtomBalance } = useSelector(
-    (state: RootState) => state.balances
-  );
+  const { ibcAtomBalance, stkAtomBalance, xprtBalance, atomBalance } =
+    useSelector((state: RootState) => state.balances);
 
   const { isWalletConnected } = useWallet();
   const { isMobile } = useWindowSize();
@@ -68,43 +71,189 @@ const BalanceList = () => {
     unlistedPendingClaimList
   ]);
 
+  const handleCollapse = (value: string) => {
+    for (const key in open) {
+      if (key === value) {
+        open[key] = !open[key];
+      }
+      setOpen({ ...open });
+    }
+  };
+
   return (
-    <>
-      <div className={`${Styles.balanceList} px-6 py-5`}>
-        <h2 className="text-light-emphasis text-base flex items-center font-semibold leading-normal mb-4">
-          Balances
-          <Tooltip
-            placement="bottom"
-            overlay={
-              <span>
-                Only showing balances of <br /> your assets staked via pSTAKE.
-              </span>
-            }
-          >
-            <button className="icon-button px-1">
-              <Icon viewClass="arrow-right" iconName="info" />
-            </button>
-          </Tooltip>
-        </h2>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <img
-              src={"/images/tokens/stk_atom.svg"}
-              width={24}
-              height={24}
-              alt="atom"
-            />
-            <span className="text-light-mid text-sm leading-5 ml-2.5">
-              stkATOM
+    <div>
+      <div>
+        <p
+          onClick={() => handleCollapse("persistenceBalance")}
+          className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
+                 ${
+                   open["persistenceBalance"] ? "opened" : "closed"
+                 } py-3 px-8 group`}
+        >
+          <span className="flex items-center">
+            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+              Persistence Balances
             </span>
-          </div>
-          <p className="text-light-mid text-sm font-medium leading-5">
-            {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
-          </p>
-        </div>
-        {ibcAtomBalance > MIN_BALANCE_CHECK ? (
-          <>
+          </span>
+          <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
+        </p>
+        <div
+          id="persistenceBalance"
+          className={`${
+            open["persistenceBalance"] ? "active" : ""
+          } collapseMenu ease-in overflow-hidden relative bg-[#1B1B1B] px-6`}
+        >
+          <div className="pb-4 pt-2">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <img
+                  src={"/images/tokens/stk_atom.svg"}
+                  width={24}
+                  height={24}
+                  alt="atom"
+                />
+                <span className="text-light-mid text-sm leading-5 ml-2.5">
+                  stkATOM
+                </span>
+              </div>
+              <p
+                className="text-light-mid text-sm font-medium leading-5"
+                title={formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+              >
+                {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+              </p>
+            </div>
             <div className="flex justify-between items-center mt-4">
+              <div className="flex items-center">
+                <img
+                  src={"/images/tokens/xprt_white.svg"}
+                  width={24}
+                  height={24}
+                  alt="xprt_white"
+                />
+                <span className="text-light-mid text-sm leading-5 ml-2.5">
+                  XPRT
+                </span>
+              </div>
+              <p
+                className="text-light-mid text-sm font-medium leading-5"
+                title={formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
+              >
+                {formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
+              </p>
+            </div>
+
+            <>
+              <div className="flex justify-between items-center mt-4">
+                <div className="flex items-center">
+                  <img
+                    src={"/images/tokens/atom.svg"}
+                    width={24}
+                    height={24}
+                    alt="atom"
+                  />
+                  <span className="text-light-mid text-sm leading-5 ml-2.5">
+                    ATOM
+                  </span>
+                  <Tooltip
+                    placement="bottom"
+                    overlay={
+                      <span className="text-center block">
+                        (ATOM on Persistence)
+                      </span>
+                    }
+                  >
+                    <button className="icon-button px-1">
+                      <Icon viewClass="arrow-right" iconName="info" />
+                    </button>
+                  </Tooltip>
+                </div>
+                <p className="text-light-mid text-sm font-medium leading-5">
+                  {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
+                </p>
+              </div>
+              {ibcAtomBalance > MIN_BALANCE_CHECK ? (
+                <div className={`m-auto w-[220px] md:w-auto`}>
+                  <WithdrawButton />
+                </div>
+              ) : null}
+            </>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p
+          onClick={() => handleCollapse("cosmosBalance")}
+          className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
+                 ${
+                   open["cosmosBalance"] ? "opened" : "closed"
+                 } py-3 px-8 group`}
+        >
+          <span className="flex items-center">
+            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+              Cosmos Balances
+            </span>
+          </span>
+          <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
+        </p>
+        <div
+          id="cosmosBalance"
+          className={`${
+            open["cosmosBalance"] ? "active" : ""
+          } collapseMenu overflow-hidden relative bg-[#1B1B1B] px-6`}
+        >
+          <div className="flex justify-between items-center pb-4 pt-2">
+            <div className="flex items-center">
+              <img
+                src={"/images/tokens/atom.svg"}
+                width={24}
+                height={24}
+                alt="atom"
+              />
+              <span className="text-light-mid text-sm leading-5 ml-2.5">
+                ATOM
+              </span>
+            </div>
+            <p className="text-light-mid text-sm font-medium leading-5">
+              {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p
+          onClick={() => handleCollapse("unStaking")}
+          className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
+                 ${open["unStaking"] ? "opened" : "closed"} py-3 px-8 group`}
+        >
+          <span className="flex items-center">
+            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+              Unstaking
+            </span>
+            <Tooltip
+              placement="bottom"
+              overlay={
+                <span>
+                  Your assets in the process of <br />
+                  being unstaked, after which <br />
+                  they can be claimed.
+                </span>
+              }
+            >
+              <button className="icon-button px-1">
+                <Icon viewClass="arrow-right" iconName="info" />
+              </button>
+            </Tooltip>
+          </span>
+          <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
+        </p>
+        <div
+          id="unStaking"
+          className={`${open["unStaking"] ? "active" : ""} collapseMenu
+              overflow-hidden relative bg-[#1B1B1B] px-6 `}
+        >
+          <div className="pb-4 pt-2">
+            <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/atom.svg"}
@@ -115,90 +264,39 @@ const BalanceList = () => {
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
                   ATOM
                 </span>
-                <Tooltip
-                  placement="bottom"
-                  overlay={
-                    <span className="text-center block">
-                      Withdraw <br /> (ATOM on Persistence)
-                    </span>
-                  }
-                >
-                  <button className="icon-button px-1">
-                    <Icon viewClass="arrow-right" iconName="info" />
-                  </button>
-                </Tooltip>
               </div>
               <p className="text-light-mid text-sm font-medium leading-5">
-                {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
+                {formatNumber(
+                  Number(decimalize(activeClaims)) +
+                    Number(decimalize(totalPendingBalance)) +
+                    Number(decimalize(activeStkAtomClaims)) +
+                    Number(decimalize(totalUnListedPendingClaims)),
+                  3,
+                  isMobile ? 2 : 6
+                )}
               </p>
             </div>
-            <div className={`m-auto w-[220px] md:w-auto`}>
-              <WithdrawButton />
-            </div>
-          </>
-        ) : null}
-      </div>
-
-      <div className={`${Styles.balanceList} px-6 py-5`}>
-        <h2 className="text-light-emphasis text-base flex items-center font-semibold leading-normal mb-4">
-          Unstaking
-          <Tooltip
-            placement="bottom"
-            overlay={
-              <span>
-                Your assets in the process of <br />
-                being unstaked, after which <br />
-                they can be claimed.
-              </span>
-            }
-          >
-            <button className="icon-button px-1">
-              <Icon viewClass="arrow-right" iconName="info" />
-            </button>
-          </Tooltip>
-        </h2>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center">
-            <img
-              src={"/images/tokens/atom.svg"}
-              width={24}
-              height={24}
-              alt="atom"
-            />
-            <span className="text-light-mid text-sm leading-5 ml-2.5">
-              ATOM
-            </span>
-          </div>
-          <p className="text-light-mid text-sm font-medium leading-5">
-            {formatNumber(
-              Number(decimalize(activeClaims)) +
-                Number(decimalize(totalPendingBalance)) +
-                Number(decimalize(activeStkAtomClaims)) +
-                Number(decimalize(totalUnListedPendingClaims)),
-              3,
-              isMobile ? 2 : 6
+            {isWalletConnected &&
+            (activeClaims > 0 ||
+              totalPendingBalance > 0 ||
+              activeStkAtomClaims > 0 ||
+              totalUnListedPendingClaims > 0) ? (
+              <div className={`m-auto w-[220px] md:w-auto`}>
+                <Button
+                  size="small"
+                  type="secondary"
+                  content="Claim"
+                  className="w-full mt-4 md:text-xsm md:py-1 md:px-2"
+                  onClick={claimHandler}
+                />
+              </div>
+            ) : (
+              ""
             )}
-          </p>
-        </div>
-        {isWalletConnected &&
-        (activeClaims > 0 ||
-          totalPendingBalance > 0 ||
-          activeStkAtomClaims > 0 ||
-          totalUnListedPendingClaims > 0) ? (
-          <div className={`m-auto w-[220px] md:w-auto`}>
-            <Button
-              size="small"
-              type="secondary"
-              content="Claim"
-              className="w-full mt-4 md:text-xsm md:py-1 md:px-2"
-              onClick={claimHandler}
-            />
           </div>
-        ) : (
-          ""
-        )}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

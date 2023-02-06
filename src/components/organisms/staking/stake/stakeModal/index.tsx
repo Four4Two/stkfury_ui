@@ -16,10 +16,8 @@ import TransactionIcon from "../../../../molecules/transactionHelper/transactios
 
 const StakeModal = () => {
   const dispatch = useDispatch();
-  const { showModal, txFailed, stepNumber } = useSelector(
-    (state: RootState) => state.stake
-  );
-  const { amount } = useSelector((state: RootState) => state.stake);
+  const { showModal, txFailed, stepNumber, amount, liquidStakeType } =
+    useSelector((state: RootState) => state.stake);
 
   const handleClose = () => {
     dispatch(setStakeTxnStepNumber(0));
@@ -64,22 +62,24 @@ const StakeModal = () => {
       </p>
       <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
         <div className="mb-10 md:mb-7">
-          <div className="flex items-center mb-5 md:mb-3">
-            <div className="mr-3">
-              {TransactionIcon(
-                stepNumber === 1 || stepNumber === 2 ? 1 : stepNumber,
-                1,
-                txFailed
-              )}
+          {liquidStakeType === "dual" ? (
+            <div className="flex items-center mb-5 md:mb-3">
+              <div className="mr-3">
+                {TransactionIcon(
+                  stepNumber === 1 || stepNumber === 2 ? 1 : stepNumber,
+                  1,
+                  txFailed
+                )}
+              </div>
+              <p
+                className={`${
+                  stepNumber >= 1 ? "text-light-emphasis" : "text-light-low"
+                } text-base font-normal`}
+              >
+                Approve wallet transfer
+              </p>
             </div>
-            <p
-              className={`${
-                stepNumber >= 1 ? "text-light-emphasis" : "text-light-low"
-              } text-base font-normal`}
-            >
-              Approve wallet transfer
-            </p>
-          </div>
+          ) : null}
           <div className="flex items-center mb-5 md:mb-3">
             <div className="mr-3">
               {TransactionIcon(

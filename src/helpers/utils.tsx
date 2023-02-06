@@ -4,7 +4,7 @@ import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
 import { Decimal } from "@cosmjs/math";
 import { Scope } from "@sentry/nextjs";
 import * as Sentry from "@sentry/nextjs";
-import { fetchAccountBalance } from "../pages/api/onChain";
+import { fetchAccountBalance, getTokenBalance } from "../pages/api/onChain";
 import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
 import { TEST_NET } from "../../AppConstants";
 import {
@@ -144,13 +144,15 @@ export async function pollAccountBalance(
   if (availableAmount) {
     initialBalance = availableAmount;
   } else {
-    initialBalance = await fetchAccountBalance(address, denom, rpc);
+    const balances: any = await fetchAccountBalance(address, rpc);
+    initialBalance = getTokenBalance(balances, denom);
   }
-  printConsole(initialBalance + "initialBalance");
+  printConsole(initialBalance, "initialBalance");
   await delay(PollingConfig.initialTxHashQueryDelay);
   for (let i = 0; i < PollingConfig.numberOfRetries; i++) {
     try {
-      const fetchResult = await fetchAccountBalance(address, denom, rpc);
+      const balances: any = await fetchAccountBalance(address, rpc);
+      const fetchResult = getTokenBalance(balances, denom);
       if (fetchResult !== "0" && decimalize(fetchResult) !== initialBalance) {
         return fetchResult;
       } else {

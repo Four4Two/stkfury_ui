@@ -20,6 +20,8 @@
     "@cosmjs/proto-signing": "^0.29.0",
     "@cosmjs/stargate": "^0.29.0",
     "@cosmjs/tendermint-rpc": "^0.29.0",
+    "@cosmostation/cosmos-client": "^0.0.4",
+    "@cosmostation/extension-client": "^0.1.15",
     "@keplr-wallet/types": "^0.10.24",
     "@reduxjs/toolkit": "^1.8.5",
     "@sentry/browser": "^7.34.0",

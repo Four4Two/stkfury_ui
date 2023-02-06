@@ -4,14 +4,16 @@ import {
   StakeAmount,
   StakeTransactionPayload,
   SetTransactionFailedStatus,
-  SetTransactionStep
+  SetTransactionStep,
+  SetLiquidStakeType
 } from "./types";
 
 const initialState: StakeAmount = {
   amount: "",
   showModal: false,
   txFailed: false,
-  stepNumber: 0
+  stepNumber: 0,
+  liquidStakeType: "single"
 };
 
 const stake = createSlice({
@@ -33,6 +35,9 @@ const stake = createSlice({
     },
     setStakeTxnStepNumber: (state, { payload }: SetTransactionStep) => {
       state.stepNumber = payload;
+    },
+    setLiquidStakeTxnType: (state, { payload }: SetLiquidStakeType) => {
+      state.liquidStakeType = payload;
     }
   }
 });
@@ -43,7 +48,8 @@ export const {
   hideStakeModal,
   showStakeModal,
   setStakeTxnFailed,
-  setStakeTxnStepNumber
+  setStakeTxnStepNumber,
+  setLiquidStakeTxnType
 } = stake.actions;
 
 export default stake.reducer;

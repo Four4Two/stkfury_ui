@@ -14,7 +14,6 @@ import Link from "next/link";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
 import { fetchBalanceSaga } from "../../../store/reducers/balances";
-import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
 import { useRouter } from "next/router";
@@ -53,12 +52,6 @@ const NavigationBar = () => {
     const interval = setInterval(() => {
       if (isWalletConnected) {
         dispatch(
-          fetchPendingClaimsSaga({
-            address: persistenceAccountData!.address,
-            persistenceChainInfo: persistenceChainData!
-          })
-        );
-        dispatch(
           fetchInitSaga({
             persistenceChainInfo: persistenceChainData!,
             cosmosChainInfo: cosmosChainData!
@@ -93,7 +86,7 @@ const NavigationBar = () => {
   }
 
   return (
-    <div className="flex mb-10 py-6 px-7 md:px-3">
+    <div className="flex mb-10 py-6 pl-7 pr-14 md:px-3">
       <div className="flex items-center flex-1">
         <div className="hidden md:block">
           <Link href="/" className="nav-link" passHref>
@@ -129,7 +122,7 @@ const NavigationBar = () => {
             }
             className="button custom lg:!hidden pointer-events-none !text-sm"
           />
-          <div className="pl-5">
+          <div className="pl-4">
             <LoginOptions />
           </div>
           <button className="md:block hidden pl-2" onClick={handleMenu}>
