@@ -18,7 +18,7 @@ const BalanceList = () => {
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState<number>(0);
   const [pendingList, setPendingList] = useState<any>([]);
   const [open, setOpen] = useState<any>({
-    persistenceBalance: false,
+    persistenceBalance: true,
     cosmosBalance: false,
     unStaking: false
   });
@@ -100,48 +100,49 @@ const BalanceList = () => {
         <div
           id="persistenceBalance"
           className={`${
-            open["persistenceBalance"] ? "h-[180px]" : "active h-0"
-          } overflow-hidden relative bg-[#1B1B1B] px-6 transition-height duration-200 ease-in-out`}
+            open["persistenceBalance"] ? "active" : ""
+          } collapseMenu ease-in overflow-hidden relative bg-[#1B1B1B] px-6`}
         >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <img
-                src={"/images/tokens/stk_atom.svg"}
-                width={24}
-                height={24}
-                alt="atom"
-              />
-              <span className="text-light-mid text-sm leading-5 ml-2.5">
-                stkATOM
-              </span>
+          <div className="pb-4 pt-2">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <img
+                  src={"/images/tokens/stk_atom.svg"}
+                  width={24}
+                  height={24}
+                  alt="atom"
+                />
+                <span className="text-light-mid text-sm leading-5 ml-2.5">
+                  stkATOM
+                </span>
+              </div>
+              <p
+                className="text-light-mid text-sm font-medium leading-5"
+                title={formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+              >
+                {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+              </p>
             </div>
-            <p
-              className="text-light-mid text-sm font-medium leading-5"
-              title={formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
-            >
-              {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
-            </p>
-          </div>
-          <div className="flex justify-between items-center mt-4">
-            <div className="flex items-center">
-              <img
-                src={"/images/tokens/xprt_white.svg"}
-                width={24}
-                height={24}
-                alt="xprt_white"
-              />
-              <span className="text-light-mid text-sm leading-5 ml-2.5">
-                XPRT
-              </span>
+            <div className="flex justify-between items-center mt-4">
+              <div className="flex items-center">
+                <img
+                  src={"/images/tokens/xprt_white.svg"}
+                  width={24}
+                  height={24}
+                  alt="xprt_white"
+                />
+                <span className="text-light-mid text-sm leading-5 ml-2.5">
+                  XPRT
+                </span>
+              </div>
+              <p
+                className="text-light-mid text-sm font-medium leading-5"
+                title={formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
+              >
+                {formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
+              </p>
             </div>
-            <p
-              className="text-light-mid text-sm font-medium leading-5"
-              title={formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
-            >
-              {formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
-            </p>
-          </div>
-          {ibcAtomBalance > MIN_BALANCE_CHECK ? (
+
             <>
               <div className="flex justify-between items-center mt-4">
                 <div className="flex items-center">
@@ -158,7 +159,7 @@ const BalanceList = () => {
                     placement="bottom"
                     overlay={
                       <span className="text-center block">
-                        Withdraw <br /> (ATOM on Persistence)
+                        (ATOM on Persistence)
                       </span>
                     }
                   >
@@ -171,11 +172,13 @@ const BalanceList = () => {
                   {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
                 </p>
               </div>
-              <div className={`m-auto w-[220px] md:w-auto`}>
-                <WithdrawButton />
-              </div>
+              {ibcAtomBalance > MIN_BALANCE_CHECK ? (
+                <div className={`m-auto w-[220px] md:w-auto`}>
+                  <WithdrawButton />
+                </div>
+              ) : null}
             </>
-          ) : null}
+          </div>
         </div>
       </div>
       <div>
@@ -196,10 +199,10 @@ const BalanceList = () => {
         <div
           id="cosmosBalance"
           className={`${
-            open["cosmosBalance"] ? "h-[40px]" : "active h-0"
-          } overflow-hidden relative bg-[#1B1B1B] px-6  transition-height duration-200 ease-in-out`}
+            open["cosmosBalance"] ? "active" : ""
+          } collapseMenu overflow-hidden relative bg-[#1B1B1B] px-6`}
         >
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center pb-4 pt-2">
             <div className="flex items-center">
               <img
                 src={"/images/tokens/atom.svg"}
@@ -246,50 +249,51 @@ const BalanceList = () => {
         </p>
         <div
           id="unStaking"
-          className={`${open["unStaking"] ? "h-[90px]" : "active h-0"} moreList
-              overflow-hidden relative bg-[#1B1B1B] px-6
-                transition-height duration-200 ease-in-out`}
+          className={`${open["unStaking"] ? "active" : ""} collapseMenu
+              overflow-hidden relative bg-[#1B1B1B] px-6 `}
         >
-          <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <img
-                src={"/images/tokens/atom.svg"}
-                width={24}
-                height={24}
-                alt="atom"
-              />
-              <span className="text-light-mid text-sm leading-5 ml-2.5">
-                ATOM
-              </span>
+          <div className="pb-4 pt-2">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center">
+                <img
+                  src={"/images/tokens/atom.svg"}
+                  width={24}
+                  height={24}
+                  alt="atom"
+                />
+                <span className="text-light-mid text-sm leading-5 ml-2.5">
+                  ATOM
+                </span>
+              </div>
+              <p className="text-light-mid text-sm font-medium leading-5">
+                {formatNumber(
+                  Number(decimalize(activeClaims)) +
+                    Number(decimalize(totalPendingBalance)) +
+                    Number(decimalize(activeStkAtomClaims)) +
+                    Number(decimalize(totalUnListedPendingClaims)),
+                  3,
+                  isMobile ? 2 : 6
+                )}
+              </p>
             </div>
-            <p className="text-light-mid text-sm font-medium leading-5">
-              {formatNumber(
-                Number(decimalize(activeClaims)) +
-                  Number(decimalize(totalPendingBalance)) +
-                  Number(decimalize(activeStkAtomClaims)) +
-                  Number(decimalize(totalUnListedPendingClaims)),
-                3,
-                isMobile ? 2 : 6
-              )}
-            </p>
+            {isWalletConnected &&
+            (activeClaims > 0 ||
+              totalPendingBalance > 0 ||
+              activeStkAtomClaims > 0 ||
+              totalUnListedPendingClaims > 0) ? (
+              <div className={`m-auto w-[220px] md:w-auto`}>
+                <Button
+                  size="small"
+                  type="secondary"
+                  content="Claim"
+                  className="w-full mt-4 md:text-xsm md:py-1 md:px-2"
+                  onClick={claimHandler}
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
-          {isWalletConnected &&
-          (activeClaims > 0 ||
-            totalPendingBalance > 0 ||
-            activeStkAtomClaims > 0 ||
-            totalUnListedPendingClaims > 0) ? (
-            <div className={`m-auto w-[220px] md:w-auto`}>
-              <Button
-                size="small"
-                type="secondary"
-                content="Claim"
-                className="w-full mt-4 md:text-xsm md:py-1 md:px-2"
-                onClick={claimHandler}
-              />
-            </div>
-          ) : (
-            ""
-          )}
         </div>
       </div>
     </div>

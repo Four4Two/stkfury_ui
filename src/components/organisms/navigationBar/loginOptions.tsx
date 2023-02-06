@@ -29,24 +29,27 @@ export const LoginOptions = () => {
 
   const disconnectHandler = async () => {
     localStorage.removeItem("wallet");
+    localStorage.removeItem("walletName");
     window.location.reload();
   };
 
   useEffect(() => {
     const fetchApi = async () => {
-      const provider = await cosmos();
-      isWalletConnected && walletName === "keplr"
-        ? window.addEventListener("keplr_keystorechange", async () => {
-            await connect("keplr");
-          })
-        : null;
-      isWalletConnected && walletName === "cosmosStation"
-        ? await provider.onAccountChanged(async () => {
-            await connect("cosmosStation");
-          })
-        : null;
+      if (walletName === "keplr") {
+        window.addEventListener("keplr_keystorechange", async () => {
+          await connect("keplr");
+        });
+      } else if (walletName === "cosmosStation") {
+        const provider = await cosmos();
+        await provider.onAccountChanged(async () => {
+          await connect("cosmosStation");
+        });
+      }
+      return null;
     };
-    fetchApi();
+    if (isWalletConnected) {
+      fetchApi();
+    }
   }, [walletName, isWalletConnected, connect]);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -120,7 +123,7 @@ export const LoginOptions = () => {
         {isWalletConnected ? (
           <>
             <div
-              className="p-4 flex items-center md:py-3"
+              className="p-4 flex items-center md:py-3 rounded-md"
               onClick={disconnectHandler}
             >
               <Icon
@@ -133,9 +136,9 @@ export const LoginOptions = () => {
             </div>
           </>
         ) : (
-          <div>
+          <div className="py-2">
             <div
-              className="p-4 flex items-center md:py-3"
+              className="px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-tr-md rounded-tl-md"
               onClick={() => connectHandler("keplr")}
             >
               <img
@@ -148,7 +151,7 @@ export const LoginOptions = () => {
               </span>
             </div>
             <div
-              className="p-4 flex items-center md:py-3"
+              className="px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-br-md rounded-bl-md"
               onClick={() => connectHandler("cosmosStation")}
             >
               <img

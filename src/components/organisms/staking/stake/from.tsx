@@ -18,6 +18,7 @@ const From = () => {
   const { minDeposit } = useSelector((state: RootState) => state.initialData);
   const priceInDollars = atomPrice * Number(amount);
 
+  const totalAtomBalance = atomBalance + ibcAtomBalance;
   const { isWalletConnected } = useWallet();
   const { isMobile } = useWindowSize();
 
@@ -31,7 +32,9 @@ const From = () => {
   };
 
   const maxHandler = () => {
-    dispatch(setStakeAmount((Number(atomBalance) - MIN_STAKE_FEE).toFixed(6)));
+    dispatch(
+      setStakeAmount((Number(totalAtomBalance) - MIN_STAKE_FEE).toFixed(6))
+    );
   };
 
   return (
@@ -53,7 +56,7 @@ const From = () => {
           <p className="mt-3 leading-normal text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(atomBalance + ibcAtomBalance, 3, isMobile ? 2 : 6)}
+              {formatNumber(totalAtomBalance, 3, isMobile ? 2 : 6)}
             </span>
             {isWalletConnected &&
             Number(atomBalance) > MIN_STAKE_FEE + minDeposit ? (

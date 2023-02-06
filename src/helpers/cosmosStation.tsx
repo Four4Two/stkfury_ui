@@ -35,9 +35,11 @@ export const CosmosStationWallet = async (chain: ChainInfo) => {
     );
     console.log(account);
     return await getOfflineSigner(chain.chainId);
-  } catch (e) {
+  } catch (e: any) {
     if (e instanceof InstallError) {
-      console.log("not installed");
+      throw new Error("Please install cosmostation extension");
+    } else {
+      throw new Error(e.message);
     }
   }
 };

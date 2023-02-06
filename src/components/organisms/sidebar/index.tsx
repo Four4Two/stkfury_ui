@@ -30,15 +30,20 @@ const socialList = [
     url: "https://blog.pstake.finance/category/stkatom/",
     iconName: "medium-m",
     tooltip: "Medium"
+  },
+  {
+    url: "https://pstake.finance/atom",
+    iconName: "globe",
+    tooltip: "Website"
+  },
+  {
+    url: "#",
+    iconName: "bug",
+    tooltip: "Bug Report"
   }
 ];
 
 const moreList = [
-  {
-    url: "https://pstake.finance/atom",
-    name: "Website",
-    icon: "website"
-  },
   {
     url: "https://docs.pstake.finance/stkATOM_Introduction/",
     name: "Docs",

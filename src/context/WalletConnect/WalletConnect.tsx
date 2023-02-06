@@ -26,7 +26,7 @@ import {
 } from "../../store/reducers/liveData";
 import { getAPY, getChainStatus } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
-import CosmosStationWallet from "../../helpers/CosmosStation";
+import CosmosStationWallet from "../../helpers/cosmosStation";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -78,12 +78,14 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   useEffect(() => {
     if (walletConnected) {
       if (walletName === "keplr") {
+        console.log("here in keplr");
         connect("keplr");
       } else {
+        console.log("here in cosmosStation");
         connect("cosmosStation");
       }
     }
-  }, [walletConnected, walletName]);
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -121,6 +123,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   }, [cosmosChainInfo, persistenceChainInfo]);
 
   const connect = async (walletType: string): Promise<boolean> => {
+    console.log("in connect");
     try {
       let persistenceSignerData: any =
         walletType === "keplr"

@@ -13,7 +13,10 @@ import {
 } from "../../../../helpers/config";
 import { DEPOSIT, MIN_STAKE_FEE, STAKE } from "../../../../../AppConstants";
 import {
+  executeStakeTransactionSaga,
+  setLiquidStakeTxnType,
   setStakeTxnFailed,
+  setStakeTxnStepNumber,
   showStakeModal
 } from "../../../../store/reducers/transactions/stake";
 import {
@@ -23,8 +26,7 @@ import {
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
 import { executeDepositTransactionSaga } from "../../../../store/reducers/transactions/deposit";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
-import { displayToast } from "../../../molecules/toast";
-import { ToastType } from "../../../molecules/toast/types";
+import { put } from "@redux-saga/core/effects";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -49,12 +51,13 @@ const Submit = () => {
     persistenceAccountData,
     persistenceSigner,
     persistenceChainData,
-    isWalletConnected,
-    connect
+    isWalletConnected
   } = useWallet();
 
-  const diff = Number((atomBalance - Number(amount)).toFixed(6));
+  const totalAtomBalance: number = atomBalance + ibcAtomBalance;
+  const diff = Number((totalAtomBalance - Number(amount)).toFixed(6));
 
+  // stake amount after leaving min stake fee
   const stakeAmount =
     diff < MIN_STAKE_FEE
       ? (Number(amount) - Number((MIN_STAKE_FEE - diff).toFixed(6))).toFixed(6)
@@ -63,40 +66,62 @@ const Submit = () => {
   const stakeHandler = async () => {
     try {
       dispatch(setStakeTxnFailed(false));
-      dispatch(setTransactionProgress(DEPOSIT));
-      const depositMsg = await MakeIBCTransferMsg({
-        channel: ibcInfo?.sourceChannelId,
-        fromAddress: cosmosAccountData?.address,
-        toAddress: persistenceAccountData?.address,
-        amount: unDecimalize(stakeAmount),
-        timeoutHeight: undefined,
-        timeoutTimestamp: undefined,
-        denom: cosmosChainData?.stakeCurrency.coinMinimalDenom,
-        sourceRPCUrl: cosmosChainData?.rpc,
-        destinationRPCUrl: persistenceChainData?.rpc,
-        port: IBCConfiguration.ibcDefaultPort
-      });
-
       const stakeMsg = LiquidStakeMsg(
         persistenceAccountData!.address,
         unDecimalize(stakeAmount),
         ibcInfo!.coinDenom
       );
+      if (Number(stakeAmount) <= ibcAtomBalance) {
+        dispatch(setLiquidStakeTxnType("single"));
+        dispatch(setTransactionProgress(STAKE));
+        dispatch(setStakeTxnStepNumber(3));
+        dispatch(
+          executeStakeTransactionSaga({
+            persistenceSigner: persistenceSigner!,
+            msg: stakeMsg,
+            account: persistenceAccountData?.address!,
+            persistenceChainInfo: persistenceChainData!,
+            pollInitialBalance: stkAtomBalance,
+            cosmosAddress: cosmosAccountData!.address,
+            cosmosChainInfo: cosmosChainData!
+          })
+        );
+      } else {
+        dispatch(setLiquidStakeTxnType("dual"));
+        dispatch(setTransactionProgress(DEPOSIT));
 
-      dispatch(
-        executeDepositTransactionSaga({
-          cosmosSigner: cosmosSigner!,
-          cosmosChainInfo: cosmosChainData!,
-          persistenceChainInfo: persistenceChainData!,
-          cosmosAddress: cosmosAccountData!.address,
-          persistenceAddress: persistenceAccountData!.address,
-          depositMsg: depositMsg,
-          stakeMsg: stakeMsg,
-          pollInitialDepositBalance: ibcAtomBalance,
-          pollInitialStakeBalance: stkAtomBalance,
-          persistenceSigner: persistenceSigner!
-        })
-      );
+        const ibcBalance = Number(
+          Number(unDecimalize(stakeAmount)) -
+            Number(unDecimalize(ibcAtomBalance))
+        ).toFixed(6);
+
+        const depositMsg = await MakeIBCTransferMsg({
+          channel: ibcInfo?.sourceChannelId,
+          fromAddress: cosmosAccountData?.address,
+          toAddress: persistenceAccountData?.address,
+          amount: ibcBalance,
+          timeoutHeight: undefined,
+          timeoutTimestamp: undefined,
+          denom: cosmosChainData?.stakeCurrency.coinMinimalDenom,
+          sourceRPCUrl: cosmosChainData?.rpc,
+          destinationRPCUrl: persistenceChainData?.rpc,
+          port: IBCConfiguration.ibcDefaultPort
+        });
+        dispatch(
+          executeDepositTransactionSaga({
+            cosmosSigner: cosmosSigner!,
+            cosmosChainInfo: cosmosChainData!,
+            persistenceChainInfo: persistenceChainData!,
+            cosmosAddress: cosmosAccountData!.address,
+            persistenceAddress: persistenceAccountData!.address,
+            depositMsg: depositMsg,
+            stakeMsg: stakeMsg,
+            pollInitialDepositBalance: ibcAtomBalance,
+            pollInitialStakeBalance: stkAtomBalance,
+            persistenceSigner: persistenceSigner!
+          })
+        );
+      }
       dispatch(showStakeModal());
     } catch (e) {
       dispatch(setStakeTxnFailed(true));
@@ -107,9 +132,9 @@ const Submit = () => {
   const enable =
     amount &&
     Number(amount) > 0 &&
-    Number(amount) <= Number(atomBalance) &&
+    Number(amount) <= Number(totalAtomBalance) &&
     minDeposit <= Number(amount) &&
-    MIN_STAKE_FEE + minDeposit <= Number(atomBalance);
+    MIN_STAKE_FEE + minDeposit <= Number(totalAtomBalance);
   return isWalletConnected ? (
     <Button
       className={`${

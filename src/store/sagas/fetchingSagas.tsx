@@ -2,7 +2,6 @@ import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
   fetchAllEpochEntries,
-  getChainStatus,
   getTokenBalance,
   getTVU
 } from "../../pages/api/onChain";

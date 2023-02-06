@@ -335,6 +335,7 @@ export const getMaxRedeem = async (rpc: string): Promise<number> => {
     const moduleAccountResponse = await pstakeQueryService.DepositModuleAccount(
       {}
     );
+    console.log(moduleAccountResponse, "moduleAccountResponse");
     return moduleAccountResponse
       ? Number(moduleAccountResponse.balance?.amount)
       : 0;
