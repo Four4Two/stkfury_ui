@@ -69,10 +69,10 @@ export const KeplrWallet = async (
           features: ["ibc-transfer", "ibc-go"]
         });
       } catch {
-        alert("Failed to suggest the chain");
+        throw new Error("Failed to suggest the chain");
       }
     } else {
-      alert("Please use the recent version of keplr extension");
+      throw new Error("Please use the recent version of keplr extension");
     }
   }
 

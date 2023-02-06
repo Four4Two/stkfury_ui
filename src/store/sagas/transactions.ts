@@ -335,7 +335,6 @@ export function* executeDepositTransaction({
       "",
       cosmosChainInfo.rpc
     );
-    console.log(depositMsg, "depositMsg");
     yield put(setStakeTxnStepNumber(2));
     printConsole(transaction, "transaction deposit");
     yield put(setDepositAmount(""));

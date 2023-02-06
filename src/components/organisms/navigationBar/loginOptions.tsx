@@ -40,8 +40,7 @@ export const LoginOptions = () => {
           await connect("keplr");
         });
       } else if (walletName === "cosmosStation") {
-        const provider = await cosmos();
-        await provider.onAccountChanged(async () => {
+        window.cosmostation.cosmos.on("accountChanged", async () => {
           await connect("cosmosStation");
         });
       }

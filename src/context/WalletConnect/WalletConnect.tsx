@@ -78,10 +78,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   useEffect(() => {
     if (walletConnected) {
       if (walletName === "keplr") {
-        console.log("here in keplr");
         connect("keplr");
       } else {
-        console.log("here in cosmosStation");
         connect("cosmosStation");
       }
     }
@@ -123,7 +121,6 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   }, [cosmosChainInfo, persistenceChainInfo]);
 
   const connect = async (walletType: string): Promise<boolean> => {
-    console.log("in connect");
     try {
       let persistenceSignerData: any =
         walletType === "keplr"
@@ -161,13 +158,19 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       setWalletName(walletType);
       setWalletConnected("connected");
     } catch (e: any) {
-      printConsole(e);
       displayToast(
         {
           message: e.message!
         },
         ToastType.ERROR
       );
+      if (
+        e.message === "Please install cosmostation extension" ||
+        e.message === "install keplr extension"
+      ) {
+        localStorage.removeItem("wallet");
+        localStorage.removeItem("walletName");
+      }
       return false;
     }
     setIsWalletConnected(true);
