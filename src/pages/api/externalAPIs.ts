@@ -76,7 +76,7 @@ export const fetchCrescentPoolInfo = async () => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error fetching info from osmosis": OSMOSIS_POOL_URL
+      "Error fetching info from crescent": CRESCENT_POOL_URL
     });
     genericErrorHandler(e, customScope);
     return initialLiquidity_Fees;
