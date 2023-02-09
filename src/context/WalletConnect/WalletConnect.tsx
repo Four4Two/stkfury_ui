@@ -75,6 +75,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
 
   const dispatch = useDispatch();
 
+  // re-login on every reload or refresh
   useEffect(() => {
     if (walletConnected) {
       if (walletName === "keplr") {
@@ -85,6 +86,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     }
   }, [walletConnected, walletName]);
 
+  // fetch calls on initial render
   useEffect(() => {
     dispatch(
       fetchInitSaga({
@@ -100,6 +102,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     );
   }, [persistenceChainInfo, dispatch, cosmosChainInfo]);
 
+  // fetch calls only on initial render
   useEffect(() => {
     const fetchApy = async () => {
       const [apy, cosmosChainStatus, persistenceChainStatus] =

@@ -37,6 +37,7 @@ const NavigationBar = () => {
     persistenceChainData
   } = useWallet();
 
+  // fetch call on every 10 sec
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(
@@ -49,6 +50,7 @@ const NavigationBar = () => {
     return () => clearInterval(interval);
   }, [dispatch, persistenceChainData, cosmosChainData]);
 
+  // fetch call on every 3min sec
   useEffect(() => {
     const interval = setInterval(() => {
       if (isWalletConnected) {
