@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
 import Tooltip from "rc-tooltip";
 import { Icon } from "../../atoms/icon";
-import { decimalize, formatNumber } from "../../../helpers/utils";
+import {
+  decimalize,
+  formatNumber,
+  truncateToFixedDecimalPlaces
+} from "../../../helpers/utils";
 import Button from "../../atoms/button";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import { showClaimModal } from "../../../store/reducers/transactions/claim";
@@ -15,6 +19,8 @@ import { MIN_BALANCE_CHECK } from "../../../../AppConstants";
 const BalanceList = () => {
   const dispatch = useDispatch();
   const [activeClaims, setActiveClaims] = useState<number>(0);
+  const { exchangeRate } = useSelector((state: RootState) => state.initialData);
+  const { atomPrice } = useSelector((state: RootState) => state.liveData);
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState<number>(0);
   const [pendingList, setPendingList] = useState<any>([]);
   const [open, setOpen] = useState<any>({
@@ -27,6 +33,10 @@ const BalanceList = () => {
     useState<number>(0);
   const { ibcAtomBalance, stkAtomBalance, xprtBalance, atomBalance } =
     useSelector((state: RootState) => state.balances);
+
+  const stkATOMAmount = truncateToFixedDecimalPlaces(
+    Number(stkAtomBalance) * (1 / exchangeRate)
+  );
 
   const { isWalletConnected } = useWallet();
   const { isMobile } = useWindowSize();
@@ -91,7 +101,7 @@ const BalanceList = () => {
                  } py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+            <span className="text-light-emphasis text-sm flex items-center font-medium leading-normal">
               Persistence Balances
             </span>
           </span>
@@ -108,8 +118,8 @@ const BalanceList = () => {
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/stk_atom.svg"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="atom"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
@@ -118,7 +128,11 @@ const BalanceList = () => {
               </div>
               <p
                 className="text-light-mid text-sm font-medium leading-5"
-                title={formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+                title={`$${formatNumber(
+                  atomPrice * stkATOMAmount,
+                  3,
+                  isMobile ? 2 : 6
+                )}`}
               >
                 {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
               </p>
@@ -127,18 +141,15 @@ const BalanceList = () => {
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/xprt_white.svg"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="xprt_white"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
                   XPRT
                 </span>
               </div>
-              <p
-                className="text-light-mid text-sm font-medium leading-5"
-                title={formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
-              >
+              <p className="text-light-mid text-sm font-medium leading-5">
                 {formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
               </p>
             </div>
@@ -148,8 +159,8 @@ const BalanceList = () => {
                 <div className="flex items-center">
                   <img
                     src={"/images/tokens/atom.svg"}
-                    width={24}
-                    height={24}
+                    width={22}
+                    height={22}
                     alt="atom"
                   />
                   <span className="text-light-mid text-sm leading-5 ml-2.5">
@@ -168,7 +179,14 @@ const BalanceList = () => {
                     </button>
                   </Tooltip>
                 </div>
-                <p className="text-light-mid text-sm font-medium leading-5">
+                <p
+                  className="text-light-mid text-sm font-medium leading-5"
+                  title={`$${formatNumber(
+                    atomPrice * ibcAtomBalance,
+                    3,
+                    isMobile ? 2 : 6
+                  )}`}
+                >
                   {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
                 </p>
               </div>
@@ -190,7 +208,7 @@ const BalanceList = () => {
                  } py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+            <span className="text-light-emphasis flex items-center text-sm flex items-center font-medium leading-normal">
               Cosmos Balances
             </span>
           </span>
@@ -206,15 +224,22 @@ const BalanceList = () => {
             <div className="flex items-center">
               <img
                 src={"/images/tokens/atom.svg"}
-                width={24}
-                height={24}
+                width={22}
+                height={22}
                 alt="atom"
               />
               <span className="text-light-mid text-sm leading-5 ml-2.5">
                 ATOM
               </span>
             </div>
-            <p className="text-light-mid text-sm font-medium leading-5">
+            <p
+              className="text-light-mid text-sm font-medium leading-5"
+              title={`$${formatNumber(
+                atomPrice * atomBalance,
+                3,
+                isMobile ? 2 : 6
+              )}`}
+            >
               {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}
             </p>
           </div>
@@ -227,7 +252,10 @@ const BalanceList = () => {
                  ${open["unStaking"] ? "opened" : "closed"} py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+            <span
+              className="text-light-emphasis flex items-center text-sm flex
+             items-center font-medium leading-normal"
+            >
               Unstaking
             </span>
             <Tooltip
@@ -257,8 +285,8 @@ const BalanceList = () => {
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/atom.svg"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="atom"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">

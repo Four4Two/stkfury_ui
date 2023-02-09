@@ -23,6 +23,7 @@ const From = () => {
     Number(amount) * (1 / exchangeRate)
   );
 
+  // dollar value of user input based on exchangeRate at that moments
   const priceInDollars = atomPrice * Number(stkATOMAmount);
 
   const inputHandler = (evt: ChangeEvent<HTMLInputElement>) => {

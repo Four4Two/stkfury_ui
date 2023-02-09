@@ -26,7 +26,6 @@ import {
 import { MakeIBCTransferMsg } from "../../../../helpers/transaction";
 import { executeDepositTransactionSaga } from "../../../../store/reducers/transactions/deposit";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
-import { put } from "@redux-saga/core/effects";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -54,10 +53,12 @@ const Submit = () => {
     isWalletConnected
   } = useWallet();
 
+  //atom on both cosmos and persistence chains
   const totalAtomBalance: number = atomBalance + ibcAtomBalance;
+
   const diff = Number((totalAtomBalance - Number(amount)).toFixed(6));
 
-  // stake amount after leaving min stake fee
+  // stake amount after leaving min stake fee(MIN_STAKE_FEE)
   const stakeAmount =
     diff < MIN_STAKE_FEE
       ? (Number(amount) - Number((MIN_STAKE_FEE - diff).toFixed(6))).toFixed(6)
@@ -90,6 +91,7 @@ const Submit = () => {
         dispatch(setLiquidStakeTxnType("dual"));
         dispatch(setTransactionProgress(DEPOSIT));
 
+        //ibc balance from cosmos to persistence
         const ibcBalance = Number(
           Number(unDecimalize(stakeAmount)) -
             Number(unDecimalize(ibcAtomBalance))
@@ -135,6 +137,7 @@ const Submit = () => {
     Number(amount) <= Number(totalAtomBalance) &&
     minDeposit <= Number(amount) &&
     MIN_STAKE_FEE + minDeposit <= Number(totalAtomBalance);
+
   return isWalletConnected ? (
     <Button
       className={`${

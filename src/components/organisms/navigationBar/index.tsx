@@ -18,6 +18,7 @@ import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
+import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ const NavigationBar = () => {
     persistenceChainData
   } = useWallet();
 
+  // fetch call on every 10 sec
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(
@@ -48,9 +50,16 @@ const NavigationBar = () => {
     return () => clearInterval(interval);
   }, [dispatch, persistenceChainData, cosmosChainData]);
 
+  // fetch call on every 3min sec
   useEffect(() => {
     const interval = setInterval(() => {
       if (isWalletConnected) {
+        dispatch(
+          fetchPendingClaimsSaga({
+            address: persistenceAccountData!.address,
+            persistenceChainInfo: persistenceChainData!
+          })
+        );
         dispatch(
           fetchInitSaga({
             persistenceChainInfo: persistenceChainData!,

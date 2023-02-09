@@ -14,6 +14,7 @@ import WithdrawToasts from "./withdrawModal/withdrawToasts";
 import BalanceList from "./balanceList";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import { useWallet } from "../../../context/WalletConnect/WalletConnect";
+import { BUG_REPORT_URL } from "../../../../AppConstants";
 
 const socialList = [
   {
@@ -37,7 +38,7 @@ const socialList = [
     tooltip: "Website"
   },
   {
-    url: "#",
+    url: BUG_REPORT_URL,
     iconName: "bug",
     tooltip: "Bug Report"
   }
