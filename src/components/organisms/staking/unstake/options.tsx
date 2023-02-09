@@ -15,7 +15,10 @@ const Options = () => {
     (state: RootState) => state.initialData
   );
 
+  // user balance after deducting redeem fee
   const stkAtomAmount = Number(amount) - Number(amount) * redeemFee;
+
+  //converting stkAtom to atom
   const atomAmount = Number(stkAtomAmount) / exchangeRate;
 
   let redeemAmount: number;

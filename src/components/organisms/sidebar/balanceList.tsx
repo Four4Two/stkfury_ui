@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
 import Tooltip from "rc-tooltip";
 import { Icon } from "../../atoms/icon";
-import { decimalize, formatNumber } from "../../../helpers/utils";
+import {
+  decimalize,
+  formatNumber,
+  truncateToFixedDecimalPlaces
+} from "../../../helpers/utils";
 import Button from "../../atoms/button";
 import { hideMobileSidebar } from "../../../store/reducers/sidebar";
 import { showClaimModal } from "../../../store/reducers/transactions/claim";
@@ -15,6 +19,8 @@ import { MIN_BALANCE_CHECK } from "../../../../AppConstants";
 const BalanceList = () => {
   const dispatch = useDispatch();
   const [activeClaims, setActiveClaims] = useState<number>(0);
+  const { exchangeRate } = useSelector((state: RootState) => state.initialData);
+  const { atomPrice } = useSelector((state: RootState) => state.liveData);
   const [activeStkAtomClaims, setActiveStkAtomClaims] = useState<number>(0);
   const [pendingList, setPendingList] = useState<any>([]);
   const [open, setOpen] = useState<any>({
@@ -27,6 +33,10 @@ const BalanceList = () => {
     useState<number>(0);
   const { ibcAtomBalance, stkAtomBalance, xprtBalance, atomBalance } =
     useSelector((state: RootState) => state.balances);
+
+  const stkATOMAmount = truncateToFixedDecimalPlaces(
+    Number(stkAtomBalance) * (1 / exchangeRate)
+  );
 
   const { isWalletConnected } = useWallet();
   const { isMobile } = useWindowSize();
@@ -118,7 +128,11 @@ const BalanceList = () => {
               </div>
               <p
                 className="text-light-mid text-sm font-medium leading-5"
-                title={formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+                title={`$${formatNumber(
+                  atomPrice * stkATOMAmount,
+                  3,
+                  isMobile ? 2 : 6
+                )}`}
               >
                 {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
               </p>
@@ -135,10 +149,7 @@ const BalanceList = () => {
                   XPRT
                 </span>
               </div>
-              <p
-                className="text-light-mid text-sm font-medium leading-5"
-                title={formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
-              >
+              <p className="text-light-mid text-sm font-medium leading-5">
                 {formatNumber(xprtBalance, 3, isMobile ? 2 : 6)}
               </p>
             </div>
@@ -168,7 +179,14 @@ const BalanceList = () => {
                     </button>
                   </Tooltip>
                 </div>
-                <p className="text-light-mid text-sm font-medium leading-5">
+                <p
+                  className="text-light-mid text-sm font-medium leading-5"
+                  title={`$${formatNumber(
+                    atomPrice * ibcAtomBalance,
+                    3,
+                    isMobile ? 2 : 6
+                  )}`}
+                >
                   {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
                 </p>
               </div>
@@ -214,7 +232,14 @@ const BalanceList = () => {
                 ATOM
               </span>
             </div>
-            <p className="text-light-mid text-sm font-medium leading-5">
+            <p
+              className="text-light-mid text-sm font-medium leading-5"
+              title={`$${formatNumber(
+                atomPrice * atomBalance,
+                3,
+                isMobile ? 2 : 6
+              )}`}
+            >
               {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}
             </p>
           </div>
