@@ -91,7 +91,7 @@ const BalanceList = () => {
                  } py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+            <span className="text-light-emphasis text-sm flex items-center font-medium leading-normal">
               Persistence Balances
             </span>
           </span>
@@ -108,8 +108,8 @@ const BalanceList = () => {
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/stk_atom.svg"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="atom"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
@@ -127,8 +127,8 @@ const BalanceList = () => {
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/xprt_white.svg"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="xprt_white"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
@@ -148,8 +148,8 @@ const BalanceList = () => {
                 <div className="flex items-center">
                   <img
                     src={"/images/tokens/atom.svg"}
-                    width={24}
-                    height={24}
+                    width={22}
+                    height={22}
                     alt="atom"
                   />
                   <span className="text-light-mid text-sm leading-5 ml-2.5">
@@ -190,7 +190,7 @@ const BalanceList = () => {
                  } py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+            <span className="text-light-emphasis flex items-center text-sm flex items-center font-medium leading-normal">
               Cosmos Balances
             </span>
           </span>
@@ -206,8 +206,8 @@ const BalanceList = () => {
             <div className="flex items-center">
               <img
                 src={"/images/tokens/atom.svg"}
-                width={24}
-                height={24}
+                width={22}
+                height={22}
                 alt="atom"
               />
               <span className="text-light-mid text-sm leading-5 ml-2.5">
@@ -227,7 +227,10 @@ const BalanceList = () => {
                  ${open["unStaking"] ? "opened" : "closed"} py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis text-base flex items-center font-semibold leading-normal">
+            <span
+              className="text-light-emphasis flex items-center text-sm flex
+             items-center font-medium leading-normal"
+            >
               Unstaking
             </span>
             <Tooltip
@@ -257,8 +260,8 @@ const BalanceList = () => {
               <div className="flex items-center">
                 <img
                   src={"/images/tokens/atom.svg"}
-                  width={24}
-                  height={24}
+                  width={22}
+                  height={22}
                   alt="atom"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">

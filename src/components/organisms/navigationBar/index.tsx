@@ -18,6 +18,7 @@ import { fetchInitSaga } from "../../../store/reducers/initialData";
 import { RootState } from "../../../store/reducers";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
+import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -51,6 +52,12 @@ const NavigationBar = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (isWalletConnected) {
+        dispatch(
+          fetchPendingClaimsSaga({
+            address: persistenceAccountData!.address,
+            persistenceChainInfo: persistenceChainData!
+          })
+        );
         dispatch(
           fetchInitSaga({
             persistenceChainInfo: persistenceChainData!,

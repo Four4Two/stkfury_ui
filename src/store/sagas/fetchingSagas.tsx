@@ -45,14 +45,14 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     persistenceChainInfo,
     cosmosChainInfo
   }: any = payload;
-  //balances on persistence chain
+  //fetch balance on persistence chain
   // @ts-ignore
   const persistenceBalances: any = yield fetchAccountBalance(
     persistenceAddress,
     persistenceChainInfo.rpc
   );
 
-  //balances cosmos chain
+  //fetch balance on cosmos chain
   // @ts-ignore
   const cosmosBalances: any = yield fetchAccountBalance(
     cosmosAddress,
@@ -65,7 +65,7 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     IBCInfo!.coinDenom
   );
 
-  //stk atom balance on persistence chain
+  //stkAtom balance on persistence chain
   const stkAtomBalance = getTokenBalance(
     persistenceBalances,
     STK_ATOM_MINIMAL_DENOM
