@@ -21,6 +21,9 @@ export const BUG_REPORT_URL =
   "https://docs.google.com/forms/d/1SpwpntQ5jVAb5BwtG7-Ul58z0vE7RocCSrN-s6bCl8M/viewform?edit_requested=true";
 export const IBC_DENOM =
   "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2";
+export const CRESCENT_STK_ATOM_DENOM =
+  "ibc/E32F6485CDAE995FC492010770936119D0BF90F5226C9AED727988DF03B5F569";
+
 // Key works
 export const COIN_ATOM = "ATOM";
 export const COIN_ATOM_DENOM = "uatom";

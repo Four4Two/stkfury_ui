@@ -1,10 +1,15 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ChainInfo } from "@keplr-wallet/types";
 import { FEES, POOL_LIQUIDITY } from "../../../../AppConstants";
+import React from "react";
 
 export interface InitialLiquidityFees {
   [POOL_LIQUIDITY]: number;
   [FEES]: number;
+}
+export interface InitialTvlApyTypes {
+  tvl: number | React.ReactNode;
+  total_apy: number | React.ReactNode;
 }
 
 export interface InitialDataState {
@@ -12,6 +17,7 @@ export interface InitialDataState {
   apy: number;
   redeemFee: number;
   osmosisInfo: InitialLiquidityFees;
+  crescentInfo: InitialTvlApyTypes;
   maxRedeem: number;
   minDeposit: number;
 }
