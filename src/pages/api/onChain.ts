@@ -119,7 +119,7 @@ export const getAPR = async () => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate": persistenceChainInfo?.rpc
+      "Error while fetching apr": persistenceChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
     return -1;

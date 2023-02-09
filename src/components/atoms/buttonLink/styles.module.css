@@ -11,10 +11,18 @@
     border: 0 solid;
 }
 
+.primary:hover{
+    background: #cb575bfa;
+}
+
 .secondary {
     background: transparent;
     color: #fcfcfc;
     border: 3px solid #C73238;
+}
+
+.secondary:hover{
+    background: #C73238;
 }
 
 .tertiary {
