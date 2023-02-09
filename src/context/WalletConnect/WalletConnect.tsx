@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState
 } from "react";
-import { WalletProviderProps, WalletState } from "./types";
+import { WalletProviderProps, WalletState, walletType } from "./types";
 import { ChainInfo, Window as KeplrWindow } from "@keplr-wallet/types";
 import { AccountData } from "@cosmjs/launchpad/build/signer";
 import { OfflineSigner } from "@cosmjs/launchpad";
@@ -13,7 +13,6 @@ import KeplrWallet from "../../helpers/keplr";
 import { fetchBalanceSaga } from "../../store/reducers/balances";
 import { useDispatch } from "react-redux";
 import { fetchInitSaga, setAPY } from "../../store/reducers/initialData";
-import { printConsole } from "../../helpers/utils";
 import { fetchPendingClaimsSaga } from "../../store/reducers/claim";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
@@ -25,7 +24,6 @@ import {
   setPersistenceChainStatus
 } from "../../store/reducers/liveData";
 import { getAPY, getChainStatus } from "../../pages/api/onChain";
-import { put } from "@redux-saga/core/effects";
 import CosmosStationWallet from "../../helpers/cosmosStation";
 
 declare global {
@@ -42,7 +40,8 @@ const WalletContext = createContext<WalletState>({
   connect(): Promise<boolean> {
     return Promise.resolve(false);
   },
-  isWalletConnected: false
+  isWalletConnected: false,
+  walletType: "keplr"
 });
 
 export const useWallet = (): WalletState => {
@@ -66,6 +65,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     OfflineSigner | OfflineDirectSigner | null
   >(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletType, setWalletType] = useState<walletType>("keplr");
   const [persistenceAccountData, setPersistenceAccountData] =
     useState<AccountData | null>(null);
   const [cosmosAccountData, setCosmosAccountData] =
@@ -83,7 +83,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         connect("cosmosStation");
       }
     }
-  }, []);
+  }, [walletConnected, walletName]);
 
   useEffect(() => {
     dispatch(
@@ -120,7 +120,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     setPersistenceChainData(persistenceChainInfo);
   }, [cosmosChainInfo, persistenceChainInfo]);
 
-  const connect = async (walletType: string): Promise<boolean> => {
+  const connect = async (walletType: walletType): Promise<boolean> => {
     try {
       let persistenceSignerData: any =
         walletType === "keplr"
@@ -157,6 +157,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       );
       setWalletName(walletType);
       setWalletConnected("connected");
+      setWalletType(walletType);
     } catch (e: any) {
       displayToast(
         {
@@ -185,7 +186,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     persistenceSigner,
     persistenceChainData,
     connect,
-    isWalletConnected
+    isWalletConnected,
+    walletType
   };
 
   return (

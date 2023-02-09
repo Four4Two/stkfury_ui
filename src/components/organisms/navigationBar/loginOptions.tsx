@@ -9,8 +9,6 @@ import { Window as KeplrWindow } from "@keplr-wallet/types/build/window";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
 import { walletType } from "../../../context/WalletConnect/types";
-import { getStorageValue } from "../../../customHooks/useLocalStorage";
-import { cosmos } from "@cosmostation/extension-client";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -18,9 +16,9 @@ declare global {
 
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { connect, isWalletConnected, persistenceAccountData } = useWallet();
+  const { connect, isWalletConnected, persistenceAccountData, walletType } =
+    useWallet();
   const { isMobile } = useWindowSize();
-  const walletName = getStorageValue("walletName", "");
 
   const connectHandler = async (wallet: walletType) => {
     await connect(wallet);
@@ -35,11 +33,11 @@ export const LoginOptions = () => {
 
   useEffect(() => {
     const fetchApi = async () => {
-      if (walletName === "keplr") {
+      if (walletType === "keplr") {
         window.addEventListener("keplr_keystorechange", async () => {
           await connect("keplr");
         });
-      } else if (walletName === "cosmosStation") {
+      } else if (walletType === "cosmosStation") {
         window.cosmostation.cosmos.on("accountChanged", async () => {
           await connect("cosmosStation");
         });
@@ -49,7 +47,7 @@ export const LoginOptions = () => {
     if (isWalletConnected) {
       fetchApi();
     }
-  }, [walletName, isWalletConnected, connect]);
+  }, [walletType, isWalletConnected, connect]);
 
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => {
@@ -57,11 +55,11 @@ export const LoginOptions = () => {
   });
 
   const loginIcon =
-    walletName === "cosmosStation"
+    walletType === "cosmosStation"
       ? "cosmos_station"
-      : walletName === "keplr"
+      : walletType === "keplr"
       ? "keplr_round"
-      : "cosmos_station";
+      : "keplr_round";
 
   return (
     <div className="inline-block w-fit cursor-pointer relative">

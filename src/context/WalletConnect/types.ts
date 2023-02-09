@@ -38,4 +38,5 @@ export interface WalletState {
   persistenceSigner: OfflineSigner | OfflineDirectSigner | null;
   persistenceChainData: ChainInfo | null;
   connect: (walletType: walletType) => Promise<boolean>;
+  walletType: walletType;
 }
