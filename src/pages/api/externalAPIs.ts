@@ -6,6 +6,7 @@ import {
   FEES,
   POOL_LIQUIDITY
 } from "../../../AppConstants";
+import { initialTVLAPY } from "../../store/reducers/initialData";
 
 export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
@@ -79,7 +80,7 @@ export const fetchCrescentPoolInfo = async () => {
       "Error fetching info from crescent": CRESCENT_POOL_URL
     });
     genericErrorHandler(e, customScope);
-    return initialLiquidity_Fees;
+    return initialTVLAPY;
   }
-  return initialLiquidity_Fees;
+  return initialTVLAPY;
 };
