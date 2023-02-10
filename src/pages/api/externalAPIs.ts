@@ -38,7 +38,7 @@ export const fetchOsmosisPoolInfo = async () => {
     const res = await Axios.get(OSMOSIS_POOL_URL);
     if (res && res.data) {
       return {
-        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity).toLocaleString(),
+        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity).toFixed(2),
         [FEES]: res.data[0].fees
       };
     }
@@ -69,7 +69,7 @@ export const fetchCrescentPoolInfo = async () => {
         Number(crescentInfo.Reserved[1].amount) *
         crescentInfo.Reserved[1].priceOracle;
       return {
-        tvl: Number(decimalize(atomTvl + stkAtomTvl)).toLocaleString(),
+        tvl: Number(decimalize(atomTvl + stkAtomTvl)).toFixed(2),
         total_apy: Number(crescentInfo?.apr).toFixed(2)
       };
     }

@@ -3,9 +3,11 @@ import React from "react";
 import { Icon } from "../../atoms/icon";
 import ButtonLink from "../../atoms/buttonLink";
 import Tooltip from "rc-tooltip";
+import { useWindowSize } from "../../../customHooks/useWindowSize";
+import { numberFormat } from "../../../helpers/utils";
 
 const listData = (label: any, value: any) => (
-  <div className="pr-5 flex-1 md:py-2">
+  <div className="pr-5 flex-1 lg:py-2">
     <p
       className="font-normal text-base
          leading-normal mb-2 text-light-mid lg:whitespace-nowrap md:mb-1"
@@ -18,7 +20,7 @@ const listData = (label: any, value: any) => (
   </div>
 );
 
-const listShow = (item: any, index: number) => (
+const listShow = (item: any, index: number, isMobile = false) => (
   <div className="card-container mb-8" key={index}>
     <div className="card card-primary bg-[#28282880] p-8 rounded-md lg:block flex flex-wrap md:p-5">
       <div className="content flex-1 md:flex-auto">
@@ -52,7 +54,7 @@ const listShow = (item: any, index: number) => (
           </Tooltip>
         </div>
         <div className="flex flex-wrap md:mb-2">
-          <div className="md:hidden flex-1">
+          <div className="md:hidden pr-4 md:pr-0 flex-1">
             {listData(
               "Platform",
               <>
@@ -65,10 +67,19 @@ const listShow = (item: any, index: number) => (
           </div>
           {item.type === "defi" ? (
             <>
-              {item.platform === "Osmosis"
-                ? listData("Swap Fee", `${item.fees}`)
-                : listData("APR", `${item.apy}%`)}
-              {listData("Pool Liquidity", `$${item.pool_liquidity}`)}
+              {listData("Swap Fee", `${item.fees}`)}
+
+              {item.platform === "Crescent"
+                ? listData("APR", `${item.apy}%`)
+                : null}
+              {listData(
+                "Pool Liquidity",
+                `$${
+                  isMobile
+                    ? numberFormat(item.pool_liquidity, 3)
+                    : Number(item.pool_liquidity).toLocaleString()
+                }`
+              )}
             </>
           ) : (
             <>
@@ -78,24 +89,24 @@ const listShow = (item: any, index: number) => (
           )}
         </div>
       </div>
-      <div className="w-[11.875rem] flex flex-col justify-center md:w-auto">
+      <div className="w-[11.875rem] flex flex-col justify-center lg:w-auto lg:mt-3">
         {item.launched ? (
           item.type === "yield_farming" ? (
-            <div className="flex flex-col justify-center mx-2.5 md:flex-row md:mx-0">
+            <div className="flex flex-col justify-center mx-2.5 lg:flex-row lg:mx-0">
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
-                className="button button-primary mb-3 md:py-2 md:px-4 md:text-xsm md:flex-1 md:mb-0 md:mr-2 pointer-events-none"
+                className="button button-primary mb-3 lg:py-2 lg:px-4 lg:text-xsm lg:flex-1 lg:mb-0 lg:mr-2 pointer-events-none"
                 content={<>Coming Soon</>}
               />
             </div>
           ) : item.type === "defi" ? (
-            <div className="flex flex-col justify-center mx-2.5 md:flex-row md:mx-0">
+            <div className="flex flex-col justify-center mx-2.5 lg:flex-row lg:mx-0">
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
                 type={"primary"}
-                className="button button-primary mb-3 md:py-2 md:px-4 md:text-xsm md:flex-1 md:mb-0 md:mr-2"
+                className="button button-primary mb-3 lg:py-2 lg:px-4 lg:text-xsm lg:flex-1 lg:mb-0 lg:mr-2"
                 content={
                   <div className="flex justify-center items-center">
                     Swap
@@ -110,7 +121,7 @@ const listShow = (item: any, index: number) => (
                 link={item.pool_link}
                 target={"_blank"}
                 type="secondary"
-                className="button button-primary px-4 md:py-2 md:px-4 md:text-xsm md:flex-1"
+                className="button button-primary px-4 lg:py-2 lg:px-4 lg:text-xsm lg:flex-1"
                 content={
                   <div className="flex justify-center items-center">
                     Add Liquidity
@@ -127,7 +138,7 @@ const listShow = (item: any, index: number) => (
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
-                className="button button-primary md:py-2 md:px-4 md:text-xsm"
+                className="button button-primary lg:py-2 lg:px-4 lg:text-xsm"
                 content={
                   <>
                     Borrow
@@ -141,7 +152,7 @@ const listShow = (item: any, index: number) => (
               <ButtonLink
                 link={item.swap_link}
                 target={"_blank"}
-                className="button button-primary md:py-2 md:px-4 md:text-xsm"
+                className="button button-primary lg:py-2 lg:px-4 lg:text-xsm"
                 content={
                   <>
                     Lend
@@ -159,7 +170,7 @@ const listShow = (item: any, index: number) => (
             <ButtonLink
               link={item.swap_link}
               target={"_blank"}
-              className="button button-primary pointer-events-none opacity-50 md:py-2 md:px-4 md:text-xsm"
+              className="button button-primary pointer-events-none opacity-50 lg:py-2 lg:px-4 lg:text-xsm"
               content="Coming Soon"
             />
           </div>
@@ -170,11 +181,14 @@ const listShow = (item: any, index: number) => (
 );
 
 const CardList = ({ sortActive, allData, defiData, lendingData }: any) => {
+  const { isMobile } = useWindowSize();
   return (
     <div>
       {sortActive["all"] && allData.length ? (
         allData.length ? (
-          allData.map((item: any, index: number) => listShow(item, index))
+          allData.map((item: any, index: number) =>
+            listShow(item, index, isMobile)
+          )
         ) : (
           <p className="empty-list">Data not found</p>
         )
@@ -183,7 +197,9 @@ const CardList = ({ sortActive, allData, defiData, lendingData }: any) => {
       )}
       {defiData.length && sortActive["dexes"] ? (
         defiData.length ? (
-          defiData.map((item: any, index: number) => listShow(item, index))
+          defiData.map((item: any, index: number) =>
+            listShow(item, index, isMobile)
+          )
         ) : (
           <p className="empty-list">Data not found</p>
         )
@@ -192,7 +208,9 @@ const CardList = ({ sortActive, allData, defiData, lendingData }: any) => {
       )}
       {lendingData.length && sortActive["lending"] ? (
         lendingData.length ? (
-          lendingData.map((item: any, index: number) => listShow(item, index))
+          lendingData.map((item: any, index: number) =>
+            listShow(item, index, isMobile)
+          )
         ) : (
           <p className="empty-list">Data not found</p>
         )
