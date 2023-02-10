@@ -20,23 +20,26 @@ const DefiList = () => {
   const initData = useSelector((state: RootState) => state.initialData);
 
   useEffect(() => {
-    const defiList = defiSwapList(initData.osmosisInfo);
+    const defiList = defiSwapList(initData.osmosisInfo, initData.crescentInfo);
     setDefiData(defiList);
     setLendingData(defiBorrowLendingList);
     const totalData: any = [
-      ...defiSwapList(initData.osmosisInfo),
+      ...defiSwapList(initData.osmosisInfo, initData.crescentInfo),
       ...defiBorrowLendingList
     ];
     const sortedData = totalData.sort((a: any, b: any) => a.id - b.id);
     setAllData(sortedData);
-  }, [initData.osmosisInfo]);
+  }, [initData.osmosisInfo, initData.crescentInfo]);
 
   const searchHandler = (evt: any) => {
     const searchTerm = evt.target.value;
     let newDefiList;
     let newLendingList;
 
-    newDefiList = defiSwapList(initData.osmosisInfo).filter((val) => {
+    newDefiList = defiSwapList(
+      initData.osmosisInfo,
+      initData.crescentInfo
+    ).filter((val) => {
       return (
         val.inputToken.toLowerCase().includes(searchTerm.toLowerCase()) ||
         val.platform.toLowerCase().includes(searchTerm.toLowerCase())

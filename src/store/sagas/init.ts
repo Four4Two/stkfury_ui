@@ -1,6 +1,7 @@
 import {
   FetchInitialDataSaga,
-  InitialLiquidityFees
+  InitialLiquidityFees,
+  InitialTvlApyTypes
 } from "../reducers/initialData/types";
 import {
   getAPR,
@@ -8,13 +9,17 @@ import {
   getMaxRedeem,
   getFee
 } from "../../pages/api/onChain";
-import { fetchOsmosisPoolInfo } from "../../pages/api/externalAPIs";
+import {
+  fetchCrescentPoolInfo,
+  fetchOsmosisPoolInfo
+} from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
   setExchangeRate,
   setOsmosisInfo,
   setMaxRedeem,
-  setRedeemFee
+  setRedeemFee,
+  setCrescentInfo
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
@@ -27,6 +32,8 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   yield put(setExchangeRate(exchangeRate));
   yield put(setRedeemFee(fee));
   const osmosisInfo: InitialLiquidityFees = yield fetchOsmosisPoolInfo();
+  const crescentInfo: InitialTvlApyTypes = yield fetchCrescentPoolInfo();
+  yield put(setCrescentInfo(crescentInfo));
   yield put(setOsmosisInfo(osmosisInfo));
   yield put(setMaxRedeem(maxRedeem));
 }
