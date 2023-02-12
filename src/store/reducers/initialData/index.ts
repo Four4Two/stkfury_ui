@@ -8,7 +8,8 @@ import {
   SetRedeemFee,
   InitialLiquidityFees,
   SetMaxRedeem,
-  SetMinRedeem
+  SetMinRedeem,
+  InitialTvlApyTypes
 } from "./types";
 import { MIN_DEPOSIT } from "../../../../AppConstants";
 
@@ -17,13 +18,16 @@ const initialLiquidity_Fees: InitialLiquidityFees = {
   [FEES]: 0
 };
 
+export const initialTVLAPY: InitialTvlApyTypes = { tvl: 0.0, total_apy: 0.0 };
+
 const initialState: InitialDataState = {
   exchangeRate: 1,
   apy: 0,
   redeemFee: 0,
   osmosisInfo: initialLiquidity_Fees,
   maxRedeem: 0,
-  minDeposit: MIN_DEPOSIT
+  minDeposit: MIN_DEPOSIT,
+  crescentInfo: initialTVLAPY
 };
 
 const initData = createSlice({
@@ -48,6 +52,9 @@ const initData = createSlice({
     },
     setMinDeposit: (state, action: SetMinRedeem) => {
       state.minDeposit = action.payload;
+    },
+    setCrescentInfo: (state, action) => {
+      state.crescentInfo = action.payload;
     }
   }
 });
@@ -59,7 +66,8 @@ export const {
   setOsmosisInfo,
   setExchangeRate,
   setMaxRedeem,
-  setMinDeposit
+  setMinDeposit,
+  setCrescentInfo
 } = initData.actions;
 
 export default initData.reducer;
