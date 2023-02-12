@@ -115,7 +115,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <TermsModal />
         <ToastContainer
           position="top-right"
-          autoClose={3000}
+          autoClose={300000}
           hideProgressBar={true}
           newestOnTop={false}
           closeOnClick
