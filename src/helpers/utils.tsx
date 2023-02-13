@@ -1,12 +1,16 @@
 import _ from "lodash";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
+import {
+  createProtobufRpcClient,
+  decodeCosmosSdkDecFromProto,
+  QueryClient
+} from "@cosmjs/stargate";
 import { Decimal } from "@cosmjs/math";
 import { Scope } from "@sentry/nextjs";
 import * as Sentry from "@sentry/nextjs";
 import { fetchAccountBalance, getTokenBalance } from "../pages/api/onChain";
 import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
-import { TEST_NET } from "../../AppConstants";
+import { APR_BASE_RATE, TEST_NET } from "../../AppConstants";
 import {
   QueryAllowListedValidatorsResponse,
   QueryClientImpl
@@ -20,6 +24,15 @@ import { ChainInfo } from "@keplr-wallet/types";
 import { AllowListedValidator } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/pstake/lscosmos/v1beta1/lscosmos";
 import Long from "long";
 const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
+import {
+  QueryAllBalancesResponse,
+  QueryClientImpl as BankQueryClient,
+  QueryTotalSupplyResponse
+} from "cosmjs-types/cosmos/bank/v1beta1/query";
+
+import { QueryClientImpl as MintQueryClient } from "cosmjs-types/cosmos/mint/v1beta1/query";
+
+import { QueryClientImpl as DistrQueryClient } from "cosmjs-types/cosmos/distribution/v1beta1/query";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -213,6 +226,39 @@ export const printConsole = (message: any, helpText = "") => {
     console.log(message, helpText);
   }
 };
+
+export async function getBaseRate() {
+  try {
+    const cosmosClient = await RpcClient(cosmosChainInfo!.rpc);
+    const stakingQueryClient = new StakingQueryClient(cosmosClient);
+    const bankQueryClient = new BankQueryClient(cosmosClient);
+    const mintQueryClient = new MintQueryClient(cosmosClient);
+    const distributionQueryClient = new DistrQueryClient(cosmosClient);
+    const stakingPool = await stakingQueryClient.Pool({});
+    const supply = await bankQueryClient.SupplyOf({ denom: "uatom" });
+    const inflation = await mintQueryClient.Inflation({});
+    const distributionParams = await distributionQueryClient.Params({});
+    return (
+      (Number(decodeCosmosSdkDecFromProto(inflation.inflation).toString()) *
+        Number(supply!.amount!.amount) *
+        (1 -
+          Number(
+            decodeCosmosSdkDecFromProto(
+              distributionParams!.params!.communityTax
+            ).toString()
+          ))) /
+      Number(stakingPool!.pool!.bondedTokens)
+    );
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching baseRate": cosmosChainInfo?.rpc
+    });
+    genericErrorHandler(e, customScope);
+    return APR_BASE_RATE;
+  }
+}
 
 /**
  * It fetches the commission rates of all the validators in the network and returns the average

@@ -9,6 +9,7 @@ import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1bet
 import {
   decimalize,
   genericErrorHandler,
+  getBaseRate,
   getCommission,
   printConsole,
   RpcClient
@@ -39,6 +40,10 @@ import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 const persistenceChainInfo = ExternalChains[env].find(
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
+);
+
+const cosmosChainInfo = ExternalChains[env].find(
   (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
@@ -111,10 +116,13 @@ export const getFee = async (rpc: string): Promise<number> => {
 
 export const getAPR = async () => {
   try {
-    const baseRate = APR_BASE_RATE;
+    const baseRate = await getBaseRate();
     const commission = await getCommission();
     const incentives = 0;
-    const apr = baseRate - (commission / 100) * baseRate + incentives;
+    const apr =
+      Number(baseRate) * 100 -
+      (commission / 100) * (Number(baseRate) * 100) +
+      incentives;
     return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
