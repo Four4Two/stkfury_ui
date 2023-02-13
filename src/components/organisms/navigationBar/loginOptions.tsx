@@ -157,7 +157,7 @@ export const LoginOptions = () => {
                 className="w-[20px] h-[20px]"
               />
               <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
-                CosmosStation
+                Cosmostation
               </span>
             </div>
           </div>
