@@ -102,7 +102,7 @@ const BalanceList = () => {
         >
           <span className="flex items-center">
             <span className="text-light-emphasis text-sm flex items-center font-medium leading-normal">
-              Persistence Balances
+              Assets on Persistence
             </span>
           </span>
           <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
@@ -209,7 +209,7 @@ const BalanceList = () => {
         >
           <span className="flex items-center">
             <span className="text-light-emphasis flex items-center text-sm flex items-center font-medium leading-normal">
-              Cosmos Balances
+              Assets on Cosmos Hub
             </span>
           </span>
           <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
