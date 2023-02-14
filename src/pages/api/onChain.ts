@@ -11,6 +11,7 @@ import {
   genericErrorHandler,
   getBaseRate,
   getCommission,
+  GetStkAtomValidatorAPY,
   printConsole,
   RpcClient
 } from "../../helpers/utils";
@@ -137,9 +138,9 @@ export const getAPR = async () => {
 
 export const getAPY = async () => {
   try {
-    const apr = await getAPR();
-    const apy = ((1 + Number(apr) / 36500) ** 365 - 1) * 100;
-    return Number(apy.toFixed(2));
+    const apy = await GetStkAtomValidatorAPY();
+    const apyPercentage = apy * 100;
+    return Number(apyPercentage.toFixed(2));
   } catch (e) {
     return -1;
   }

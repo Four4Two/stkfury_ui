@@ -10,12 +10,14 @@ import { Scope } from "@sentry/nextjs";
 import * as Sentry from "@sentry/nextjs";
 import { fetchAccountBalance, getTokenBalance } from "../pages/api/onChain";
 import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
-import { APR_BASE_RATE, TEST_NET } from "../../AppConstants";
+import { APR_BASE_RATE, COIN_ATOM_DENOM, TEST_NET } from "../../AppConstants";
 import {
   QueryAllowListedValidatorsResponse,
-  QueryClientImpl
+  QueryClientImpl,
+  QueryDelegationStateResponse
 } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
 import {
+  QueryClientImpl as StakeQuery,
   QueryClientImpl as StakingQueryClient,
   QueryValidatorResponse,
   QueryValidatorsResponse
@@ -267,6 +269,7 @@ export async function getBaseRate() {
  */
 export const getCommission = async () => {
   try {
+    console.log(await GetStkAtomValidatorAPY(), "GetStkAtomValidatorAPY");
     const weight: number = 1;
     let commission: number = 0;
     const rpcClient = await RpcClient(persistenceChainInfo?.rpc!);
@@ -365,4 +368,118 @@ export const numberFormat = (number: any, decPlaces: number) => {
   }
 
   return number;
+};
+
+export async function GetCosmosAPY() {
+  const cosmosClient = await RpcClient(cosmosChainInfo!.rpc);
+  const stakingQueryClient = new StakingQueryClient(cosmosClient);
+  const bankQueryClient = new BankQueryClient(cosmosClient);
+  const mintQueryClient = new MintQueryClient(cosmosClient);
+  const distributionQueryClient = new DistrQueryClient(cosmosClient);
+  const stakingPool = await stakingQueryClient.Pool({});
+  const supply = await bankQueryClient.SupplyOf({ denom: COIN_ATOM_DENOM });
+  const inflation = await mintQueryClient.Inflation({});
+  const distributionParams = await distributionQueryClient.Params({});
+  return (
+    (Number(decodeCosmosSdkDecFromProto(inflation.inflation).toString()) *
+      Number(supply!.amount!.amount) *
+      (1 -
+        Number(
+          decodeCosmosSdkDecFromProto(
+            distributionParams!.params!.communityTax
+          ).toString()
+        ))) /
+    Number(stakingPool!.pool!.bondedTokens)
+  );
+}
+
+export async function GetStkAtomValidatorAPR() {
+  const baseRate = await GetCosmosAPY();
+  const pstakeValidators: any = await getValidatorStates();
+  let commissionAdjustedAPYFactor = 0;
+  let totalDelegations = 0;
+  for (const val in pstakeValidators) {
+    commissionAdjustedAPYFactor =
+      commissionAdjustedAPYFactor +
+      (1 - pstakeValidators[val]!.commission) *
+        pstakeValidators[val].delegation;
+    totalDelegations = totalDelegations + +pstakeValidators[val].delegation;
+  }
+  const incentives = 0;
+  const apr =
+    (baseRate * commissionAdjustedAPYFactor) / totalDelegations + incentives;
+  return isNaN(apr) ? baseRate : apr;
+}
+
+export const GetStkAtomValidatorAPY = async () => {
+  const apr = await GetStkAtomValidatorAPR();
+  return (1 + Number(apr) / 365) ** 365 - 1;
+};
+
+export const getValidatorStates = async () => {
+  const rpcClient = await RpcClient(persistenceChainInfo!.rpc);
+  const pstakeQueryService = new QueryClientImpl(rpcClient);
+  const allowListedValidators: QueryAllowListedValidatorsResponse =
+    await pstakeQueryService.AllowListedValidators({});
+  const cosmosRpcClient = await RpcClient(cosmosChainInfo!.rpc);
+  const cosmosQueryService = new StakeQuery(cosmosRpcClient);
+  const validators =
+    allowListedValidators!.allowListedValidators!.allowListedValidators;
+  let pstakeValidators: any = {};
+  for (let validator of validators) {
+    pstakeValidators[validator.validatorAddress] = {
+      targetWeight: validator.targetWeight,
+      commission: 1,
+      delegation: 0
+    }; //keep commission 1
+  }
+  const pstakeDelegationState: QueryDelegationStateResponse =
+    await pstakeQueryService.DelegationState({});
+  for (const delegation of pstakeDelegationState!.delegationState!
+    .hostAccountDelegations) {
+    if (pstakeValidators.hasOwnProperty(delegation.validatorAddress)) {
+      // @ts-ignore
+      pstakeValidators[delegation.validatorAddress].delegation =
+        delegation!.amount!.amount;
+    } else {
+      // @ts-ignore
+      pstakeValidators[delegation.validatorAddress] = {
+        targetWeight: 0,
+        commission: 1,
+        delegation: delegation!.amount!.amount
+      };
+    }
+  }
+  let key: any = new Uint8Array();
+  let cosmosValidators = [];
+  do {
+    const validatorCommission = await cosmosQueryService.Validators({
+      status: "BOND_STATUS_BONDED",
+      pagination: {
+        key: key,
+        offset: Long.fromNumber(0, true),
+        limit: Long.fromNumber(0, true),
+        countTotal: true,
+        reverse: false
+      }
+    });
+    key = validatorCommission?.pagination?.nextKey;
+    cosmosValidators.push(...validatorCommission.validators);
+  } while (key.length !== 0);
+
+  if (cosmosValidators?.length !== 0) {
+    for (let validator of cosmosValidators) {
+      if (pstakeValidators.hasOwnProperty(validator.operatorAddress)) {
+        pstakeValidators[validator?.operatorAddress]!.commission = parseFloat(
+          decimalize(
+            validator.commission
+              ? validator!.commission!.commissionRates!.rate
+              : 0,
+            18
+          )
+        );
+      }
+    }
+  }
+  return pstakeValidators;
 };
