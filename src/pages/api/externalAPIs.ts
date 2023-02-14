@@ -1,18 +1,14 @@
 import Axios from "axios";
 import { decimalize, genericErrorHandler } from "../../helpers/utils";
 import { Scope } from "@sentry/nextjs";
-import {
-  CRESCENT_STK_ATOM_DENOM,
-  FEES,
-  POOL_LIQUIDITY
-} from "../../../AppConstants";
+import { CRESCENT_STK_ATOM_DENOM } from "../../../AppConstants";
 import { initialTVLAPY } from "../../store/reducers/initialData";
+import { InitialTvlApyFeeTypes } from "../../store/reducers/initialData/types";
 
 export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
+export const OSMOSIS_POOL_APR_URL = "https://api.osmosis.zone/apr/v2/886";
 export const CRESCENT_POOL_URL = "https://apigw-v3.crescent.network/pool/live";
-
-const initialLiquidity_Fees = { [POOL_LIQUIDITY]: 0, [FEES]: 0 };
 
 export const fetchAtomPrice = async (): Promise<number> => {
   try {
@@ -35,13 +31,34 @@ export const fetchAtomPrice = async (): Promise<number> => {
 
 export const fetchOsmosisPoolInfo = async () => {
   try {
-    const res = await Axios.get(OSMOSIS_POOL_URL);
-    if (res && res.data) {
-      return {
-        [POOL_LIQUIDITY]: Math.round(res.data[0].liquidity).toFixed(2),
-        [FEES]: res.data[0].fees
-      };
+    const responses = await Axios.all([
+      Axios.get(OSMOSIS_POOL_URL),
+      Axios.get(OSMOSIS_POOL_APR_URL)
+    ]);
+    const responseOne = responses[0];
+    const responseTwo = responses[1];
+
+    const osmoInfo: InitialTvlApyFeeTypes = {
+      fees: 0,
+      total_apy: 0,
+      tvl: 0
+    };
+
+    if (responseTwo && responseTwo.data) {
+      osmoInfo.total_apy = Math.round(
+        responseTwo.data[0].apr_list[0].apr_14d
+      ).toFixed(2);
+    } else {
+      osmoInfo.total_apy = 0;
     }
+    if (responseOne && responseOne.data) {
+      osmoInfo.tvl = Math.round(responseOne.data[0].liquidity).toFixed(2);
+      osmoInfo.fees = responseOne.data[0].fees;
+    } else {
+      osmoInfo.fees = 0;
+      osmoInfo.tvl = 0;
+    }
+    return osmoInfo;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
@@ -49,9 +66,8 @@ export const fetchOsmosisPoolInfo = async () => {
       "Error fetching info from osmosis": OSMOSIS_POOL_URL
     });
     genericErrorHandler(e, customScope);
-    return initialLiquidity_Fees;
+    return initialTVLAPY;
   }
-  return initialLiquidity_Fees;
 };
 
 export const fetchCrescentPoolInfo = async () => {

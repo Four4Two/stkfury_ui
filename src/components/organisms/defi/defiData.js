@@ -12,9 +12,8 @@ export const defiSwapList = (osmosisInfo, crescentInfo) => [
     pool_link: "https://frontier.osmosis.zone/pool/886",
     launched: true,
     type: "defi",
-    tvl: 0,
-    apy: 0,
-    pool_liquidity: osmosisInfo.pool_liquidity,
+    apy: osmosisInfo.total_apy,
+    pool_liquidity: osmosisInfo.tvl,
     fees: osmosisInfo.fees
   },
   {

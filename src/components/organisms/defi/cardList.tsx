@@ -68,10 +68,7 @@ const listShow = (item: any, index: number, isMobile = false) => (
           {item.type === "defi" ? (
             <>
               {listData("Swap Fee", `${item.fees}`)}
-
-              {item.platform === "Crescent"
-                ? listData("APR", `${item.apy}%`)
-                : null}
+              {listData("APR", `${item.apy}%`)}
               {listData(
                 "Pool Liquidity",
                 `$${
