@@ -8,6 +8,7 @@ import Copy from "../../molecules/copy";
 import { Window as KeplrWindow } from "@keplr-wallet/types/build/window";
 import { useOnClickOutside } from "../../../customHooks/useOnClickOutside";
 import { useWindowSize } from "../../../customHooks/useWindowSize";
+import { walletType } from "../../../context/WalletConnect/types";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -15,33 +16,50 @@ declare global {
 
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { connect, isWalletConnected, persistenceAccountData } = useWallet();
+  const { connect, isWalletConnected, persistenceAccountData, walletType } =
+    useWallet();
   const { isMobile } = useWindowSize();
 
-  const connectHandler = async () => {
-    await connect();
+  const connectHandler = async (wallet: walletType) => {
+    await connect(wallet);
     setDropdownOpen(false);
   };
 
   const disconnectHandler = async () => {
     localStorage.removeItem("wallet");
+    localStorage.removeItem("walletName");
     window.location.reload();
   };
 
   useEffect(() => {
-    {
-      isWalletConnected
-        ? window.addEventListener("keplr_keystorechange", async () => {
-            await connect();
-          })
-        : null;
+    const fetchApi = async () => {
+      if (walletType === "keplr") {
+        window.addEventListener("keplr_keystorechange", async () => {
+          await connect("keplr");
+        });
+      } else if (walletType === "cosmosStation") {
+        window.cosmostation.cosmos.on("accountChanged", async () => {
+          await connect("cosmosStation");
+        });
+      }
+      return null;
+    };
+    if (isWalletConnected) {
+      fetchApi();
     }
-  }, [isWalletConnected, connect]);
+  }, [walletType, isWalletConnected, connect]);
 
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside(ref, () => {
     setDropdownOpen(false);
   });
+
+  const loginIcon =
+    walletType === "cosmosStation"
+      ? "cosmos_station"
+      : walletType === "keplr"
+      ? "keplr_round"
+      : "keplr_round";
 
   return (
     <div className="inline-block w-fit cursor-pointer relative">
@@ -61,7 +79,7 @@ export const LoginOptions = () => {
                 }}
               >
                 <img
-                  src={"/images/keplr_round.svg"}
+                  src={`/images/wallets/${loginIcon}.svg`}
                   alt={"logo"}
                   className="w-[20px] h-[20px]"
                 />
@@ -96,13 +114,13 @@ export const LoginOptions = () => {
       <div
         className={`${Styles.DropdownMenu} 
       ${dropdownOpen && Styles.DropdownMenuActive} 
-      absolute bg-dropDown rounded-md`}
+      absolute bg-dropDown rounded-md w-fit min-w-full`}
         ref={ref}
       >
         {isWalletConnected ? (
           <>
             <div
-              className="p-4 flex items-center md:py-3"
+              className="p-4 flex items-center md:py-3 rounded-md"
               onClick={disconnectHandler}
             >
               <Icon
@@ -115,18 +133,31 @@ export const LoginOptions = () => {
             </div>
           </>
         ) : (
-          <div>
+          <div className="py-2">
             <div
-              className="p-4 flex items-center md:py-3"
-              onClick={connectHandler}
+              className="px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-tr-md rounded-tl-md"
+              onClick={() => connectHandler("keplr")}
             >
               <img
-                src={"/images/keplr_round.svg"}
+                src={"/images/wallets/keplr_round.svg"}
                 alt={"logo"}
                 className="w-[20px] h-[20px]"
               />
               <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
                 Keplr Wallet
+              </span>
+            </div>
+            <div
+              className="px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-br-md rounded-bl-md"
+              onClick={() => connectHandler("cosmosStation")}
+            >
+              <img
+                src={"/images/wallets/cosmos_station.svg"}
+                alt={"logo"}
+                className="w-[20px] h-[20px]"
+              />
+              <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
+                Cosmostation
               </span>
             </div>
           </div>

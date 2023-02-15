@@ -63,35 +63,37 @@ module.exports = {
       overline: ["0.625rem", { lineHeight: "1rem" }]
     },
     screens: {
-      "2xl": { max: "1536px" },
+      "2xl": { max: "1535px" },
       // => @media (max-width: 1536px) { ... }
-
-      "1.5xl": { max: "1408px" },
-      // => @media (max-width: 1408px) { ... }
-
-      xl: { max: "1280px" },
-      // => @media (max-width: 1280px) { ... }
-
-      "1.5lg": { max: "1152px" },
-      // => @media (max-width: 1152px) { ... }
-
-      lg: { max: "1024px" },
-      // => @media (max-width: 1024px) { ... }
-
-      "1.5md": { max: "896px" },
-      // => @media (max-width: 896px) { ... }
-
-      md: { max: "768px" },
-      // => @media (max-width: 768px) { ... }
-
-      "1.5xs": { max: "640px" },
-      // => @media (max-width: 640px) { ... }
-
-      // "1.5xs": { max: "512px" },
-      // // => @media (max-width: 512px) { ... }
-
-      sm: { max: "512px" }
+      "1.5xl": { max: "1407px" },
+      xl: { max: "1279px" },
+      "1.5lg": { max: "1151px" },
+      lg: { max: "1023px" },
+      "1.5md": { max: "895px" },
+      md: { max: "767px" },
+      "1.5xs": { max: "639px" },
+      sm: { max: "511px" }
+    },
+    extend: {
+      transitionProperty: {
+        height: "height"
+      },
+      screens: {
+        "-2xl": { min: "1536px" },
+        // => @media (min-width: 1535px) { ... }
+        "-1.5xl": { min: "1408px" },
+        "-xl": { min: "1280px" },
+        "-1.5lg": { min: "1152px" },
+        "-lg": { min: "1024px" },
+        "-1.5md": { min: "896px" },
+        "-md": { min: "768px" },
+        "-1.5sm": { min: "640px" },
+        "-sm": { min: "512px" }
+      }
     }
+  },
+  variants: {
+    height: ["responsive", "hover", "focus"]
   },
   plugins: []
 };

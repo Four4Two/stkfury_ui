@@ -9,7 +9,9 @@ import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1bet
 import {
   decimalize,
   genericErrorHandler,
+  getBaseRate,
   getCommission,
+  GetStkAtomValidatorAPY,
   printConsole,
   RpcClient
 } from "../../helpers/utils";
@@ -28,10 +30,10 @@ import Long from "long";
 import moment from "moment";
 import { ChainInfo } from "@keplr-wallet/types";
 import {
-  STK_ATOM_MINIMAL_DENOM,
   APR_BASE_RATE,
   APR_DEFAULT,
-  COSMOS_UNBOND_TIME
+  COSMOS_UNBOND_TIME,
+  STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
@@ -42,30 +44,35 @@ const persistenceChainInfo = ExternalChains[env].find(
   (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
-export const fetchAccountBalance = async (
-  address: string,
-  tokenDenom: string,
-  rpc: string
+const cosmosChainInfo = ExternalChains[env].find(
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
+);
+
+export const getTokenBalance = (
+  balances: QueryAllBalancesResponse,
+  tokenDenom: string
 ) => {
+  if (balances && balances!.balances!.length) {
+    const token: Coin | undefined = balances.balances.find(
+      (item: Coin) => item.denom === tokenDenom
+    );
+    if (token === undefined) {
+      return "0";
+    } else {
+      return token!.amount;
+    }
+  } else {
+    return "0";
+  }
+};
+
+export const fetchAccountBalance = async (address: string, rpc: string) => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
-    const balances: QueryAllBalancesResponse =
-      await bankQueryService.AllBalances({
-        address: address
-      });
-    if (balances.balances.length) {
-      const token: Coin | undefined = balances.balances.find(
-        (item: Coin) => item.denom === tokenDenom
-      );
-      if (token === undefined) {
-        return "0";
-      } else {
-        return token!.amount;
-      }
-    } else {
-      return "0";
-    }
+    return await bankQueryService.AllBalances({
+      address: address
+    });
   } catch (error) {
     printConsole(error);
     return "0";
@@ -110,10 +117,13 @@ export const getFee = async (rpc: string): Promise<number> => {
 
 export const getAPR = async () => {
   try {
-    const baseRate = APR_BASE_RATE;
+    const baseRate = await getBaseRate();
     const commission = await getCommission();
     const incentives = 0;
-    const apr = baseRate - (commission / 100) * baseRate + incentives;
+    const apr =
+      Number(baseRate) * 100 -
+      (commission / 100) * (Number(baseRate) * 100) +
+      incentives;
     return isNaN(apr) ? APR_DEFAULT : apr.toFixed(2);
   } catch (e) {
     const customScope = new Scope();
@@ -128,9 +138,9 @@ export const getAPR = async () => {
 
 export const getAPY = async () => {
   try {
-    const apr = await getAPR();
-    const apy = ((1 + Number(apr) / 36500) ** 365 - 1) * 100;
-    return Number(apy.toFixed(2));
+    const apy = await GetStkAtomValidatorAPY();
+    const apyPercentage = apy * 100;
+    return Number(apyPercentage.toFixed(2));
   } catch (e) {
     return -1;
   }

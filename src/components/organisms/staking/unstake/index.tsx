@@ -7,9 +7,16 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { INSTANT } from "../../../../../AppConstants";
 import Link from "next/link";
+import { decimalize } from "../../../../helpers/utils";
 
 const Stake = () => {
-  const { type } = useSelector((state: RootState) => state.unStake);
+  const { type, amount } = useSelector((state: RootState) => state.unStake);
+
+  const { stkAtomBalance, atomBalance } = useSelector(
+    (state: RootState) => state.balances
+  );
+
+  const { maxRedeem } = useSelector((state: RootState) => state.initialData);
 
   return (
     <>
@@ -26,10 +33,25 @@ const Stake = () => {
       <div className="mt-4">
         <Submit />
       </div>
+
       {type === INSTANT ? (
-        <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
-          Redeem stkATOM and receive ATOM to your Cosmos wallet instantly.
-        </p>
+        Number(amount) > Number(decimalize(maxRedeem)) ? (
+          Number(amount) > Number(stkAtomBalance) ? (
+            <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
+              Redeem stkATOM and receive ATOM to your Cosmos wallet instantly.
+            </p>
+          ) : (
+            <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
+              Due to insufficient liquidity to redeem instantly on pSTAKE, you
+              can instead swap stkATOM for ATOM on one of the DEXes listed in
+              our DeFi section.
+            </p>
+          )
+        ) : (
+          <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
+            Redeem stkATOM and receive ATOM to your Cosmos wallet instantly.
+          </p>
+        )
       ) : (
         <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
           Your stkATOM will only be unbonded after an unbonding period of 21-25

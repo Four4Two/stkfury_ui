@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState
 } from "react";
-import { WalletProviderProps, WalletState } from "./types";
+import { WalletProviderProps, WalletState, walletType } from "./types";
 import { ChainInfo, Window as KeplrWindow } from "@keplr-wallet/types";
 import { AccountData } from "@cosmjs/launchpad/build/signer";
 import { OfflineSigner } from "@cosmjs/launchpad";
@@ -13,7 +13,6 @@ import KeplrWallet from "../../helpers/keplr";
 import { fetchBalanceSaga } from "../../store/reducers/balances";
 import { useDispatch } from "react-redux";
 import { fetchInitSaga, setAPY } from "../../store/reducers/initialData";
-import { printConsole } from "../../helpers/utils";
 import { fetchPendingClaimsSaga } from "../../store/reducers/claim";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
@@ -24,8 +23,9 @@ import {
   setCosmosChainStatus,
   setPersistenceChainStatus
 } from "../../store/reducers/liveData";
-import { getAPY, getChainStatus } from "../../pages/api/onChain";
-import { put } from "@redux-saga/core/effects";
+import { getChainStatus } from "../../pages/api/onChain";
+import CosmosStationWallet from "../../helpers/cosmosStation";
+import { getstkAtomAPY } from "../../pages/api/externalAPIs";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -41,7 +41,8 @@ const WalletContext = createContext<WalletState>({
   connect(): Promise<boolean> {
     return Promise.resolve(false);
   },
-  isWalletConnected: false
+  isWalletConnected: false,
+  walletType: "keplr"
 });
 
 export const useWallet = (): WalletState => {
@@ -65,20 +66,28 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     OfflineSigner | OfflineDirectSigner | null
   >(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletType, setWalletType] = useState<walletType>("keplr");
   const [persistenceAccountData, setPersistenceAccountData] =
     useState<AccountData | null>(null);
   const [cosmosAccountData, setCosmosAccountData] =
     useState<AccountData | null>(null);
   const [walletConnected, setWalletConnected] = useLocalStorage("wallet", "");
+  const [walletName, setWalletName] = useLocalStorage("walletName", "");
 
   const dispatch = useDispatch();
 
+  // re-login on every reload or refresh
   useEffect(() => {
     if (walletConnected) {
-      connect();
+      if (walletName === "keplr") {
+        connect("keplr");
+      } else {
+        connect("cosmosStation");
+      }
     }
-  }, [walletConnected]);
+  }, [walletConnected, walletName]);
 
+  // fetch calls on initial render
   useEffect(() => {
     dispatch(
       fetchInitSaga({
@@ -94,11 +103,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     );
   }, [persistenceChainInfo, dispatch, cosmosChainInfo]);
 
+  // fetch calls only on initial render
   useEffect(() => {
     const fetchApy = async () => {
       const [apy, cosmosChainStatus, persistenceChainStatus] =
         await Promise.all([
-          getAPY(),
+          getstkAtomAPY(),
           getChainStatus(cosmosChainInfo.rpc),
           getChainStatus(persistenceChainInfo.rpc)
         ]);
@@ -114,40 +124,58 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     setPersistenceChainData(persistenceChainInfo);
   }, [cosmosChainInfo, persistenceChainInfo]);
 
-  const connect = async (): Promise<boolean> => {
+  const connect = async (walletType: walletType): Promise<boolean> => {
     try {
-      const persistenceSigner = await KeplrWallet(persistenceChainInfo);
-      const cosmosSigner = await KeplrWallet(cosmosChainInfo);
-      const cosmosAccounts = await cosmosSigner!.getAccounts();
-      setCosmosAccountData(cosmosAccounts[0]);
-      setCosmosSigner(cosmosSigner);
-      const persistenceAccounts = await persistenceSigner!.getAccounts();
-      setPersistenceAccountData(persistenceAccounts[0]);
-      setPersistenceSigner(persistenceSigner);
+      let persistenceSignerData: any =
+        walletType === "keplr"
+          ? await KeplrWallet(persistenceChainInfo)
+          : await CosmosStationWallet(persistenceChainInfo);
+
+      let cosmosSignerData: any =
+        walletType === "keplr"
+          ? await KeplrWallet(cosmosChainInfo)
+          : await CosmosStationWallet(cosmosChainInfo);
+
+      let persistenceAddressData: any =
+        await persistenceSignerData!.getAccounts();
+      let cosmosAddressData: any = await cosmosSignerData!.getAccounts();
+
+      setCosmosAccountData(cosmosAddressData[0]);
+      setCosmosSigner(cosmosSignerData);
+      setPersistenceAccountData(persistenceAddressData[0]);
+      setPersistenceSigner(persistenceSignerData);
+
       dispatch(
         fetchBalanceSaga({
-          persistenceAddress: persistenceAccounts[0]!.address,
-          cosmosAddress: cosmosAccounts[0]!.address,
+          persistenceAddress: persistenceAddressData[0]!.address,
+          cosmosAddress: cosmosAddressData[0]!.address,
           persistenceChainInfo: persistenceChainInfo!,
           cosmosChainInfo: cosmosChainInfo!
         })
       );
       dispatch(
         fetchPendingClaimsSaga({
-          address: persistenceAccounts[0]!.address,
+          address: persistenceAddressData[0]!.address,
           persistenceChainInfo: persistenceChainInfo!
         })
       );
+      setWalletName(walletType);
       setWalletConnected("connected");
+      setWalletType(walletType);
     } catch (e: any) {
-      printConsole(e);
       displayToast(
         {
           message: e.message!
         },
         ToastType.ERROR
       );
-      console.error(e);
+      if (
+        e.message === "Please install cosmostation extension" ||
+        e.message === "install keplr extension"
+      ) {
+        localStorage.removeItem("wallet");
+        localStorage.removeItem("walletName");
+      }
       return false;
     }
     setIsWalletConnected(true);
@@ -162,7 +190,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     persistenceSigner,
     persistenceChainData,
     connect,
-    isWalletConnected
+    isWalletConnected,
+    walletType
   };
 
   return (

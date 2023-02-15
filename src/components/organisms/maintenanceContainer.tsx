@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
 import { fetchLiveDataSaga } from "../../store/reducers/liveData";
-import { SHORT_INTERVAL } from "../../../AppConstants";
+import { BUG_REPORT_URL, SHORT_INTERVAL } from "../../../AppConstants";
 import { useWallet } from "../../context/WalletConnect/WalletConnect";
 
 const MaintenanceContainer = () => {
@@ -50,7 +50,7 @@ const MaintenanceContainer = () => {
           Sorry for the inconvenience. Something went wrong. Please try again,
           or refresh the page. If you keep seeing this message, you can report{" "}
           <a
-            href={"https://t.me/pstakefinancechat"}
+            href={BUG_REPORT_URL}
             className="text-[#0d6efd] font-semibold"
             target={"_blank"}
             rel="noreferrer"

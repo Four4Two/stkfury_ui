@@ -1,30 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { FEES, POOL_LIQUIDITY } from "../../../../AppConstants";
 import {
   SetExchangeRate,
   FetchInitialDataSaga,
   InitialDataState,
   SetAPR,
   SetRedeemFee,
-  InitialLiquidityFees,
   SetMaxRedeem,
   SetMinRedeem,
-  InitialTvlApyTypes
+  InitialTvlApyFeeTypes
 } from "./types";
 import { MIN_DEPOSIT } from "../../../../AppConstants";
 
-const initialLiquidity_Fees: InitialLiquidityFees = {
-  [POOL_LIQUIDITY]: 0,
-  [FEES]: 0
+export const initialTVLAPY: InitialTvlApyFeeTypes = {
+  tvl: 0,
+  total_apy: 0,
+  fees: 0
 };
-
-export const initialTVLAPY: InitialTvlApyTypes = { tvl: 0.0, total_apy: 0.0 };
 
 const initialState: InitialDataState = {
   exchangeRate: 1,
   apy: 0,
   redeemFee: 0,
-  osmosisInfo: initialLiquidity_Fees,
+  osmosisInfo: initialTVLAPY,
   maxRedeem: 0,
   minDeposit: MIN_DEPOSIT,
   crescentInfo: initialTVLAPY

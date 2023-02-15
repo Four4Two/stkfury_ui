@@ -4,7 +4,7 @@ export const TEST_NET = "Testnet";
 export const DEV_NET = "Devnet";
 export const DEPOSIT_ADDRESS = "cosmos16vhhczel0jzdf6kxxk62uwzkay763p9cryp7we";
 export const PERSISTENCE_FEE = "0uxprt";
-export const COSMOS_FEE = "0uatom";
+export const COSMOS_FEE = "0.002uatom";
 export const COSMOS_LIQUID_STAKE_URL =
   "/pstake.lscosmos.v1beta1.MsgLiquidStake";
 export const COSMOS_LIQUID_UN_STAKE_URL =
@@ -17,7 +17,8 @@ export const MIN_BALANCE_CHECK = 0.00003;
 export const MIN_DEPOSIT = 0.01;
 export const MIN_STAKE_FEE = 0.01;
 export const MIN_REDEEM = 0.01;
-
+export const BUG_REPORT_URL =
+  "https://docs.google.com/forms/d/1SpwpntQ5jVAb5BwtG7-Ul58z0vE7RocCSrN-s6bCl8M/viewform?edit_requested=true";
 export const IBC_DENOM =
   "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2";
 export const CRESCENT_STK_ATOM_DENOM =

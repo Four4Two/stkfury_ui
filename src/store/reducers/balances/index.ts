@@ -4,13 +4,15 @@ import {
   FetchBalanceSaga,
   SetAtomBalance,
   SetIbcAtomBalance,
-  SetStkAtomBalance
+  SetStkAtomBalance,
+  SetXprtBalance
 } from "./types";
 
 const initialState: BalanceState = {
   atomBalance: 0,
   stkAtomBalance: 0,
-  ibcAtomBalance: 0
+  ibcAtomBalance: 0,
+  xprtBalance: 0
 };
 
 const balances = createSlice({
@@ -26,6 +28,9 @@ const balances = createSlice({
     },
     setIbcAtomBalance: (state, action: SetIbcAtomBalance) => {
       state.ibcAtomBalance = action.payload;
+    },
+    setXprtBalance: (state, action: SetXprtBalance) => {
+      state.xprtBalance = action.payload;
     }
   }
 });
@@ -34,6 +39,7 @@ export const {
   setAtomBalance,
   setStkAtomBalance,
   setIbcAtomBalance,
+  setXprtBalance,
   fetchBalanceSaga
 } = balances.actions;
 
