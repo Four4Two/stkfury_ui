@@ -208,8 +208,11 @@ const BalanceList = () => {
                  } py-3 px-8 group`}
         >
           <span className="flex items-center">
-            <span className="text-light-emphasis flex items-center text-sm flex items-center font-medium leading-normal">
-              Assets on Cosmos Hub
+            <span
+              className="text-light-emphasis flex items-center
+             text-sm flex items-center font-medium leading-normal"
+            >
+              {isMobile ? "Assets on Cosmos" : "Assets on Cosmos Hub"}
             </span>
           </span>
           <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
