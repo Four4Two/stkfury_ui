@@ -23,8 +23,9 @@ import {
   setCosmosChainStatus,
   setPersistenceChainStatus
 } from "../../store/reducers/liveData";
-import { getAPY, getChainStatus } from "../../pages/api/onChain";
+import { getChainStatus } from "../../pages/api/onChain";
 import CosmosStationWallet from "../../helpers/cosmosStation";
+import { getstkAtomAPY } from "../../pages/api/externalAPIs";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -107,7 +108,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     const fetchApy = async () => {
       const [apy, cosmosChainStatus, persistenceChainStatus] =
         await Promise.all([
-          getAPY(),
+          getstkAtomAPY(),
           getChainStatus(cosmosChainInfo.rpc),
           getChainStatus(persistenceChainInfo.rpc)
         ]);

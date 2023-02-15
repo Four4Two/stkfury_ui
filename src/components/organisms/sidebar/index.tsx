@@ -170,7 +170,7 @@ const Sidebar = () => {
             {moreList.map((item, index) => (
               <li className={`list-none`} key={index}>
                 <a
-                  className="group py-[0.625rem] sm:pb-6 px-8 flex items-center cursor-pointer"
+                  className="group py-[0.625rem] px-8 flex items-center cursor-pointer"
                   href={item.url}
                   target={"_blank"}
                   rel="noopener noreferrer"
