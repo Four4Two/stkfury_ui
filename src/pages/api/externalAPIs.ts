@@ -9,7 +9,7 @@ export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
 export const OSMOSIS_POOL_APR_URL = "https://api.osmosis.zone/apr/v2/886";
 export const CRESCENT_POOL_URL = "https://apigw-v3.crescent.network/pool/live";
-export const APY_API = "https://staging.api.persistence.one/pstake/stkatom/apy";
+export const APY_API = "https://api.persistence.one/pstake/stkatom/apy";
 
 export const fetchAtomPrice = async (): Promise<number> => {
   try {
