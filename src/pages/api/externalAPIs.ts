@@ -1,11 +1,7 @@
 import Axios from "axios";
 import { decimalize, genericErrorHandler } from "../../helpers/utils";
 import { Scope } from "@sentry/nextjs";
-import {
-  APR_DEFAULT,
-  CRESCENT_STK_ATOM_DENOM,
-  IBC_DENOM
-} from "../../../AppConstants";
+import { APR_DEFAULT, CRESCENT_STK_ATOM_DENOM } from "../../../AppConstants";
 import { initialTVLAPY } from "../../store/reducers/initialData";
 import { InitialTvlApyFeeTypes } from "../../store/reducers/initialData/types";
 
@@ -67,10 +63,10 @@ export const fetchOsmosisPoolInfo = async () => {
     };
 
     if (responseTwo && responseTwo.data) {
-      let item = responseTwo.data[0].apr_list.find(
-        (item: any) => item!.denom === IBC_DENOM
-      );
-      osmoInfo.total_apy = Math.round(item.apr_14d);
+      osmoInfo.total_apy = Math.round(
+        responseTwo.data[0].apr_list[0].apr_14d +
+          responseTwo.data[0].apr_list[1].apr_14d
+      ).toFixed(2);
     } else {
       osmoInfo.total_apy = 0;
     }
