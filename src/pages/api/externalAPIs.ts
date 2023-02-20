@@ -64,7 +64,8 @@ export const fetchOsmosisPoolInfo = async () => {
 
     if (responseTwo && responseTwo.data) {
       osmoInfo.total_apy = Math.round(
-        responseTwo.data[0].apr_list[0].apr_14d
+        responseTwo.data[0].apr_list[0].apr_14d +
+          responseTwo.data[0].apr_list[1].apr_14d
       ).toFixed(2);
     } else {
       osmoInfo.total_apy = 0;
