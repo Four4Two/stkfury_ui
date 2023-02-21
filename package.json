@@ -36,6 +36,7 @@
     "moment": "^2.29.4",
     "next": "12.2.2",
     "next-seo": "^5.4.0",
+    "persistenceonejs": "^2.0.4",
     "rc-tooltip": "^5.2.2",
     "react": "18.2.0",
     "react-copy-to-clipboard": "^5.1.0",

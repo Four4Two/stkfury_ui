@@ -15,7 +15,7 @@ import {
   QueryAllowListedValidatorsResponse,
   QueryClientImpl,
   QueryDelegationStateResponse
-} from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
+} from "persistenceonejs/pstake/lscosmos/v1beta1/query";
 import {
   QueryClientImpl as StakeQuery,
   QueryClientImpl as StakingQueryClient,
@@ -23,7 +23,7 @@ import {
   QueryValidatorsResponse
 } from "cosmjs-types/cosmos/staking/v1beta1/query";
 import { ChainInfo } from "@keplr-wallet/types";
-import { AllowListedValidator } from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/pstake/lscosmos/v1beta1/lscosmos";
+import { AllowListedValidator } from "persistenceonejs/pstake/lscosmos/v1beta1/lscosmos";
 import Long from "long";
 const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
 import {

@@ -3,7 +3,7 @@ import {
   MsgLiquidStake,
   MsgLiquidUnstake,
   MsgRedeem
-} from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
+} from "persistenceonejs/pstake/lscosmos/v1beta1/msgs";
 import { AminoMsg, Coin } from "@cosmjs/amino";
 import { AminoConverters } from "@cosmjs/stargate";
 
