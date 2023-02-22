@@ -157,6 +157,7 @@ export const getTVU = async (rpc: string): Promise<number> => {
         (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
       if (token !== undefined) {
+        console.log(Number(token?.amount), "getTVU");
         return Number(token?.amount);
       } else {
         return 0;

@@ -73,6 +73,7 @@ const Submit = () => {
   const stakeHandler = async () => {
     let messages: LiquidUnStakeMsgTypes[];
     let pollingBalance;
+    console.log(ibcInfo, "ibcInfo");
     dispatch(setTransactionProgress(UN_STAKE));
     if (type === INSTANT) {
       const withDrawMsg = await MakeIBCTransferMsg({
@@ -87,6 +88,7 @@ const Submit = () => {
         destinationRPCUrl: cosmosChainData?.rpc,
         port: IBCConfiguration.ibcDefaultPort
       });
+      console.log(withDrawMsg, "withDrawMsg");
       const redeemMsg = RedeemMsg(
         persistenceAccountData!.address,
         unDecimalize(amount),
