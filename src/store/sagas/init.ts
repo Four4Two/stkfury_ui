@@ -2,7 +2,7 @@ import {
   FetchInitialDataSaga,
   InitialTvlApyFeeTypes
 } from "../reducers/initialData/types";
-import { getMaxRedeem } from "../../pages/api/onChain";
+import { getFee, getMaxRedeem } from "../../pages/api/onChain";
 import {
   fetchCrescentPoolInfo,
   fetchOsmosisPoolInfo,
@@ -13,16 +13,19 @@ import {
   setExchangeRate,
   setOsmosisInfo,
   setMaxRedeem,
-  setCrescentInfo
+  setCrescentInfo,
+  setRedeemFee
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const { persistenceChainInfo }: any = payload;
-  const [exchangeRate, maxRedeem] = yield Promise.all([
+  const [exchangeRate, redeemFee, maxRedeem] = yield Promise.all([
     getExchangeRate(),
+    getFee(persistenceChainInfo.rpc),
     getMaxRedeem(persistenceChainInfo.rpc)
   ]);
   yield put(setExchangeRate(exchangeRate));
+  yield put(setRedeemFee(redeemFee));
   const osmosisInfo: InitialTvlApyFeeTypes = yield fetchOsmosisPoolInfo();
   const crescentInfo: InitialTvlApyFeeTypes = yield fetchCrescentPoolInfo();
   yield put(setCrescentInfo(crescentInfo));
