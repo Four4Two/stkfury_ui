@@ -106,12 +106,11 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   // fetch calls only on initial render
   useEffect(() => {
     const fetchApy = async () => {
-      const [apy, cosmosChainStatus, persistenceChainStatus] =
-        await Promise.all([
-          getStkAtomAPY(),
-          getChainStatus(cosmosChainInfo.rpc),
-          getChainStatus(persistenceChainInfo.rpc)
-        ]);
+      const [cosmosChainStatus, persistenceChainStatus] = await Promise.all([
+        getChainStatus(cosmosChainInfo.rpc),
+        getChainStatus(persistenceChainInfo.rpc)
+      ]);
+      const apy = await getStkAtomAPY();
       dispatch(setAPY(apy));
       dispatch(setCosmosChainStatus(cosmosChainStatus));
       dispatch(setPersistenceChainStatus(persistenceChainStatus));
