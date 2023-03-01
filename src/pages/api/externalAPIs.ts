@@ -9,7 +9,12 @@ export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
 export const OSMOSIS_POOL_APR_URL = "https://api.osmosis.zone/apr/v2/886";
 export const CRESCENT_POOL_URL = "https://apigw-v3.crescent.network/pool/live";
-export const APY_API = "https://api.persistence.one/pstake/stkatom/apy";
+export const STK_ATOM_APY_API =
+  "https://api.persistence.one/pstake/stkatom/apy";
+export const STK_ATOM_CVALUE_API =
+  "https://api.persistence.one/pstake/stkatom/c_value";
+export const STK_ATOM_TVU_API =
+  "https://api.persistence.one/pstake/stkatom/atom_tvu";
 
 export const fetchAtomPrice = async (): Promise<number> => {
   try {
@@ -29,9 +34,9 @@ export const fetchAtomPrice = async (): Promise<number> => {
   }
 };
 
-export const getstkAtomAPY = async (): Promise<number> => {
+export const getStkAtomAPY = async (): Promise<number> => {
   try {
-    const res = await Axios.get(APY_API);
+    const res = await Axios.get(STK_ATOM_APY_API);
     if (res && res.data) {
       return Number((res.data * 100).toFixed(2));
     }
@@ -40,10 +45,46 @@ export const getstkAtomAPY = async (): Promise<number> => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error fetching apy": APY_API
+      "Error fetching apy": STK_ATOM_APY_API
     });
     genericErrorHandler(e, customScope);
     return -1;
+  }
+};
+
+export const getExchangeRate = async (): Promise<number> => {
+  try {
+    const res = await Axios.get(STK_ATOM_CVALUE_API);
+    if (res && res.data) {
+      return Number(res.data);
+    }
+    return 1;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching exchange rate": STK_ATOM_CVALUE_API
+    });
+    genericErrorHandler(e, customScope);
+    return 1;
+  }
+};
+
+export const getTVU = async (): Promise<number> => {
+  try {
+    const res = await Axios.get(STK_ATOM_TVU_API);
+    if (res && res.data) {
+      return Number(res?.data!.amount!.amount);
+    }
+    return 0;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching tvu": STK_ATOM_TVU_API
+    });
+    genericErrorHandler(e, customScope);
+    return 0;
   }
 };
 

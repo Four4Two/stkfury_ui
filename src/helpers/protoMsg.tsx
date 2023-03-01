@@ -10,7 +10,7 @@ import {
   MsgLiquidStake,
   MsgLiquidUnstake,
   MsgRedeem
-} from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
+} from "persistenceonejs/pstake/lscosmos/v1beta1/msgs";
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import { coin } from "@cosmjs/amino";
 import Long from "long";

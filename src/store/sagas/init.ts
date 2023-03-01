@@ -2,29 +2,30 @@ import {
   FetchInitialDataSaga,
   InitialTvlApyFeeTypes
 } from "../reducers/initialData/types";
-import { getExchangeRate, getMaxRedeem, getFee } from "../../pages/api/onChain";
+import { getFee, getMaxRedeem } from "../../pages/api/onChain";
 import {
   fetchCrescentPoolInfo,
-  fetchOsmosisPoolInfo
+  fetchOsmosisPoolInfo,
+  getExchangeRate
 } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
   setExchangeRate,
   setOsmosisInfo,
   setMaxRedeem,
-  setRedeemFee,
-  setCrescentInfo
+  setCrescentInfo,
+  setRedeemFee
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const { persistenceChainInfo }: any = payload;
-  const [exchangeRate, fee, maxRedeem] = yield Promise.all([
-    getExchangeRate(persistenceChainInfo.rpc),
+  const [exchangeRate, redeemFee, maxRedeem] = yield Promise.all([
+    getExchangeRate(),
     getFee(persistenceChainInfo.rpc),
     getMaxRedeem(persistenceChainInfo.rpc)
   ]);
   yield put(setExchangeRate(exchangeRate));
-  yield put(setRedeemFee(fee));
+  yield put(setRedeemFee(redeemFee));
   const osmosisInfo: InitialTvlApyFeeTypes = yield fetchOsmosisPoolInfo();
   const crescentInfo: InitialTvlApyFeeTypes = yield fetchCrescentPoolInfo();
   yield put(setCrescentInfo(crescentInfo));

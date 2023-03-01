@@ -3,7 +3,7 @@ import {
   MsgLiquidStake,
   MsgLiquidUnstake,
   MsgRedeem
-} from "./proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/msgs";
+} from "persistenceonejs/pstake/lscosmos/v1beta1/msgs";
 import { AminoConverters, AminoTypes, GasPrice } from "@cosmjs/stargate";
 import { OfflineDirectSigner, Registry } from "@cosmjs/proto-signing";
 import {

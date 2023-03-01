@@ -20,9 +20,9 @@ import {
   QueryAllDelegatorUnbondingEpochEntriesResponse,
   QueryClientImpl,
   QueryUnbondingEpochCValueResponse
-} from "../../helpers/proto-codecs/codec/pstake/pstake/lscosmos/v1beta1/query";
+} from "persistenceonejs/pstake/lscosmos/v1beta1/query";
 
-import { QueryClientImpl as EpochQueryClient } from "../../helpers/proto-codecs/codec/persistence/epochs/v1beta1/query";
+import { QueryClientImpl as EpochQueryClient } from "persistenceonejs/persistence/epochs/v1beta1/query";
 
 import { Scope } from "@sentry/nextjs";
 import { Coin } from "@cosmjs/proto-signing";
@@ -157,6 +157,7 @@ export const getTVU = async (rpc: string): Promise<number> => {
         (item: Coin) => item.denom === STK_ATOM_MINIMAL_DENOM
       );
       if (token !== undefined) {
+        console.log(Number(token?.amount), "getTVU");
         return Number(token?.amount);
       } else {
         return 0;
@@ -225,7 +226,9 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
             const unbondTime =
               unbondTimeResponse.hostAccountUndelegation.completionTime;
 
-            const unStakedon = moment(unbondTime).format("DD MMM YYYY hh:mm A");
+            const unStakedon = moment(
+              unbondTime.seconds.toNumber()! * 1000
+            ).format("DD MMM YYYY hh:mm A");
 
             const remainingTime = moment(unStakedon).fromNow(true);
 
@@ -252,8 +255,10 @@ export const fetchAllEpochEntries = async (address: string, rpc: string) => {
           const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!;
 
           const diff = (nextEpochNumber - currentEpochNumber + 1) * drs;
+
           const tentativeTime = moment(
-            epochInfo.epochs[0].currentEpochStartTime
+            epochInfo!.epochs[0]!.currentEpochStartTime?.seconds.toNumber()! * // ms conversion
+              1000
           )
             .add(diff + COSMOS_UNBOND_TIME, "seconds")
             .local()

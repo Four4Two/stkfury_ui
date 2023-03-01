@@ -90,8 +90,7 @@ const StakingTabs = () => {
             Total Value Unlocked(TVU)
           </p>
           <p className="text-light-emphasis font-semibold leading-normal text-2xl text-center md:text-base">
-            {formatNumber(Number(decimalize(tvu * inverseExchangeRate)), 3, 2)}{" "}
-            ATOM
+            {formatNumber(Number(decimalize(tvu)), 3, 2)} ATOM
           </p>
         </div>
       </div>

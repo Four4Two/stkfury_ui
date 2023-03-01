@@ -25,7 +25,7 @@ import {
 } from "../../store/reducers/liveData";
 import { getChainStatus } from "../../pages/api/onChain";
 import CosmosStationWallet from "../../helpers/cosmosStation";
-import { getstkAtomAPY } from "../../pages/api/externalAPIs";
+import { getStkAtomAPY } from "../../pages/api/externalAPIs";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -106,12 +106,11 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   // fetch calls only on initial render
   useEffect(() => {
     const fetchApy = async () => {
-      const [apy, cosmosChainStatus, persistenceChainStatus] =
-        await Promise.all([
-          getstkAtomAPY(),
-          getChainStatus(cosmosChainInfo.rpc),
-          getChainStatus(persistenceChainInfo.rpc)
-        ]);
+      const [cosmosChainStatus, persistenceChainStatus] = await Promise.all([
+        getChainStatus(cosmosChainInfo.rpc),
+        getChainStatus(persistenceChainInfo.rpc)
+      ]);
+      const apy = await getStkAtomAPY();
       dispatch(setAPY(apy));
       dispatch(setCosmosChainStatus(cosmosChainStatus));
       dispatch(setPersistenceChainStatus(persistenceChainStatus));
