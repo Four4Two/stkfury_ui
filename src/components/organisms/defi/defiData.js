@@ -12,7 +12,7 @@ export const defiSwapList = (osmosisInfo, crescentInfo) => [
     pool_link: "https://app.osmosis.zone/pool/886",
     launched: true,
     type: "defi",
-    apy: "21.1",
+    apy: osmosisInfo.total_apy,
     pool_liquidity: osmosisInfo.tvl,
     fees: osmosisInfo.fees
   },
