@@ -14,6 +14,7 @@ export interface InitialDataState {
   redeemFee: number;
   osmosisInfo: InitialTvlApyFeeTypes;
   crescentInfo: InitialTvlApyFeeTypes;
+  dexterInfo: InitialTvlApyFeeTypes;
   maxRedeem: number;
   minDeposit: number;
 }

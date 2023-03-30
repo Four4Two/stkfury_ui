@@ -114,6 +114,12 @@ export const ExternalChains: ExternalChainData = {
           coinMinimalDenom: "stk/uatom",
           coinDecimals: 6,
           coinGeckoId: "persistence"
+        },
+        {
+          coinDenom: "PSTAKE",
+          coinMinimalDenom: "PSTAKE",
+          coinDecimals: 18,
+          coinGeckoId: "pstake"
         }
       ],
       feeCurrencies: [
