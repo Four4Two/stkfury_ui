@@ -188,15 +188,20 @@ export const fetchDexterPoolInfo = async () => {
       const poolAggregate = responseJson.data.pool_aggregate_data?.find(
         (item: any) => item.pool_id === 1
       );
-      const poolIncentiveApr =
-        responseJson.data.pool_current_incentive_apr?.find(
-          (item: any) => item.pool_id === 1
-        );
+      const poolIncentiveAprList =
+        responseJson.data.pool_current_incentive_apr?.filter((item: any) => {
+          return item.pool_id === 1;
+        });
+      let poolIncentiveApr = 0;
+      if (poolIncentiveAprList && poolIncentiveAprList.length) {
+        poolIncentiveAprList.forEach((item: any) => {
+          poolIncentiveApr += item.incentive_apr;
+        });
+      }
       return {
         fees: 0.3,
         total_apy: (
-          poolAggregate.fee_apr +
-          (poolIncentiveApr ? poolIncentiveApr!.incentive_apr : 0)
+          poolAggregate.fee_apr + (poolIncentiveApr ? poolIncentiveApr : 0)
         ).toFixed(2),
         tvl: poolAggregate.current_liquidity_usd!.toFixed(2)
       };

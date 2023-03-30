@@ -1,6 +1,6 @@
 export const defiSwapList = (osmosisInfo, crescentInfo, dexterInfo) => [
   {
-    id: 0,
+    id: 1,
     inputToken: "stkATOM",
     inputToken_logo: "/images/tokens/stk_atom.svg",
     outputToken: "ATOM",
@@ -17,7 +17,7 @@ export const defiSwapList = (osmosisInfo, crescentInfo, dexterInfo) => [
     fees: osmosisInfo.fees
   },
   {
-    id: 1,
+    id: 2,
     inputToken: "stkATOM",
     inputToken_logo: "/images/tokens/stk_atom.svg",
     outputToken: "ATOM",
@@ -34,7 +34,7 @@ export const defiSwapList = (osmosisInfo, crescentInfo, dexterInfo) => [
     fees: "0%"
   },
   {
-    id: 2,
+    id: 0,
     inputToken: "stkATOM",
     inputToken_logo: "/images/tokens/stk_atom.svg",
     outputToken: "ATOM",
