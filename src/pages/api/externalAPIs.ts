@@ -15,6 +15,7 @@ export const STK_ATOM_CVALUE_API =
   "https://api.persistence.one/pstake/stkatom/c_value";
 export const STK_ATOM_TVU_API =
   "https://api.persistence.one/pstake/stkatom/atom_tvu";
+export const DEXTER_POOL_URL = "https://api.core-1.dexter.zone/v1/graphql";
 
 export const fetchAtomPrice = async (): Promise<number> => {
   try {
@@ -154,6 +155,58 @@ export const fetchCrescentPoolInfo = async () => {
     customScope.setLevel("fatal");
     customScope.setTags({
       "Error fetching info from crescent": CRESCENT_POOL_URL
+    });
+    genericErrorHandler(e, customScope);
+    return initialTVLAPY;
+  }
+  return initialTVLAPY;
+};
+
+export const fetchDexterPoolInfo = async () => {
+  try {
+    const res = await fetch(DEXTER_POOL_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        query: `{
+            pool_aggregate_data {
+              fee_apr
+              current_liquidity_usd
+              pool_id
+            }
+            pool_current_incentive_apr {
+               incentive_apr
+               pool_id
+            }
+          }`
+      })
+    });
+    const responseJson = await res.json();
+    if (responseJson && responseJson.data) {
+      const poolAggregate = responseJson.data.pool_aggregate_data?.find(
+        (item: any) => item.pool_id === 1
+      );
+      const poolIncentiveApr =
+        responseJson.data.pool_current_incentive_apr?.find(
+          (item: any) => item.pool_id === 1
+        );
+      return {
+        fees: 0.3,
+        total_apy: (
+          poolAggregate.fee_apr +
+          (poolIncentiveApr ? poolIncentiveApr!.incentive_apr : 0)
+        ).toFixed(2),
+        tvl: poolAggregate.current_liquidity_usd!.toFixed(2)
+      };
+    }
+    return initialTVLAPY;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error fetching info from dexter": DEXTER_POOL_URL
     });
     genericErrorHandler(e, customScope);
     return initialTVLAPY;

@@ -24,7 +24,8 @@ const initialState: InitialDataState = {
   osmosisInfo: initialTVLAPY,
   maxRedeem: 0,
   minDeposit: MIN_DEPOSIT,
-  crescentInfo: initialTVLAPY
+  crescentInfo: initialTVLAPY,
+  dexterInfo: initialTVLAPY
 };
 
 const initData = createSlice({
@@ -52,6 +53,9 @@ const initData = createSlice({
     },
     setCrescentInfo: (state, action) => {
       state.crescentInfo = action.payload;
+    },
+    setDexterInfo: (state, action) => {
+      state.dexterInfo = action.payload;
     }
   }
 });
@@ -64,7 +68,8 @@ export const {
   setExchangeRate,
   setMaxRedeem,
   setMinDeposit,
-  setCrescentInfo
+  setCrescentInfo,
+  setDexterInfo
 } = initData.actions;
 
 export default initData.reducer;
