@@ -25,7 +25,8 @@ const DefiList = () => {
       initData.crescentInfo,
       initData.dexterInfo
     );
-    setDefiData(defiList);
+    const sortedDefiData = defiList.sort((a: any, b: any) => a.id - b.id);
+    setDefiData(sortedDefiData);
     setLendingData(defiBorrowLendingList);
     const totalData: any = [
       ...defiSwapList(
