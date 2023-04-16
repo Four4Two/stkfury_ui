@@ -385,7 +385,7 @@ export const getChainStatus = async (rpc: string): Promise<boolean> => {
       "Error while fetching exchange rate": rpc
     });
     genericErrorHandler(e, customScope);
-    return false;
+    return true;
   }
 };
 
