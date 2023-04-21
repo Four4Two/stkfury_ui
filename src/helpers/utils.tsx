@@ -269,7 +269,6 @@ export async function getBaseRate() {
  */
 export const getCommission = async () => {
   try {
-    console.log(await GetStkAtomValidatorAPY(), "GetStkAtomValidatorAPY");
     const weight: number = 1;
     let commission: number = 0;
     const rpcClient = await RpcClient(persistenceChainInfo?.rpc!);
