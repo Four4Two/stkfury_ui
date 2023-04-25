@@ -9,7 +9,7 @@ import { WalletProviderProps, WalletState, walletType } from "./types";
 import { ChainInfo, Window as KeplrWindow } from "@keplr-wallet/types";
 import { AccountData } from "@cosmjs/launchpad/build/signer";
 import { OfflineSigner } from "@cosmjs/launchpad";
-import KeplrWallet from "../../helpers/keplr";
+import WalletHandler from "../../helpers/wallets";
 import { fetchBalanceSaga } from "../../store/reducers/balances";
 import { useDispatch } from "react-redux";
 import { fetchInitSaga, setAPY } from "../../store/reducers/initialData";
@@ -20,11 +20,9 @@ import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
 import {
   fetchLiveDataSaga,
-  setCosmosChainStatus,
   setPersistenceChainStatus
 } from "../../store/reducers/liveData";
 import { getChainStatus } from "../../pages/api/onChain";
-import CosmosStationWallet from "../../helpers/cosmosStation";
 import { getStkAtomAPY } from "../../pages/api/externalAPIs";
 
 declare global {
@@ -81,6 +79,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     if (walletConnected) {
       if (walletName === "keplr") {
         connect("keplr");
+      } else if (walletName === "leap") {
+        connect("leap");
       } else {
         connect("cosmosStation");
       }
@@ -123,15 +123,15 @@ export const WalletProvider: FC<WalletProviderProps> = ({
 
   const connect = async (walletType: walletType): Promise<boolean> => {
     try {
-      let persistenceSignerData: any =
-        walletType === "keplr"
-          ? await KeplrWallet(persistenceChainInfo)
-          : await CosmosStationWallet(persistenceChainInfo);
+      let persistenceSignerData: any = await WalletHandler(
+        persistenceChainInfo,
+        walletType
+      );
 
-      let cosmosSignerData: any =
-        walletType === "keplr"
-          ? await KeplrWallet(cosmosChainInfo)
-          : await CosmosStationWallet(cosmosChainInfo);
+      let cosmosSignerData: any = await WalletHandler(
+        cosmosChainInfo,
+        walletType
+      );
 
       let persistenceAddressData: any =
         await persistenceSignerData!.getAccounts();
