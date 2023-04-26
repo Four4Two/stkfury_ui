@@ -22,7 +22,6 @@ export const WalletHandler = async (
   } else {
     extension = window.keplr;
   }
-  console.log(chain, "chain", extension.experimentalSuggestChain);
   if (!extension) {
     throw new Error(`install ${wallet} extension`);
   } else {
