@@ -1,73 +1,97 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import Filters from "./filter";
-import { defiSwapList, defiBorrowLendingList } from "./defiData";
 import CardList from "./cardList";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/reducers";
+import { DefiDataList, defiDataList } from "./defiData";
+
+export type SortOptions = "all" | "dexes" | "lending";
+
+const arraySortDestruct = (defiList: DefiDataList) => {
+  let arrayKeys = Object.keys(defiList);
+  let sortedTotalData: any[] = [];
+  let sortedDefiList: DefiDataList = defiList;
+  arrayKeys.map((arrayIndex: string) => {
+    const filterd = defiList[arrayIndex as keyof typeof defiList].sort(
+      (a: any, b: any) => a.id - b.id
+    );
+    sortedTotalData.push(...filterd);
+    sortedDefiList[arrayIndex as keyof typeof defiList] = filterd;
+  });
+  return [sortedTotalData, sortedDefiList];
+};
+
+const arrayFilterDestruct = (defiList: DefiDataList, searchTerm: string) => {
+  let arrayKeys = Object.keys(defiList);
+  let sortedTotalData: any[] = [];
+  let sortedDefiList: DefiDataList = defiList;
+  arrayKeys.map((arrayIndex: string) => {
+    const filterd = defiList[arrayIndex as keyof typeof defiList].filter(
+      (val) => {
+        return (
+          val.token0.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          val.platform.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+    );
+    sortedTotalData.push(...filterd);
+    sortedDefiList[arrayIndex as keyof typeof defiList] = filterd;
+  });
+  return [sortedTotalData, sortedDefiList];
+};
 
 const DefiList = () => {
-  const [sortActive, setSortActive] = useState<any>({
+  const [sortActive, setSortActive] = useState<{
+    [key in SortOptions]: boolean;
+  }>({
     all: true,
     dexes: false,
     lending: false
   });
 
   const [defiData, setDefiData] = useState<any>([]);
-  const [lendingData, setLendingData] = useState<any>([]);
   const [allData, setAllData] = useState<any>([]);
 
   const initData = useSelector((state: RootState) => state.initialData);
 
   useEffect(() => {
-    const defiList = defiSwapList(
+    let allNetworkDefiList: any = [];
+    let defiListCopy: DefiDataList = {
+      dexList: [],
+      blList: []
+    };
+    const defiList = defiDataList(
       initData.osmosisInfo,
       initData.crescentInfo,
       initData.dexterInfo
     );
-    const sortedDefiData = defiList.sort((a: any, b: any) => a.id - b.id);
-    setDefiData(sortedDefiData);
-    setLendingData(defiBorrowLendingList);
-    const totalData: any = [
-      ...defiSwapList(
-        initData.osmosisInfo,
-        initData.crescentInfo,
-        initData.dexterInfo
-      ),
-      ...defiBorrowLendingList
-    ];
-    const sortedData = totalData.sort((a: any, b: any) => a.id - b.id);
-    setAllData(sortedData);
+    const sortedDefiData: any[] = arraySortDestruct(defiList);
+    defiListCopy.dexList.push(...sortedDefiData[1].dexList);
+    defiListCopy.blList.push(...sortedDefiData[1].blList);
+    allNetworkDefiList.push(...sortedDefiData[0]);
+    setDefiData(defiListCopy);
+    setAllData(allNetworkDefiList);
   }, [initData.osmosisInfo, initData.crescentInfo, initData.dexterInfo]);
 
   const searchHandler = (evt: any) => {
     const searchTerm = evt.target.value;
-    let newDefiList;
-    let newLendingList;
-
-    newDefiList = defiSwapList(
+    let allNetworkDefiList: any = [];
+    let defiListCopy: DefiDataList = {
+      dexList: [],
+      blList: []
+    };
+    const defiList = defiDataList(
       initData.osmosisInfo,
       initData.crescentInfo,
       initData.dexterInfo
-    ).filter((val) => {
-      return (
-        val.inputToken.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        val.platform.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    });
-    newLendingList = defiBorrowLendingList.filter((val) => {
-      return (
-        val.inputToken.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        val.platform.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    });
-
-    const totalData: any = [...newDefiList, ...newLendingList];
-    const sortedTotalData = totalData.sort((a: any, b: any) => a.id - b.id);
-
-    setDefiData(newDefiList);
-    setLendingData(newLendingList);
-    setAllData(sortedTotalData);
+    );
+    const filteredArray: any[] = arrayFilterDestruct(defiList, searchTerm);
+    defiListCopy.dexList.push(...filteredArray[1].dexList);
+    defiListCopy.blList.push(...filteredArray[1].blList);
+    allNetworkDefiList.push(...filteredArray[0]);
+    setDefiData(defiListCopy);
+    setAllData(allNetworkDefiList);
   };
   return (
     <div className={`${styles.defiContainer} px-2 pb-10 m-auto md:px-3`}>
@@ -86,12 +110,7 @@ const DefiList = () => {
         sortActive={sortActive}
         searchHandler={searchHandler}
       />
-      <CardList
-        sortActive={sortActive}
-        allData={allData}
-        defiData={defiData}
-        lendingData={lendingData}
-      />
+      <CardList sortActive={sortActive} allData={allData} defiData={defiData} />
     </div>
   );
 };
