@@ -81,10 +81,10 @@ const listShow = (item: DefiInfo, index: number, isMobile = false) => (
               )}
             </>
           ) : (
-            <>
+            <div className={"hidden"}>
               {listData("Borrowing APY", `${item.borrow_apy}%`)}
               {listData("Lending APY", `${item.lending_apy}%`)}
-            </>
+            </div>
           )}
         </div>
       </div>

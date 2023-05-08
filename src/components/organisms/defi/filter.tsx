@@ -35,7 +35,7 @@ const Filters = ({ setSortActive, sortActive, searchHandler }: any) => {
         >
           Decentralized Exchanges
         </button>
-        d{" "}
+        {" "}
         <button
           className={`${sortActive["lending"] ? "active" : ""} ` + buttonClass}
           onClick={() => handleSort("lending")}
