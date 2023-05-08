@@ -14,6 +14,17 @@ declare global {
   interface Window extends KeplrWindow {}
 }
 
+const getLogo = (walletType: walletType) => {
+  switch (walletType) {
+    case "cosmosStation":
+      return "cosmos_station";
+    case "keplr":
+      return "keplr_round";
+    case "leap":
+      return "leap";
+  }
+};
+
 export const LoginOptions = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { connect, isWalletConnected, persistenceAccountData, walletType } =
@@ -54,13 +65,6 @@ export const LoginOptions = () => {
     setDropdownOpen(false);
   });
 
-  const loginIcon =
-    walletType === "cosmosStation"
-      ? "cosmos_station"
-      : walletType === "keplr"
-      ? "keplr_round"
-      : "keplr_round";
-
   return (
     <div className="inline-block w-fit cursor-pointer relative">
       {isWalletConnected ? (
@@ -79,7 +83,7 @@ export const LoginOptions = () => {
                 }}
               >
                 <img
-                  src={`/images/wallets/${loginIcon}.svg`}
+                  src={`/images/wallets/${getLogo(walletType)}.svg`}
                   alt={"logo"}
                   className="w-[20px] h-[20px]"
                 />
@@ -158,6 +162,19 @@ export const LoginOptions = () => {
               />
               <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
                 Cosmostation
+              </span>
+            </div>
+            <div
+              className="hidden px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-br-md rounded-bl-md"
+              onClick={() => connectHandler("leap")}
+            >
+              <img
+                src={"/images/wallets/leap.svg"}
+                alt={"logo"}
+                className="w-[20px] h-[20px]"
+              />
+              <span className="ml-4 text-light-high text-sm font-medium leading-normal md:text-xsm md:ml-2">
+                Leap Wallet
               </span>
             </div>
           </div>

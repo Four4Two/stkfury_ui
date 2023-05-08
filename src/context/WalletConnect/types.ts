@@ -27,7 +27,7 @@ export interface WalletProviderProps {
   children: JSX.Element;
 }
 
-export type walletType = "keplr" | "cosmosStation";
+export type walletType = "keplr" | "cosmosStation" | "leap";
 
 export interface WalletState {
   isWalletConnected: boolean;
