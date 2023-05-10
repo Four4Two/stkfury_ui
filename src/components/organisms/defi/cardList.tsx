@@ -28,8 +28,12 @@ const listShow = (item: DefiInfo, index: number, isMobile = false) => (
       <div className="content flex-1 md:flex-auto">
         <div className="heading-section flex mb-8 md:mb-2 justify-between items-center">
           <div className="heading-section flex">
-            <div className="icons relative flex items-center mr-8">
-              <span className="z-10 absolute flex">
+            <div className="icons relative flex items-center mr-4">
+              <span
+                className={`${
+                  item.type === "blList" ? "" : "z-10 absolute flex"
+                }`}
+              >
                 <img
                   src={item.token0_logo}
                   width={32}
@@ -37,7 +41,11 @@ const listShow = (item: DefiInfo, index: number, isMobile = false) => (
                   alt={"inputToken_logo"}
                 />
               </span>
-              <span className="relative left-5 flex">
+              <span
+                className={`${
+                  item.type === "blList" ? "hidden" : "relative left-5 flex"
+                }`}
+              >
                 <img
                   src={item.token1_logo}
                   width={32}
@@ -46,7 +54,12 @@ const listShow = (item: DefiInfo, index: number, isMobile = false) => (
               </span>
             </div>
             <h3 className="text-3xl font-semibold leading-normal text-light-high md:text-lg">
-              {item.token0}/{item.token1}
+              <span className={`${item.type === "blList" ? "" : "ml-4"}`}>
+                {item.token0}
+              </span>
+              <span className={`${item.type === "blList" ? "hidden" : ""}`}>
+                /{item.token1}
+              </span>
             </h3>
           </div>
           <Tooltip placement="top" overlay={<span>{item.platform}</span>}>
@@ -81,10 +94,18 @@ const listShow = (item: DefiInfo, index: number, isMobile = false) => (
               )}
             </>
           ) : (
-            <div className={"hidden"}>
-              {listData("Borrowing APY", `${item.borrow_apy}%`)}
+            <>
               {listData("Lending APY", `${item.lending_apy}%`)}
-            </div>
+              {listData("Borrowing APY", `${item.borrow_apy}%`)}
+              {listData(
+                "Total Supplied",
+                `$${
+                  isMobile
+                    ? numberFormat(item.total_supply, 3)
+                    : Number(item.total_supply).toLocaleString()
+                }`
+              )}
+            </>
           )}
         </div>
       </div>

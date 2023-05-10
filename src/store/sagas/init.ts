@@ -7,6 +7,7 @@ import {
   fetchCrescentPoolInfo,
   fetchDexterPoolInfo,
   fetchOsmosisPoolInfo,
+  fetchUmeeInfo,
   getExchangeRate
 } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
@@ -16,7 +17,8 @@ import {
   setMaxRedeem,
   setCrescentInfo,
   setRedeemFee,
-  setDexterInfo
+  setDexterInfo,
+  setUmeeInfo
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
@@ -31,8 +33,10 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const osmosisInfo: InitialTvlApyFeeTypes = yield fetchOsmosisPoolInfo();
   const crescentInfo: InitialTvlApyFeeTypes = yield fetchCrescentPoolInfo();
   const dexterInfo: InitialTvlApyFeeTypes = yield fetchDexterPoolInfo();
+  const umeeInfo: InitialTvlApyFeeTypes = yield fetchUmeeInfo();
   yield put(setDexterInfo(dexterInfo));
   yield put(setCrescentInfo(crescentInfo));
   yield put(setOsmosisInfo(osmosisInfo));
+  yield put(setUmeeInfo(umeeInfo));
   yield put(setMaxRedeem(maxRedeem));
 }

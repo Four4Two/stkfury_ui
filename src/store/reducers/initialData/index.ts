@@ -14,7 +14,10 @@ import { MIN_DEPOSIT } from "../../../../AppConstants";
 export const initialTVLAPY: InitialTvlApyFeeTypes = {
   tvl: 0,
   total_apy: 0,
-  fees: 0
+  fees: 0,
+  total_supply: 0,
+  borrow_apy: 0,
+  lending_apy: 0
 };
 
 const initialState: InitialDataState = {
@@ -25,7 +28,8 @@ const initialState: InitialDataState = {
   maxRedeem: 0,
   minDeposit: MIN_DEPOSIT,
   crescentInfo: initialTVLAPY,
-  dexterInfo: initialTVLAPY
+  dexterInfo: initialTVLAPY,
+  umeeInfo:initialTVLAPY
 };
 
 const initData = createSlice({
@@ -56,6 +60,9 @@ const initData = createSlice({
     },
     setDexterInfo: (state, action) => {
       state.dexterInfo = action.payload;
+    },
+    setUmeeInfo: (state, action) => {
+      state.umeeInfo = action.payload;
     }
   }
 });
@@ -69,7 +76,8 @@ export const {
   setMaxRedeem,
   setMinDeposit,
   setCrescentInfo,
-  setDexterInfo
+  setDexterInfo,
+  setUmeeInfo
 } = initData.actions;
 
 export default initData.reducer;

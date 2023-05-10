@@ -20,6 +20,7 @@ export interface DefiInfo {
   tvl?: number | string | React.ReactNode;
   fee?: number | string | React.ReactNode;
   borrow_apy?: number | string | React.ReactNode;
+  total_supply?: number | string | React.ReactNode;
   lending_apy?: number | string | React.ReactNode;
   type: AvailableDefiOption;
 }
@@ -31,7 +32,8 @@ export type DefiDataList = {
 export const defiDataList = (
   osmosisInfo: InitialTvlApyFeeTypes,
   crescentInfo: InitialTvlApyFeeTypes,
-  dexterInfo: InitialTvlApyFeeTypes
+  dexterInfo: InitialTvlApyFeeTypes,
+  umeeInfo:InitialTvlApyFeeTypes,
 ): DefiDataList => {
   return {
     dexList: [
@@ -107,8 +109,9 @@ export const defiDataList = (
         button_two_text: "Borrow",
         button_two_url: "https://app.umee.cc/#/markets",
         launched: true,
-        borrow_apy: 0,
-        lending_apy: 0,
+        borrow_apy: umeeInfo.borrow_apy,
+        lending_apy: umeeInfo.lending_apy,
+        total_supply: umeeInfo.total_supply,
         fee: 0,
         type: "blList"
       }
