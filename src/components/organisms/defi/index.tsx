@@ -64,7 +64,8 @@ const DefiList = () => {
     const defiList = defiDataList(
       initData.osmosisInfo,
       initData.crescentInfo,
-      initData.dexterInfo
+      initData.dexterInfo,
+      initData.umeeInfo
     );
     const sortedDefiData: any[] = arraySortDestruct(defiList);
     defiListCopy.dexList.push(...sortedDefiData[1].dexList);
@@ -72,7 +73,12 @@ const DefiList = () => {
     allNetworkDefiList.push(...sortedDefiData[0]);
     setDefiData(defiListCopy);
     setAllData(allNetworkDefiList);
-  }, [initData.osmosisInfo, initData.crescentInfo, initData.dexterInfo]);
+  }, [
+    initData.osmosisInfo,
+    initData.crescentInfo,
+    initData.dexterInfo,
+    initData.umeeInfo
+  ]);
 
   const searchHandler = (evt: any) => {
     const searchTerm = evt.target.value;
@@ -84,7 +90,8 @@ const DefiList = () => {
     const defiList = defiDataList(
       initData.osmosisInfo,
       initData.crescentInfo,
-      initData.dexterInfo
+      initData.dexterInfo,
+      initData.umeeInfo
     );
     const filteredArray: any[] = arrayFilterDestruct(defiList, searchTerm);
     defiListCopy.dexList.push(...filteredArray[1].dexList);

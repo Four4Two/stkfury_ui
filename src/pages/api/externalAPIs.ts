@@ -9,6 +9,8 @@ export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
 export const OSMOSIS_POOL_APR_URL = "https://api.osmosis.zone/apr/v2/886";
 export const CRESCENT_POOL_URL = "https://apigw-v3.crescent.network/pool/live";
+export const UMEE_URL =
+  "https://testnet-client-bff-ocstrhuppq-uc.a.run.app/convexity/assets/all";
 export const STK_ATOM_APY_API =
   "https://api.persistence.one/pstake/stkatom/apy";
 export const STK_ATOM_CVALUE_API =
@@ -219,5 +221,30 @@ export const fetchDexterPoolInfo = async () => {
     genericErrorHandler(e, customScope);
     return initialTVLAPY;
   }
-  return initialTVLAPY;
+};
+
+export const fetchUmeeInfo = async (): Promise<InitialTvlApyFeeTypes> => {
+  try {
+    const res = await Axios.get(UMEE_URL);
+    if (res && res.data) {
+      const stkatom = res.data.find((item: any) => item.asset === "STKATOM");
+      if (stkatom) {
+        return {
+          borrow_apy: Number(stkatom.borrow_apy).toFixed(2),
+          lending_apy: Number(stkatom.supply_apy).toFixed(2),
+          total_supply: Number(stkatom.market_size_usd).toFixed(2)
+        };
+      }
+      return initialTVLAPY;
+    }
+    return initialTVLAPY;
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error fetching info from umee": UMEE_URL
+    });
+    genericErrorHandler(e, customScope);
+    return initialTVLAPY;
+  }
 };

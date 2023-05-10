@@ -3,9 +3,12 @@ import { ChainInfo } from "@keplr-wallet/types";
 import React from "react";
 
 export interface InitialTvlApyFeeTypes {
-  tvl: number | React.ReactNode;
-  total_apy: number | React.ReactNode;
-  fees: number;
+  tvl?: number | React.ReactNode;
+  total_apy?: number | React.ReactNode;
+  fees?: number;
+  borrow_apy?:  number | React.ReactNode;
+  lending_apy?:  number | React.ReactNode;
+  total_supply?:  number | React.ReactNode;
 }
 
 export interface InitialDataState {
@@ -15,6 +18,7 @@ export interface InitialDataState {
   osmosisInfo: InitialTvlApyFeeTypes;
   crescentInfo: InitialTvlApyFeeTypes;
   dexterInfo: InitialTvlApyFeeTypes;
+  umeeInfo: InitialTvlApyFeeTypes;
   maxRedeem: number;
   minDeposit: number;
 }
