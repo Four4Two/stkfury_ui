@@ -53,14 +53,18 @@ export const WalletHandler = async (
   }
 
   const chainId = chain.chainId;
-
-  try {
+  if (wallet === "leap") {
+    let trys = 3;
+    while (trys > 0)
+      try {
+        await extension.enable(chainId);
+        break;
+      } catch (err) {
+        console.log(err);
+        trys--;
+      }
+  } else {
     await extension.enable(chainId);
-  } catch (e: any) {
-    if (wallet === "leap" && e.message === "Request rejected") {
-      await extension.enable(chainId);
-    }
-    throw new Error(e);
   }
 
   const offlineSigner = await extension.getOfflineSignerAuto!(chainId);
