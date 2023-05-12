@@ -165,7 +165,7 @@ export const LoginOptions = () => {
               </span>
             </div>
             <div
-              className="hidden px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-br-md rounded-bl-md"
+              className="px-4 py-2 flex items-center md:py-3 hover:bg-[#383838] rounded-br-md rounded-bl-md"
               onClick={() => connectHandler("leap")}
             >
               <img
