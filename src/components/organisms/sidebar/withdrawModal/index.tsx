@@ -72,7 +72,7 @@ const WithdrawModal = () => {
                 stepNumber >= 1 ? "text-light-emphasis" : "text-light-low"
               } text-base font-normal`}
             >
-              Approve wallet transfer
+              Approve token transfer in wallet
             </p>
           </div>
           <div className="flex items-center mb-5">
