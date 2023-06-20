@@ -39,7 +39,7 @@ export const CHAIN_ID: any = {
   },
   Testnet: {
     cosmosChainID: "theta-testnet-001",
-    persistenceChainID: "test-core-1"
+    persistenceChainID: "test-core-2"
   },
   Mainnet: {
     cosmosChainID: "cosmoshub-4",
@@ -64,11 +64,11 @@ export const IBCChainInfos: IBCChainData = {
     {
       counterpartyChainId: "theta-testnet-001",
       chainName: "pStake Cosmos Testnet",
-      sourceChannelId: "channel-667",
-      destinationChannelId: "channel-105",
+      sourceChannelId: "channel-2777",
+      destinationChannelId: "channel-1",
       portID: "transfer",
       coinDenom:
-        "ibc/4A17832B26BF318D052563EFFE677C1DE11DF8CE104F00204860F3E3439818B2",
+        "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
       prefix: "cosmos"
     }
   ],
@@ -186,9 +186,9 @@ export const ExternalChains: ExternalChainData = {
   ],
   Testnet: [
     {
-      rpc: "https://rpc.testnet.persistence.one",
-      rest: "https://rest.testnet.persistence.one/",
-      chainId: "test-core-1",
+      rpc: "https://rpc.testnet2.persistence.one",
+      rest: "https://rest.testnet2.persistence.one",
+      chainId: "test-core-2",
       chainName: "Persistence test-net",
       stakeCurrency: {
         coinDenom: "XPRT",
