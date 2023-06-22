@@ -376,12 +376,12 @@ export const getChainStatus = async (rpc: string): Promise<boolean> => {
     );
     const duration = moment.duration(ms);
     const seconds = duration.asSeconds();
-    return seconds > 60;
+    return seconds > 90;
   } catch (e) {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate": rpc
+      "Error while fetching chain status": rpc
     });
     genericErrorHandler(e, customScope);
     return true;
