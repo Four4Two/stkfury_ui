@@ -2,9 +2,12 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
-import { fetchLiveDataSaga } from "../../store/reducers/liveData";
+import {fetchLiveDataSaga, setPersistenceChainStatus} from "../../store/reducers/liveData";
 import { BUG_REPORT_URL, SHORT_INTERVAL } from "../../../AppConstants";
 import { useWallet } from "../../context/WalletConnect/WalletConnect";
+import {getChainStatus} from "../../pages/api/onChain";
+import {getStkAtomAPY} from "../../pages/api/externalAPIs";
+import {setAPY} from "../../store/reducers/initialData";
 
 const MaintenanceContainer = () => {
   const router = useRouter();
@@ -13,19 +16,17 @@ const MaintenanceContainer = () => {
     (state: RootState) => state.liveData
   );
 
-  const { cosmosChainData, persistenceChainData } = useWallet();
+  const { persistenceChainData } = useWallet();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(
-        fetchLiveDataSaga({
-          persistenceChainInfo: persistenceChainData!,
-          cosmosChainInfo: cosmosChainData!
-        })
-      );
+    const interval = setInterval(async () => {
+      const [persistenceChainStatus] = await Promise.all([
+        getChainStatus(persistenceChainData!.rpc)
+      ]);
+      dispatch(setPersistenceChainStatus(persistenceChainStatus));
     }, SHORT_INTERVAL);
     return () => clearInterval(interval);
-  }, [dispatch, persistenceChainData, cosmosChainData]);
+  }, [dispatch, persistenceChainData]);
 
   useEffect(() => {
     if (

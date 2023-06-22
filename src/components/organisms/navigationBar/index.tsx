@@ -86,11 +86,11 @@ const NavigationBar = () => {
     cosmosChainData
   ]);
 
-  const { cosmosChainStatus, persistenceChainStatus } = useSelector(
+  const { persistenceChainStatus } = useSelector(
     (state: RootState) => state.liveData
   );
 
-  if (cosmosChainStatus || persistenceChainStatus) {
+  if (persistenceChainStatus) {
     router.push("/maintenance");
   }
 
