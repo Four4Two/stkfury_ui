@@ -7,7 +7,8 @@ import {
   SetRedeemFee,
   SetMaxRedeem,
   SetMinRedeem,
-  InitialTvlApyFeeTypes
+  InitialTvlApyFeeTypes,
+    SetActiveStakeTab
 } from "./types";
 import { MIN_DEPOSIT } from "../../../../AppConstants";
 
@@ -29,7 +30,8 @@ const initialState: InitialDataState = {
   minDeposit: MIN_DEPOSIT,
   crescentInfo: initialTVLAPY,
   dexterInfo: initialTVLAPY,
-  umeeInfo:initialTVLAPY
+  umeeInfo:initialTVLAPY,
+  activeStakeTab: "Stake"
 };
 
 const initData = createSlice({
@@ -63,6 +65,9 @@ const initData = createSlice({
     },
     setUmeeInfo: (state, action) => {
       state.umeeInfo = action.payload;
+    },
+    setActiveStakeTab: (state, action:SetActiveStakeTab) => {
+      state.activeStakeTab = action.payload;
     }
   }
 });
@@ -77,7 +82,8 @@ export const {
   setMinDeposit,
   setCrescentInfo,
   setDexterInfo,
-  setUmeeInfo
+  setUmeeInfo,
+  setActiveStakeTab
 } = initData.actions;
 
 export default initData.reducer;

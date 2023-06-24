@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import TabItem from "./tabItem";
 import TabContent from "./tabContent";
+import {ActiveStakeTab} from "../../../store/reducers/initialData/types";
+import {setActiveStakeTab} from "../../../store/reducers/initialData";
 
 const Tabs = () => {
-  const [activeTab, setActiveTab] = useState("tab1");
+  const [activeTab, setActiveTab] = useState("Stake");
+
+    const tabHandler = (tab:ActiveStakeTab) =>{
+        setActiveTab(tab)
+    }
 
   return (
     <div>
@@ -13,16 +19,16 @@ const Tabs = () => {
         role="tablist"
       >
         <TabItem
-          id="tab1"
+          id="Stake"
           title={"tab1"}
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          onClick={tabHandler}
         />
         <TabItem
-          id="tab2"
+          id="Unstake"
           title={"tab2"}
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          onClick={tabHandler}
         />
       </ul>
       <div>

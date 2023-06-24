@@ -4,25 +4,32 @@ import TabItem from "../../../molecules/tabs/tabItem";
 import TabContent from "../../../molecules/tabs/tabContent";
 import Stake from "../stake";
 import UnStake from "../unstake";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { Icon } from "../../../atoms/icon";
 import Tooltip from "rc-tooltip";
 import { decimalize, formatNumber } from "../../../../helpers/utils";
 import { Spinner } from "../../../atoms/spinner";
 import { APR_DEFAULT } from "../../../../../AppConstants";
+import {setActiveStakeTab} from "../../../../store/reducers/initialData";
+import {ActiveStakeTab} from "../../../../store/reducers/initialData/types";
 
 const StakingTabs = () => {
-  const [activeTab, setActiveTab] = useState("Stake");
+  const dispatch = useDispatch()
   const { apy, exchangeRate } = useSelector(
     (state: RootState) => state.initialData
   );
   const { tvu } = useSelector((state: RootState) => state.liveData);
+  const { activeStakeTab } = useSelector((state: RootState) => state.initialData);
   const inverseExchangeRate: number = 1 / exchangeRate;
   const tabItemClasses =
     "cursor-pointer w-full bg-tabHeader " +
     "font-semibold text-lg leading-normal text-center" +
     " text-light-mid flex-1 px-4 py-2 md:px-2 md:py-1.5 md:text-base";
+
+  const tabHandler = (tab:ActiveStakeTab) =>{
+    dispatch(setActiveStakeTab(tab))
+  }
 
   return (
     <div
@@ -32,29 +39,29 @@ const StakingTabs = () => {
         <TabItem
           id="Stake"
           title={"Stake"}
-          activeTab={activeTab}
+          onClick={tabHandler}
+          activeTab={activeStakeTab}
           className={tabItemClasses}
-          setActiveTab={setActiveTab}
         />
         <TabItem
           id="Unstake"
           title={"Unstake"}
-          activeTab={activeTab}
+          onClick={tabHandler}
+          activeTab={activeStakeTab}
           className={tabItemClasses}
-          setActiveTab={setActiveTab}
         />
       </ul>
       <div>
         <TabContent
           id="Stake"
-          activeTab={activeTab}
+          activeTab={activeStakeTab}
           className="p-6 md:p-4 bg-tabContent rounded-md"
         >
           <Stake />
         </TabContent>
         <TabContent
           id="Unstake"
-          activeTab={activeTab}
+          activeTab={activeStakeTab}
           className="p-6 md:p-4 bg-tabContent rounded-md"
         >
           <UnStake />

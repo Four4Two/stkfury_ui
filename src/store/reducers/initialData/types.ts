@@ -11,6 +11,8 @@ export interface InitialTvlApyFeeTypes {
   total_supply?:  number | React.ReactNode;
 }
 
+export type ActiveStakeTab = "Stake" | "Unstake";
+
 export interface InitialDataState {
   exchangeRate: number;
   apy: number;
@@ -21,6 +23,7 @@ export interface InitialDataState {
   umeeInfo: InitialTvlApyFeeTypes;
   maxRedeem: number;
   minDeposit: number;
+  activeStakeTab: ActiveStakeTab
 }
 
 export interface FetchInitialDataSagaParams {
@@ -33,5 +36,6 @@ export type SetAPR = PayloadAction<number>;
 export type SetRedeemFee = PayloadAction<number>;
 export type SetMaxRedeem = PayloadAction<number>;
 export type SetMinRedeem = PayloadAction<number>;
+export type SetActiveStakeTab = PayloadAction<ActiveStakeTab>;
 
 export type FetchInitialDataSaga = PayloadAction<FetchInitialDataSagaParams>;

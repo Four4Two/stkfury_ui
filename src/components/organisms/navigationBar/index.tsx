@@ -19,12 +19,13 @@ import { RootState } from "../../../store/reducers";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
+import Banner from "./banner";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
   const { isMobile } = useWindowSize();
   const router = useRouter();
-
+  const { activeStakeTab } = useSelector((state: RootState) => state.initialData);
   const handleMenu = () => {
     dispatch(showMobileSidebar());
   };
@@ -95,48 +96,53 @@ const NavigationBar = () => {
   }
 
   return (
-    <div className="flex mb-10 py-6 pl-7 pr-14 md:px-3">
-      <div className="flex items-center flex-1">
-        <div className="hidden md:block">
-          <Link href="/" className="nav-link" passHref>
-            <img
-              src={"/images/logo.svg"}
-              alt={"logo"}
-              width={isMobile ? 90 : 124}
-            />
-          </Link>
-        </div>
-        <div className="flex ml-auto">
-          <Button
-            size="medium"
-            type="custom"
-            content={
-              <div className="flex items-center">
-                <div className="flex items-center">
-                  <img
-                    src={"/images/persistence_icon.svg"}
-                    alt={"logo"}
-                    width={18}
-                    height={18}
-                  />
-                  <span className="ml-3">
-                    {process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET
-                      ? "Persistence Testnet"
-                      : process.env.NEXT_PUBLIC_ENVIRONMENT === DEV_NET
-                      ? "Persistence Devnet"
-                      : "Persistence Mainnet"}
-                  </span>
-                </div>
-              </div>
-            }
-            className="button custom lg:!hidden pointer-events-none !text-sm"
-          />
-          <div className="pl-4">
-            <LoginOptions />
+    <div>
+      {activeStakeTab === 'Unstake' ?
+          <Banner/>
+       : ""}
+      <div className="block mb-10 pt-4 py-6 pl-7 pr-14 md:px-3">
+        <div className="flex items-center flex-1">
+          <div className="hidden md:block">
+            <Link href="/" className="nav-link" passHref>
+              <img
+                  src={"/images/logo.svg"}
+                  alt={"logo"}
+                  width={isMobile ? 90 : 124}
+              />
+            </Link>
           </div>
-          <button className="md:block hidden pl-2" onClick={handleMenu}>
-            <Icon iconName="menu" viewClass="menu" />
-          </button>
+          <div className="flex ml-auto">
+            <Button
+                size="medium"
+                type="custom"
+                content={
+                  <div className="flex items-center">
+                    <div className="flex items-center">
+                      <img
+                          src={"/images/persistence_icon.svg"}
+                          alt={"logo"}
+                          width={18}
+                          height={18}
+                      />
+                      <span className="ml-3">
+                    {process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET
+                        ? "Persistence Testnet"
+                        : process.env.NEXT_PUBLIC_ENVIRONMENT === DEV_NET
+                            ? "Persistence Devnet"
+                            : "Persistence Mainnet"}
+                  </span>
+                    </div>
+                  </div>
+                }
+                className="button custom lg:!hidden pointer-events-none !text-sm"
+            />
+            <div className="pl-4">
+              <LoginOptions />
+            </div>
+            <button className="md:block hidden pl-2" onClick={handleMenu}>
+              <Icon iconName="menu" viewClass="menu" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

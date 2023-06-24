@@ -5,16 +5,12 @@ const TabItem = ({
   title,
   activeTab,
   id,
-  setActiveTab,
+  onClick,
   className
 }: TabItemTypes) => {
-  const handleClick = () => {
-    setActiveTab(id);
-  };
-
   return (
     <li
-      onClick={handleClick}
+      onClick={()=>onClick(id)}
       className={
         `${
           activeTab === id ? "active tabItem" : "tabItem hover:text-light-high"
