@@ -1,10 +1,11 @@
 import React, { Dispatch, SetStateAction } from "react";
+import {ActiveStakeTab} from "../../../store/reducers/initialData/types";
 
 export interface TabItemTypes {
-  id: string;
+  id: ActiveStakeTab;
   title: React.ReactNode | string;
   activeTab: string;
-  setActiveTab: Dispatch<SetStateAction<string>>;
+  onClick: (tab:ActiveStakeTab)=>void;
   className?: string;
 }
 
