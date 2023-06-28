@@ -28,6 +28,7 @@ import {
   IBCConfiguration
 } from "../../../../helpers/config";
 import { claimType } from "../../../../store/reducers/transactions/claim/types";
+import Tooltip from "rc-tooltip";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -91,6 +92,7 @@ const ClaimModal = () => {
   );
 
   const [activeClaims, setActiveClaims] = useState(0);
+  const [toolTipEnabled, setTooltipEnabled] = useState(false);
   const [pendingList, setPendingList] = useState<any>([]);
   const [unListedPendingClaims, setUnlistedPendingClaims] = useState<any>([]);
 
@@ -157,6 +159,10 @@ const ClaimModal = () => {
     dispatch(hideClaimModal());
   };
 
+  const handleTooltip = (evt:any) =>{
+    setTooltipEnabled(evt);
+  }
+
   return (
     <Modal
       show={showModal}
@@ -164,7 +170,7 @@ const ClaimModal = () => {
       className="claimModal"
       header="Claim Unstaked ATOM"
       closeButton={false}
-      staticBackDrop={false}
+      staticBackDrop={toolTipEnabled}
     >
       <div className="px-8 pb-4 pt-4 md:px-7">
         {activeClaims > 0 || claimableStkAtomBalance > 0 ? (
@@ -188,6 +194,18 @@ const ClaimModal = () => {
                     </p>
                     <div className="flex text-base text-light-mid leading-normal font-medium">
                       Failed Unstaking
+                      <Tooltip
+                          onVisibleChange={handleTooltip}
+                          placement="bottom"
+                          trigger={"click"}
+                          overlay={<span>Due to an unexpected error, your unstaking request failed. <br/> Please see&nbsp;
+                            <a href="https://twitter.com/pSTAKE_Cosmos" target={"_blank"} rel="noreferrer" className="underline">twitter</a>
+                            &nbsp;for more details. You may claim<br/> your stkATOM to retry your unstaking request.</span>}
+                      >
+                        <button className="icon-button px-1 align-middle">
+                          <Icon viewClass="arrow-right" iconName="info" />
+                        </button>
+                      </Tooltip>
                     </div>
                   </div>
                 ) : null}
