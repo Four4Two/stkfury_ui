@@ -197,7 +197,6 @@ const ClaimModal = () => {
                       <Tooltip
                           onVisibleChange={handleTooltip}
                           placement="bottom"
-                          trigger={"click"}
                           overlay={<span>Due to an unexpected error, your unstaking request failed. <br/> Please see&nbsp;
                             <a href="https://twitter.com/pSTAKE_Cosmos" target={"_blank"} rel="noreferrer" className="underline">Twitter</a>
                             &nbsp;for more details. You may claim<br/> your stkATOM to retry your unstaking request.</span>}
