@@ -11,7 +11,14 @@ const isProd = process.env.NODE_ENV === 'production'
 const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
-  assetPrefix: isProd ? './' : '' // To disable assetPrefix in development for hot reload
+  assetPrefix: isProd ? './' : '', // To disable assetPrefix in development for hot reload
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+    return config;
+  },
 }
 
 module.exports = nextConfig
