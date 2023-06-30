@@ -210,7 +210,7 @@ const ClaimModal = () => {
                 ) : null}
               </div>
               <p
-                className={`mt-4 claimButton opacity-50 rounded-md pointer-events-none cursor-not-allowed cursor-pointer border-2 border-[#47C28B] border-solid
+                className={`mt-4 claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
                          ${
                            !enable || (name === CLAIM && inProgress)

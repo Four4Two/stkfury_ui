@@ -64,7 +64,7 @@ const Options = () => {
       <div
         className={`${
           type !== INSTANT ? "active" : ""
-        } option-item opacity-50 rounded-md pointer-events-none cursor-not-allowed block relative 
+        } option-item cursor-pointer block relative 
         rounded-lg py-3 px-6 border border-solid border-[#373737] md:p-4`}
         onClick={() => optionHandler("normal")}
       >
