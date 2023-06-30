@@ -19,13 +19,11 @@ import { RootState } from "../../../store/reducers";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
-import Banner from "./banner";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
   const { isMobile } = useWindowSize();
   const router = useRouter();
-  const { activeStakeTab } = useSelector((state: RootState) => state.initialData);
   const handleMenu = () => {
     dispatch(showMobileSidebar());
   };
@@ -97,9 +95,6 @@ const NavigationBar = () => {
 
   return (
     <div>
-      {activeStakeTab === 'Unstake' ?
-          <Banner/>
-       : ""}
       <div className="block mb-10 pt-4 py-6 pl-7 pr-14 md:px-3">
         <div className="flex items-center flex-1">
           <div className="hidden md:block">
