@@ -329,7 +329,7 @@ input[type="number"] {
 }
 
 .termsModal .modalDialog {
-  max-width: 700px;
+  max-width: 750px;
 }
 
 .inputContainer:focus-within {
