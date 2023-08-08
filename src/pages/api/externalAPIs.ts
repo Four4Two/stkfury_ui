@@ -3,8 +3,12 @@ import { decimalize, genericErrorHandler } from "../../helpers/utils";
 import { Scope } from "@sentry/nextjs";
 import { APR_DEFAULT, CRESCENT_STK_ATOM_DENOM } from "../../../AppConstants";
 import { initialTVLAPY } from "../../store/reducers/initialData";
-import { InitialTvlApyFeeTypes } from "../../store/reducers/initialData/types";
-
+import {
+  InitialTvlApyFeeTypes,
+  ShadeInitialInfo
+} from "../../store/reducers/initialData/types";
+export const SHADE_URL =
+  "https://na36v10ce3.execute-api.us-east-1.amazonaws.com/API-mainnet-STAGE/shadeswap/pairs";
 export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
 export const OSMOSIS_POOL_APR_URL = "https://api.osmosis.zone/apr/v2/886";
@@ -220,6 +224,48 @@ export const fetchDexterPoolInfo = async () => {
     });
     genericErrorHandler(e, customScope);
     return initialTVLAPY;
+  }
+};
+
+export const fetchShadeInfo = async (): Promise<ShadeInitialInfo> => {
+  try {
+    const res = await Axios.get(SHADE_URL);
+    if (res && res.data) {
+      const stkATOMSilk = res.data.find(
+        (item: any) => item.id === "ec478c0a-c7cd-4327-b6cb-8d01ca87d319"
+      );
+      const atomStkATOM = res.data.find(
+        (item: any) => item.id === "1d7f9ba8-b4be-4a34-a54d-63554f14f8fb"
+      );
+      console.log(stkATOMSilk, "stkATOMSilk", atomStkATOM);
+      return {
+        stkATOMSilk: {
+          total_apy: Number(stkATOMSilk.apr.total).toFixed(2),
+          tvl: Number(stkATOMSilk.liquidity_usd).toFixed(2),
+          fees: (Number(stkATOMSilk.fees.lp) * 100).toFixed(2)
+        },
+        atomStkAtom: {
+          total_apy: Number(atomStkATOM.apr.total).toFixed(2),
+          tvl: Number(atomStkATOM.liquidity_usd).toFixed(2),
+          fees: (Number(atomStkATOM.fees.lp) * 100).toFixed(2)
+        }
+      };
+    }
+    return {
+      stkATOMSilk: initialTVLAPY,
+      atomStkAtom: initialTVLAPY
+    };
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error fetching info from umee": SHADE_URL
+    });
+    genericErrorHandler(e, customScope);
+    return {
+      stkATOMSilk: initialTVLAPY,
+      atomStkAtom: initialTVLAPY
+    };
   }
 };
 

@@ -33,7 +33,9 @@ export const defiDataList = (
   osmosisInfo: InitialTvlApyFeeTypes,
   crescentInfo: InitialTvlApyFeeTypes,
   dexterInfo: InitialTvlApyFeeTypes,
-  umeeInfo:InitialTvlApyFeeTypes,
+  umeeInfo: InitialTvlApyFeeTypes,
+  shadeAtomStkAtom: InitialTvlApyFeeTypes,
+  shadeStkATOMSilk: InitialTvlApyFeeTypes
 ): DefiDataList => {
   return {
     dexList: [
@@ -84,7 +86,7 @@ export const defiDataList = (
         platform: "Dexter",
         platform_logo: "/images/defi/dexter.svg",
         button_one_text: "Swap",
-        button_one_url: "https://app.dexter.zone/",
+        button_one_url: "https://app.dexter.zone/?from=stkATOM&to=ATOM",
         button_two_text: "Add Liquidity",
         button_two_url:
           "https://app.dexter.zone/pools/persistence1335rlmhujm0gj5e9gh7at9jpqvqckz0mpe4v284ar4lw5mlkryzszkpfrs",
@@ -92,6 +94,44 @@ export const defiDataList = (
         apy: dexterInfo.total_apy,
         tvl: dexterInfo.tvl,
         fee: dexterInfo.fees,
+        type: "dexList"
+      },
+      {
+        id: 4,
+        token0: "stkATOM",
+        token0_logo: "/images/tokens/stk_atom.svg",
+        token1: "ATOM",
+        token1_logo: "/images/tokens/atom.svg",
+        platform: "Shade",
+        platform_logo: "/images/defi/shade.svg",
+        button_one_text: "Swap",
+        button_one_url:
+          "https://app.shadeprotocol.io/swap?input=stkATOM&output=ATOM",
+        button_two_text: "Add Liquidity",
+        button_two_url: "https://app.shadeprotocol.io/swap/pools",
+        launched: true,
+        apy: shadeAtomStkAtom.total_apy,
+        tvl: shadeAtomStkAtom.tvl,
+        fee: `${shadeAtomStkAtom.fees}%`,
+        type: "dexList"
+      },
+      {
+        id: 5,
+        token0: "stkATOM",
+        token0_logo: "/images/tokens/stk_atom.svg",
+        token1: "SILK",
+        token1_logo: "/images/tokens/silk.svg",
+        platform: "Shade",
+        platform_logo: "/images/defi/shade.svg",
+        button_one_text: "Swap",
+        button_one_url:
+          "https://app.shadeprotocol.io/swap?input=stkATOM&output=ATOM",
+        button_two_text: "Add Liquidity",
+        button_two_url: "https://app.shadeprotocol.io/swap/pools",
+        launched: true,
+        apy: shadeStkATOMSilk.total_apy,
+        tvl: shadeStkATOMSilk.tvl,
+        fee: `${shadeStkATOMSilk.fees}%`,
         type: "dexList"
       }
     ],

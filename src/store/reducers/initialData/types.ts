@@ -5,13 +5,18 @@ import React from "react";
 export interface InitialTvlApyFeeTypes {
   tvl?: number | React.ReactNode;
   total_apy?: number | React.ReactNode;
-  fees?: number;
-  borrow_apy?:  number | React.ReactNode;
-  lending_apy?:  number | React.ReactNode;
-  total_supply?:  number | React.ReactNode;
+  fees?: number | React.ReactNode;
+  borrow_apy?: number | React.ReactNode;
+  lending_apy?: number | React.ReactNode;
+  total_supply?: number | React.ReactNode;
 }
 
 export type ActiveStakeTab = "Stake" | "Unstake";
+
+export interface ShadeInitialInfo {
+  atomStkAtom: InitialTvlApyFeeTypes;
+  stkATOMSilk: InitialTvlApyFeeTypes;
+}
 
 export interface InitialDataState {
   exchangeRate: number;
@@ -21,9 +26,10 @@ export interface InitialDataState {
   crescentInfo: InitialTvlApyFeeTypes;
   dexterInfo: InitialTvlApyFeeTypes;
   umeeInfo: InitialTvlApyFeeTypes;
+  shadeInfo: ShadeInitialInfo;
   maxRedeem: number;
   minDeposit: number;
-  activeStakeTab: ActiveStakeTab
+  activeStakeTab: ActiveStakeTab;
 }
 
 export interface FetchInitialDataSagaParams {

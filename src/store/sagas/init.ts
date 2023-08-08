@@ -7,6 +7,7 @@ import {
   fetchCrescentPoolInfo,
   fetchDexterPoolInfo,
   fetchOsmosisPoolInfo,
+  fetchShadeInfo,
   fetchUmeeInfo,
   getExchangeRate
 } from "../../pages/api/externalAPIs";
@@ -18,7 +19,8 @@ import {
   setCrescentInfo,
   setRedeemFee,
   setDexterInfo,
-  setUmeeInfo
+  setUmeeInfo,
+  setShadeInfo
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
@@ -33,10 +35,12 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const osmosisInfo: InitialTvlApyFeeTypes = yield fetchOsmosisPoolInfo();
   const crescentInfo: InitialTvlApyFeeTypes = yield fetchCrescentPoolInfo();
   const dexterInfo: InitialTvlApyFeeTypes = yield fetchDexterPoolInfo();
+  const shadeInfo = yield fetchShadeInfo();
   const umeeInfo: InitialTvlApyFeeTypes = yield fetchUmeeInfo();
   yield put(setDexterInfo(dexterInfo));
   yield put(setCrescentInfo(crescentInfo));
   yield put(setOsmosisInfo(osmosisInfo));
   yield put(setUmeeInfo(umeeInfo));
   yield put(setMaxRedeem(maxRedeem));
+  yield put(setShadeInfo(shadeInfo));
 }
