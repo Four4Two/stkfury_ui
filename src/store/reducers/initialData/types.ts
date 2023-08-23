@@ -27,6 +27,7 @@ export interface InitialDataState {
   dexterInfo: InitialTvlApyFeeTypes;
   umeeInfo: InitialTvlApyFeeTypes;
   shadeInfo: ShadeInitialInfo;
+  shadeCollateral: InitialTvlApyFeeTypes;
   maxRedeem: number;
   minDeposit: number;
   activeStakeTab: ActiveStakeTab;

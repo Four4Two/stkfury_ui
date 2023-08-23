@@ -67,7 +67,8 @@ const DefiList = () => {
       initData.dexterInfo,
       initData.umeeInfo,
       initData.shadeInfo.stkATOMSilk,
-      initData.shadeInfo.atomStkAtom
+      initData.shadeInfo.atomStkAtom,
+      initData.shadeCollateral
     );
     const sortedDefiData: any[] = arraySortDestruct(defiList);
     defiListCopy.dexList.push(...sortedDefiData[1].dexList);
@@ -96,7 +97,8 @@ const DefiList = () => {
       initData.dexterInfo,
       initData.umeeInfo,
       initData.shadeInfo.stkATOMSilk,
-      initData.shadeInfo.atomStkAtom
+      initData.shadeInfo.atomStkAtom,
+      initData.shadeCollateral
     );
     const filteredArray: any[] = arrayFilterDestruct(defiList, searchTerm);
     defiListCopy.dexList.push(...filteredArray[1].dexList);

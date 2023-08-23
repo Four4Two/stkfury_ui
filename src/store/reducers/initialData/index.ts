@@ -11,7 +11,6 @@ import {
   SetActiveStakeTab
 } from "./types";
 import { MIN_DEPOSIT } from "../../../../AppConstants";
-
 export const initialTVLAPY: InitialTvlApyFeeTypes = {
   tvl: 0,
   total_apy: 0,
@@ -32,6 +31,7 @@ const initialState: InitialDataState = {
   dexterInfo: initialTVLAPY,
   umeeInfo: initialTVLAPY,
   activeStakeTab: "Stake",
+  shadeCollateral: initialTVLAPY,
   shadeInfo: {
     atomStkAtom: initialTVLAPY,
     stkATOMSilk: initialTVLAPY
@@ -75,6 +75,9 @@ const initData = createSlice({
     },
     setShadeInfo: (state, action) => {
       state.shadeInfo = action.payload;
+    },
+    setShadeCollateral: (state, action) => {
+      state.shadeCollateral = action.payload;
     }
   }
 });
@@ -91,7 +94,8 @@ export const {
   setDexterInfo,
   setUmeeInfo,
   setActiveStakeTab,
-  setShadeInfo
+  setShadeInfo,
+  setShadeCollateral
 } = initData.actions;
 
 export default initData.reducer;
