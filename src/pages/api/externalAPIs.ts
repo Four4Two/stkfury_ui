@@ -1,5 +1,9 @@
 import Axios from "axios";
-import { decimalize, genericErrorHandler } from "../../helpers/utils";
+import {
+  decimalize,
+  decimalizeRaw,
+  genericErrorHandler
+} from "../../helpers/utils";
 import { Scope } from "@sentry/nextjs";
 import { APR_DEFAULT, CRESCENT_STK_ATOM_DENOM } from "../../../AppConstants";
 import { initialTVLAPY } from "../../store/reducers/initialData";
@@ -22,6 +26,8 @@ export const STK_ATOM_CVALUE_API =
 export const STK_ATOM_TVU_API =
   "https://api.persistence.one/pstake/stkatom/atom_tvu";
 export const DEXTER_POOL_URL = "https://api.core-1.dexter.zone/v1/graphql";
+export const SHADE_LCD = "https://lcd.secret.express";
+import { SecretNetworkClient } from "secretjs";
 
 export const fetchAtomPrice = async (): Promise<number> => {
   try {
@@ -294,3 +300,43 @@ export const fetchUmeeInfo = async (): Promise<InitialTvlApyFeeTypes> => {
     return initialTVLAPY;
   }
 };
+
+export const fetchShadeCollateral =
+  async (): Promise<InitialTvlApyFeeTypes> => {
+    try {
+      let stkAtomPrice = 1;
+      const res = await Axios.get(
+        "https://api.coingecko.com/api/v3/coins/stkatom"
+      );
+      if (res && res.data) {
+        stkAtomPrice = res.data.market_data.current_price.usd;
+      }
+
+      const secretjs = new SecretNetworkClient({
+        url: SHADE_LCD,
+        chainId: "secret-4"
+      });
+
+      const result: any = await secretjs.query.compute.queryContract({
+        contract_address: "secret1qxk2scacpgj2mmm0af60674afl9e6qneg7yuny",
+        query: { vault: { vault_id: "10" } }
+      });
+      if (result) {
+        return {
+          total_supply:
+            Number(decimalizeRaw(result.vault.collateral.base!, 18)) *
+            stkAtomPrice,
+          fees: Number(result.vault.config.fees.borrow_fee.delta) * 100
+        };
+      }
+      return initialTVLAPY;
+    } catch (e) {
+      const customScope = new Scope();
+      customScope.setLevel("fatal");
+      customScope.setTags({
+        "Error fetching info from secret": SHADE_LCD
+      });
+      genericErrorHandler(e, customScope);
+      return initialTVLAPY;
+    }
+  };

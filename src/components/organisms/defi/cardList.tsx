@@ -93,19 +93,35 @@ const listShow = (item: DefiInfo, index: number, isMobile = false) => (
                 }`
               )}
             </>
+          ) : item.type === "blList" ? (
+            item.platform === "Umee" ? (
+              <>
+                {listData("Lending APY", `${item.lending_apy}%`)}
+                {listData("Borrowing APY", `${item.borrow_apy}%`)}
+                {listData(
+                  "Total Supplied",
+                  `$${
+                    isMobile
+                      ? numberFormat(item.total_supply, 3)
+                      : Number(item.total_supply).toLocaleString()
+                  }`
+                )}
+              </>
+            ) : (
+              <>
+                {listData("Borrowing Fee", `${item.fee}%`)}
+                {listData(
+                  "Total Supplied",
+                  `$${
+                    isMobile
+                      ? numberFormat(item.total_supply, 3)
+                      : Number(item.total_supply).toLocaleString()
+                  }`
+                )}
+              </>
+            )
           ) : (
-            <>
-              {listData("Lending APY", `${item.lending_apy}%`)}
-              {listData("Borrowing APY", `${item.borrow_apy}%`)}
-              {listData(
-                "Total Supplied",
-                `$${
-                  isMobile
-                    ? numberFormat(item.total_supply, 3)
-                    : Number(item.total_supply).toLocaleString()
-                }`
-              )}
-            </>
+            ""
           )}
         </div>
       </div>

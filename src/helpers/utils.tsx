@@ -138,6 +138,10 @@ export const decimalize = (valueString: string | number, decimals = 6) => {
   ).toString();
 };
 
+export const decimalizeRaw = (valueString: string, decimals = 6) => {
+  return Decimal.fromAtomics(valueString, decimals).toString();
+};
+
 export const unDecimalize = (valueString: string | number, decimals = 6) => {
   return Decimal.fromUserInput(valueString.toString(), decimals).atomics;
 };

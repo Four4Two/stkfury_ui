@@ -35,7 +35,8 @@ export const defiDataList = (
   dexterInfo: InitialTvlApyFeeTypes,
   umeeInfo: InitialTvlApyFeeTypes,
   shadeAtomStkAtom: InitialTvlApyFeeTypes,
-  shadeStkATOMSilk: InitialTvlApyFeeTypes
+  shadeStkATOMSilk: InitialTvlApyFeeTypes,
+  shadeCollateral: InitialTvlApyFeeTypes
 ): DefiDataList => {
   return {
     dexList: [
@@ -125,7 +126,7 @@ export const defiDataList = (
         platform_logo: "/images/defi/shade.svg",
         button_one_text: "Swap",
         button_one_url:
-          "https://app.shadeprotocol.io/swap?input=stkATOM&output=ATOM",
+          "https://app.shadeprotocol.io/swap?input=stkATOM&output=SILK",
         button_two_text: "Add Liquidity",
         button_two_url: "https://app.shadeprotocol.io/swap/pools",
         launched: true,
@@ -153,6 +154,25 @@ export const defiDataList = (
         lending_apy: umeeInfo.lending_apy,
         total_supply: umeeInfo.total_supply,
         fee: 0,
+        type: "blList"
+      },
+      {
+        id: 3,
+        token0: "stkATOM",
+        token0_logo: "/images/tokens/stk_atom.svg",
+        token1: "SILK",
+        token1_logo: "/images/tokens/silk.svg",
+        platform: "Shade",
+        platform_logo: "/images/defi/shade.svg",
+        button_one_text: "Add Collateral",
+        button_one_url: "https://app.shadeprotocol.io/borrow",
+        button_two_text: "Borrow",
+        button_two_url: "https://app.shadeprotocol.io/borrow",
+        launched: true,
+        borrow_apy: 0,
+        lending_apy: 0,
+        total_supply: shadeCollateral.total_supply,
+        fee: shadeCollateral.fees,
         type: "blList"
       }
     ]
