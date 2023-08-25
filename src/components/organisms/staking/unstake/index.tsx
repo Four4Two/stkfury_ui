@@ -57,8 +57,8 @@ const Stake = () => {
           Your stkATOM will only be unbonded after an unbonding period of 21-25
           days. If you want immediate liquidity, you can swap stkATOM for ATOM
           on one of the DEXes listed in our&nbsp;
-          <Link href="/defi" passHref>
-            <a className="text-[#3e73f0]">DeFi section.</a>
+          <Link href="/defi" className="text-[#3e73f0]" passHref>
+            DeFi section.
           </Link>
         </p>
       )}
