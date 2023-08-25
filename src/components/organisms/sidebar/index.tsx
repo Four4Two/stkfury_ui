@@ -78,14 +78,14 @@ const Sidebar = () => {
         <div>
           <div className="text-center pt-8 pb-[1.9rem]">
             <Link href="/" className="nav-link" passHref>
-              <a className="text-center">
+              <p className="text-center">
                 <img
                   src={"/images/logo.svg"}
                   alt={"logo"}
                   className="m-auto"
                   width={isMobile ? 90 : 124}
                 />
-              </a>
+              </p>
             </Link>
           </div>
           <div className="pb-4">
@@ -140,11 +140,10 @@ const Sidebar = () => {
                 <Link
                   href={`https://www.mintscan.io/persistence/account/${persistenceAccountData?.address}`}
                   className="nav-link"
+                  target={"_blank"}
                   passHref
                 >
-                  <a
-                    target={"_blank"}
-                    rel="noopener noreferrer"
+                  <p
                     className={`${Styles.navBarLink} group py-[0.625rem] sm:pb-6 px-8 flex items-center cursor-pointer`}
                     onClick={isMobile ? closeSideHandler : emptyFunc}
                   >
@@ -163,7 +162,7 @@ const Sidebar = () => {
                         viewClass={`!w-[8px] !h-[8px] side-bar-icon -mb-0.5 mr-8 ml-1.5 group-hover:fill-[#fcfcfc]`}
                       />
                     </span>
-                  </a>
+                  </p>
                 </Link>
               </li>
             ) : null}
