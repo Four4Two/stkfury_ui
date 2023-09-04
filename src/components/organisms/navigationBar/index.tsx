@@ -90,7 +90,7 @@ const NavigationBar = () => {
     (state: RootState) => state.liveData
   );
 
-  if (persistenceChainStatus) {
+  if (persistenceChainStatus || process.env.NEXT_PUBLIC_MAINTENANCE === "true") {
     router.push("/maintenance");
   }
 
