@@ -3,11 +3,6 @@ import { Icon } from "../../../atoms/icon";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./styles.module.css";
 import {
-  ClaimMsg,
-  ClaimMsgTypes,
-  LiquidUnStakeMsgTypes
-} from "../../../../helpers/protoMsg";
-import {
   decimalize,
   truncateToFixedDecimalPlaces
 } from "../../../../helpers/utils";
@@ -109,59 +104,12 @@ const ClaimModal = () => {
     setUnlistedPendingClaims(unlistedPendingClaimList);
   }, [claimableBalance, pendingClaimList, unlistedPendingClaimList]);
 
-  const claimHandler = async () => {
-    let messages: ClaimMsgTypes[];
-    let pollBalance: any;
-    let claimType: claimType;
-    dispatch(setTransactionProgress(CLAIM));
-    if (activeClaims > 0) {
-      const withDrawMsg = await MakeIBCTransferMsg({
-        channel: ibcInfo?.destinationChannelId,
-        fromAddress: persistenceAccountData?.address,
-        toAddress: cosmosAccountData?.address,
-        amount: truncateToFixedDecimalPlaces(activeClaims),
-        timeoutHeight: undefined,
-        timeoutTimestamp: undefined,
-        denom: ibcInfo?.coinDenom,
-        sourceRPCUrl: persistenceChainData?.rpc,
-        destinationRPCUrl: cosmosChainData?.rpc,
-        port: IBCConfiguration.ibcDefaultPort
-      });
-      pollBalance = atomBalance;
-      const claimMsg = ClaimMsg(persistenceAccountData!.address);
-      messages = [claimMsg, withDrawMsg];
-      claimType = "claimAll";
-    } else {
-      pollBalance = stkAtomBalance;
-      const claimMsg = ClaimMsg(persistenceAccountData!.address);
-      messages = [claimMsg];
-      claimType = "claimStkAtom";
-    }
-
-    dispatch(
-      executeClaimTransactionSaga({
-        persistenceSigner: persistenceSigner!,
-        persistenceChainInfo: persistenceChainData!,
-        msg: messages,
-        cosmosAddress: cosmosAccountData?.address!,
-        address: persistenceAccountData!.address,
-        cosmosChainInfo: cosmosChainData!,
-        pollInitialIBCAtomBalance: pollBalance,
-        claimType: claimType
-      })
-    );
-  };
-
   const enable =
     Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
 
   const handleClose = () => {
     dispatch(hideClaimModal());
   };
-
-  const handleTooltip = (evt:any) =>{
-    setTooltipEnabled(evt);
-  }
 
   return (
     <Modal
@@ -176,39 +124,6 @@ const ClaimModal = () => {
         {activeClaims > 0 || claimableStkAtomBalance > 0 ? (
           <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6 mb-4">
             <div className="block">
-              <div>
-                {activeClaims > 0 ? (
-                  <div className="flex justify-between items-center">
-                    <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
-                      {decimalize(activeClaims)} ATOM
-                    </p>
-                    <div className="flex text-base text-light-mid leading-normal font-medium">
-                      Completed Unstaking
-                    </div>
-                  </div>
-                ) : null}
-                {claimableStkAtomBalance > 0 ? (
-                  <div className="flex justify-between items-center mt-3">
-                    <p className="font-medium leading-normal text-3xl text-light-high md:text-base">
-                      {decimalize(claimableStkAtomBalance)} stkATOM
-                    </p>
-                    <div className="flex text-base text-light-mid leading-normal font-medium">
-                      Failed Unstaking
-                      <Tooltip
-                          onVisibleChange={handleTooltip}
-                          placement="bottom"
-                          overlay={<span>Due to an unexpected error, your unstaking request failed. <br/> Please see&nbsp;
-                            <a href="https://twitter.com/pSTAKE_Cosmos" target={"_blank"} rel="noreferrer" className="underline">Twitter</a>
-                            &nbsp;for more details. You may claim<br/> your stkATOM to retry your unstaking request.</span>}
-                      >
-                        <button className="icon-button px-1 align-middle">
-                          <Icon viewClass="arrow-right" iconName="info" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-                ) : null}
-              </div>
               <p
                 className={`mt-4 claimButton rounded-md cursor-pointer border-2 border-[#47C28B] border-solid
                          text-sm text-light-high px-[6.4px] py-[6.4px] w-[86px] text-center mx-auto
@@ -217,7 +132,6 @@ const ClaimModal = () => {
                              ? "opacity-50 pointer-events-none"
                              : ""
                          }`}
-                onClick={claimHandler}
               >
                 {name === CLAIM && inProgress ? (
                   <Spinner size={"small"} />

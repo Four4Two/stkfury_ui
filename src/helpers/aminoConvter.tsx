@@ -1,11 +1,15 @@
 import {
-  MsgClaim,
   MsgLiquidStake,
   MsgLiquidUnstake,
   MsgRedeem
-} from "persistenceonejs/pstake/lscosmos/v1beta1/msgs";
+} from "persistenceonejs/pstake/liquidstakeibc/v1beta1/msgs";
 import { AminoMsg, Coin } from "@cosmjs/amino";
 import { AminoConverters } from "@cosmjs/stargate";
+import {
+  COSMOS_LIQUID_STAKE_URL,
+  COSMOS_LIQUID_UN_STAKE_URL,
+  REDEEM_URL
+} from "../../AppConstants";
 
 export interface AminoMsgLiquidStake extends AminoMsg {
   readonly type: "cosmos/MsgLiquidStake";
@@ -38,9 +42,9 @@ export interface AminoMsgRedeem extends AminoMsg {
   };
 }
 
-export function createLSCosmosAminoConverters(): AminoConverters {
+export function createLSIBCosmosAminoConverters(): AminoConverters {
   return {
-    "/pstake.lscosmos.v1beta1.MsgLiquidStake": {
+    [COSMOS_LIQUID_STAKE_URL]: {
       aminoType: "cosmos/MsgLiquidStake",
       toAmino: ({
         delegatorAddress,
@@ -57,7 +61,7 @@ export function createLSCosmosAminoConverters(): AminoConverters {
         amount: amount
       })
     },
-    "/pstake.lscosmos.v1beta1.MsgLiquidUnstake": {
+    [COSMOS_LIQUID_UN_STAKE_URL]: {
       aminoType: "cosmos/MsgLiquidUnstake",
       toAmino: ({
         delegatorAddress,
@@ -74,16 +78,7 @@ export function createLSCosmosAminoConverters(): AminoConverters {
         amount: amount
       })
     },
-    "/pstake.lscosmos.v1beta1.MsgClaim": {
-      aminoType: "cosmos/MsgClaim",
-      toAmino: ({ delegatorAddress }: MsgClaim): AminoMsgClaim["value"] => ({
-        delegator_address: delegatorAddress
-      }),
-      fromAmino: ({ delegator_address }: AminoMsgClaim["value"]): MsgClaim => ({
-        delegatorAddress: delegator_address
-      })
-    },
-    "/pstake.lscosmos.v1beta1.MsgRedeem": {
+    [REDEEM_URL]: {
       aminoType: "cosmos/MsgRedeem",
       toAmino: ({
         delegatorAddress,

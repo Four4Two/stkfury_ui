@@ -56,7 +56,8 @@ const NavigationBar = () => {
         dispatch(
           fetchPendingClaimsSaga({
             address: persistenceAccountData!.address,
-            persistenceChainInfo: persistenceChainData!
+            persistenceChainInfo: persistenceChainData!,
+            dstChainInfo: cosmosChainData!
           })
         );
         dispatch(
@@ -100,36 +101,36 @@ const NavigationBar = () => {
           <div className="hidden md:block">
             <Link href="/" className="nav-link" passHref>
               <img
-                  src={"/images/logo.svg"}
-                  alt={"logo"}
-                  width={isMobile ? 90 : 124}
+                src={"/images/logo.svg"}
+                alt={"logo"}
+                width={isMobile ? 90 : 124}
               />
             </Link>
           </div>
           <div className="flex ml-auto">
             <Button
-                size="medium"
-                type="custom"
-                content={
+              size="medium"
+              type="custom"
+              content={
+                <div className="flex items-center">
                   <div className="flex items-center">
-                    <div className="flex items-center">
-                      <img
-                          src={"/images/persistence_icon.svg"}
-                          alt={"logo"}
-                          width={18}
-                          height={18}
-                      />
-                      <span className="ml-3">
-                    {process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET
+                    <img
+                      src={"/images/persistence_icon.svg"}
+                      alt={"logo"}
+                      width={18}
+                      height={18}
+                    />
+                    <span className="ml-3">
+                      {process.env.NEXT_PUBLIC_ENVIRONMENT === TEST_NET
                         ? "Persistence Testnet"
                         : process.env.NEXT_PUBLIC_ENVIRONMENT === DEV_NET
-                            ? "Persistence Devnet"
-                            : "Persistence Mainnet"}
-                  </span>
-                    </div>
+                        ? "Persistence Devnet"
+                        : "Persistence Mainnet"}
+                    </span>
                   </div>
-                }
-                className="button custom lg:!hidden pointer-events-none !text-sm"
+                </div>
+              }
+              className="button custom lg:!hidden pointer-events-none !text-sm"
             />
             <div className="pl-4">
               <LoginOptions />
