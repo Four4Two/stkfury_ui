@@ -2,15 +2,18 @@ import {
   FetchInitialDataSaga,
   InitialTvlApyFeeTypes
 } from "../reducers/initialData/types";
-import { getFee, getMaxRedeem } from "../../pages/api/onChain";
+import {
+  getExchangeRateFromRpc,
+  getFee,
+  getMaxRedeem
+} from "../../pages/api/onChain";
 import {
   fetchCrescentPoolInfo,
   fetchDexterPoolInfo,
   fetchOsmosisPoolInfo,
   fetchShadeCollateral,
   fetchShadeInfo,
-  fetchUmeeInfo,
-  getExchangeRate
+  fetchUmeeInfo
 } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
@@ -26,11 +29,11 @@ import {
 } from "../reducers/initialData";
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
-  const { persistenceChainInfo }: any = payload;
+  const { persistenceChainInfo, cosmosChainInfo }: any = payload;
   const [exchangeRate, redeemFee, maxRedeem] = yield Promise.all([
-    getExchangeRate(),
-    getFee(persistenceChainInfo.rpc),
-    getMaxRedeem(persistenceChainInfo.rpc)
+    getExchangeRateFromRpc(persistenceChainInfo.rpc, cosmosChainInfo.chainId),
+    getFee(persistenceChainInfo.rpc, cosmosChainInfo.chainId),
+    getMaxRedeem(persistenceChainInfo.rpc, cosmosChainInfo.chainId)
   ]);
   yield put(setExchangeRate(exchangeRate));
   yield put(setRedeemFee(redeemFee));

@@ -11,6 +11,7 @@ export interface ClaimState {
 
 export interface FetchPendingClaimSagaParams {
   persistenceChainInfo: ChainInfo;
+  dstChainInfo: ChainInfo;
   address: string;
 }
 

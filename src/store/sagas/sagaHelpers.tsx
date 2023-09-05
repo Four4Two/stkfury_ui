@@ -39,7 +39,8 @@ export function* postTransactionActions(
     yield put(
       fetchPendingClaimsSaga({
         address: persistenceAddress,
-        persistenceChainInfo: persistenceChainData!
+        persistenceChainInfo: persistenceChainData!,
+        dstChainInfo: cosmosChainData
       })
     );
   }

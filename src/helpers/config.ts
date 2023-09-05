@@ -236,8 +236,8 @@ export const ExternalChains: ExternalChainData = {
       }
     },
     {
-      rpc: "https://rpc.testnet-cosmos.audit.one",
-      rest: "https://rest.testnet-cosmos.audit.one",
+      rpc: "https://rpc.sentry-02.theta-testnet.polypore.xyz",
+      rest: "https://rest.sentry-02.theta-testnet.polypore.xyz",
       chainId: "theta-testnet-001",
       chainName: "pStake Cosmos Testnet",
       stakeCurrency: {

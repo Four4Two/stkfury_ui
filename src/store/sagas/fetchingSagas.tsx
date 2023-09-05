@@ -1,8 +1,9 @@
 import { FetchBalanceSaga } from "../reducers/balances/types";
 import {
   fetchAccountBalance,
-  fetchAllEpochEntries,
-  getTokenBalance
+  fetchUnbondingList,
+  getTokenBalance,
+  getChainTVU
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
@@ -15,12 +16,7 @@ import { decimalize } from "../../helpers/utils";
 import { CHAIN_ID, IBCChainInfos } from "../../helpers/config";
 import { STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
 import { FetchPendingClaimSaga } from "../reducers/claim/types";
-import {
-  setClaimableBalance,
-  setClaimableStkAtomBalance,
-  setPendingClaimList,
-  setUnlistedPendingClaimList
-} from "../reducers/claim";
+import { setClaimableBalance, setPendingClaimList } from "../reducers/claim";
 import { fetchAtomPrice, getTVU } from "../../pages/api/externalAPIs";
 
 import { FetchLiveDataSaga } from "../reducers/liveData/types";
@@ -45,7 +41,6 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     persistenceAddress,
     persistenceChainInfo.rpc
   );
-
   //fetch balance on cosmos chain
   // @ts-ignore
   const cosmosBalances: any = yield fetchAccountBalance(
@@ -84,24 +79,24 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
 }
 
 export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
-  const { address, persistenceChainInfo }: any = payload;
+  const { address, persistenceChainInfo, dstChainInfo }: any = payload;
   // @ts-ignore
-  const accountEpochs: any = yield fetchAllEpochEntries(
+  const response = yield fetchUnbondingList(
+    persistenceChainInfo.rpc,
     address,
-    persistenceChainInfo.rpc
+    dstChainInfo.chainId
   );
-  yield put(setClaimableBalance(accountEpochs.claimableAmount));
-  yield put(setPendingClaimList(accountEpochs.filteredPendingClaims));
-  yield put(
-    setUnlistedPendingClaimList(accountEpochs.filteredUnlistedPendingClaims)
-  );
-  yield put(setClaimableStkAtomBalance(accountEpochs.totalFailedUnbondAmount));
+  yield put(setClaimableBalance(response.claimableAmount));
+  yield put(setPendingClaimList(response.list));
 }
 
 // @ts-ignore
 export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
   const { persistenceChainInfo }: any = payload;
-  const [tvu, atomPrice] = yield Promise.all([getTVU(), fetchAtomPrice()]);
+  const [tvu, atomPrice] = yield Promise.all([
+    getChainTVU(persistenceChainInfo.rpc, "stk/uatom"),
+    fetchAtomPrice()
+  ]);
   yield put(setAtomPrice(atomPrice));
   yield put(setTVU(tvu));
 }

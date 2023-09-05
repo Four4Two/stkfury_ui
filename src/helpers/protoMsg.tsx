@@ -2,15 +2,13 @@ import {
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
   IBC_TRANSFER_URL,
-  REDEEM_URL,
-  CLAIM_URL
+  REDEEM_URL
 } from "../../AppConstants";
 import {
-  MsgClaim,
   MsgLiquidStake,
   MsgLiquidUnstake,
   MsgRedeem
-} from "persistenceonejs/pstake/lscosmos/v1beta1/msgs";
+} from "persistenceonejs/pstake/liquidstakeibc/v1beta1/msgs";
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import { coin } from "@cosmjs/amino";
 import Long from "long";
@@ -30,9 +28,9 @@ export interface LiquidUnStakeMsgTypes {
   value?: MsgLiquidStake;
 }
 
-export interface ClaimMsgTypes {
+export interface RedeemMsgTypes {
   typeUrl?: string;
-  value?: MsgClaim;
+  value?: MsgRedeem;
 }
 
 export const LiquidStakeMsg = (
@@ -73,7 +71,7 @@ export const RedeemMsg = (
   address: string,
   amount: string,
   denom: string
-): LiquidUnStakeMsgTypes => {
+): RedeemMsgTypes => {
   return {
     typeUrl: REDEEM_URL,
     value: MsgRedeem.fromPartial({
@@ -82,15 +80,6 @@ export const RedeemMsg = (
         denom: denom,
         amount: String(amount)
       }
-    })
-  };
-};
-
-export const ClaimMsg = (address: string): ClaimMsgTypes => {
-  return {
-    typeUrl: CLAIM_URL,
-    value: MsgClaim.fromPartial({
-      delegatorAddress: address
     })
   };
 };

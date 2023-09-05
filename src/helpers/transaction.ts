@@ -1,16 +1,14 @@
 import {
-  MsgClaim,
   MsgLiquidStake,
   MsgLiquidUnstake,
   MsgRedeem
-} from "persistenceonejs/pstake/lscosmos/v1beta1/msgs";
+} from "persistenceonejs/pstake/liquidstakeibc/v1beta1/msgs";
 import { AminoConverters, AminoTypes, GasPrice } from "@cosmjs/stargate";
 import { OfflineDirectSigner, Registry } from "@cosmjs/proto-signing";
 import {
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
-  REDEEM_URL,
-  CLAIM_URL
+  REDEEM_URL
 } from "../../AppConstants";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { IBCConfiguration } from "./config";
@@ -22,7 +20,7 @@ import {
 import { QueryChannelClientStateResponse } from "cosmjs-types/ibc/core/channel/v1/query";
 import { TransferMsg } from "./protoMsg";
 import Long from "long";
-import { createLSCosmosAminoConverters } from "./aminoConvter";
+import { createLSIBCosmosAminoConverters } from "./aminoConvter";
 import {
   createAuthzAminoConverters,
   createBankAminoConverters,
@@ -40,11 +38,11 @@ function createAminoTypes(prefix: string): AminoConverters {
     ...createBankAminoConverters(),
     ...createDistributionAminoConverters(),
     ...createGovAminoConverters(),
-    ...createStakingAminoConverters(prefix),
+    ...createStakingAminoConverters(),
     ...createIbcAminoConverters(),
     ...createFeegrantAminoConverters(),
     ...createVestingAminoConverters(),
-    ...createLSCosmosAminoConverters()
+    ...createLSIBCosmosAminoConverters()
   };
 }
 
@@ -69,8 +67,7 @@ export async function Transaction(
       ...defaultRegistryTypes,
       [COSMOS_LIQUID_STAKE_URL, MsgLiquidStake],
       [COSMOS_LIQUID_UN_STAKE_URL, MsgLiquidUnstake],
-      [REDEEM_URL, MsgRedeem],
-      [CLAIM_URL, MsgClaim]
+      [REDEEM_URL, MsgRedeem]
     ]),
     gasPrice: GasPrice.fromString(gasPrice),
     aminoTypes: new AminoTypes(createAminoTypes(signerAddress.split("1")[0]))

@@ -153,7 +153,8 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       dispatch(
         fetchPendingClaimsSaga({
           address: persistenceAddressData[0]!.address,
-          persistenceChainInfo: persistenceChainInfo!
+          persistenceChainInfo: persistenceChainInfo!,
+          dstChainInfo: cosmosChainInfo
         })
       );
       setWalletName(walletType);

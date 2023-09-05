@@ -6,12 +6,12 @@ export const DEPOSIT_ADDRESS = "cosmos16vhhczel0jzdf6kxxk62uwzkay763p9cryp7we";
 export const PERSISTENCE_FEE = "0uxprt";
 export const COSMOS_FEE = "0.0025uatom";
 export const COSMOS_LIQUID_STAKE_URL =
-  "/pstake.lscosmos.v1beta1.MsgLiquidStake";
+  "/pstake.liquidstakeibc.v1beta1.MsgLiquidStake";
 export const COSMOS_LIQUID_UN_STAKE_URL =
-  "/pstake.lscosmos.v1beta1.MsgLiquidUnstake";
-export const REDEEM_URL = "/pstake.lscosmos.v1beta1.MsgRedeem";
-export const CLAIM_URL = "/pstake.lscosmos.v1beta1.MsgClaim";
+  "/pstake.liquidstakeibc.v1beta1.MsgLiquidUnstake";
+export const REDEEM_URL = "/pstake.liquidstakeibc.v1beta1.MsgRedeem";
 export const IBC_TRANSFER_URL = "/ibc.applications.transfer.v1.MsgTransfer";
+
 export const SHORT_INTERVAL = 10000;
 export const MIN_BALANCE_CHECK = 0.00003;
 export const MIN_DEPOSIT = 0.01;
@@ -52,7 +52,7 @@ export const MID_INTERVAL = 180000;
 export const LONG_INTERVAL = 3600000;
 
 export const APR_BASE_RATE = 18.92;
-export const APR_DEFAULT = 22.86;
+export const APR_DEFAULT = 19.05;
 
 //error msgs
 export const ERROR_WHILE_CLAIMING = "ERROR_WHILE_CLAIMING";
