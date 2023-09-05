@@ -13,7 +13,8 @@ import {
   fetchOsmosisPoolInfo,
   fetchShadeCollateral,
   fetchShadeInfo,
-  fetchUmeeInfo
+  fetchUmeeInfo,
+  getExchangeRate
 } from "../../pages/api/externalAPIs";
 import { put } from "@redux-saga/core/effects";
 import {
@@ -31,7 +32,7 @@ import {
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   const { persistenceChainInfo, cosmosChainInfo }: any = payload;
   const [exchangeRate, redeemFee, maxRedeem] = yield Promise.all([
-    getExchangeRateFromRpc(persistenceChainInfo.rpc, cosmosChainInfo.chainId),
+    getExchangeRate(),
     getFee(persistenceChainInfo.rpc, cosmosChainInfo.chainId),
     getMaxRedeem(persistenceChainInfo.rpc, cosmosChainInfo.chainId)
   ]);
