@@ -52,7 +52,7 @@ export const MID_INTERVAL = 180000;
 export const LONG_INTERVAL = 3600000;
 
 export const APR_BASE_RATE = 18.92;
-export const APR_DEFAULT = 19.05;
+export const APR_DEFAULT = 19.08;
 
 //error msgs
 export const ERROR_WHILE_CLAIMING = "ERROR_WHILE_CLAIMING";
