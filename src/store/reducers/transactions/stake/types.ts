@@ -23,6 +23,7 @@ export interface DelegatedValidator {
   identity: string;
   inputAmount: string;
   validatorAddress: string;
+  status?: boolean;
 }
 
 export interface DelegatedValidators {

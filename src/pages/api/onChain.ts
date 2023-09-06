@@ -369,12 +369,14 @@ export const getDelegations = async (
             );
           }
         );
+        console.log(validator, "validator-123");
         delegations.push({
           name: validator!.description?.moniker!,
           identity: await getAvatar(validator!.description?.identity!),
           amount: decimalize(delegation.balance?.amount!),
           inputAmount: "",
-          validatorAddress: validator!.operatorAddress
+          validatorAddress: validator!.operatorAddress,
+          status: !validator!.jailed && validator!.status === 3
         });
       }
     }

@@ -115,7 +115,7 @@ const ValidatorStakeModal = () => {
       show={validatorModal}
       onClose={handleClose}
       className="delegationModal"
-      staticBackDrop={false}
+      staticBackDrop={true}
       closeButton={false}
     >
       <div className={`px-10 py-10 md:p-7`}>
@@ -130,7 +130,7 @@ const ValidatorStakeModal = () => {
             )}{" "}
             ATOM
           </p>
-          <div className={"w-[150px]"}>
+          <div className={"w-[150px] hidden"}>
             <Submit
               className={"!text-sm !px-1"}
               inputState={inputState}
@@ -157,6 +157,12 @@ const ValidatorStakeModal = () => {
                     Staked Amount
                   </th>
                   <th
+                    className="px-4 py-3 text-light-mid backdrop-blur font-normal
+                   text-left sticky top-0 !bg-[#252525] h-[48px]"
+                  >
+                    Status
+                  </th>
+                  <th
                     className="text-right py-3 pr-8 backdrop-blur text-light-mid
                   font-normal sticky top-0 !bg-[#252525] h-[48px] !z-[999]"
                   >
@@ -170,7 +176,7 @@ const ValidatorStakeModal = () => {
                     inputState.map(
                       (item: DelegatedValidator, index: number) => (
                         <tr key={index} className="py-2">
-                          <td className="pl-8 py-3 text-left text-light-mid">
+                          <td className="pl-8 py-3 text-left text-light-mid text-sm">
                             <div className={"flex items-center"}>
                               <div className="mr-4">
                                 {Number(item.inputAmount) > 0 ? (
@@ -196,22 +202,64 @@ const ValidatorStakeModal = () => {
                             </div>
                           </td>
                           <td className={"px-4 py-3 text-light-mid"}>
-                            <p className={"inline-flex "}>
-                              {truncateToFixedDecimalPlaces(
-                                Number(item.amount)
-                              )}
-                              {`($${(
+                            <p className={""}>
+                              <span
+                                className={
+                                  "text-light-full font-medium text-sm"
+                                }
+                              >
+                                {" "}
+                                {truncateToFixedDecimalPlaces(
+                                  Number(item.amount)
+                                )}
+                              </span>
+                              <span
+                                className={
+                                  "block text-light-low font-medium text-sm"
+                                }
+                              >{`$${(
                                 atomPrice * Number(item.amount)
-                              ).toLocaleString()})`}
+                              ).toLocaleString()}`}</span>
                             </p>
                           </td>
+                          <td className="pl-8 py-3 text-left text-light-mid">
+                            <Tooltip
+                              placement="top"
+                              overlay={
+                                <p
+                                  className={`${
+                                    item.status
+                                      ? "text-[#47C28B]"
+                                      : "text-light-low"
+                                  }  text-sm font-semibold`}
+                                >
+                                  {item.status ? "ELIGIBLE" : "NOT ELIGIBLE"}
+                                </p>
+                              }
+                            >
+                              <button className="icon-button px-1 align-middle mb-1">
+                                <Icon
+                                  iconName={
+                                    item.status ? "success-right" : "crossed"
+                                  }
+                                  viewClass="!w-[16px] !h-[16px]"
+                                />
+                              </button>
+                            </Tooltip>
+                          </td>
                           <td className="py-3 pr-8 text-right">
-                            <div className={"relative z-10"}>
+                            <div
+                              className={`relative z-10 ${
+                                item.status
+                                  ? ""
+                                  : "pointer-events-none opacity-50"
+                              }`}
+                            >
                               <input
                                 placeholder={"Enter Amount"}
                                 type="number"
                                 onWheel={(e: any) => e.target.blur()}
-                                className={`border border-solid p-2 rounded-md outline-none bg-black-400 text-light-mid  ${
+                                className={`border border-solid p-2 text-[12px] font-medium rounded-md outline-none bg-black-400 text-light-mid  ${
                                   Number(item.inputAmount) > Number(item.amount)
                                     ? "border-primary"
                                     : "border-[#282828]"
@@ -224,7 +272,7 @@ const ValidatorStakeModal = () => {
                               {Number(item.inputAmount) <
                               Number(item.amount) ? (
                                 <span
-                                  className="text-light-high ml-2 text-sm font-bold uppercase
+                                  className="text-light-high ml-2 text-[10px] font-bold uppercase
                             cursor-pointer absolute right-[10px] top-[10px]"
                                   onClick={() =>
                                     inputHandler(item.name, item.amount)
@@ -243,14 +291,9 @@ const ValidatorStakeModal = () => {
                   ) : null
                 ) : (
                   <tr>
-                    <td />
-                    <td
-                      className="flex justify-center items-center p-4 w-full"
-                      colSpan={3}
-                    >
+                    <td className="text-center p-4" colSpan={4}>
                       <Spinner size={"medium"} />
                     </td>
-                    <td />
                   </tr>
                 )}
               </tbody>
