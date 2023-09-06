@@ -12,6 +12,7 @@ const nextConfig = {
   reactStrictMode: false,
   swcMinify: true,
   images: {
+    unoptimized: true,
     domains: ["s3.amazonaws.com", "localhost"]
   },
   assetPrefix: isProd ? "./" : "", // To disable assetPrefix in development for hot reload
