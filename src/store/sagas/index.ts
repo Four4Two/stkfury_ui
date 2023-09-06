@@ -4,12 +4,14 @@ import { fetchInitSaga } from "../reducers/initialData";
 import { fetchInit } from "./init";
 import {
   executeClaimTransaction,
+  executeDelegationStakeTransaction,
   executeDepositTransaction,
   executeStakeTransaction,
   executeUnStakeTransaction,
   executeWithdrawTransaction
 } from "./transactions";
 import {
+  executeDelegationStakeTransactionSaga,
   executeStakeTransactionSaga,
   fetchDelegatedValidatorsSaga
 } from "../reducers/transactions/stake";
@@ -45,5 +47,9 @@ export default function* appSaga() {
   yield takeEvery(
     executeWithdrawTransactionSaga.type,
     executeWithdrawTransaction
+  );
+  yield takeEvery(
+    executeDelegationStakeTransactionSaga.type,
+    executeDelegationStakeTransaction
   );
 }

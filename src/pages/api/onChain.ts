@@ -40,6 +40,7 @@ import {
 } from "../../store/reducers/transactions/stake/types";
 import { Validator } from "cosmjs-types/cosmos/staking/v1beta1/staking";
 import { getAvatar } from "./externalAPIs";
+import { QueryClient, setupIbcExtension } from "@cosmjs/stargate";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -69,7 +70,10 @@ export const getTokenBalance = (
   }
 };
 
-export const fetchAccountBalance = async (address: string, rpc: string) => {
+export const fetchAccountBalance = async (
+  address: string,
+  rpc: string
+): Promise<QueryAllBalancesResponse> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
@@ -77,10 +81,10 @@ export const fetchAccountBalance = async (address: string, rpc: string) => {
       address: address
     });
   } catch (error) {
-    console.log(error, "cosmosBalances");
-
     printConsole(error);
-    return "0";
+    return {
+      balances: []
+    };
   }
 };
 
@@ -396,5 +400,50 @@ export const getDelegations = async (
       list: [],
       totalAmount: 0
     };
+  }
+};
+
+export const getTokenizedSharesFromBalance = async (
+  balances: QueryAllBalancesResponse,
+  address: string,
+  rpc: string,
+  prefix: string
+) => {
+  try {
+    const tendermintClient = await Tendermint34Client.connect(rpc);
+    const queryClient = new QueryClient(tendermintClient);
+    console.log(balances, "response-123");
+    if (balances && balances!.balances!.length) {
+      let balancesList: Coin[] = [];
+      for (let item of balances!.balances) {
+        console.log(item, "item-123");
+        if (item.denom.includes("ibc/")) {
+          const ibcExtension = setupIbcExtension(queryClient);
+          let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(
+            item.denom
+          );
+          if (ibcDenomeResponse!.denomTrace!.baseDenom.includes(prefix)) {
+            const balance = {
+              denom: item.denom,
+              baseDenom: ibcDenomeResponse!.denomTrace!.baseDenom,
+              amount: item.amount
+            };
+            balancesList.push(balance);
+            console.log(ibcDenomeResponse, "ibcDenomeResponse");
+          }
+        }
+      }
+      return balancesList.length > 1
+        ? balancesList.sort(
+            (a, b) =>
+              Number(a.denom.substring(a.denom.length - 1)) -
+              Number(b.denom.substring(b.denom.length - 1))
+          )
+        : balancesList;
+    }
+    return [];
+  } catch (error) {
+    printConsole(error);
+    return [];
   }
 };

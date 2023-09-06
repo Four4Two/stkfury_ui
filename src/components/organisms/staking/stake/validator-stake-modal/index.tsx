@@ -115,7 +115,7 @@ const ValidatorStakeModal = () => {
       show={validatorModal}
       onClose={handleClose}
       className="delegationModal"
-      staticBackDrop={true}
+      staticBackDrop={false}
       closeButton={false}
     >
       <div className={`px-10 py-10 md:p-7`}>
@@ -182,13 +182,20 @@ const ValidatorStakeModal = () => {
                                 {Number(item.inputAmount) > 0 ? (
                                   <Icon
                                     iconName="checkbox"
-                                    viewClass="!w-[16px] !h-[16px] fill-[#E50913]"
+                                    viewClass="!w-[18px] !h-[18px] fill-[#C73238]"
+                                  />
+                                ) : item.status ? (
+                                  <span
+                                    className="w-[18px] h-[18px] border-2 rounded-sm
+                            border-solid border-[#C73238] block "
                                   />
                                 ) : (
                                   <span
-                                    className="w-[16px] h-[16px] rounded-full border
-                            border-solid border-[#69696D] block "
-                                  />
+                                    className="w-[18px] h-[18px] border-2 rounded-sm
+                            border-solid border-[#C73238] block text-[#C73238] flex items-center justify-center font-bold opacity-20"
+                                  >
+                                    -
+                                  </span>
                                 )}
                               </div>
                               <Image
@@ -252,7 +259,7 @@ const ValidatorStakeModal = () => {
                               className={`relative z-10 ${
                                 item.status
                                   ? ""
-                                  : "pointer-events-none opacity-50"
+                                  : "pointer-events-none opacity-20"
                               }`}
                             >
                               <input
