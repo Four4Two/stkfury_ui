@@ -5,10 +5,12 @@ import { Icon } from "../../../atoms/icon";
 import styles from "./styles.module.css";
 import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
+import StakeOptions from "./stake-option";
 
 const UnStake = () => {
   return (
     <>
+      <StakeOptions />
       <From />
       <div className="swap-icon flex w-full items-center justify-center relative">
         <div

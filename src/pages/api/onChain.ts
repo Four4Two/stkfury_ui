@@ -6,7 +6,11 @@ import {
 
 import { QueryClientImpl as LiquidStakeQueryClient } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/query";
 
-import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1beta1/query";
+import {
+  QueryClientImpl as StakeQuery,
+  QueryDelegatorDelegationsResponse,
+  QueryDelegatorValidatorsResponse
+} from "cosmjs-types/cosmos/staking/v1beta1/query";
 
 import {
   decimalize,
@@ -30,6 +34,12 @@ import {
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
+import {
+  DelegatedValidator,
+  DelegatedValidators
+} from "../../store/reducers/transactions/stake/types";
+import { Validator } from "cosmjs-types/cosmos/staking/v1beta1/staking";
+import { getAvatar } from "./externalAPIs";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -319,5 +329,70 @@ export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
     });
     genericErrorHandler(e, customScope);
     return 0;
+  }
+};
+
+export const getDelegations = async (
+  address: string,
+  rpc: string
+): Promise<DelegatedValidators> => {
+  try {
+    console.log(address, rpc, "params getDelegations");
+    const delegations: DelegatedValidator[] = [];
+    let totalAmount: number = 0;
+    const rpcClient = await RpcClient(rpc);
+    const stakingQueryService = new StakeQuery(rpcClient);
+    const delegationsResponse: QueryDelegatorDelegationsResponse =
+      await stakingQueryService.DelegatorDelegations({
+        delegatorAddr: address
+      });
+
+    const delegatedValidators: QueryDelegatorValidatorsResponse =
+      await stakingQueryService.DelegatorValidators({
+        delegatorAddr: address
+      });
+    console.log(delegatedValidators, "delegatedValidators");
+
+    if (delegationsResponse.delegationResponses.length > 0) {
+      totalAmount = delegationsResponse.delegationResponses.reduce(
+        (accumulator, object) => {
+          return accumulator + Number(object?.balance?.amount);
+        },
+        0
+      );
+      for (const delegation of delegationsResponse.delegationResponses) {
+        const validator = delegatedValidators.validators.find(
+          (validator: Validator) => {
+            return (
+              validator.operatorAddress ===
+              delegation.delegation?.validatorAddress
+            );
+          }
+        );
+        delegations.push({
+          name: validator!.description?.moniker!,
+          identity: await getAvatar(validator!.description?.identity!),
+          amount: decimalize(delegation.balance?.amount!),
+          inputAmount: "",
+          validatorAddress: validator!.operatorAddress
+        });
+      }
+    }
+
+    return {
+      list: delegations,
+      totalAmount: decimalize(totalAmount)
+    };
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching delegation": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return {
+      list: [],
+      totalAmount: 0
+    };
   }
 };

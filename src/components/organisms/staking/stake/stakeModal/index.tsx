@@ -62,7 +62,7 @@ const StakeModal = () => {
       </p>
       <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
         <div className="mb-10 md:mb-7">
-          {liquidStakeType === "dual" ? (
+          {liquidStakeType === "ibcStaking" ? (
             <div className="flex items-center mb-5 md:mb-3">
               <div className="mr-3">
                 {TransactionIcon(

@@ -3,7 +3,8 @@ import {
   fetchAccountBalance,
   fetchUnbondingList,
   getTokenBalance,
-  getChainTVU
+  getChainTVU,
+  getDelegations
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
@@ -21,6 +22,14 @@ import { fetchAtomPrice, getTVU } from "../../pages/api/externalAPIs";
 
 import { FetchLiveDataSaga } from "../reducers/liveData/types";
 import { setAtomPrice, setTVU } from "../reducers/liveData";
+import {
+  DelegatedValidators,
+  FetchDelegatedValidatorsSaga
+} from "../reducers/transactions/stake/types";
+import {
+  setDelegatedValidators,
+  setDelegatedValidatorsLoader
+} from "../reducers/transactions/stake";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -96,4 +105,14 @@ export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
   const [tvu, atomPrice] = yield Promise.all([getTVU(), fetchAtomPrice()]);
   yield put(setAtomPrice(atomPrice));
   yield put(setTVU(tvu));
+}
+
+export function* fetchDelegations({ payload }: FetchDelegatedValidatorsSaga) {
+  yield put(setDelegatedValidatorsLoader(true));
+  const response: DelegatedValidators = yield getDelegations(
+    payload.address,
+    payload.rpc
+  );
+  yield put(setDelegatedValidators(response));
+  yield put(setDelegatedValidatorsLoader(false));
 }

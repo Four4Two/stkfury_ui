@@ -73,7 +73,7 @@ const Submit = () => {
         ibcInfo!.coinDenom
       );
       if (Number(stakeAmount) <= ibcAtomBalance) {
-        dispatch(setLiquidStakeTxnType("single"));
+        dispatch(setLiquidStakeTxnType("directStaking"));
         dispatch(setTransactionProgress(STAKE));
         dispatch(setStakeTxnStepNumber(3));
         dispatch(
@@ -88,7 +88,7 @@ const Submit = () => {
           })
         );
       } else {
-        dispatch(setLiquidStakeTxnType("dual"));
+        dispatch(setLiquidStakeTxnType("ibcStaking"));
         dispatch(setTransactionProgress(DEPOSIT));
 
         //ibc balance from cosmos to persistence
