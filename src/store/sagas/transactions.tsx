@@ -1,5 +1,8 @@
 import { put, select } from "@redux-saga/core/effects";
-import { StakeTransactionPayload } from "../reducers/transactions/stake/types";
+import {
+  DelegationStakeTransactionPayload,
+  StakeTransactionPayload
+} from "../reducers/transactions/stake/types";
 import {
   resetTransaction,
   setTransactionProgress
@@ -23,13 +26,14 @@ import {
   setStakeTxnFailed,
   setStakeTxnStepNumber
 } from "../reducers/transactions/stake";
-import { Transaction } from "../../helpers/transaction";
+import { MakeIBCTransferMsg, Transaction } from "../../helpers/transaction";
 import { DeliverTxResponse } from "@cosmjs/stargate/build/stargateclient";
 import { displayToast } from "../../components/molecules/toast";
 import { ToastType } from "../../components/molecules/toast/types";
 import {
   genericErrorHandler,
   pollAccountBalance,
+  pollAccountBalanceList,
   printConsole
 } from "../../helpers/utils";
 import {
@@ -43,7 +47,11 @@ import {
 } from "../reducers/transactions/unstake/types";
 import { toast } from "react-toastify";
 import { DepositTransactionPayload } from "../reducers/transactions/deposit/types";
-import { CHAIN_ID, IBCChainInfos } from "../../helpers/config";
+import {
+  CHAIN_ID,
+  IBCChainInfos,
+  IBCConfiguration
+} from "../../helpers/config";
 import { RootState } from "../reducers";
 import { ClaimTransactionPayload } from "../reducers/transactions/claim/types";
 import { setDepositAmount } from "../reducers/transactions/deposit";
@@ -53,6 +61,12 @@ import {
   setWithdrawTxnFailed,
   setWithdrawTxnStepNumber
 } from "../reducers/transactions/withdraw";
+import {
+  fetchAccountBalance,
+  getTokenizedSharesFromBalance
+} from "../../pages/api/onChain";
+import { QueryAllBalancesResponse } from "cosmjs-types/cosmos/bank/v1beta1/query";
+import { LiquidStakeLsmMsg } from "../../helpers/protoMsg";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -447,6 +461,200 @@ export function* executeWithdrawTransaction({
       cosmosAddress,
       persistenceChainInfo,
       cosmosChainInfo
+    );
+    genericErrorHandler(e, customScope);
+  }
+}
+
+export function* executeDelegationStakeTransaction({
+  payload
+}: DelegationStakeTransactionPayload): any {
+  const {
+    srcChainInfo,
+    dstChainInfo,
+    srcChainSigner,
+    account,
+    dstAddress,
+    msg,
+    dstChainSigner,
+    pollInitialBalance
+  } = payload;
+  try {
+    let ibcInfo = IBCChainInfos[env].find(
+      (chain) => chain.counterpartyChainId === dstChainInfo.chainId
+    );
+    yield put(setStakeTxnStepNumber(1));
+    // step 1: fetch initial balance on destination chain
+    // @ts-ignore
+    const balances: any = yield fetchAccountBalance(
+      dstAddress,
+      dstChainInfo!.rpc
+    );
+    console.log(balances, "balance response1", msg);
+    // step 2: make tokenize txn
+    const transaction: DeliverTxResponse = yield Transaction(
+      dstChainSigner, // dstChainSigner,
+      dstAddress, // dstAddress,
+      msg,
+      COSMOS_FEE, // getGasPrice(dstChainInfo.stakeCurrency.coinMinimalDenom),
+      "",
+      dstChainInfo.rpc // dstChainInfo.rpc
+    );
+    printConsole(transaction, "transaction tokenize");
+    yield put(setDepositAmount(""));
+    if (transaction.code === 0) {
+      // step 3: polling to check tokenize txn status
+      const response: any = yield pollAccountBalanceList(
+        balances,
+        dstAddress,
+        dstChainInfo.rpc
+      );
+      yield put(setStakeTxnStepNumber(2));
+      console.log(response, "transaction poll response");
+      if (response.length > 0) {
+        let newList: any = [];
+        msg.forEach((msgItem) => {
+          const filtered = response.filter((item: any) =>
+            item.denom.includes(msgItem!.value!.validatorAddress)
+          );
+          newList.push(...filtered);
+        });
+        console.log(newList, "newList");
+        let ibcMessages = [];
+        for (let item of newList) {
+          if (item.denom.startsWith(ibcInfo!.prefix)) {
+            const ibcMsg = yield MakeIBCTransferMsg({
+              channel: ibcInfo!.sourceChannelId, // ibcInfo?.sourceChannelId,
+              fromAddress: dstAddress, //dstAddress,
+              toAddress: account, // account,
+              amount: item.amount,
+              timeoutHeight: undefined,
+              timeoutTimestamp: undefined,
+              denom: item.denom,
+              sourceRPCUrl: dstChainInfo.rpc, // dstChainInfo?.rpc,
+              destinationRPCUrl: srcChainInfo?.rpc, // srcChainInfo?.rpc,
+              port: IBCConfiguration.ibcDefaultPort
+            });
+            ibcMessages.push(ibcMsg);
+          }
+        }
+        printConsole(ibcMessages, "transaction ibcMsg");
+        // step 4: make ibc txn to transfer tokenized tokens
+        const ibcTxn: DeliverTxResponse = yield Transaction(
+          dstChainSigner, // dstChainSigner,
+          dstAddress, //dstAddress,
+          ibcMessages,
+          COSMOS_FEE, // getGasPrice(dstChainInfo.stakeCurrency.coinMinimalDenom),
+          "",
+          dstChainInfo.rpc // dstChainInfo.rpc
+        );
+        printConsole(ibcTxn, "transaction ibcTxn");
+        if (ibcTxn.code === 0) {
+          // step 5: polling to check ibc txn status
+          const pollIbcTxn: any = yield pollAccountBalanceList(
+            { balances: response },
+            dstAddress, // dstAddress,
+            dstChainInfo.rpc //dstChainInfo.rpc
+          );
+          yield put(setStakeTxnStepNumber(3));
+          printConsole(pollIbcTxn, "transaction ibcTxn polling");
+          if (pollIbcTxn.length > 0) {
+            console.log("successfully transferred");
+            yield put(setStakeTxnStepNumber(4));
+
+            // fetch balance source chain
+            const srcBalances: QueryAllBalancesResponse =
+              yield fetchAccountBalance(
+                account, //srcAddress,
+                srcChainInfo.rpc // srcChainInfo.rpc
+              );
+            const tokens: any = yield getTokenizedSharesFromBalance(
+              srcBalances,
+              account, //account
+              srcChainInfo.rpc, // srcChainInfo.rpc
+              ibcInfo!.prefix
+            );
+            // let delegations = [];
+            // msg.forEach((msgItem) => {
+            //   const filtered = tokens.filter((item) =>
+            //     item.denom.includes(msgItem.value.validatorAddress)
+            //   );
+            //   delegations.push(...filtered);
+            // });
+            // console.log(delegations, "delegations1", tokens);
+            let liquidStakeMsg: any = [];
+            msg.forEach((msgItem) => {
+              tokens.forEach((item: any) => {
+                if (item.baseDenom.includes(msgItem!.value!.validatorAddress)) {
+                  liquidStakeMsg.push(
+                    LiquidStakeLsmMsg(account, item.amount, item.denom)
+                  );
+                }
+              });
+            });
+            // const liquidStakeMsg = LiquidStakeLsmMsg(account, delegations);
+            console.log(liquidStakeMsg, "liquidStakeMsg");
+            // step 6: make liquid stake txn with received tokenized tokens on src chain
+            const liquidStakeTxn: DeliverTxResponse = yield Transaction(
+              srcChainSigner,
+              account,
+              liquidStakeMsg,
+              PERSISTENCE_FEE,
+              "",
+              srcChainInfo.rpc
+            );
+            console.log(liquidStakeTxn, "liquidStakeTxn");
+            if (liquidStakeTxn.code === 0) {
+              // step 7:  polling to check liquidStake txn status
+              const pollLiquidStakeTxn: any = yield pollAccountBalanceList(
+                srcBalances,
+                account, // account,
+                srcChainInfo.rpc //srcChainInfo.rpc
+              );
+              console.log(pollLiquidStakeTxn, "pollLiquidStakeTxn");
+              if (pollLiquidStakeTxn.length > 0) {
+                yield put(setStakeTxnStepNumber(5));
+                yield postTransactionActions(
+                  "delegationStaking",
+                  account,
+                  dstAddress,
+                  srcChainInfo,
+                  dstChainInfo
+                );
+                displayToast(
+                  {
+                    message: "Transaction Successful"
+                  },
+                  ToastType.SUCCESS
+                );
+              }
+            }
+          } else {
+            throw new Error("some thing went wrong");
+          }
+        } else {
+          throw new Error("some thing went wrong");
+        }
+      } else {
+        throw new Error("some thing went wrong");
+      }
+    } else {
+      throw new Error(transaction.rawLog);
+    }
+  } catch (e: any) {
+    console.log(e, "-cosmos error in executeLSMTransaction");
+    yield put(setStakeTxnFailed(true));
+    const customScope = new Sentry.Scope();
+    customScope.setLevel(FATAL);
+    customScope.setTags({
+      [ERROR_WHILE_STAKING]: payload.account
+    });
+    yield postTransactionActions(
+      "delegationStaking",
+      account,
+      dstAddress,
+      srcChainInfo,
+      dstChainInfo
     );
     genericErrorHandler(e, customScope);
   }

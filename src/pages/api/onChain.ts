@@ -6,7 +6,11 @@ import {
 
 import { QueryClientImpl as LiquidStakeQueryClient } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/query";
 
-import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1beta1/query";
+import {
+  QueryClientImpl as StakeQuery,
+  QueryDelegatorDelegationsResponse,
+  QueryDelegatorValidatorsResponse
+} from "cosmjs-types/cosmos/staking/v1beta1/query";
 
 import {
   decimalize,
@@ -30,6 +34,13 @@ import {
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
+import {
+  DelegatedValidator,
+  DelegatedValidators
+} from "../../store/reducers/transactions/stake/types";
+import { Validator } from "cosmjs-types/cosmos/staking/v1beta1/staking";
+import { getAvatar } from "./externalAPIs";
+import { QueryClient, setupIbcExtension } from "@cosmjs/stargate";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -59,7 +70,10 @@ export const getTokenBalance = (
   }
 };
 
-export const fetchAccountBalance = async (address: string, rpc: string) => {
+export const fetchAccountBalance = async (
+  address: string,
+  rpc: string
+): Promise<QueryAllBalancesResponse> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
@@ -67,10 +81,10 @@ export const fetchAccountBalance = async (address: string, rpc: string) => {
       address: address
     });
   } catch (error) {
-    console.log(error, "cosmosBalances");
-
     printConsole(error);
-    return "0";
+    return {
+      balances: []
+    };
   }
 };
 
@@ -319,5 +333,117 @@ export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
     });
     genericErrorHandler(e, customScope);
     return 0;
+  }
+};
+
+export const getDelegations = async (
+  address: string,
+  rpc: string
+): Promise<DelegatedValidators> => {
+  try {
+    console.log(address, rpc, "params getDelegations");
+    const delegations: DelegatedValidator[] = [];
+    let totalAmount: number = 0;
+    const rpcClient = await RpcClient(rpc);
+    const stakingQueryService = new StakeQuery(rpcClient);
+    const delegationsResponse: QueryDelegatorDelegationsResponse =
+      await stakingQueryService.DelegatorDelegations({
+        delegatorAddr: address
+      });
+
+    const delegatedValidators: QueryDelegatorValidatorsResponse =
+      await stakingQueryService.DelegatorValidators({
+        delegatorAddr: address
+      });
+    console.log(delegatedValidators, "delegatedValidators");
+
+    if (delegationsResponse.delegationResponses.length > 0) {
+      totalAmount = delegationsResponse.delegationResponses.reduce(
+        (accumulator, object) => {
+          return accumulator + Number(object?.balance?.amount);
+        },
+        0
+      );
+      for (const delegation of delegationsResponse.delegationResponses) {
+        const validator = delegatedValidators.validators.find(
+          (validator: Validator) => {
+            return (
+              validator.operatorAddress ===
+              delegation.delegation?.validatorAddress
+            );
+          }
+        );
+        console.log(validator, "validator-123");
+        delegations.push({
+          name: validator!.description?.moniker!,
+          identity: await getAvatar(validator!.description?.identity!),
+          amount: decimalize(delegation.balance?.amount!),
+          inputAmount: "",
+          validatorAddress: validator!.operatorAddress,
+          status: !validator!.jailed && validator!.status === 3
+        });
+      }
+    }
+
+    return {
+      list: delegations,
+      totalAmount: decimalize(totalAmount)
+    };
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching delegation": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return {
+      list: [],
+      totalAmount: 0
+    };
+  }
+};
+
+export const getTokenizedSharesFromBalance = async (
+  balances: QueryAllBalancesResponse,
+  address: string,
+  rpc: string,
+  prefix: string
+) => {
+  try {
+    const tendermintClient = await Tendermint34Client.connect(rpc);
+    const queryClient = new QueryClient(tendermintClient);
+    console.log(balances, "response-123");
+    if (balances && balances!.balances!.length) {
+      let balancesList: Coin[] = [];
+      for (let item of balances!.balances) {
+        console.log(item, "item-123");
+        if (item.denom.includes("ibc/")) {
+          const ibcExtension = setupIbcExtension(queryClient);
+          let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(
+            item.denom
+          );
+          if (ibcDenomeResponse!.denomTrace!.baseDenom.includes(prefix)) {
+            const balance = {
+              denom: item.denom,
+              baseDenom: ibcDenomeResponse!.denomTrace!.baseDenom,
+              amount: item.amount
+            };
+            balancesList.push(balance);
+            console.log(ibcDenomeResponse, "ibcDenomeResponse");
+          }
+        }
+      }
+      return balancesList.length > 1
+        ? balancesList.sort(
+            (a, b) =>
+              Number(a.denom.substring(a.denom.length - 1)) -
+              Number(b.denom.substring(b.denom.length - 1))
+          )
+        : balancesList;
+    }
+    return [];
+  } catch (error) {
+    printConsole(error);
+    return [];
   }
 };

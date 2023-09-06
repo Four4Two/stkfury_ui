@@ -1,17 +1,21 @@
 import {
+  COSMOS_LIQUID_STAKE_LSM_URL,
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
   IBC_TRANSFER_URL,
-  REDEEM_URL
+  REDEEM_URL,
+  TOKENIZE_URL
 } from "../../AppConstants";
 import {
   MsgLiquidStake,
+  MsgLiquidStakeLSM,
   MsgLiquidUnstake,
   MsgRedeem
 } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/msgs";
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import { coin } from "@cosmjs/amino";
 import Long from "long";
+import { MsgTokenizeShares } from "persistenceonejs/cosmos/staking/v1beta1/tx";
 
 export interface LiquidStakeMsgTypes {
   typeUrl?: string;
@@ -31,6 +35,16 @@ export interface LiquidUnStakeMsgTypes {
 export interface RedeemMsgTypes {
   typeUrl?: string;
   value?: MsgRedeem;
+}
+
+export interface TokenizeShareMsgTypes {
+  typeUrl?: string;
+  value?: MsgTokenizeShares;
+}
+
+export interface LiquidStakeLsmMsgTypes {
+  typeUrl?: string;
+  value?: MsgLiquidStakeLSM;
 }
 
 export const LiquidStakeMsg = (
@@ -107,6 +121,46 @@ export const TransferMsg = (
         revisionHeight: timeoutHeight?.revisionHeight
       },
       timeoutTimestamp: timeoutTimestamp
+    })
+  };
+};
+
+export const TokenizeSharesMsg = (
+  fromAddress: string,
+  validatorAddress: string,
+  tokenizedShareOwner: string,
+  amount: any,
+  denom: string
+): TokenizeShareMsgTypes => {
+  return {
+    typeUrl: TOKENIZE_URL,
+    value: MsgTokenizeShares.fromPartial({
+      delegatorAddress: fromAddress,
+      validatorAddress: validatorAddress,
+      amount: {
+        denom: denom,
+        amount: String(amount)
+      },
+      tokenizedShareOwner: tokenizedShareOwner
+    })
+  };
+};
+
+export const LiquidStakeLsmMsg = (
+  address: string,
+  amount: any,
+  denom: string
+): LiquidStakeLsmMsgTypes => {
+  return {
+    typeUrl: COSMOS_LIQUID_STAKE_LSM_URL,
+    value: MsgLiquidStakeLSM.fromPartial({
+      delegatorAddress: address,
+      delegations: [
+        {
+          denom: denom,
+          amount: amount
+        }
+      ]
     })
   };
 };

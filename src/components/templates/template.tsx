@@ -8,6 +8,7 @@ import WithdrawModal from "../organisms/sidebar/withdrawModal";
 import StakeToasts from "../organisms/staking/stake/stakeToasts";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
+import ValidatorStakeModal from "../organisms/staking/stake/validator-stake-modal";
 
 export const PageTemplate = ({
   children,
@@ -18,7 +19,9 @@ export const PageTemplate = ({
   className: string;
   title: string;
 }) => {
-  const { showModal } = useSelector((state: RootState) => state.stake);
+  const { showModal, validatorModal } = useSelector(
+    (state: RootState) => state.stake
+  );
   return (
     <div>
       <div className="appLayout grid md:block">
@@ -35,6 +38,7 @@ export const PageTemplate = ({
       <ClaimModal />
       <StakeModal />
       <WithdrawModal />
+      {validatorModal ? <ValidatorStakeModal /> : null}
       {!showModal ? <StakeToasts /> : null}
     </div>
   );

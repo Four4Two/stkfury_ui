@@ -5,7 +5,14 @@ import {
   StakeTransactionPayload,
   SetTransactionFailedStatus,
   SetTransactionStep,
-  SetLiquidStakeType
+  SetLiquidStakeType,
+  FetchDelegatedValidatorsSaga,
+  SetDelegatedValidators,
+  SetDelegatedValidatorsLoader,
+  SetDelegationsStakeAmount,
+  SetValidatorModal,
+  SetLiquidStakeOption,
+  DelegationStakeTransactionPayload
 } from "./types";
 
 const initialState: StakeAmount = {
@@ -13,7 +20,15 @@ const initialState: StakeAmount = {
   showModal: false,
   txFailed: false,
   stepNumber: 0,
-  liquidStakeType: "single"
+  liquidStakeType: "directStaking",
+  stakeOption: "wallet",
+  validatorModal: false,
+  delegationStakeAmount: "",
+  delegatedValidators: {
+    list: [],
+    totalAmount: 0
+  },
+  delegatedValidatorsLoader: false
 };
 
 const stake = createSlice({
@@ -21,6 +36,10 @@ const stake = createSlice({
   initialState,
   reducers: {
     executeStakeTransactionSaga: (state, action: StakeTransactionPayload) => {},
+    executeDelegationStakeTransactionSaga: (
+      state,
+      action: DelegationStakeTransactionPayload
+    ) => {},
     setStakeAmount: (state, { payload }: SetStakeAmount) => {
       state.amount = payload;
     },
@@ -38,6 +57,31 @@ const stake = createSlice({
     },
     setLiquidStakeTxnType: (state, { payload }: SetLiquidStakeType) => {
       state.liquidStakeType = payload;
+    },
+    setLiquidStakeOption: (state, { payload }: SetLiquidStakeOption) => {
+      state.stakeOption = payload;
+    },
+    setValidatorModal: (state, { payload }: SetValidatorModal) => {
+      state.validatorModal = payload;
+    },
+    fetchDelegatedValidatorsSaga: (
+      state,
+      action: FetchDelegatedValidatorsSaga
+    ) => {},
+    setDelegatedValidators: (state, { payload }: SetDelegatedValidators) => {
+      state.delegatedValidators = payload;
+    },
+    setDelegationsStakeAmount: (
+      state,
+      { payload }: SetDelegationsStakeAmount
+    ) => {
+      state.delegationStakeAmount = payload;
+    },
+    setDelegatedValidatorsLoader: (
+      state,
+      { payload }: SetDelegatedValidatorsLoader
+    ) => {
+      state.delegatedValidatorsLoader = payload;
     }
   }
 });
@@ -49,7 +93,14 @@ export const {
   showStakeModal,
   setStakeTxnFailed,
   setStakeTxnStepNumber,
-  setLiquidStakeTxnType
+  setLiquidStakeTxnType,
+  setValidatorModal,
+  setDelegatedValidators,
+  fetchDelegatedValidatorsSaga,
+  setDelegatedValidatorsLoader,
+  setDelegationsStakeAmount,
+  setLiquidStakeOption,
+  executeDelegationStakeTransactionSaga
 } = stake.actions;
 
 export default stake.reducer;

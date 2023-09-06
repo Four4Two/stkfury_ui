@@ -34,7 +34,25 @@ module.exports = {
       dropDown: "#282828",
       tabHeader: "#181818",
       tabContent: "rgba(24, 24, 24, 0.6)",
-      input: "rgba(27, 27, 27, 0.6)"
+      input: "rgba(27, 27, 27, 0.6)",
+      "red-light": "#cb575bfa",
+      "black-full": "#000",
+      "black-high": "#1d1d22",
+      "black-emphasis": "#26262b",
+      "black-mid": "#070B09",
+      "black-900": "#171717",
+      "black-800": "#181818",
+      "black-700": "#1b1b1b",
+      "black-600": "#1b1b1b99",
+      "black-500": "#17171799",
+      "black-400": "#282828",
+      "white-full": "#ffffff",
+      "white-high": "#FCFCFC",
+      "white-emphasis": "#ECECEC",
+      "white-mid": "#A6A6A6",
+      "white-low": "#787878",
+      disabled: "#A9A9A9",
+      activeNavbar: "#C73238"
     },
     fontFamily: {
       primary: ["Poppins", "sans-serif"]
