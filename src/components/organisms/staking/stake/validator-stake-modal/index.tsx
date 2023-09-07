@@ -52,8 +52,7 @@ const ValidatorStakeModal = () => {
   }, [cosmosAccountData]);
 
   useEffect(() => {
-    if (delegatedValidators.list.length) {
-      console.log(delegatedValidators, "delegatedValidators");
+    if (delegatedValidators) {
       setInputState(delegatedValidators.list);
     }
   }, [delegatedValidators]);
@@ -239,16 +238,20 @@ const ValidatorStakeModal = () => {
                                   className={`${
                                     item.status
                                       ? "text-[#47C28B]"
-                                      : "text-light-low"
+                                      : "text-light-mid"
                                   }  text-sm font-semibold`}
                                 >
                                   {item.status ? (
                                     "ELIGIBLE"
                                   ) : (
                                     <span>
-                                      NOT ELIGIBLE(Validator jailed or validator
-                                      <br />
-                                      may not present in PSTAKE validator list)
+                                      NOT ELIGIBLE (
+                                      <span className={"font-medium"}>
+                                        Validator jailed or validator <br />
+                                        may not present in PSTAKE active
+                                        validator list
+                                      </span>
+                                      )
                                     </span>
                                   )}
                                 </p>
@@ -305,7 +308,13 @@ const ValidatorStakeModal = () => {
                         </tr>
                       )
                     )
-                  ) : null
+                  ) : (
+                    <tr>
+                      <td className="text-center p-4" colSpan={4}>
+                        No delegations found
+                      </td>
+                    </tr>
+                  )
                 ) : (
                   <tr>
                     <td className="text-center p-4" colSpan={4}>
