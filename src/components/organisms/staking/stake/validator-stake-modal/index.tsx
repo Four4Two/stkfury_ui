@@ -34,6 +34,7 @@ const ValidatorStakeModal = () => {
   } = useWallet();
 
   const { atomPrice } = useSelector((state: RootState) => state.liveData);
+  const { validators } = useSelector((state: RootState) => state.initialData);
 
   const { validatorModal, delegatedValidators, delegatedValidatorsLoader } =
     useSelector((state: RootState) => state.stake);
@@ -44,7 +45,8 @@ const ValidatorStakeModal = () => {
     dispatch(
       fetchDelegatedValidatorsSaga({
         address: cosmosAccountData?.address!,
-        rpc: cosmosChainData?.rpc!
+        rpc: cosmosChainData?.rpc!,
+        validators: validators
       })
     );
   }, [cosmosAccountData]);
@@ -240,7 +242,15 @@ const ValidatorStakeModal = () => {
                                       : "text-light-low"
                                   }  text-sm font-semibold`}
                                 >
-                                  {item.status ? "ELIGIBLE" : "NOT ELIGIBLE"}
+                                  {item.status ? (
+                                    "ELIGIBLE"
+                                  ) : (
+                                    <span>
+                                      NOT ELIGIBLE(Validator jailed or validator
+                                      <br />
+                                      may not present in PSTAKE validator list)
+                                    </span>
+                                  )}
                                 </p>
                               }
                             >

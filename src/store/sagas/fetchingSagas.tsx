@@ -111,7 +111,8 @@ export function* fetchDelegations({ payload }: FetchDelegatedValidatorsSaga) {
   yield put(setDelegatedValidatorsLoader(true));
   const response: DelegatedValidators = yield getDelegations(
     payload.address,
-    payload.rpc
+    payload.rpc,
+    payload.validators
   );
   yield put(setDelegatedValidators(response));
   yield put(setDelegatedValidatorsLoader(false));

@@ -1,7 +1,7 @@
 import { put, takeEvery } from "@redux-saga/core/effects";
 import { fetchBalanceSaga } from "../reducers/balances";
-import { fetchInitSaga } from "../reducers/initialData";
-import { fetchInit } from "./init";
+import { fetchInitSaga, fetchValidatorsSaga } from "../reducers/initialData";
+import { fetchInit, fetchValidators } from "./init";
 import {
   executeClaimTransaction,
   executeDelegationStakeTransaction,
@@ -31,6 +31,7 @@ import { fetchLiveDataSaga } from "../reducers/liveData";
 export default function* appSaga() {
   yield takeEvery(fetchBalanceSaga.type, fetchBalance);
   yield takeEvery(fetchInitSaga.type, fetchInit);
+  yield takeEvery(fetchValidatorsSaga.type, fetchValidators);
   yield takeEvery(fetchLiveDataSaga.type, fetchLiveData);
   yield takeEvery(fetchDelegatedValidatorsSaga.type, fetchDelegations);
   yield takeEvery(fetchPendingClaimsSaga.type, fetchPendingClaims);

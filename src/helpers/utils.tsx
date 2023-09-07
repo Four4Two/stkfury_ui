@@ -134,7 +134,7 @@ export const unDecimalize = (valueString: string | number, decimals = 6) => {
 };
 
 export const genericErrorHandler = (e: any, scope = new Scope()) => {
-  console.log(e);
+  console.error(e);
   Sentry.captureException(e, scope);
 };
 

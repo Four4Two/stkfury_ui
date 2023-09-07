@@ -1,11 +1,13 @@
 import {
   FetchInitialDataSaga,
+  FetchValidatorsSaga,
   InitialTvlApyFeeTypes
 } from "../reducers/initialData/types";
 import {
   getExchangeRateFromRpc,
   getFee,
-  getMaxRedeem
+  getMaxRedeem,
+  getValidators
 } from "../../pages/api/onChain";
 import {
   fetchCrescentPoolInfo,
@@ -26,8 +28,11 @@ import {
   setDexterInfo,
   setUmeeInfo,
   setShadeInfo,
-  setShadeCollateral
+  setShadeCollateral,
+  setValidators
 } from "../reducers/initialData";
+import { setDelegatedValidatorsLoader } from "../reducers/transactions/stake";
+import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -58,4 +63,12 @@ export function* fetchInit({ payload }: FetchInitialDataSaga): any {
   yield put(setShadeCollateral(shadeLendingInfo));
   yield put(setMaxRedeem(maxRedeem));
   yield put(setShadeInfo(shadeInfo));
+}
+
+export function* fetchValidators({ payload }: FetchValidatorsSaga) {
+  const response: PstakeValidator[] = yield getValidators(
+    payload.rpc,
+    payload.chainID
+  );
+  yield put(setValidators(response));
 }
