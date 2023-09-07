@@ -3,6 +3,7 @@ import {
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
   IBC_TRANSFER_URL,
+  msgValidatorBondUrl,
   REDEEM_URL,
   TOKENIZE_URL
 } from "../../AppConstants";
@@ -12,10 +13,14 @@ import {
   MsgLiquidUnstake,
   MsgRedeem
 } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/msgs";
+
 import { MsgTransfer } from "cosmjs-types/ibc/applications/transfer/v1/tx";
 import { coin } from "@cosmjs/amino";
 import Long from "long";
-import { MsgTokenizeShares } from "persistenceonejs/cosmos/staking/v1beta1/tx";
+import {
+  MsgTokenizeShares,
+  MsgValidatorBond
+} from "persistenceonejs/cosmos/staking/v1beta1/tx";
 
 export interface LiquidStakeMsgTypes {
   typeUrl?: string;
@@ -161,6 +166,19 @@ export const LiquidStakeLsmMsg = (
           amount: amount
         }
       ]
+    })
+  };
+};
+
+export const ValidatorBond = (
+  delegatorAddress: string,
+  validatorAddress: string
+) => {
+  return {
+    typeUrl: msgValidatorBondUrl,
+    value: MsgValidatorBond.fromPartial({
+      delegatorAddress: delegatorAddress,
+      validatorAddress: validatorAddress
     })
   };
 };

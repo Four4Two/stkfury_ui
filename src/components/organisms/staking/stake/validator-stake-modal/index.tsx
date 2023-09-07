@@ -43,11 +43,11 @@ const ValidatorStakeModal = () => {
   useEffect(() => {
     dispatch(
       fetchDelegatedValidatorsSaga({
-        address: persistenceAccountData?.address!,
-        rpc: persistenceChainData?.rpc!
+        address: cosmosAccountData?.address!,
+        rpc: cosmosChainData?.rpc!
       })
     );
-  }, [persistenceAccountData]);
+  }, [cosmosAccountData]);
 
   useEffect(() => {
     if (delegatedValidators.list.length) {
