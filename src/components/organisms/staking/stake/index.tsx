@@ -6,11 +6,13 @@ import styles from "./styles.module.css";
 import ExchangeRate from "../../../molecules/exchangeRate";
 import Submit from "./submit";
 import StakeOptions from "./stake-option";
+import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 
 const UnStake = () => {
+  const { isWalletConnected } = useWallet();
   return (
     <>
-      <StakeOptions />
+      {isWalletConnected ? <StakeOptions /> : ""}
       <From />
       <div className="swap-icon flex w-full items-center justify-center relative">
         <div
