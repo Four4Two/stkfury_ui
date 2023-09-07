@@ -12,7 +12,11 @@ import { OfflineSigner } from "@cosmjs/launchpad";
 import WalletHandler from "../../helpers/wallets";
 import { fetchBalanceSaga } from "../../store/reducers/balances";
 import { useDispatch } from "react-redux";
-import { fetchInitSaga, setAPY } from "../../store/reducers/initialData";
+import {
+  fetchInitSaga,
+  fetchValidatorsSaga,
+  setAPY
+} from "../../store/reducers/initialData";
 import { fetchPendingClaimsSaga } from "../../store/reducers/claim";
 import useLocalStorage from "../../customHooks/useLocalStorage";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
@@ -93,6 +97,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       fetchInitSaga({
         persistenceChainInfo: persistenceChainInfo!,
         cosmosChainInfo: cosmosChainInfo!
+      })
+    );
+    dispatch(
+      fetchValidatorsSaga({
+        rpc: persistenceChainInfo.rpc!,
+        chainID: cosmosChainInfo.chainId
       })
     );
     dispatch(

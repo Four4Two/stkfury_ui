@@ -1,6 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ChainInfo } from "@keplr-wallet/types";
 import React from "react";
+import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
 
 export interface InitialTvlApyFeeTypes {
   tvl?: number | React.ReactNode;
@@ -31,6 +32,7 @@ export interface InitialDataState {
   maxRedeem: number;
   minDeposit: number;
   activeStakeTab: ActiveStakeTab;
+  validators: PstakeValidator[];
 }
 
 export interface FetchInitialDataSagaParams {
@@ -38,11 +40,18 @@ export interface FetchInitialDataSagaParams {
   cosmosChainInfo: ChainInfo;
 }
 
+export interface FetchValidatorsSagaParams {
+  rpc: string;
+  chainID: string;
+}
+
 export type SetExchangeRate = PayloadAction<number>;
 export type SetAPR = PayloadAction<number>;
 export type SetRedeemFee = PayloadAction<number>;
 export type SetMaxRedeem = PayloadAction<number>;
 export type SetMinRedeem = PayloadAction<number>;
+export type SetValidators = PayloadAction<PstakeValidator[]>;
 export type SetActiveStakeTab = PayloadAction<ActiveStakeTab>;
 
 export type FetchInitialDataSaga = PayloadAction<FetchInitialDataSagaParams>;
+export type FetchValidatorsSaga = PayloadAction<FetchValidatorsSagaParams>;

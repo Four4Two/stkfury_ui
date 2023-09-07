@@ -38,9 +38,10 @@ import {
   DelegatedValidator,
   DelegatedValidators
 } from "../../store/reducers/transactions/stake/types";
-import { Validator } from "cosmjs-types/cosmos/staking/v1beta1/staking";
 import { getAvatar } from "./externalAPIs";
 import { QueryClient, setupIbcExtension } from "@cosmjs/stargate";
+import { Validator } from "cosmjs-types/cosmos/staking/v1beta1/staking";
+import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -336,6 +337,26 @@ export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
   }
 };
 
+export const getValidators = async (
+  rpc: string,
+  hostChainId: string
+): Promise<PstakeValidator[]> => {
+  try {
+    let validators: PstakeValidator[] = [];
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new LiquidStakeQueryClient(rpcClient);
+    const chainParamsResponse = await pstakeQueryService.HostChain({
+      chainId: hostChainId
+    });
+    if (chainParamsResponse && chainParamsResponse.hostChain?.validators) {
+      validators = chainParamsResponse.hostChain?.validators;
+    }
+    return validators;
+  } catch (e) {
+    return [];
+  }
+};
+
 export const getDelegations = async (
   address: string,
   rpc: string
@@ -373,7 +394,12 @@ export const getDelegations = async (
             );
           }
         );
-        console.log(validator, "validator-123");
+        console.log(
+          validator,
+          "validator-123",
+          decimalize(delegation.balance?.amount!),
+          delegation.balance?.amount
+        );
         delegations.push({
           name: validator!.description?.moniker!,
           identity: await getAvatar(validator!.description?.identity!),
