@@ -11,6 +11,7 @@ export const COSMOS_LIQUID_UN_STAKE_URL =
   "/pstake.liquidstakeibc.v1beta1.MsgLiquidUnstake";
 export const REDEEM_URL = "/pstake.liquidstakeibc.v1beta1.MsgRedeem";
 export const IBC_TRANSFER_URL = "/ibc.applications.transfer.v1.MsgTransfer";
+export const msgValidatorBondUrl = "/cosmos.staking.v1beta1.MsgValidatorBond";
 export const TOKENIZE_URL = "/cosmos.staking.v1beta1.MsgTokenizeShares";
 export const COSMOS_LIQUID_STAKE_LSM_URL =
   "/pstake.liquidstakeibc.v1beta1.MsgLiquidStakeLSM";

@@ -1,14 +1,17 @@
 import {
   MsgLiquidStake,
+  MsgLiquidStakeLSM,
   MsgLiquidUnstake,
   MsgRedeem
 } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/msgs";
 import { AminoConverters, AminoTypes, GasPrice } from "@cosmjs/stargate";
 import { OfflineDirectSigner, Registry } from "@cosmjs/proto-signing";
 import {
+  COSMOS_LIQUID_STAKE_LSM_URL,
   COSMOS_LIQUID_STAKE_URL,
   COSMOS_LIQUID_UN_STAKE_URL,
-  REDEEM_URL
+  REDEEM_URL,
+  TOKENIZE_URL
 } from "../../AppConstants";
 import { OfflineSigner } from "@cosmjs/launchpad";
 import { IBCConfiguration } from "./config";
@@ -31,6 +34,7 @@ import {
   createStakingAminoConverters,
   createVestingAminoConverters
 } from "@cosmjs/stargate";
+import { MsgTokenizeShares } from "persistenceonejs/cosmos/staking/v1beta1/tx";
 
 function createAminoTypes(prefix: string): AminoConverters {
   return {
@@ -67,7 +71,9 @@ export async function Transaction(
       ...defaultRegistryTypes,
       [COSMOS_LIQUID_STAKE_URL, MsgLiquidStake],
       [COSMOS_LIQUID_UN_STAKE_URL, MsgLiquidUnstake],
-      [REDEEM_URL, MsgRedeem]
+      [REDEEM_URL, MsgRedeem],
+      [TOKENIZE_URL, MsgTokenizeShares],
+      [COSMOS_LIQUID_STAKE_LSM_URL, MsgLiquidStakeLSM]
     ]),
     gasPrice: GasPrice.fromString(gasPrice),
     aminoTypes: new AminoTypes(createAminoTypes(signerAddress.split("1")[0]))

@@ -490,6 +490,10 @@ export function* executeDelegationStakeTransaction({
       dstAddress,
       dstChainInfo!.rpc
     );
+    const balancesOnPersistence: any = yield fetchAccountBalance(
+      account,
+      srcChainInfo!.rpc
+    );
     console.log(balances, "balance response1", msg);
     // step 2: make tokenize txn
     const transaction: DeliverTxResponse = yield Transaction(
@@ -552,22 +556,26 @@ export function* executeDelegationStakeTransaction({
         if (ibcTxn.code === 0) {
           // step 5: polling to check ibc txn status
           const pollIbcTxn: any = yield pollAccountBalanceList(
-            { balances: response },
-            dstAddress, // dstAddress,
-            dstChainInfo.rpc //dstChainInfo.rpc
+            balancesOnPersistence,
+            account, // dstAddress,
+            srcChainInfo.rpc //dstChainInfo.rpc
           );
           yield put(setStakeTxnStepNumber(3));
-          printConsole(pollIbcTxn, "transaction ibcTxn polling");
+          console.log(
+            pollIbcTxn,
+            "transaction ibcTxn polling",
+            balancesOnPersistence
+          );
           if (pollIbcTxn.length > 0) {
             console.log("successfully transferred");
             yield put(setStakeTxnStepNumber(4));
-
             // fetch balance source chain
             const srcBalances: QueryAllBalancesResponse =
               yield fetchAccountBalance(
                 account, //srcAddress,
                 srcChainInfo.rpc // srcChainInfo.rpc
               );
+            console.log("srcBalances", srcBalances);
             const tokens: any = yield getTokenizedSharesFromBalance(
               srcBalances,
               account, //account
@@ -581,7 +589,7 @@ export function* executeDelegationStakeTransaction({
             //   );
             //   delegations.push(...filtered);
             // });
-            // console.log(delegations, "delegations1", tokens);
+            console.log("tokens", tokens);
             let liquidStakeMsg: any = [];
             msg.forEach((msgItem) => {
               tokens.forEach((item: any) => {
