@@ -377,7 +377,11 @@ export const getDelegations = async (
       await stakingQueryService.DelegatorValidators({
         delegatorAddr: address
       });
-    console.log(delegatedValidators, "delegatedValidators");
+    console.log(
+      delegatedValidators,
+      "delegatedValidators",
+      delegationsResponse
+    );
 
     if (delegationsResponse.delegationResponses.length > 0) {
       totalAmount = delegationsResponse.delegationResponses.reduce(
@@ -405,17 +409,19 @@ export const getDelegations = async (
           (item) => item.operatorAddress === validator!.operatorAddress
         );
         console.log(validatorCheck, "validatorCheck");
-        delegations.push({
-          name: validator!.description?.moniker!,
-          identity: await getAvatar(validator!.description?.identity!),
-          amount: decimalize(delegation.balance?.amount!),
-          inputAmount: "",
-          validatorAddress: validator!.operatorAddress,
-          status:
-            validatorCheck !== undefined &&
-            !validator!.jailed &&
-            validator!.status === 3
-        });
+        if (Number(delegation.balance?.amount) > 0) {
+          delegations.push({
+            name: validator!.description?.moniker!,
+            identity: await getAvatar(validator!.description?.identity!),
+            amount: decimalize(delegation.balance?.amount!),
+            inputAmount: "",
+            validatorAddress: validator!.operatorAddress,
+            status:
+              validatorCheck !== undefined &&
+              !validator!.jailed &&
+              validator!.status === 3
+          });
+        }
       }
     }
 
