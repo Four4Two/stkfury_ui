@@ -6,6 +6,7 @@ import {
   TokenizeShareMsgTypes
 } from "../../../../helpers/protoMsg";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
+import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
 
 // 0- initialized, 1-depositStart, 2-depositSigned, 3-stakeStart, 4-stakeSigned, 5-complete
 export type TransactionSteps = 0 | 1 | 2 | 3 | 4 | 5; // These are txn steps number for easy transaction tracking in ui.
@@ -68,6 +69,7 @@ export interface DelegationStakeTransactionParams {
 export interface fetchDelegatedValidatorsParams {
   address: string;
   rpc: string;
+  validators: PstakeValidator[];
 }
 
 export type StakeTransactionPayload = PayloadAction<StakeTransactionParams>;

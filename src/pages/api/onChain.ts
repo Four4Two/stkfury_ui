@@ -359,7 +359,8 @@ export const getValidators = async (
 
 export const getDelegations = async (
   address: string,
-  rpc: string
+  rpc: string,
+  validators: PstakeValidator[]
 ): Promise<DelegatedValidators> => {
   try {
     console.log(address, rpc, "params getDelegations");
@@ -400,13 +401,20 @@ export const getDelegations = async (
           decimalize(delegation.balance?.amount!),
           delegation.balance?.amount
         );
+        const validatorCheck = validators.find(
+          (item) => item.operatorAddress === validator!.operatorAddress
+        );
+        console.log(validatorCheck, "validatorCheck");
         delegations.push({
           name: validator!.description?.moniker!,
           identity: await getAvatar(validator!.description?.identity!),
           amount: decimalize(delegation.balance?.amount!),
           inputAmount: "",
           validatorAddress: validator!.operatorAddress,
-          status: !validator!.jailed && validator!.status === 3
+          status:
+            validatorCheck !== undefined &&
+            !validator!.jailed &&
+            validator!.status === 3
         });
       }
     }
