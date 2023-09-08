@@ -6,6 +6,8 @@ export interface BalanceState {
   stkAtomBalance: number;
   ibcAtomBalance: number;
   xprtBalance: number;
+  cosmosBalances: any[];
+  persistenceBalances: any[];
 }
 
 export interface FetchBalanceSagaParams {
@@ -16,6 +18,8 @@ export interface FetchBalanceSagaParams {
 }
 
 export type SetAtomBalance = PayloadAction<number>;
+export type SetPersistenceBalances = PayloadAction<any[]>;
+export type SetCosmosBalances = PayloadAction<any[]>;
 export type SetStkAtomBalance = PayloadAction<number>;
 export type SetIbcAtomBalance = PayloadAction<number>;
 export type SetXprtBalance = PayloadAction<number>;

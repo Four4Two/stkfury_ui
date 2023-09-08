@@ -9,7 +9,8 @@ import { QueryClientImpl as LiquidStakeQueryClient } from "persistenceonejs/psta
 import {
   QueryClientImpl as StakeQuery,
   QueryDelegatorDelegationsResponse,
-  QueryDelegatorValidatorsResponse
+  QueryDelegatorValidatorsResponse,
+  QueryValidatorResponse
 } from "cosmjs-types/cosmos/staking/v1beta1/query";
 
 import {
@@ -484,6 +485,49 @@ export const getTokenizedSharesFromBalance = async (
     return [];
   } catch (error) {
     printConsole(error);
+    return [];
+  }
+};
+
+export const getTokenizedShares = async (
+  address: string,
+  dstChainInfo: ChainInfo,
+  prefix: string
+) => {
+  try {
+    const balances: QueryAllBalancesResponse = await fetchAccountBalance(
+      address, //srcAddress,
+      dstChainInfo.rpc // srcChainInfo.rpc
+    );
+    const delegations: any = [];
+    if (balances && balances!.balances!.length) {
+      for (let item of balances!.balances) {
+        console.log(item, "item-123");
+        if (item.denom.startsWith(prefix)) {
+          const valAddress = item.denom.substring(0, item.denom.indexOf("/"));
+          const rpcClient = await RpcClient(dstChainInfo.rpc);
+          const stakingQueryService = new StakeQuery(rpcClient);
+          const vresponse: QueryValidatorResponse =
+            await stakingQueryService.Validator({
+              validatorAddr: valAddress
+            });
+          delegations.push({
+            denom: item.denom,
+            name: vresponse.validator!.description!.moniker!,
+            identity: await getAvatar(
+              vresponse.validator!.description?.identity!
+            ),
+            amount: decimalize(item?.amount!),
+            inputAmount: "",
+            validatorAddress: vresponse.validator!.operatorAddress,
+            status:
+              !vresponse.validator!.jailed && vresponse.validator!.status === 3
+          });
+        }
+      }
+    }
+    return delegations;
+  } catch (e) {
     return [];
   }
 };

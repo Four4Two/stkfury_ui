@@ -9,7 +9,9 @@ import {
 import { put } from "@redux-saga/core/effects";
 import {
   setAtomBalance,
+  setCosmosBalances,
   setIbcAtomBalance,
+  setPersistenceBalances,
   setStkAtomBalance,
   setXprtBalance
 } from "../reducers/balances";
@@ -85,6 +87,8 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
   yield put(setXprtBalance(Number(decimalize(xprtBalance))));
   yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
   yield put(setAtomBalance(Number(decimalize(atomBalance))));
+  yield put(setCosmosBalances(cosmosBalances));
+  yield put(setPersistenceBalances(persistenceBalances));
 }
 
 export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
