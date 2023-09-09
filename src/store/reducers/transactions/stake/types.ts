@@ -32,6 +32,17 @@ export interface DelegatedValidators {
   totalAmount: number | string;
 }
 
+export interface TokenizedShares {
+  sharesOnSourceChain: {
+    list: any[];
+    totalAmount: number | string;
+  };
+  sharesOnDestinationChain: {
+    list: any[];
+    totalAmount: number | string;
+  };
+}
+
 export interface StakeAmount {
   amount: string;
   showModal: boolean;
@@ -43,6 +54,8 @@ export interface StakeAmount {
   delegatedValidators: DelegatedValidators;
   delegatedValidatorsLoader: boolean;
   validatorModal: boolean;
+  tokenizedShares: TokenizedShares;
+  tokenizedModal: boolean;
 }
 
 export interface StakeTransactionParams {
@@ -66,6 +79,15 @@ export interface DelegationStakeTransactionParams {
   dstChainInfo: ChainInfo;
 }
 
+export interface fetchTokenizeSharesSagaParams {
+  address: string;
+  dstAddress: string;
+  srcChain: ChainInfo;
+  dstChain: ChainInfo;
+  srcChainBalances: any;
+  dstChainBalances: any;
+}
+
 export interface fetchDelegatedValidatorsParams {
   address: string;
   rpc: string;
@@ -79,6 +101,7 @@ export type SetLiquidStakeType = PayloadAction<LiquidStakeType>;
 export type SetTransactionStep = PayloadAction<TransactionSteps>;
 export type SetLiquidStakeOption = PayloadAction<StakeOption>;
 export type SetValidatorModal = PayloadAction<boolean>;
+export type SetTokenizedShareModal = PayloadAction<boolean>;
 export type FetchDelegatedValidatorsSaga =
   PayloadAction<fetchDelegatedValidatorsParams>;
 export type SetDelegatedValidators = PayloadAction<DelegatedValidators>;
@@ -86,3 +109,6 @@ export type SetDelegatedValidatorsLoader = PayloadAction<boolean>;
 export type SetDelegationsStakeAmount = PayloadAction<string>;
 export type DelegationStakeTransactionPayload =
   PayloadAction<DelegationStakeTransactionParams>;
+export type FetchTokenizeSharesSaga =
+  PayloadAction<fetchTokenizeSharesSagaParams>;
+export type SetTokenizedShares = PayloadAction<TokenizedShares>;

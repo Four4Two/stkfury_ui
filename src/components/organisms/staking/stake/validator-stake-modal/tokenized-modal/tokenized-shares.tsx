@@ -2,35 +2,27 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Submit from "./submit";
-import { DelegatedValidator } from "../../../../../store/reducers/transactions/stake/types";
+import { DelegatedValidator } from "../../../../../../store/reducers/transactions/stake/types";
 import Tooltip from "rc-tooltip";
 import Image from "next/image";
-import { useWallet } from "../../../../../context/WalletConnect/WalletConnect";
-import { RootState } from "../../../../../store/reducers";
+import { useWallet } from "../../../../../../context/WalletConnect/WalletConnect";
+import { RootState } from "../../../../../../store/reducers";
 import {
-  fetchDelegatedValidatorsSaga,
   fetchTokenizeSharesSaga,
-  setValidatorModal
-} from "../../../../../store/reducers/transactions/stake";
-import Modal from "../../../../molecules/modal";
+  setTokenizedShareModal
+} from "../../../../../../store/reducers/transactions/stake";
+import Modal from "../../../../../molecules/modal";
 import {
   formatNumber,
   truncateToFixedDecimalPlaces
-} from "../../../../../helpers/utils";
-import { Icon } from "../../../../atoms/icon";
-import { Spinner } from "../../../../atoms/spinner";
-import {
-  getTokenizedShares,
-  getTokenizedSharesFromBalance
-} from "../../../../../pages/api/onChain";
-import { fetchTokenizeShares } from "../../../../../store/sagas/fetchingSagas";
-import { ChainInfo } from "@keplr-wallet/types";
+} from "../../../../../../helpers/utils";
+import { Icon } from "../../../../../atoms/icon";
+import { Spinner } from "../../../../../atoms/spinner";
 
 const TokenizedSharesModal = () => {
   const [inputState, setInputState] = useState<DelegatedValidator[]>([]);
-  const [selectedInput, setSelectedInput] = useState<DelegatedValidator[]>([]);
   const [totalAmount, setTotalAmount] = useState<any>("0");
-  const [selectedList, setSelectedList] = useState<DelegatedValidator[]>([]);
+  const [validatorList, setValidatorList] = useState<any[]>([]);
 
   const dispatch = useDispatch();
   const {
@@ -44,19 +36,18 @@ const TokenizedSharesModal = () => {
   const { cosmosBalances, persistenceBalances } = useSelector(
     (state: RootState) => state.balances
   );
-  const { validators } = useSelector((state: RootState) => state.initialData);
 
-  const {
-    validatorModal,
-    delegatedValidators,
-    delegatedValidatorsLoader,
-    tokenizedShares
-  } = useSelector((state: RootState) => state.stake);
+  const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
+    useSelector((state: RootState) => state.stake);
 
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
 
   useEffect(() => {
-    if (isWalletConnected) {
+    if (
+      isWalletConnected &&
+      (cosmosBalances.balances.length > 0 ||
+        persistenceBalances.balances.length > 0)
+    ) {
       dispatch(
         fetchTokenizeSharesSaga({
           address: persistenceAccountData!.address,
@@ -68,33 +59,52 @@ const TokenizedSharesModal = () => {
         })
       );
     }
-  }, [isWalletConnected]);
+  }, [isWalletConnected, cosmosBalances, persistenceBalances]);
 
   useEffect(() => {
     if (tokenizedShares) {
       console.log(tokenizedShares, "tokenizedShares-42");
-      setInputState(
-        tokenizedShares.sharesOnSourceChain.list.concat(
-          tokenizedShares.sharesOnDestinationChain.list
-        )
+      const list = tokenizedShares.sharesOnSourceChain.list.concat(
+        tokenizedShares.sharesOnDestinationChain.list
       );
+      setInputState(list);
       setTotalAmount(
         Number(tokenizedShares.sharesOnSourceChain.totalAmount) +
           Number(tokenizedShares.sharesOnDestinationChain.totalAmount)
       );
+      console.log(list, "list-42");
+      if (list.length > 0) {
+        let vList: any[] = [];
+        list.map((item: any) => {
+          console.log(vList, "vList-42");
+          const validatorResponse = vList.find(
+            (validator) => validator.validatorAddress === item.validatorAddress
+          );
+          console.log(validatorResponse, "validatorResponse-42");
+          if (validatorResponse === undefined) {
+            vList.push({
+              name: item.name,
+              validatorAddress: item.validatorAddress,
+              identity: item.identity
+            });
+          }
+        });
+        setValidatorList(vList);
+        // dispatch(setTokenizedShareModal(false));
+        // dispatch(setValidatorModal(true));
+      }
     }
   }, [tokenizedShares]);
 
   const handleClose = () => {
-    dispatch(setValidatorModal(false));
+    dispatch(setTokenizedShareModal(false));
     setInputState([]);
-    setSelectedList([]);
     setTotalAmount("0");
   };
 
   return (
     <Modal
-      show={validatorModal}
+      show={tokenizedModal}
       onClose={handleClose}
       className="delegationModal"
       staticBackDrop={false}
@@ -110,11 +120,11 @@ const TokenizedSharesModal = () => {
               <div>
                 <p className="text-sm text-light-mid pb-2">Validators</p>
                 <p className="text-sm text-light-full">
-                  {inputState.length}
-                  {inputState.length > 0 ? (
+                  {validatorList.length}
+                  {validatorList.length > 0 ? (
                     <Tooltip
                       placement="right"
-                      overlay={inputState.map((item: any, index: number) => (
+                      overlay={validatorList.map((item: any, index: number) => (
                         <div
                           key={index}
                           className={"flex items-center mx-2 my-1.5"}
@@ -169,9 +179,9 @@ const TokenizedSharesModal = () => {
           )}
         </div>
 
-        <div className={"w-[340px] mx-auto"}>
+        <div className={"w-full mx-auto"}>
           <Submit
-            inputState={selectedInput}
+            inputState={inputState}
             totalAmount={totalAmount}
             buttonText={"Liquid Stake"}
           />

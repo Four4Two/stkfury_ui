@@ -15,8 +15,12 @@ const initialState: BalanceState = {
   stkAtomBalance: 0,
   ibcAtomBalance: 0,
   xprtBalance: 0,
-  cosmosBalances: [],
-  persistenceBalances: []
+  cosmosBalances: {
+    balances: []
+  },
+  persistenceBalances: {
+    balances: []
+  }
 };
 
 const balances = createSlice({

@@ -490,21 +490,45 @@ export const getTokenizedSharesFromBalance = async (
 };
 
 export const getTokenizedShares = async (
+  balances: QueryAllBalancesResponse,
   address: string,
+  chainInfo: ChainInfo,
   dstChainInfo: ChainInfo,
+  chain: string,
   prefix: string
 ) => {
   try {
-    const balances: QueryAllBalancesResponse = await fetchAccountBalance(
-      address, //srcAddress,
-      dstChainInfo.rpc // srcChainInfo.rpc
-    );
+    const tendermintClient = await Tendermint34Client.connect(chainInfo.rpc!);
+    const queryClient = new QueryClient(tendermintClient);
+    let totalAmount: number = 0;
+    console.log(balances, "balances-1");
     const delegations: any = [];
     if (balances && balances!.balances!.length) {
       for (let item of balances!.balances) {
         console.log(item, "item-123");
-        if (item.denom.startsWith(prefix)) {
-          const valAddress = item.denom.substring(0, item.denom.indexOf("/"));
+        let valAddress: string = "";
+        if (chain === "cosmos") {
+          if (item.denom.startsWith(prefix)) {
+            valAddress = item.denom.substring(0, item.denom.indexOf("/"));
+          }
+        } else if (chain === "persistence") {
+          if (item.denom.includes("ibc/")) {
+            const ibcExtension = setupIbcExtension(queryClient);
+            let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(
+              item.denom
+            );
+            console.log(ibcDenomeResponse, "ibcDenomeResponse", prefix);
+            if (ibcDenomeResponse!.denomTrace!.baseDenom.includes(prefix)) {
+              valAddress = ibcDenomeResponse!.denomTrace!.baseDenom.substring(
+                0,
+                ibcDenomeResponse!.denomTrace!.baseDenom.indexOf("/")
+              );
+            }
+          }
+        }
+        console.log(valAddress, "valAddress-123", item);
+        if (valAddress !== "") {
+          totalAmount = totalAmount + Number(decimalize(item?.amount!));
           const rpcClient = await RpcClient(dstChainInfo.rpc);
           const stakingQueryService = new StakeQuery(rpcClient);
           const vresponse: QueryValidatorResponse =
@@ -526,8 +550,15 @@ export const getTokenizedShares = async (
         }
       }
     }
-    return delegations;
+    console.log(delegations, "delegations");
+    return {
+      list: delegations,
+      totalAmount: totalAmount
+    };
   } catch (e) {
-    return [];
+    return {
+      list: [],
+      totalAmount: 0
+    };
   }
 };

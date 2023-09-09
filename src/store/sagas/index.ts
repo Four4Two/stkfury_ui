@@ -13,7 +13,8 @@ import {
 import {
   executeDelegationStakeTransactionSaga,
   executeStakeTransactionSaga,
-  fetchDelegatedValidatorsSaga
+  fetchDelegatedValidatorsSaga,
+  fetchTokenizeSharesSaga
 } from "../reducers/transactions/stake";
 import { executeUnStakeTransactionSaga } from "../reducers/transactions/unstake";
 import { executeDepositTransactionSaga } from "../reducers/transactions/deposit";
@@ -21,7 +22,8 @@ import {
   fetchBalance,
   fetchDelegations,
   fetchLiveData,
-  fetchPendingClaims
+  fetchPendingClaims,
+  fetchTokenizeShares
 } from "./fetchingSagas";
 import { executeClaimTransactionSaga } from "../reducers/transactions/claim";
 import { fetchPendingClaimsSaga } from "../reducers/claim";
@@ -34,6 +36,7 @@ export default function* appSaga() {
   yield takeEvery(fetchValidatorsSaga.type, fetchValidators);
   yield takeEvery(fetchLiveDataSaga.type, fetchLiveData);
   yield takeEvery(fetchDelegatedValidatorsSaga.type, fetchDelegations);
+  yield takeEvery(fetchTokenizeSharesSaga.type, fetchTokenizeShares);
   yield takeEvery(fetchPendingClaimsSaga.type, fetchPendingClaims);
   yield takeEvery(executeStakeTransactionSaga.type, executeStakeTransaction);
   yield takeEvery(
