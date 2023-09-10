@@ -26,41 +26,11 @@ const TokenizedSharesModal = () => {
   const [validatorList, setValidatorList] = useState<any[]>([]);
 
   const dispatch = useDispatch();
-  const {
-    cosmosAccountData,
-    cosmosChainData,
-    persistenceChainData,
-    persistenceAccountData,
-    isWalletConnected
-  } = useWallet();
-
-  const { cosmosBalances, persistenceBalances } = useSelector(
-    (state: RootState) => state.balances
-  );
 
   const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
     useSelector((state: RootState) => state.stake);
 
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
-
-  useEffect(() => {
-    if (
-      isWalletConnected &&
-      (cosmosBalances.balances.length > 0 ||
-        persistenceBalances.balances.length > 0)
-    ) {
-      dispatch(
-        fetchTokenizeSharesSaga({
-          address: persistenceAccountData!.address,
-          dstAddress: cosmosAccountData!.address,
-          srcChain: persistenceChainData!,
-          dstChain: cosmosChainData!,
-          srcChainBalances: persistenceBalances,
-          dstChainBalances: cosmosBalances
-        })
-      );
-    }
-  }, [isWalletConnected, cosmosBalances, persistenceBalances]);
 
   useEffect(() => {
     if (tokenizedShares) {

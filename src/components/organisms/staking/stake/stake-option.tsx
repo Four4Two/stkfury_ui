@@ -8,6 +8,7 @@ import {
 import { RootState } from "../../../../store/reducers";
 import { Dropdown } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
+import { MIN_STAKE } from "../../../../../AppConstants";
 
 interface OptionsList {
   name: StakeOption;
@@ -32,8 +33,9 @@ export const getLogoPath = (network: StakeOption) => {
 
 const StakeOptions = () => {
   const dispatch = useDispatch();
-  const { stakeOption } = useSelector((state: RootState) => state.stake);
-
+  const { stakeOption, tokenizedShares } = useSelector(
+    (state: RootState) => state.stake
+  );
   const [show, setShow] = useState<boolean>(false);
 
   const list: OptionsList[] = [
@@ -50,7 +52,14 @@ const StakeOptions = () => {
   ];
 
   const dropDownHandler = async () => {
-    dispatch(setTokenizedShareModal(true));
+    const totalAmount =
+      Number(tokenizedShares.sharesOnSourceChain.totalAmount) +
+      Number(tokenizedShares.sharesOnDestinationChain.totalAmount);
+    if (totalAmount > MIN_STAKE) {
+      dispatch(setTokenizedShareModal(true));
+    } else {
+      dispatch(setValidatorModal(true));
+    }
   };
 
   const dropCloseDownHandler = (value: boolean) => {

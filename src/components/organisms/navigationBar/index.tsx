@@ -19,6 +19,7 @@ import { RootState } from "../../../store/reducers";
 import { useRouter } from "next/router";
 import { fetchLiveDataSaga } from "../../../store/reducers/liveData";
 import { fetchPendingClaimsSaga } from "../../../store/reducers/claim";
+import { fetchTokenizeSharesSaga } from "../../../store/reducers/transactions/stake";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -35,6 +36,17 @@ const NavigationBar = () => {
     cosmosChainData,
     persistenceChainData
   } = useWallet();
+
+  const { cosmosBalances, persistenceBalances } = useSelector(
+    (state: RootState) => state.balances
+  );
+
+  const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
+    useSelector((state: RootState) => state.stake);
+
+  const { persistenceChainStatus } = useSelector(
+    (state: RootState) => state.liveData
+  );
 
   // fetch call on every 10 sec
   useEffect(() => {
@@ -86,11 +98,29 @@ const NavigationBar = () => {
     cosmosChainData
   ]);
 
-  const { persistenceChainStatus } = useSelector(
-    (state: RootState) => state.liveData
-  );
+  useEffect(() => {
+    if (
+      isWalletConnected &&
+      (cosmosBalances.balances.length > 0 ||
+        persistenceBalances.balances.length > 0)
+    ) {
+      dispatch(
+        fetchTokenizeSharesSaga({
+          address: persistenceAccountData!.address,
+          dstAddress: cosmosAccountData!.address,
+          srcChain: persistenceChainData!,
+          dstChain: cosmosChainData!,
+          srcChainBalances: persistenceBalances,
+          dstChainBalances: cosmosBalances
+        })
+      );
+    }
+  }, [isWalletConnected, cosmosBalances, persistenceBalances]);
 
-  if (persistenceChainStatus || process.env.NEXT_PUBLIC_MAINTENANCE === "true") {
+  if (
+    persistenceChainStatus ||
+    process.env.NEXT_PUBLIC_MAINTENANCE === "true"
+  ) {
     router.push("/maintenance");
   }
 
