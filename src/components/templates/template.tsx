@@ -9,6 +9,7 @@ import StakeToasts from "../organisms/staking/stake/stakeToasts";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/reducers";
 import ValidatorStakeModal from "../organisms/staking/stake/validator-stake-modal";
+import TokenizedSharesModal from "../organisms/staking/stake/validator-stake-modal/tokenized-modal/tokenized-shares";
 
 export const PageTemplate = ({
   children,
@@ -19,7 +20,7 @@ export const PageTemplate = ({
   className: string;
   title: string;
 }) => {
-  const { showModal, validatorModal } = useSelector(
+  const { showModal, validatorModal, tokenizedModal } = useSelector(
     (state: RootState) => state.stake
   );
   return (
@@ -39,6 +40,7 @@ export const PageTemplate = ({
       <StakeModal />
       <WithdrawModal />
       {validatorModal ? <ValidatorStakeModal /> : null}
+      {tokenizedModal ? <TokenizedSharesModal /> : null}
       {!showModal ? <StakeToasts /> : null}
     </div>
   );

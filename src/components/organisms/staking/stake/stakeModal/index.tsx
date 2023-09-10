@@ -71,7 +71,8 @@ const StakeModal = () => {
       </div>
       <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base md:px-7">
         Liquid Staking{" "}
-        {liquidStakeType === "delegationStaking"
+        {liquidStakeType === "delegationStaking" ||
+        liquidStakeType === "tokenizedSharesStaking"
           ? delegationStakeAmount
           : amount}{" "}
         ATOM
@@ -111,10 +112,17 @@ const StakeModal = () => {
           ) : (
             ""
           )}
-          {liquidStakeType === "delegationStaking" ? (
+          {liquidStakeType === "delegationStaking" ||
+          liquidStakeType === "tokenizedSharesStaking" ? (
             <div className="flex items-center mb-5 md:mb-3">
               <div className="mr-3">
-                {TransactionIcon(stepNumber, 2, txFailed)}
+                {liquidStakeType === "tokenizedSharesStaking"
+                  ? TransactionIcon(
+                      stepNumber === 1 || stepNumber === 2 ? 1 : stepNumber,
+                      1,
+                      txFailed
+                    )
+                  : TransactionIcon(stepNumber, 2, txFailed)}
               </div>
               <p
                 className={`${
@@ -142,7 +150,8 @@ const StakeModal = () => {
               </p>
             </div>
           )}
-          {liquidStakeType === "delegationStaking" ? (
+          {liquidStakeType === "delegationStaking" ||
+          liquidStakeType === "tokenizedSharesStaking" ? (
             <div className="flex items-center mb-5 md:mb-3">
               <div className="mr-3">
                 {TransactionIcon(

@@ -7,12 +7,16 @@ import {
   SetTransactionStep,
   SetLiquidStakeType,
   FetchDelegatedValidatorsSaga,
+  FetchTokenizeSharesSaga,
   SetDelegatedValidators,
   SetDelegatedValidatorsLoader,
   SetDelegationsStakeAmount,
   SetValidatorModal,
   SetLiquidStakeOption,
-  DelegationStakeTransactionPayload
+  DelegationStakeTransactionPayload,
+  SetTokenizedShares,
+  SetTokenizedShareModal,
+  TokenizedShareStakeTransactionPayload
 } from "./types";
 
 const initialState: StakeAmount = {
@@ -28,7 +32,18 @@ const initialState: StakeAmount = {
     list: [],
     totalAmount: 0
   },
-  delegatedValidatorsLoader: false
+  delegatedValidatorsLoader: false,
+  tokenizedShares: {
+    sharesOnSourceChain: {
+      list: [],
+      totalAmount: 0
+    },
+    sharesOnDestinationChain: {
+      list: [],
+      totalAmount: 0
+    }
+  },
+  tokenizedModal: false
 };
 
 const stake = createSlice({
@@ -39,6 +54,10 @@ const stake = createSlice({
     executeDelegationStakeTransactionSaga: (
       state,
       action: DelegationStakeTransactionPayload
+    ) => {},
+    executeTokenizedShareStakeTransactionSaga: (
+      state,
+      action: TokenizedShareStakeTransactionPayload
     ) => {},
     setStakeAmount: (state, { payload }: SetStakeAmount) => {
       state.amount = payload;
@@ -64,6 +83,9 @@ const stake = createSlice({
     setValidatorModal: (state, { payload }: SetValidatorModal) => {
       state.validatorModal = payload;
     },
+    setTokenizedShareModal: (state, { payload }: SetTokenizedShareModal) => {
+      state.tokenizedModal = payload;
+    },
     fetchDelegatedValidatorsSaga: (
       state,
       action: FetchDelegatedValidatorsSaga
@@ -82,6 +104,10 @@ const stake = createSlice({
       { payload }: SetDelegatedValidatorsLoader
     ) => {
       state.delegatedValidatorsLoader = payload;
+    },
+    fetchTokenizeSharesSaga: (state, action: FetchTokenizeSharesSaga) => {},
+    setTokenizedShares: (state, { payload }: SetTokenizedShares) => {
+      state.tokenizedShares = payload;
     }
   }
 });
@@ -100,7 +126,11 @@ export const {
   setDelegatedValidatorsLoader,
   setDelegationsStakeAmount,
   setLiquidStakeOption,
-  executeDelegationStakeTransactionSaga
+  executeDelegationStakeTransactionSaga,
+  fetchTokenizeSharesSaga,
+  setTokenizedShares,
+  setTokenizedShareModal,
+  executeTokenizedShareStakeTransactionSaga
 } = stake.actions;
 
 export default stake.reducer;

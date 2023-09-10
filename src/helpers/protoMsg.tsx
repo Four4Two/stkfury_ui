@@ -21,6 +21,7 @@ import {
   MsgTokenizeShares,
   MsgValidatorBond
 } from "persistenceonejs/cosmos/staking/v1beta1/tx";
+import { amountDecimalize } from "./utils";
 
 export interface LiquidStakeMsgTypes {
   typeUrl?: string;
@@ -113,12 +114,19 @@ export const TransferMsg = (
   denom: string,
   port = "transfer"
 ): TransferMsgTypes => {
+  const actualAmount = amountDecimalize(amount);
+  console.log(amount, Number(amount), "tr-msg", actualAmount);
+
   return {
     typeUrl: IBC_TRANSFER_URL,
     value: MsgTransfer.fromPartial({
       sourcePort: port,
       sourceChannel: channel,
-      token: coin(Math.trunc(Number(amount)), denom),
+      token: {
+        denom: denom,
+        amount: amount
+      },
+      // coin(Number(amount).toString(), denom),
       sender: fromAddress,
       receiver: toAddress,
       timeoutHeight: {

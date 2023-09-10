@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { StakeOption } from "../../../../store/reducers/transactions/stake/types";
-import { setValidatorModal } from "../../../../store/reducers/transactions/stake";
+import {
+  setTokenizedShareModal,
+  setValidatorModal
+} from "../../../../store/reducers/transactions/stake";
 import { RootState } from "../../../../store/reducers";
 import { Dropdown } from "../../../molecules/dropdown";
 import { Icon } from "../../../atoms/icon";
@@ -47,7 +50,7 @@ const StakeOptions = () => {
   ];
 
   const dropDownHandler = async () => {
-    dispatch(setValidatorModal(true));
+    dispatch(setTokenizedShareModal(true));
   };
 
   const dropCloseDownHandler = (value: boolean) => {

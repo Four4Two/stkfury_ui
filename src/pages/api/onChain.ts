@@ -9,7 +9,8 @@ import { QueryClientImpl as LiquidStakeQueryClient } from "persistenceonejs/psta
 import {
   QueryClientImpl as StakeQuery,
   QueryDelegatorDelegationsResponse,
-  QueryDelegatorValidatorsResponse
+  QueryDelegatorValidatorsResponse,
+  QueryValidatorResponse
 } from "cosmjs-types/cosmos/staking/v1beta1/query";
 
 import {
@@ -30,6 +31,7 @@ import {
   APR_BASE_RATE,
   APR_DEFAULT,
   COSMOS_UNBOND_TIME,
+  MIN_STAKE,
   STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
@@ -485,5 +487,82 @@ export const getTokenizedSharesFromBalance = async (
   } catch (error) {
     printConsole(error);
     return [];
+  }
+};
+
+export const getTokenizedShares = async (
+  balances: QueryAllBalancesResponse,
+  address: string,
+  chainInfo: ChainInfo,
+  dstChainInfo: ChainInfo,
+  chain: string,
+  prefix: string
+) => {
+  try {
+    const tendermintClient = await Tendermint34Client.connect(chainInfo.rpc!);
+    const queryClient = new QueryClient(tendermintClient);
+    let totalAmount: number = 0;
+    console.log(balances, "balances-1");
+    const delegations: any = [];
+    if (balances && balances!.balances!.length) {
+      for (let item of balances!.balances) {
+        console.log(item, "item-123");
+        let valAddress: string = "";
+        if (chain === "cosmos") {
+          if (item.denom.startsWith(prefix)) {
+            valAddress = item.denom.substring(0, item.denom.indexOf("/"));
+          }
+        } else if (chain === "persistence") {
+          if (item.denom.includes("ibc/")) {
+            const ibcExtension = setupIbcExtension(queryClient);
+            let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(
+              item.denom
+            );
+            console.log(ibcDenomeResponse, "ibcDenomeResponse", prefix);
+            if (ibcDenomeResponse!.denomTrace!.baseDenom.includes(prefix)) {
+              valAddress = ibcDenomeResponse!.denomTrace!.baseDenom.substring(
+                0,
+                ibcDenomeResponse!.denomTrace!.baseDenom.indexOf("/")
+              );
+            }
+          }
+        }
+        console.log(valAddress, "valAddress-123", item);
+        if (valAddress !== "") {
+          console.log(valAddress, "valAddress-123-IN", item);
+          totalAmount = totalAmount + Number(decimalize(item?.amount!));
+          const rpcClient = await RpcClient(dstChainInfo.rpc);
+          const stakingQueryService = new StakeQuery(rpcClient);
+          const vresponse: QueryValidatorResponse =
+            await stakingQueryService.Validator({
+              validatorAddr: valAddress
+            });
+          delegations.push({
+            denom: item.denom,
+            name: vresponse.validator!.description!.moniker!,
+            identity: await getAvatar(
+              vresponse.validator!.description?.identity!
+            ),
+            amount: item?.amount,
+            inputAmount: "",
+            validatorAddress: vresponse.validator!.operatorAddress,
+            status:
+              !vresponse.validator!.jailed &&
+              vresponse.validator!.status === 3 &&
+              Number(item?.amount) <= MIN_STAKE
+          });
+        }
+      }
+    }
+    console.log(delegations, "delegations");
+    return {
+      list: delegations,
+      totalAmount: totalAmount
+    };
+  } catch (e) {
+    return {
+      list: [],
+      totalAmount: 0
+    };
   }
 };
