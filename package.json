@@ -24,6 +24,7 @@
     "@cosmostation/cosmos-client": "^0.0.4",
     "@cosmostation/extension-client": "^0.1.15",
     "@keplr-wallet/types": "^0.10.24",
+    "@keplr-wallet/unit": "^0.12.23",
     "@reduxjs/toolkit": "^1.8.5",
     "@sentry/browser": "^7.34.0",
     "@sentry/nextjs": "^7.34.0",

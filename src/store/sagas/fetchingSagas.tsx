@@ -138,6 +138,7 @@ export function* fetchTokenizeShares({
     "persistence",
     "cosmos"
   );
+  console.log(sharesOnPersistence, "sharesOnPersistence");
   const sharesOnCosmos = yield getTokenizedShares(
     payload.dstChainBalances,
     payload.dstAddress,
@@ -146,6 +147,7 @@ export function* fetchTokenizeShares({
     "cosmos",
     "cosmos"
   );
+  console.log(sharesOnCosmos, "sharesOnCosmos");
   yield put(
     setTokenizedShares({
       sharesOnDestinationChain: sharesOnCosmos,

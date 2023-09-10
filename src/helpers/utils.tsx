@@ -18,6 +18,7 @@ import {
   QueryAllBalancesResponse,
   QueryClientImpl as BankQueryClient
 } from "cosmjs-types/cosmos/bank/v1beta1/query";
+import { Dec, DecUtils, Int } from "@keplr-wallet/unit";
 
 import { QueryClientImpl as MintQueryClient } from "cosmjs-types/cosmos/mint/v1beta1/query";
 
@@ -346,3 +347,9 @@ export async function GetCosmosAPY() {
     Number(stakingPool!.pool!.bondedTokens)
   );
 }
+
+export const amountDecimalize = (amount: string) => {
+  let dec = new Dec(amount);
+  dec = dec.mul(DecUtils.getTenExponentNInPrecisionRange(6));
+  return dec.truncate().toString();
+};

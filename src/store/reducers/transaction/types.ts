@@ -6,6 +6,7 @@ export type TransactionType =
   | "deposit"
   | "withdraw"
   | "delegationStaking"
+  | "tokenizedSharesStaking"
   | "";
 
 export interface TransactionState {

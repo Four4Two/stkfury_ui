@@ -16,7 +16,8 @@ export type StakeOption = "wallet" | "validator";
 export type LiquidStakeType =
   | "directStaking"
   | "ibcStaking"
-  | "delegationStaking";
+  | "delegationStaking"
+  | "tokenizedSharesStaking";
 
 export interface DelegatedValidator {
   name: string;
@@ -79,6 +80,17 @@ export interface DelegationStakeTransactionParams {
   dstChainInfo: ChainInfo;
 }
 
+export interface TokenizedShareStakeTransactionParams {
+  srcChainSigner: OfflineSigner | OfflineDirectSigner;
+  dstChainSigner: OfflineSigner | OfflineDirectSigner;
+  srcChainInfo: ChainInfo;
+  account: string;
+  pollInitialBalance: number;
+  dstAddress: string;
+  tokenList: TokenizedShares;
+  dstChainInfo: ChainInfo;
+}
+
 export interface fetchTokenizeSharesSagaParams {
   address: string;
   dstAddress: string;
@@ -109,6 +121,8 @@ export type SetDelegatedValidatorsLoader = PayloadAction<boolean>;
 export type SetDelegationsStakeAmount = PayloadAction<string>;
 export type DelegationStakeTransactionPayload =
   PayloadAction<DelegationStakeTransactionParams>;
+export type TokenizedShareStakeTransactionPayload =
+  PayloadAction<TokenizedShareStakeTransactionParams>;
 export type FetchTokenizeSharesSaga =
   PayloadAction<fetchTokenizeSharesSagaParams>;
 export type SetTokenizedShares = PayloadAction<TokenizedShares>;

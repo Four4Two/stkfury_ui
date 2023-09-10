@@ -8,6 +8,7 @@ import {
 import { useWallet } from "../../../../../../context/WalletConnect/WalletConnect";
 import {
   executeDelegationStakeTransactionSaga,
+  executeTokenizedShareStakeTransactionSaga,
   setDelegationsStakeAmount,
   setLiquidStakeTxnType,
   setStakeTxnFailed,
@@ -20,7 +21,8 @@ import { TokenizeSharesMsg } from "../../../../../../helpers/protoMsg";
 
 const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
   const [error, setError] = useState<any>(false);
-
+  const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
+    useSelector((state: RootState) => state.stake);
   useEffect(() => {
     if (inputState.length) {
       const amount = inputState.find((item: any) => {
@@ -52,16 +54,14 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
     try {
       console.log(inputState, "inputState-123");
       dispatch(setStakeTxnFailed(false));
-      let messages: any = [];
-      console.log(messages, "inputState-messages");
-      dispatch(setLiquidStakeTxnType("delegationStaking"));
+      dispatch(setLiquidStakeTxnType("tokenizedSharesStaking"));
       dispatch(setDelegationsStakeAmount(totalAmount));
-      dispatch(setTransactionProgress("delegationStaking"));
+      dispatch(setTransactionProgress("tokenizedSharesStaking"));
       dispatch(
-        executeDelegationStakeTransactionSaga({
+        executeTokenizedShareStakeTransactionSaga({
           srcChainSigner: persistenceSigner!,
           dstChainSigner: cosmosSigner!,
-          msg: messages,
+          tokenList: tokenizedShares,
           account: persistenceAccountData?.address!,
           srcChainInfo: persistenceChainData!,
           pollInitialBalance: stkAtomBalance,
@@ -69,7 +69,7 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
           dstChainInfo: cosmosChainData!
         })
       );
-      dispatch(setValidatorModal(false));
+      dispatch(setTokenizedShareModal(false));
       dispatch(showStakeModal());
     } catch (e) {
       dispatch(setStakeTxnFailed(true));
@@ -96,7 +96,7 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
         className={`button w-full flex-1 !py-[8px] md:text-sm ${className} !border-2 !border-[#c73238]`}
         type="primary"
         size="medium"
-        disabled={true}
+        disabled={error || Number(totalAmount) <= 0}
         onClick={stakeHandler}
         content={buttonText}
       />

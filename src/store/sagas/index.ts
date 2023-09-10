@@ -7,12 +7,14 @@ import {
   executeDelegationStakeTransaction,
   executeDepositTransaction,
   executeStakeTransaction,
+  executeTokenizedShareStakeTransaction,
   executeUnStakeTransaction,
   executeWithdrawTransaction
 } from "./transactions";
 import {
   executeDelegationStakeTransactionSaga,
   executeStakeTransactionSaga,
+  executeTokenizedShareStakeTransactionSaga,
   fetchDelegatedValidatorsSaga,
   fetchTokenizeSharesSaga
 } from "../reducers/transactions/stake";
@@ -55,5 +57,9 @@ export default function* appSaga() {
   yield takeEvery(
     executeDelegationStakeTransactionSaga.type,
     executeDelegationStakeTransaction
+  );
+  yield takeEvery(
+    executeTokenizedShareStakeTransactionSaga.type,
+    executeTokenizedShareStakeTransaction
   );
 }

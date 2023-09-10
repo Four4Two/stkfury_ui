@@ -18,6 +18,7 @@ import {
 } from "../../../../../../helpers/utils";
 import { Icon } from "../../../../../atoms/icon";
 import { Spinner } from "../../../../../atoms/spinner";
+import { MIN_STAKE } from "../../../../../../../AppConstants";
 
 const TokenizedSharesModal = () => {
   const [inputState, setInputState] = useState<DelegatedValidator[]>([]);
@@ -116,62 +117,71 @@ const TokenizedSharesModal = () => {
         </p>
         <div className="py-4 px-8 bg-black-800 w-full rounded-md mb-8">
           {!delegatedValidatorsLoader ? (
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm text-light-mid pb-2">Validators</p>
-                <p className="text-sm text-light-full">
-                  {validatorList.length}
-                  {validatorList.length > 0 ? (
-                    <Tooltip
-                      placement="right"
-                      overlay={validatorList.map((item: any, index: number) => (
-                        <div
-                          key={index}
-                          className={"flex items-center mx-2 my-1.5"}
-                        >
-                          <Image
-                            src={item.identity}
-                            alt={item.identity}
-                            width={22}
-                            height={22}
-                            className="rounded-full mr-2"
-                          />
-                          <span className="text-xsm text-light-mi">
-                            {" "}
-                            {item.name}
-                          </span>
-                        </div>
-                      ))}
-                    >
-                      <button className="icon-button px-1 align-middle mb-1">
-                        <Icon viewClass="arrow-right" iconName="info" />
-                      </button>
-                    </Tooltip>
-                  ) : null}
-                </p>
+            totalAmount > MIN_STAKE ? (
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="text-sm text-light-mid pb-2">Validators</p>
+                  <p className="text-sm text-light-full">
+                    {validatorList.length}
+                    {validatorList.length > 0 ? (
+                      <Tooltip
+                        placement="right"
+                        overlay={validatorList.map(
+                          (item: any, index: number) => (
+                            <div
+                              key={index}
+                              className={"flex items-center mx-2 my-1.5"}
+                            >
+                              <Image
+                                src={item.identity}
+                                alt={item.identity}
+                                width={22}
+                                height={22}
+                                className="rounded-full mr-2"
+                              />
+                              <span className="text-xsm text-light-mi">
+                                {" "}
+                                {item.name}
+                              </span>
+                            </div>
+                          )
+                        )}
+                      >
+                        <button className="icon-button px-1 align-middle mb-1">
+                          <Icon viewClass="arrow-right" iconName="info" />
+                        </button>
+                      </Tooltip>
+                    ) : null}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-light-mid pb-2">Amount</p>
+                  <p className="text-sm text-light-full">
+                    {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-light-mid pb-2">You will get</p>
+                  <p className="text-sm text-light-full">
+                    {truncateToFixedDecimalPlaces(
+                      Number(totalAmount) * exchangeRate
+                    )}{" "}
+                    stkATOM
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-light-mid pb-2">Exchange Rate</p>
+                  <p className="text-sm text-light-full">
+                    1 ATOM = {formatNumber(exchangeRate)} &nbsp; stkATOM
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-light-mid pb-2">Amount</p>
-                <p className="text-sm text-light-full">
-                  {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-light-mid pb-2">You will get</p>
-                <p className="text-sm text-light-full">
-                  {truncateToFixedDecimalPlaces(
-                    Number(totalAmount) * exchangeRate
-                  )}{" "}
-                  stkATOM
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-light-mid pb-2">Exchange Rate</p>
-                <p className="text-sm text-light-full">
-                  1 ATOM = {formatNumber(exchangeRate)} &nbsp; stkATOM
-                </p>
-              </div>
-            </div>
+            ) : (
+              <p>
+                Tokenized delegations not found. Click on View other delegation
+                button to liquid stake from delegations
+              </p>
+            )
           ) : (
             <div className="flex justify-center items-center">
               <Spinner size={"medium"} />

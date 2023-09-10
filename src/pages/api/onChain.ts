@@ -31,6 +31,7 @@ import {
   APR_BASE_RATE,
   APR_DEFAULT,
   COSMOS_UNBOND_TIME,
+  MIN_STAKE,
   STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
@@ -528,6 +529,7 @@ export const getTokenizedShares = async (
         }
         console.log(valAddress, "valAddress-123", item);
         if (valAddress !== "") {
+          console.log(valAddress, "valAddress-123-IN", item);
           totalAmount = totalAmount + Number(decimalize(item?.amount!));
           const rpcClient = await RpcClient(dstChainInfo.rpc);
           const stakingQueryService = new StakeQuery(rpcClient);
@@ -541,11 +543,13 @@ export const getTokenizedShares = async (
             identity: await getAvatar(
               vresponse.validator!.description?.identity!
             ),
-            amount: decimalize(item?.amount!),
+            amount: item?.amount,
             inputAmount: "",
             validatorAddress: vresponse.validator!.operatorAddress,
             status:
-              !vresponse.validator!.jailed && vresponse.validator!.status === 3
+              !vresponse.validator!.jailed &&
+              vresponse.validator!.status === 3 &&
+              Number(item?.amount) <= MIN_STAKE
           });
         }
       }

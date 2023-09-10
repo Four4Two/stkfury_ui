@@ -15,7 +15,8 @@ import {
   SetLiquidStakeOption,
   DelegationStakeTransactionPayload,
   SetTokenizedShares,
-  SetTokenizedShareModal
+  SetTokenizedShareModal,
+  TokenizedShareStakeTransactionPayload
 } from "./types";
 
 const initialState: StakeAmount = {
@@ -53,6 +54,10 @@ const stake = createSlice({
     executeDelegationStakeTransactionSaga: (
       state,
       action: DelegationStakeTransactionPayload
+    ) => {},
+    executeTokenizedShareStakeTransactionSaga: (
+      state,
+      action: TokenizedShareStakeTransactionPayload
     ) => {},
     setStakeAmount: (state, { payload }: SetStakeAmount) => {
       state.amount = payload;
@@ -124,7 +129,8 @@ export const {
   executeDelegationStakeTransactionSaga,
   fetchTokenizeSharesSaga,
   setTokenizedShares,
-  setTokenizedShareModal
+  setTokenizedShareModal,
+  executeTokenizedShareStakeTransactionSaga
 } = stake.actions;
 
 export default stake.reducer;
