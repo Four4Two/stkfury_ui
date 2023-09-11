@@ -185,7 +185,7 @@ const ValidatorStakeModal = () => {
                                     iconName="checkbox"
                                     viewClass="!w-[18px] !h-[18px] fill-[#C73238]"
                                   />
-                                ) : item.status ? (
+                                ) : item.status === "active" ? (
                                   <span
                                     className="w-[18px] h-[18px] border-2 rounded-sm
                             border-solid border-[#C73238] block "
@@ -236,22 +236,18 @@ const ValidatorStakeModal = () => {
                               overlay={
                                 <p
                                   className={`${
-                                    item.status
+                                    item.status === "active"
                                       ? "text-[#47C28B]"
                                       : "text-light-mid"
                                   }  text-sm font-semibold`}
                                 >
-                                  {item.status ? (
+                                  {item.status === "active" ? (
                                     "ELIGIBLE"
                                   ) : (
-                                    <span>
-                                      NOT ELIGIBLE (
-                                      <span className={"font-medium"}>
-                                        Validator jailed or validator <br />
-                                        may not present in PSTAKE active
-                                        validator list
-                                      </span>
-                                      )
+                                    <span className="uppercase">
+                                      {item.status === "inactive"
+                                        ? "Jailed"
+                                        : "Not Eligible"}
                                     </span>
                                   )}
                                 </p>
@@ -260,7 +256,9 @@ const ValidatorStakeModal = () => {
                               <button className="icon-button px-1 align-middle mb-1">
                                 <Icon
                                   iconName={
-                                    item.status ? "success-right" : "crossed"
+                                    item.status === "active"
+                                      ? "success-right"
+                                      : "crossed"
                                   }
                                   viewClass="!w-[16px] !h-[16px]"
                                 />
@@ -270,7 +268,7 @@ const ValidatorStakeModal = () => {
                           <td className="py-3 pr-8 text-right">
                             <div
                               className={`relative z-10 ${
-                                item.status
+                                item.status === "active"
                                   ? ""
                                   : "pointer-events-none opacity-20"
                               }`}

@@ -407,10 +407,12 @@ export const getDelegations = async (
           decimalize(delegation.balance?.amount!),
           delegation.balance?.amount
         );
-        const validatorCheck = validators.find(
+        const eligibilityCheck = validators.find(
           (item) => item.operatorAddress === validator!.operatorAddress
         );
-        console.log(validatorCheck, "validatorCheck");
+        const activeCheck = !validator!.jailed && validator!.status === 3;
+
+        console.log(eligibilityCheck, "validatorCheck", validator);
         if (Number(delegation.balance?.amount) > 0) {
           delegations.push({
             name: validator!.description?.moniker!,
@@ -419,9 +421,11 @@ export const getDelegations = async (
             inputAmount: "",
             validatorAddress: validator!.operatorAddress,
             status:
-              validatorCheck !== undefined &&
-              !validator!.jailed &&
-              validator!.status === 3
+              eligibilityCheck === undefined
+                ? "not-eligible"
+                : !activeCheck
+                ? "inactive"
+                : "active"
           });
         }
       }
