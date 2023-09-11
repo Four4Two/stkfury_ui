@@ -93,7 +93,7 @@ const StakeOptions = () => {
               </span>
             </div>
           }
-          dropDownButtonClass="!py-1.5 bg-dark-700 "
+          dropDownButtonClass="!py-1.5 bg-dark-700 !w-[214px] !justify-between"
           dropdownType={"click"}
           staticBackDrop={false}
           dropDownIcon={true}

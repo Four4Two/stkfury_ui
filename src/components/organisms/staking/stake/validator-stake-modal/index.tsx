@@ -121,7 +121,7 @@ const ValidatorStakeModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-2">
-          pSTAKE Liquid Staking
+          Delegations
         </p>
         <div className="flex items-center mb-4 justify-between">
           <p className="text-sm text-light-mid pr-2">
