@@ -421,7 +421,8 @@ export const getDelegations = async (
             inputAmount: "",
             validatorAddress: validator!.operatorAddress,
             status:
-              eligibilityCheck === undefined
+              eligibilityCheck === undefined ||
+              Number(decimalize(delegation.balance?.amount!)) <= MIN_STAKE
                 ? "not-eligible"
                 : !activeCheck
                 ? "inactive"

@@ -18,9 +18,10 @@ import {
 } from "../../../../../helpers/utils";
 import { Icon } from "../../../../atoms/icon";
 import { Spinner } from "../../../../atoms/spinner";
+import { MIN_STAKE } from "../../../../../../AppConstants";
 
 const ValidatorStakeModal = () => {
-  const [inputState, setInputState] = useState<DelegatedValidator[]>([]);
+  const [inputState, setInputState] = useState<DelegatedValidator[]>([]); // initial validator list
   const [selectedInput, setSelectedInput] = useState<DelegatedValidator[]>([]);
   const [totalAmount, setTotalAmount] = useState<any>("0");
   const [selectedList, setSelectedList] = useState<DelegatedValidator[]>([]);
@@ -98,8 +99,8 @@ const ValidatorStakeModal = () => {
               );
             }
           }
-          selectedListArray.push(itemCopy);
         }
+        selectedListArray.push(itemCopy);
         return itemCopy;
       }
     );
@@ -111,6 +112,7 @@ const ValidatorStakeModal = () => {
     setTotalAmount(amount);
   };
 
+  const checkBoxHandler = () => {};
   return (
     <Modal
       show={validatorModal}
@@ -121,7 +123,7 @@ const ValidatorStakeModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-2">
-          pSTAKE Liquid Staking
+          Delegations
         </p>
         <div className="flex items-center mb-4 justify-between">
           <p className="text-sm text-light-mid pr-2">
@@ -131,14 +133,6 @@ const ValidatorStakeModal = () => {
             )}{" "}
             ATOM
           </p>
-          <div className={"w-[150px] hidden"}>
-            <Submit
-              className={"!text-sm !px-1"}
-              inputState={inputState}
-              totalAmount={delegatedValidators.totalAmount}
-              buttonText={"Liquid Stake All"}
-            />
-          </div>
         </div>
         <div className="pb-4">
           <div className="max-h-[250px] overflow-auto">
@@ -181,14 +175,22 @@ const ValidatorStakeModal = () => {
                             <div className={"flex items-center"}>
                               <div className="mr-4">
                                 {Number(item.inputAmount) > 0 ? (
-                                  <Icon
-                                    iconName="checkbox"
-                                    viewClass="!w-[18px] !h-[18px] fill-[#C73238]"
-                                  />
+                                  <div
+                                    onClick={() => inputHandler(item.name, "")}
+                                    className={"cursor-pointer"}
+                                  >
+                                    <Icon
+                                      iconName="checkbox"
+                                      viewClass="!w-[18px] !h-[18px] fill-[#C73238]"
+                                    />
+                                  </div>
                                 ) : item.status === "active" ? (
                                   <span
                                     className="w-[18px] h-[18px] border-2 rounded-sm
-                            border-solid border-[#C73238] block "
+                            border-solid border-[#C73238] block cursor-pointer"
+                                    onClick={() =>
+                                      inputHandler(item.name, item.amount)
+                                    }
                                   />
                                 ) : (
                                   <span
@@ -388,6 +390,7 @@ const ValidatorStakeModal = () => {
 
         <div className={"w-[340px] mx-auto"}>
           <Submit
+            selectedList={selectedList}
             inputState={selectedInput}
             totalAmount={totalAmount}
             buttonText={"Liquid Stake"}
