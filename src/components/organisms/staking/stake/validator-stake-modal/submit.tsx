@@ -16,16 +16,30 @@ import {
 } from "../../../../../store/reducers/transactions/stake";
 import Button from "../../../../atoms/button";
 import { TokenizeSharesMsg } from "../../../../../helpers/protoMsg";
+import { MIN_STAKE } from "../../../../../../AppConstants";
 
-const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
+const Submit = ({
+  selectedList,
+  inputState,
+  totalAmount,
+  buttonText,
+  className
+}: any) => {
   const [error, setError] = useState<any>(false);
 
   useEffect(() => {
     if (inputState.length) {
-      const amount = inputState.find((item: any) => {
-        return Number(item.inputAmount) > Number(item?.amount);
+      const amountCheck = inputState.some((item: any) => {
+        console.log(Number(item?.inputAmount), "inputState");
+        if (Number(item?.inputAmount) > 0) {
+          return (
+            Number(item.inputAmount) > Number(item?.amount) ||
+            Number(item.inputAmount) < MIN_STAKE
+          );
+        }
+        return false;
       });
-      if (amount) {
+      if (amountCheck) {
         setError(true);
       } else {
         setError(false);
@@ -49,18 +63,22 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
 
   const stakeHandler = async () => {
     try {
-      console.log(inputState, "inputState-123");
       dispatch(setStakeTxnFailed(false));
       let messages: any = [];
-      inputState.forEach((item: any) => {
+      selectedList.forEach((item: any) => {
+        const response = inputState.find(
+          (listItem: any) => listItem.validatorAddress === item.validatorAddress
+        );
+        console.log(response, "response-44");
         messages.push(
           TokenizeSharesMsg(
             cosmosAccountData!.address,
-            item.validatorAddress,
+            response.validatorAddress,
             cosmosAccountData!.address, // dstAccountData.address,
             (
-              Number(item.inputAmount ? item.inputAmount : item?.amount) *
-              1000000
+              Number(
+                response.inputAmount ? response.inputAmount : response?.amount
+              ) * 1000000
             ).toFixed(0),
             cosmosChainData!.stakeCurrency.coinMinimalDenom // cosmosAccountData.stakeCurrency.coinMinimalDenom
           )
