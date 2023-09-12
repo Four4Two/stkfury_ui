@@ -141,7 +141,7 @@ const ValidatorStakeModal = () => {
         <div className="flex items-center mb-6 justify-between">
           <p className="text-sm text-light-mid pr-2">
             Select the validator(s) and enter the amount of staked ATOM you wish
-            to liquid stake. Learn more here.&nbsp;
+            to liquid stake.&nbsp;
             <a
               href="/"
               target="_blank"
@@ -193,10 +193,10 @@ const ValidatorStakeModal = () => {
                     Status
                   </th>
                   <th
-                    className="text-right py-3 pr-8 backdrop-blur text-sm  text-light-mid
+                    className="text-left py-3 pl-4 pr-8 backdrop-blur text-sm  text-light-mid
                   font-normal sticky top-0 !bg-[#252525] h-[48px] !z-[999]"
                   >
-                    Amount to Liquid Stake
+                    Liquid Stake
                   </th>
                 </tr>
               </thead>
@@ -246,7 +246,7 @@ const ValidatorStakeModal = () => {
                               {item.name}
                             </div>
                           </td>
-                          <td className={"px-4 py-3 text-light-mid"}>
+                          <td className={"px-4 py-3 text-left text-light-mid"}>
                             <p className={""}>
                               <span
                                 className={
@@ -267,7 +267,7 @@ const ValidatorStakeModal = () => {
                               ).toLocaleString()}`}</span>
                             </p>
                           </td>
-                          <td className="pl-8 py-3 text-left text-light-mid">
+                          <td className="px-4 py-3 text-left text-light-mid">
                             <Tooltip
                               placement="top"
                               overlay={
@@ -302,9 +302,9 @@ const ValidatorStakeModal = () => {
                               </button>
                             </Tooltip>
                           </td>
-                          <td className="py-3 pr-8 text-right">
+                          <td className="py-3 pl-4 pr-8 text-left">
                             <div
-                              className={`relative z-10 ${
+                              className={`relative w-[164px] z-10 ${
                                 item.status === "active"
                                   ? ""
                                   : "pointer-events-none opacity-20"
@@ -314,7 +314,7 @@ const ValidatorStakeModal = () => {
                                 placeholder={"Enter Amount"}
                                 type="number"
                                 onWheel={(e: any) => e.target.blur()}
-                                className={`border border-solid p-2 text-[12px] font-medium rounded-md outline-none bg-black-400 text-light-mid  ${
+                                className={`w-full border border-solid p-2 text-[12px] font-medium rounded-md outline-none bg-black-400 text-light-mid  ${
                                   Number(item.inputAmount) > Number(item.amount)
                                     ? "border-primary"
                                     : "border-[#282828]"
@@ -363,14 +363,14 @@ const ValidatorStakeModal = () => {
         </div>
 
         <div className="py-4 px-8 bg-black-800 w-full rounded-md mb-8">
-          <div className="flex justify-between items-center">
-            <div>
+          <div className="flex justify-between items-center flex-wrap">
+            <div className={"flex-[15%]"}>
               <p className="text-sm text-light-mid pb-2">Validators</p>
               <p className="text-sm text-light-full">
                 {selectedList.length}
                 {selectedList.length > 0 ? (
                   <Tooltip
-                    placement="right"
+                    placement="bottom"
                     overlay={selectedList.map(
                       (item: DelegatedValidator, index: number) => (
                         <div
@@ -399,13 +399,13 @@ const ValidatorStakeModal = () => {
                 ) : null}
               </p>
             </div>
-            <div>
+            <div className={"flex-[20%]"}>
               <p className="text-sm text-light-mid pb-2">Total Amount</p>
               <p className="text-sm text-light-full">
                 {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
               </p>
             </div>
-            <div>
+            <div className={"flex-[30%]"}>
               <p className="text-sm text-light-mid pb-2">You Will Get</p>
               <p className="text-sm text-light-full">
                 {truncateToFixedDecimalPlaces(
@@ -414,7 +414,7 @@ const ValidatorStakeModal = () => {
                 stkATOM
               </p>
             </div>
-            <div>
+            <div className={"flex-[30%]"}>
               <p className="text-sm text-light-mid pb-2">Exchange Rate</p>
               <p className="text-sm text-light-full">
                 1 ATOM = {formatNumber(exchangeRate)} &nbsp; stkATOM
