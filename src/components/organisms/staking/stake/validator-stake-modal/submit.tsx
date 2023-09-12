@@ -11,6 +11,7 @@ import {
   setDelegationsStakeAmount,
   setLiquidStakeTxnType,
   setStakeTxnFailed,
+  setStakeTxnStepNumber,
   setValidatorModal,
   showStakeModal
 } from "../../../../../store/reducers/transactions/stake";

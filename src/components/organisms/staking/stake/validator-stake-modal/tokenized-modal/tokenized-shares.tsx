@@ -83,8 +83,14 @@ const TokenizedSharesModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-4">
-          Existing Tokenized Delegations
+          Existing tokenized staked ATOM
         </p>
+        <div className="flex items-center mb-6 justify-between">
+          <p className="text-sm text-light-mid pr-2">
+            Looks like you already have some staked ATOM that can be liquid
+            staked. Proceed to Liquid Stake.
+          </p>
+        </div>
         <div className="py-4 px-8 bg-black-800 w-full rounded-md mb-8">
           {!delegatedValidatorsLoader ? (
             totalAmount > MIN_STAKE ? (

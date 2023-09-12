@@ -150,7 +150,12 @@ const Submit = () => {
       size="large"
       disabled={!enable || ((name === STAKE || name === DEPOSIT) && inProgress)}
       content={
-        (name === STAKE || name === DEPOSIT) && inProgress && !showModal ? (
+        (name === STAKE ||
+          name === DEPOSIT ||
+          name === "delegationStaking" ||
+          name === "tokenizedSharesStaking") &&
+        inProgress &&
+        !showModal ? (
           <Spinner size={isMobile ? "small" : "medium"} />
         ) : minDeposit <= Number(amount) ? (
           "Liquid Stake"

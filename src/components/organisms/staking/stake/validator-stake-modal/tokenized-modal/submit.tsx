@@ -12,6 +12,7 @@ import {
   setDelegationsStakeAmount,
   setLiquidStakeTxnType,
   setStakeTxnFailed,
+  setStakeTxnStepNumber,
   setTokenizedShareModal,
   setValidatorModal,
   showStakeModal
@@ -52,6 +53,7 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
 
   const stakeHandler = async () => {
     try {
+      dispatch(setStakeTxnStepNumber(0));
       console.log(inputState, "inputState-123");
       dispatch(setStakeTxnFailed(false));
       dispatch(setLiquidStakeTxnType("tokenizedSharesStaking"));

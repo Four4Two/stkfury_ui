@@ -122,10 +122,7 @@ export const TransferMsg = (
     value: MsgTransfer.fromPartial({
       sourcePort: port,
       sourceChannel: channel,
-      token: {
-        denom: denom,
-        amount: amount
-      },
+      token: coin(Math.trunc(Number(amount)), denom),
       // coin(Number(amount).toString(), denom),
       sender: fromAddress,
       receiver: toAddress,
