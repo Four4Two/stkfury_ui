@@ -65,6 +65,7 @@ const Submit = ({
     try {
       dispatch(setStakeTxnFailed(false));
       let messages: any = [];
+      console.log(selectedList, "selectedList-44");
       selectedList.forEach((item: any) => {
         const response = inputState.find(
           (listItem: any) => listItem.validatorAddress === item.validatorAddress

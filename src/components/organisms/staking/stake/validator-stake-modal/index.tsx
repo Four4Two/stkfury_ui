@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Submit from "./submit";
 import { DelegatedValidator } from "../../../../../store/reducers/transactions/stake/types";
@@ -19,12 +19,14 @@ import {
 import { Icon } from "../../../../atoms/icon";
 import { Spinner } from "../../../../atoms/spinner";
 import { MIN_STAKE } from "../../../../../../AppConstants";
+import { Switch } from "../../../../atoms/switch";
 
 const ValidatorStakeModal = () => {
   const [inputState, setInputState] = useState<DelegatedValidator[]>([]); // initial validator list
   const [selectedInput, setSelectedInput] = useState<DelegatedValidator[]>([]);
   const [totalAmount, setTotalAmount] = useState<any>("0");
   const [selectedList, setSelectedList] = useState<DelegatedValidator[]>([]);
+  const [switchValue, setSwitchValue] = useState(false);
 
   const dispatch = useDispatch();
   const {
@@ -54,7 +56,7 @@ const ValidatorStakeModal = () => {
 
   useEffect(() => {
     if (delegatedValidators) {
-      setInputState(delegatedValidators.list);
+      setInputState(delegatedValidators.eligible);
     }
   }, [delegatedValidators]);
 
@@ -112,7 +114,15 @@ const ValidatorStakeModal = () => {
     setTotalAmount(amount);
   };
 
-  const checkBoxHandler = () => {};
+  const switchHandler = (evt: ChangeEvent<HTMLInputElement>) => {
+    if (switchValue) {
+      setInputState(delegatedValidators.eligible);
+    } else {
+      setInputState(delegatedValidators.nonEligible);
+    }
+    setSwitchValue(!switchValue);
+    console.log("switchHandler-1switchHandler", evt);
+  };
   return (
     <Modal
       show={validatorModal}
@@ -123,18 +133,40 @@ const ValidatorStakeModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-2">
-          Delegations
+          Convert your Staked ATOM to Liquid Staked stkATOM
         </p>
-        <div className="flex items-center mb-4 justify-between">
+        <div className="flex items-center mb-6 justify-between">
           <p className="text-sm text-light-mid pr-2">
-            <span className="text-light-emphasis">Total Staked:</span>{" "}
-            {truncateToFixedDecimalPlaces(
-              Number(delegatedValidators.totalAmount)
-            )}{" "}
-            ATOM
+            Select the validator(s) and enter the amount of staked ATOM you wish
+            to liquid stake. Want step by step instructions? &nbsp;
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#3E73F0] underline"
+            >
+              See our guide.
+            </a>
+            {/*<span className="text-light-emphasis">Total Staked:</span>{" "}*/}
+            {/*{truncateToFixedDecimalPlaces(*/}
+            {/*  Number(delegatedValidators.totalAmount)*/}
+            {/*)}{" "}*/}
+            {/*ATOM*/}
           </p>
         </div>
         <div className="pb-4">
+          <div className="flex justify-between items-center mb-3">
+            <p className={"text-light-high text-sm"}>
+              List of staked validator delegations
+            </p>
+            <Switch
+              size={"sm"}
+              checked={switchValue}
+              labelText={"Show non-eligible validators"}
+              onChange={switchHandler}
+            />
+          </div>
+
           <div className="max-h-[250px] overflow-auto">
             <table className="w-full">
               <thead className="">
@@ -149,7 +181,7 @@ const ValidatorStakeModal = () => {
                     className="px-4 py-3 text-light-mid backdrop-blur font-normal
                    text-left sticky top-0 !bg-[#252525] h-[48px]"
                   >
-                    Staked Amount
+                    Staked ATOM
                   </th>
                   <th
                     className="px-4 py-3 text-light-mid backdrop-blur font-normal
@@ -161,7 +193,7 @@ const ValidatorStakeModal = () => {
                     className="text-right py-3 pr-8 backdrop-blur text-light-mid
                   font-normal sticky top-0 !bg-[#252525] h-[48px] !z-[999]"
                   >
-                    Input Amount
+                    Amount to Liquid Stake
                   </th>
                 </tr>
               </thead>
@@ -357,7 +389,7 @@ const ValidatorStakeModal = () => {
                       )
                     )}
                   >
-                    <button className="icon-button px-1 align-middle mb-1">
+                    <button className="icon-button px-1 align-middle -mt-1">
                       <Icon viewClass="arrow-right" iconName="info" />
                     </button>
                   </Tooltip>
@@ -365,13 +397,15 @@ const ValidatorStakeModal = () => {
               </p>
             </div>
             <div>
-              <p className="text-sm text-light-mid pb-2">Amount</p>
+              <p className="text-sm text-light-mid pb-2">Total Amount</p>
               <p className="text-sm text-light-full">
                 {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
               </p>
             </div>
             <div>
-              <p className="text-sm text-light-mid pb-2">You will get</p>
+              <p className="text-sm text-light-mid pb-2">
+                Liquid Staked Amount
+              </p>
               <p className="text-sm text-light-full">
                 {truncateToFixedDecimalPlaces(
                   Number(totalAmount) * exchangeRate

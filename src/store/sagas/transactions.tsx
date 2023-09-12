@@ -517,7 +517,7 @@ export function* executeDelegationStakeTransaction({
         dstChainInfo.rpc
       );
       yield put(setStakeTxnStepNumber(2));
-      console.log(response, "transaction poll response");
+      console.log(response, "transaction poll response", msg);
       if (response.length > 0) {
         let newList: any = [];
         msg.forEach((msgItem) => {
