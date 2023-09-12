@@ -5,12 +5,8 @@ import Submit from "./submit";
 import { DelegatedValidator } from "../../../../../../store/reducers/transactions/stake/types";
 import Tooltip from "rc-tooltip";
 import Image from "next/image";
-import { useWallet } from "../../../../../../context/WalletConnect/WalletConnect";
 import { RootState } from "../../../../../../store/reducers";
-import {
-  fetchTokenizeSharesSaga,
-  setTokenizedShareModal
-} from "../../../../../../store/reducers/transactions/stake";
+import { setTokenizedShareModal } from "../../../../../../store/reducers/transactions/stake";
 import Modal from "../../../../../molecules/modal";
 import {
   formatNumber,
@@ -61,8 +57,6 @@ const TokenizedSharesModal = () => {
           }
         });
         setValidatorList(vList);
-        // dispatch(setTokenizedShareModal(false));
-        // dispatch(setValidatorModal(true));
       }
     }
   }, [tokenizedShares]);
@@ -131,7 +125,7 @@ const TokenizedSharesModal = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-light-mid pb-2">Amount</p>
+                  <p className="text-sm text-light-mid pb-2">Total Amount</p>
                   <p className="text-sm text-light-full">
                     {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
                   </p>

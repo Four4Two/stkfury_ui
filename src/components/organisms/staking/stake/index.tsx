@@ -9,10 +9,9 @@ import StakeOptions from "./stake-option";
 import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 
 const UnStake = () => {
-  const { isWalletConnected } = useWallet();
   return (
     <>
-      {isWalletConnected ? <StakeOptions /> : ""}
+      <StakeOptions />
       <From />
       <div className="swap-icon flex w-full items-center justify-center relative">
         <div

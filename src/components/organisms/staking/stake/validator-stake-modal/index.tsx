@@ -33,7 +33,8 @@ const ValidatorStakeModal = () => {
     cosmosAccountData,
     cosmosChainData,
     persistenceChainData,
-    persistenceAccountData
+    persistenceAccountData,
+    isWalletConnected
   } = useWallet();
 
   const { atomPrice } = useSelector((state: RootState) => state.liveData);
@@ -45,14 +46,16 @@ const ValidatorStakeModal = () => {
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
 
   useEffect(() => {
-    dispatch(
-      fetchDelegatedValidatorsSaga({
-        address: cosmosAccountData?.address!,
-        rpc: cosmosChainData?.rpc!,
-        validators: validators
-      })
-    );
-  }, [cosmosAccountData]);
+    if (isWalletConnected) {
+      dispatch(
+        fetchDelegatedValidatorsSaga({
+          address: cosmosAccountData?.address!,
+          rpc: cosmosChainData?.rpc!,
+          validators: validators
+        })
+      );
+    }
+  }, [cosmosAccountData, isWalletConnected]);
 
   useEffect(() => {
     if (delegatedValidators) {
@@ -133,19 +136,19 @@ const ValidatorStakeModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-2">
-          Convert your Staked ATOM to Liquid Staked stkATOM
+          Liquid Stake your staked ATOM using LSM
         </p>
         <div className="flex items-center mb-6 justify-between">
           <p className="text-sm text-light-mid pr-2">
             Select the validator(s) and enter the amount of staked ATOM you wish
-            to liquid stake. Want step by step instructions? &nbsp;
+            to liquid stake. Learn more here.&nbsp;
             <a
               href="/"
               target="_blank"
               rel="noreferrer"
               className="text-[#3E73F0] underline"
             >
-              See our guide.
+              Learn more here.
             </a>
             {/*<span className="text-light-emphasis">Total Staked:</span>{" "}*/}
             {/*{truncateToFixedDecimalPlaces(*/}
@@ -157,12 +160,12 @@ const ValidatorStakeModal = () => {
         <div className="pb-4">
           <div className="flex justify-between items-center mb-3">
             <p className={"text-light-high text-sm"}>
-              List of staked validator delegations
+              List of staked validators
             </p>
             <Switch
               size={"sm"}
               checked={switchValue}
-              labelText={"Show non-eligible validators"}
+              labelText={"Show not-eligible validators"}
               onChange={switchHandler}
             />
           </div>
@@ -172,25 +175,25 @@ const ValidatorStakeModal = () => {
               <thead className="">
                 <tr>
                   <th
-                    className="pl-8 py-3 backdrop-blur text-left text-light-mid font-normal
+                    className="pl-8 py-3 backdrop-blur text-sm text-left text-light-mid font-normal
                   sticky top-0 !bg-[#252525] h-[48px]"
                   >
                     Validator
                   </th>
                   <th
-                    className="px-4 py-3 text-light-mid backdrop-blur font-normal
+                    className="px-4 py-3 text-light-mid text-sm backdrop-blur font-normal
                    text-left sticky top-0 !bg-[#252525] h-[48px]"
                   >
                     Staked ATOM
                   </th>
                   <th
-                    className="px-4 py-3 text-light-mid backdrop-blur font-normal
+                    className="px-4 py-3 text-light-mid text-sm  backdrop-blur font-normal
                    text-left sticky top-0 !bg-[#252525] h-[48px]"
                   >
                     Status
                   </th>
                   <th
-                    className="text-right py-3 pr-8 backdrop-blur text-light-mid
+                    className="text-right py-3 pr-8 backdrop-blur text-sm  text-light-mid
                   font-normal sticky top-0 !bg-[#252525] h-[48px] !z-[999]"
                   >
                     Amount to Liquid Stake
@@ -403,9 +406,7 @@ const ValidatorStakeModal = () => {
               </p>
             </div>
             <div>
-              <p className="text-sm text-light-mid pb-2">
-                Liquid Staked Amount
-              </p>
+              <p className="text-sm text-light-mid pb-2">You Will Get</p>
               <p className="text-sm text-light-full">
                 {truncateToFixedDecimalPlaces(
                   Number(totalAmount) * exchangeRate

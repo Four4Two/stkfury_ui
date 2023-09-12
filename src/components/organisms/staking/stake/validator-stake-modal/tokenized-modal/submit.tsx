@@ -95,7 +95,7 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
         content={"View other delegations"}
       />
       <Button
-        className={`button w-full flex-1 !py-[8px] md:text-sm ${className} !border-2 !border-[#c73238]`}
+        className={`button w-full flex-1 !py-[8px] md:text-sm ${className} !border-2 !border-[#c73238] hover:!border-[#cb575bfa]`}
         type="primary"
         size="medium"
         disabled={error || Number(totalAmount) <= 0}
