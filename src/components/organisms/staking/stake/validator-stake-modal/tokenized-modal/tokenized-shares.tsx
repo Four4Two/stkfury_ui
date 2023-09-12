@@ -95,7 +95,7 @@ const TokenizedSharesModal = () => {
                     {validatorList.length}
                     {validatorList.length > 0 ? (
                       <Tooltip
-                        placement="right"
+                        placement="bottom"
                         overlay={validatorList.map(
                           (item: any, index: number) => (
                             <div
