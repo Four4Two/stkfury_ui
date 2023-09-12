@@ -32,6 +32,8 @@ export interface DelegatedValidator {
 
 export interface DelegatedValidators {
   list: DelegatedValidator[];
+  eligible: DelegatedValidator[];
+  nonEligible: DelegatedValidator[];
   totalAmount: number | string;
 }
 

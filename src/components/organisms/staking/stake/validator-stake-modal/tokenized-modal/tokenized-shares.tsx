@@ -5,12 +5,8 @@ import Submit from "./submit";
 import { DelegatedValidator } from "../../../../../../store/reducers/transactions/stake/types";
 import Tooltip from "rc-tooltip";
 import Image from "next/image";
-import { useWallet } from "../../../../../../context/WalletConnect/WalletConnect";
 import { RootState } from "../../../../../../store/reducers";
-import {
-  fetchTokenizeSharesSaga,
-  setTokenizedShareModal
-} from "../../../../../../store/reducers/transactions/stake";
+import { setTokenizedShareModal } from "../../../../../../store/reducers/transactions/stake";
 import Modal from "../../../../../molecules/modal";
 import {
   formatNumber,
@@ -61,8 +57,6 @@ const TokenizedSharesModal = () => {
           }
         });
         setValidatorList(vList);
-        // dispatch(setTokenizedShareModal(false));
-        // dispatch(setValidatorModal(true));
       }
     }
   }, [tokenizedShares]);
@@ -83,8 +77,14 @@ const TokenizedSharesModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-4">
-          Existing Tokenized Delegations
+          Existing tokenized staked ATOM
         </p>
+        <div className="flex items-center mb-6 justify-between">
+          <p className="text-sm text-light-mid pr-2">
+            Looks like you already have some staked ATOM that can be liquid
+            staked. Proceed to Liquid Stake.
+          </p>
+        </div>
         <div className="py-4 px-8 bg-black-800 w-full rounded-md mb-8">
           {!delegatedValidatorsLoader ? (
             totalAmount > MIN_STAKE ? (
@@ -125,7 +125,7 @@ const TokenizedSharesModal = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-light-mid pb-2">Amount</p>
+                  <p className="text-sm text-light-mid pb-2">Total Amount</p>
                   <p className="text-sm text-light-full">
                     {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
                   </p>

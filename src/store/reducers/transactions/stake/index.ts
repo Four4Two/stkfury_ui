@@ -30,6 +30,8 @@ const initialState: StakeAmount = {
   delegationStakeAmount: "",
   delegatedValidators: {
     list: [],
+    eligible: [],
+    nonEligible: [],
     totalAmount: 0
   },
   delegatedValidatorsLoader: false,

@@ -75,7 +75,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                 <Icon
                   viewClass={`${
                     !closeDropdown ? "rotate-360" : "rotate-360"
-                  } dropDownIcon mx-2 !w-[10px] ease-in duration-200  rotate-90 fill-[#fff]`}
+                  } dropDownIcon mx-2 !w-[10px] ease-in duration-200  rotate-90 fill-[#A6A6A6]`}
                   iconName="chevron"
                 />
               ) : (

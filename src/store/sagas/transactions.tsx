@@ -517,16 +517,32 @@ export function* executeDelegationStakeTransaction({
         dstChainInfo.rpc
       );
       yield put(setStakeTxnStepNumber(2));
-      console.log(response, "transaction poll response");
+      console.log(response, "transaction poll response", msg);
       if (response.length > 0) {
         let newList: any = [];
         msg.forEach((msgItem) => {
+          // filter balance list based on selected list
           const filtered = response.filter((item: any) =>
             item.denom.includes(msgItem!.value!.validatorAddress)
           );
-          newList.push(...filtered);
+          // get the max index from tokenized delegations
+          const maxObject = Math.max(
+            ...filtered.map((o: any) => {
+              const value = o.denom.substring(
+                o.denom.indexOf("/") + 1,
+                o.denom.length + 1
+              );
+              return Number(value);
+            })
+          );
+          // get the selected validator amount balance list using index
+          const selectedValidator = filtered.find(
+            (item: any) =>
+              item.denom === `${msgItem!.value!.validatorAddress}/${maxObject}`
+          );
+          console.log(maxObject, "maxObject", selectedValidator);
+          newList.push(selectedValidator ? selectedValidator : filtered);
         });
-        console.log(newList, "newList");
         let ibcMessages = [];
         for (let item of newList) {
           if (item.denom.startsWith(ibcInfo!.prefix)) {
@@ -631,12 +647,6 @@ export function* executeDelegationStakeTransaction({
                   dstAddress,
                   srcChainInfo,
                   dstChainInfo
-                );
-                displayToast(
-                  {
-                    message: "Transaction Successful"
-                  },
-                  ToastType.SUCCESS
                 );
               }
             }
@@ -770,8 +780,9 @@ export function* executeTokenizedShareStakeTransaction({
     tokens.forEach((item: any) => {
       if (
         item.baseDenom.startsWith("cosmos") &&
-        Number(decimalize(item.amount)) > MIN_STAKE
+        Number(decimalize(item.amount)) >= MIN_STAKE
       ) {
+        console.log("tokens-inside", item);
         liquidStakeMsg.push(
           LiquidStakeLsmMsg(account, item.amount, item.denom)
         );
@@ -805,12 +816,6 @@ export function* executeTokenizedShareStakeTransaction({
           dstAddress,
           srcChainInfo,
           dstChainInfo
-        );
-        displayToast(
-          {
-            message: "Transaction Successful"
-          },
-          ToastType.SUCCESS
         );
       }
     }

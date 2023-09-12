@@ -27,6 +27,7 @@ export function* postTransactionActions(
   persistenceChainData: ChainInfo,
   cosmosChainData: ChainInfo
 ) {
+  yield put(resetTransaction());
   yield put(
     fetchBalanceSaga({
       persistenceAddress: persistenceAddress,

@@ -15,6 +15,7 @@ import Modal from "../../../../molecules/modal";
 import { Icon } from "../../../../atoms/icon";
 import TransactionIcon from "../../../../molecules/transactionHelper/transactiosIcon";
 import Button from "../../../../atoms/button";
+import { truncateToFixedDecimalPlaces } from "../../../../../helpers/utils";
 
 const StakeModal = () => {
   const dispatch = useDispatch();
@@ -73,8 +74,8 @@ const StakeModal = () => {
         Liquid Staking{" "}
         {liquidStakeType === "delegationStaking" ||
         liquidStakeType === "tokenizedSharesStaking"
-          ? delegationStakeAmount
-          : amount}{" "}
+          ? truncateToFixedDecimalPlaces(Number(delegationStakeAmount))
+          : truncateToFixedDecimalPlaces(Number(amount))}{" "}
         ATOM
       </p>
       <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
@@ -106,7 +107,7 @@ const StakeModal = () => {
                   stepNumber >= 1 ? "text-light-emphasis" : "text-light-low"
                 } text-base font-normal`}
               >
-                Approve tokenizing delegations
+                Approve to tokenize your staked ATOM
               </p>
             </div>
           ) : (
@@ -129,7 +130,7 @@ const StakeModal = () => {
                   stepNumber >= 3 ? "text-light-emphasis" : "text-light-low"
                 } text-base font-normal`}
               >
-                Approve transferring tokenized shares
+                Approve transfer to Persistence
               </p>
             </div>
           ) : (
@@ -146,7 +147,7 @@ const StakeModal = () => {
                   stepNumber >= 3 ? "text-light-emphasis" : "text-light-low"
                 } text-base font-normal`}
               >
-                Approve staking with pSTAKE
+                Approve to liquid stake with pSTAKE
               </p>
             </div>
           )}
@@ -165,7 +166,7 @@ const StakeModal = () => {
                   stepNumber >= 3 ? "text-light-emphasis" : "text-light-low"
                 } text-base font-normal`}
               >
-                Approve staking with pSTAKE
+                Approve to liquid stake with pSTAKE
               </p>
             </div>
           ) : (

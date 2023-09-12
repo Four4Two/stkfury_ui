@@ -367,6 +367,8 @@ export const getDelegations = async (
   try {
     console.log(address, rpc, "params getDelegations");
     const delegations: DelegatedValidator[] = [];
+    let eligibleDelegations: DelegatedValidator[] = [];
+    let notEligibleDelegations: DelegatedValidator[] = [];
     let totalAmount: number = 0;
     const rpcClient = await RpcClient(rpc);
     const stakingQueryService = new StakeQuery(rpcClient);
@@ -431,9 +433,19 @@ export const getDelegations = async (
         }
       }
     }
-
+    if (delegations.length > 0) {
+      eligibleDelegations = delegations.filter(
+        (item) => item.status === "active"
+      );
+      notEligibleDelegations = delegations.filter(
+        (item) => item.status !== "active"
+      );
+    }
+    console.log(delegations, "delegations-12");
     return {
-      list: delegations,
+      list: eligibleDelegations.concat(notEligibleDelegations),
+      eligible: eligibleDelegations,
+      nonEligible: notEligibleDelegations,
       totalAmount: decimalize(totalAmount)
     };
   } catch (e) {
@@ -445,6 +457,8 @@ export const getDelegations = async (
     genericErrorHandler(e, customScope);
     return {
       list: [],
+      eligible: [],
+      nonEligible: [],
       totalAmount: 0
     };
   }

@@ -66,63 +66,82 @@ const StakeOptions = () => {
     setShow(value);
   };
   return (
-    <div className="px-6 py-2 bg-[#151515] border rounded-md border-solid border-[#1C1C1C] flex justify-between items-center mb-4">
-      <p className="text-sm text-light-high font-medium text-sm">
-        Liquid Stake from
-      </p>
-      <div className="lex justify-between items-center">
-        <Dropdown
-          className="text-light-high"
-          dropDownVariant="custom"
-          closeDropdown={show}
-          closeHandler={(value) => dropCloseDownHandler(value)}
-          dropDownVariantBg="bg-black-700 text-[12px] text-light-high"
-          dropdownLabel={
+    <Dropdown
+      className="text-light-high w-full mb-2"
+      dropDownVariant="custom"
+      closeDropdown={show}
+      closeHandler={(value) => dropCloseDownHandler(value)}
+      dropDownVariantBg="bg-black-700 text-[12px] text-light-high"
+      dropdownLabel={
+        <div className="flex items-center">
+          <div
+            className="rounded-full bg-[#C73238] flex items-center
+              justify-center w-[26px] h-[26px] mr-2"
+          >
+            <Icon
+              iconName="wallet"
+              viewClass={"fill-[#FFFFFF] !w-[14px] !h-[12px]"}
+            />
+          </div>
+          <span className="text-base text-light-emphasis font-medium leading-normal md:text-xsm md:ml-2 capitalize">
+            Liquid Staking using Wallet
+          </span>
+        </div>
+      }
+      dropDownButtonClass="text-[12px] text-light-high !py-2.5 bg-dark-700
+         button md:text-sm w-full bg-[#151515] !px-6 !justify-between"
+      dropdownType={"click"}
+      staticBackDrop={false}
+      dropDownIcon={true}
+      dropDownContentClass="!bg-[#242424] drop-shadow-md round-md w-max py-1 md:p-0"
+    >
+      <>
+        <div
+          className="px-6 py-2 flex items-center pointer-events-none bg-[#191919]
+                   text-dark-high whitespace-nowrap"
+          onClick={dropDownHandler}
+        >
+          <div className={"flex-1"}>
             <div className="flex items-center">
               <div
                 className="rounded-full bg-[#C73238] flex items-center
-              justify-center w-[28px] h-[28px] mr-2"
+                     justify-center w-[26px] h-[26px] mr-2"
               >
                 <Icon
-                  iconName={getLogoPath(stakeOption)}
+                  iconName={"wallet"}
                   viewClass={"fill-[#FFFFFF] !w-[14px] !h-[12px]"}
                 />
               </div>
               <span className="text-sm text-light-emphasis font-medium leading-normal md:text-xsm md:ml-2 capitalize">
-                {stakeOption}
-              </span>
-            </div>
-          }
-          dropDownButtonClass="!py-1.5 bg-dark-700 !w-[214px] !justify-between"
-          dropdownType={"click"}
-          staticBackDrop={false}
-          dropDownIcon={true}
-          dropDownContentClass="!bg-[#282828] drop-shadow-md round-md !py-1 md:p-0"
-        >
-          <div
-            className="px-4 py-1 flex items-center hover:cursor-pointer hover:bg-[#383838]
-                   text-dark-high whitespace-nowrap"
-            key={1}
-            onClick={dropDownHandler}
-          >
-            <div className="flex items-center">
-              <div
-                className="rounded-full bg-[#212121] flex items-center
-                     justify-center w-[28px] h-[28px] mr-2"
-              >
-                <Icon
-                  iconName={"validators"}
-                  viewClass={"fill-[#A6A6A6] !w-[14px] !h-[12px]"}
-                />
-              </div>
-              <span className="text-sm text-light-emphasis font-medium leading-normal md:text-xsm md:ml-2 capitalize">
-                Validator Delegation
+                Liquid Staking using Wallet
               </span>
             </div>
           </div>
-        </Dropdown>
-      </div>
-    </div>
+        </div>
+        <div
+          className="px-6 py-2 flex items-center hover:cursor-pointer
+                   text-dark-high whitespace-nowrap"
+          onClick={dropDownHandler}
+        >
+          <div className={"flex-1"}>
+            <div className="flex items-center">
+              <div
+                className="rounded-full bg-[#C73238] flex items-center
+                     justify-center w-[26px] h-[26px] mr-2"
+              >
+                <Icon
+                  iconName={"validators"}
+                  viewClass={"fill-[#FFFFFF] !w-[14px] !h-[12px]"}
+                />
+              </div>
+              <span className="text-sm text-light-emphasis font-medium leading-normal md:text-xsm md:ml-2 capitalize">
+                Liquid Stake your staked ATOM using LSM
+              </span>
+            </div>
+          </div>
+        </div>
+      </>
+    </Dropdown>
   );
 };
 
