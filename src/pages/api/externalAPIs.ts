@@ -186,12 +186,14 @@ export const fetchDexterPoolInfo = async () => {
       },
       body: JSON.stringify({
         query: `{
-            pool_aggregate_data {
-              fee_apr
-              current_liquidity_usd
+            pool_weekly_aggregate_with_apr(where: {pool_id: {_eq: 1}}) {
               pool_id
+              total_swap_fee
+              current_liquidity_usd
+              total_volume
+              apr
             }
-            pool_current_incentive_apr {
+            pool_current_incentive_apr(where: {pool_id: {_eq: 1}}) {
                incentive_apr
                pool_id
             }
@@ -199,10 +201,9 @@ export const fetchDexterPoolInfo = async () => {
       })
     });
     const responseJson = await res.json();
+    console.log(responseJson, "responseJson");
     if (responseJson && responseJson.data) {
-      const poolAggregate = responseJson.data.pool_aggregate_data?.find(
-        (item: any) => item.pool_id === 1
-      );
+      const poolAggregate = responseJson.data.pool_weekly_aggregate_with_apr[0];
       const poolIncentiveAprList =
         responseJson.data.pool_current_incentive_apr?.filter((item: any) => {
           return item.pool_id === 1;
@@ -214,9 +215,9 @@ export const fetchDexterPoolInfo = async () => {
         });
       }
       return {
-        fees: 0.3,
+        fees: "0.3%",
         total_apy: (
-          poolAggregate.fee_apr + (poolIncentiveApr ? poolIncentiveApr : 0)
+          poolIncentiveApr + (poolAggregate.apr ? poolAggregate.apr : 0)
         ).toFixed(2),
         tvl: poolAggregate.current_liquidity_usd!.toFixed(2)
       };
