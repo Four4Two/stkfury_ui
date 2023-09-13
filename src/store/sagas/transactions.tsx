@@ -790,23 +790,14 @@ export function* executeTokenizedShareStakeTransaction({
     );
     console.log(liquidStakeTxn, "liquidStakeTxn");
     if (liquidStakeTxn.code === 0) {
-      // step 7:  polling to check liquidStake txn status
-      const pollLiquidStakeTxn: any = yield pollAccountBalanceList(
-        srcBalances,
-        account, // account,
-        srcChainInfo.rpc //srcChainInfo.rpc
+      yield put(setStakeTxnStepNumber(5));
+      yield postTransactionActions(
+        "tokenizedSharesStaking",
+        account,
+        dstAddress,
+        srcChainInfo,
+        dstChainInfo
       );
-      console.log(pollLiquidStakeTxn, "pollLiquidStakeTxn");
-      if (pollLiquidStakeTxn.length > 0) {
-        yield put(setStakeTxnStepNumber(5));
-        yield postTransactionActions(
-          "tokenizedSharesStaking",
-          account,
-          dstAddress,
-          srcChainInfo,
-          dstChainInfo
-        );
-      }
     }
   } catch (e: any) {
     console.log(e, "-cosmos error in executeLSMTransaction");
