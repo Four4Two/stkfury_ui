@@ -4,7 +4,6 @@ on:
     types: [ opened, reopened ]
 jobs:
   deploy:
-    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     permissions:
       contents: read
