@@ -8,7 +8,9 @@ import {
   SetMaxRedeem,
   SetMinRedeem,
   InitialTvlApyFeeTypes,
-  SetActiveStakeTab
+  SetActiveStakeTab,
+  FetchValidatorsSaga,
+  SetValidators
 } from "./types";
 import { MIN_DEPOSIT } from "../../../../AppConstants";
 export const initialTVLAPY: InitialTvlApyFeeTypes = {
@@ -35,7 +37,8 @@ const initialState: InitialDataState = {
   shadeInfo: {
     atomStkAtom: initialTVLAPY,
     stkATOMSilk: initialTVLAPY
-  }
+  },
+  validators: []
 };
 
 const initData = createSlice({
@@ -43,6 +46,7 @@ const initData = createSlice({
   initialState,
   reducers: {
     fetchInitSaga: (state, action: FetchInitialDataSaga) => {},
+    fetchValidatorsSaga: (state, action: FetchValidatorsSaga) => {},
     setExchangeRate: (state, action: SetExchangeRate) => {
       state.exchangeRate = action.payload;
     },
@@ -78,6 +82,9 @@ const initData = createSlice({
     },
     setShadeCollateral: (state, action) => {
       state.shadeCollateral = action.payload;
+    },
+    setValidators: (state, action: SetValidators) => {
+      state.validators = action.payload;
     }
   }
 });
@@ -95,7 +102,9 @@ export const {
   setUmeeInfo,
   setActiveStakeTab,
   setShadeInfo,
-  setShadeCollateral
+  setShadeCollateral,
+  fetchValidatorsSaga,
+  setValidators
 } = initData.actions;
 
 export default initData.reducer;

@@ -1,11 +1,14 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { ChainInfo } from "@keplr-wallet/types";
+import { QueryAllBalancesResponse } from "cosmjs-types/cosmos/bank/v1beta1/query";
 
 export interface BalanceState {
   atomBalance: number;
   stkAtomBalance: number;
   ibcAtomBalance: number;
   xprtBalance: number;
+  cosmosBalances: QueryAllBalancesResponse;
+  persistenceBalances: QueryAllBalancesResponse;
 }
 
 export interface FetchBalanceSagaParams {
@@ -16,6 +19,8 @@ export interface FetchBalanceSagaParams {
 }
 
 export type SetAtomBalance = PayloadAction<number>;
+export type SetPersistenceBalances = PayloadAction<QueryAllBalancesResponse>;
+export type SetCosmosBalances = PayloadAction<QueryAllBalancesResponse>;
 export type SetStkAtomBalance = PayloadAction<number>;
 export type SetIbcAtomBalance = PayloadAction<number>;
 export type SetXprtBalance = PayloadAction<number>;

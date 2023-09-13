@@ -3,7 +3,9 @@ import {
   BalanceState,
   FetchBalanceSaga,
   SetAtomBalance,
+  SetCosmosBalances,
   SetIbcAtomBalance,
+  SetPersistenceBalances,
   SetStkAtomBalance,
   SetXprtBalance
 } from "./types";
@@ -12,7 +14,13 @@ const initialState: BalanceState = {
   atomBalance: 0,
   stkAtomBalance: 0,
   ibcAtomBalance: 0,
-  xprtBalance: 0
+  xprtBalance: 0,
+  cosmosBalances: {
+    balances: []
+  },
+  persistenceBalances: {
+    balances: []
+  }
 };
 
 const balances = createSlice({
@@ -31,6 +39,12 @@ const balances = createSlice({
     },
     setXprtBalance: (state, action: SetXprtBalance) => {
       state.xprtBalance = action.payload;
+    },
+    setPersistenceBalances: (state, action: SetPersistenceBalances) => {
+      state.persistenceBalances = action.payload;
+    },
+    setCosmosBalances: (state, action: SetCosmosBalances) => {
+      state.cosmosBalances = action.payload;
     }
   }
 });
@@ -40,7 +54,9 @@ export const {
   setStkAtomBalance,
   setIbcAtomBalance,
   setXprtBalance,
-  fetchBalanceSaga
+  fetchBalanceSaga,
+  setPersistenceBalances,
+  setCosmosBalances
 } = balances.actions;
 
 export default balances.reducer;

@@ -3,12 +3,16 @@ import {
   fetchAccountBalance,
   fetchUnbondingList,
   getTokenBalance,
-  getChainTVU
+  getChainTVU,
+  getDelegations,
+  getTokenizedShares
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
   setAtomBalance,
+  setCosmosBalances,
   setIbcAtomBalance,
+  setPersistenceBalances,
   setStkAtomBalance,
   setXprtBalance
 } from "../reducers/balances";
@@ -21,6 +25,17 @@ import { fetchAtomPrice, getTVU } from "../../pages/api/externalAPIs";
 
 import { FetchLiveDataSaga } from "../reducers/liveData/types";
 import { setAtomPrice, setTVU } from "../reducers/liveData";
+import {
+  DelegatedValidators,
+  FetchDelegatedValidatorsSaga,
+  FetchTokenizeSharesSaga
+} from "../reducers/transactions/stake/types";
+import {
+  setDelegatedValidators,
+  setDelegatedValidatorsLoader,
+  setTokenizedShares,
+  setTokenizeSharesLoader
+} from "../reducers/transactions/stake";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -48,6 +63,7 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     cosmosChainInfo.rpc
   );
 
+  console.log(cosmosBalances, "cosmosBalances1");
   //atom balance on persistence chain
   const ibcAtomBalance = getTokenBalance(
     persistenceBalances,
@@ -76,6 +92,8 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
   yield put(setXprtBalance(Number(decimalize(xprtBalance))));
   yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
   yield put(setAtomBalance(Number(decimalize(atomBalance))));
+  yield put(setCosmosBalances(cosmosBalances));
+  yield put(setPersistenceBalances(persistenceBalances));
 }
 
 export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
@@ -96,4 +114,47 @@ export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
   const [tvu, atomPrice] = yield Promise.all([getTVU(), fetchAtomPrice()]);
   yield put(setAtomPrice(atomPrice));
   yield put(setTVU(tvu));
+}
+
+export function* fetchDelegations({ payload }: FetchDelegatedValidatorsSaga) {
+  yield put(setDelegatedValidatorsLoader(true));
+  const response: DelegatedValidators = yield getDelegations(
+    payload.address,
+    payload.rpc,
+    payload.validators
+  );
+  console.log(response, "delegatedValidatorsfiect-saga");
+  yield put(setDelegatedValidators(response));
+  yield put(setDelegatedValidatorsLoader(false));
+}
+
+export function* fetchTokenizeShares({
+  payload
+}: FetchTokenizeSharesSaga): any {
+  yield put(setTokenizeSharesLoader(true));
+  const sharesOnPersistence = yield getTokenizedShares(
+    payload.srcChainBalances,
+    payload!.address,
+    payload.srcChain!,
+    payload.dstChain!,
+    "persistence",
+    "cosmos"
+  );
+  console.log(sharesOnPersistence, "sharesOnPersistence");
+  const sharesOnCosmos = yield getTokenizedShares(
+    payload.dstChainBalances,
+    payload.dstAddress,
+    payload.dstChain!,
+    payload.dstChain!,
+    "cosmos",
+    "cosmos"
+  );
+  console.log(sharesOnCosmos, "sharesOnCosmos");
+  yield put(
+    setTokenizedShares({
+      sharesOnDestinationChain: sharesOnCosmos,
+      sharesOnSourceChain: sharesOnPersistence
+    })
+  );
+  yield put(setTokenizeSharesLoader(false));
 }

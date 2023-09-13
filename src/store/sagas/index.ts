@@ -1,21 +1,31 @@
 import { put, takeEvery } from "@redux-saga/core/effects";
 import { fetchBalanceSaga } from "../reducers/balances";
-import { fetchInitSaga } from "../reducers/initialData";
-import { fetchInit } from "./init";
+import { fetchInitSaga, fetchValidatorsSaga } from "../reducers/initialData";
+import { fetchInit, fetchValidators } from "./init";
 import {
   executeClaimTransaction,
+  executeDelegationStakeTransaction,
   executeDepositTransaction,
   executeStakeTransaction,
+  executeTokenizedShareStakeTransaction,
   executeUnStakeTransaction,
   executeWithdrawTransaction
 } from "./transactions";
-import { executeStakeTransactionSaga } from "../reducers/transactions/stake";
+import {
+  executeDelegationStakeTransactionSaga,
+  executeStakeTransactionSaga,
+  executeTokenizedShareStakeTransactionSaga,
+  fetchDelegatedValidatorsSaga,
+  fetchTokenizeSharesSaga
+} from "../reducers/transactions/stake";
 import { executeUnStakeTransactionSaga } from "../reducers/transactions/unstake";
 import { executeDepositTransactionSaga } from "../reducers/transactions/deposit";
 import {
   fetchBalance,
+  fetchDelegations,
   fetchLiveData,
-  fetchPendingClaims
+  fetchPendingClaims,
+  fetchTokenizeShares
 } from "./fetchingSagas";
 import { executeClaimTransactionSaga } from "../reducers/transactions/claim";
 import { fetchPendingClaimsSaga } from "../reducers/claim";
@@ -25,7 +35,10 @@ import { fetchLiveDataSaga } from "../reducers/liveData";
 export default function* appSaga() {
   yield takeEvery(fetchBalanceSaga.type, fetchBalance);
   yield takeEvery(fetchInitSaga.type, fetchInit);
+  yield takeEvery(fetchValidatorsSaga.type, fetchValidators);
   yield takeEvery(fetchLiveDataSaga.type, fetchLiveData);
+  yield takeEvery(fetchDelegatedValidatorsSaga.type, fetchDelegations);
+  yield takeEvery(fetchTokenizeSharesSaga.type, fetchTokenizeShares);
   yield takeEvery(fetchPendingClaimsSaga.type, fetchPendingClaims);
   yield takeEvery(executeStakeTransactionSaga.type, executeStakeTransaction);
   yield takeEvery(
@@ -40,5 +53,13 @@ export default function* appSaga() {
   yield takeEvery(
     executeWithdrawTransactionSaga.type,
     executeWithdrawTransaction
+  );
+  yield takeEvery(
+    executeDelegationStakeTransactionSaga.type,
+    executeDelegationStakeTransaction
+  );
+  yield takeEvery(
+    executeTokenizedShareStakeTransactionSaga.type,
+    executeTokenizedShareStakeTransaction
   );
 }

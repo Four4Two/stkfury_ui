@@ -11,7 +11,7 @@ import { resetTransaction } from "../../../../store/reducers/transaction";
 
 const StakeToasts = () => {
   const dispatch = useDispatch();
-  const { txFailed, stepNumber } = useSelector(
+  const { txFailed, stepNumber, liquidStakeType } = useSelector(
     (state: RootState) => state.stake
   );
 
@@ -40,10 +40,23 @@ const StakeToasts = () => {
         )
       ) : (
         <>
+          {liquidStakeType === "delegationStaking" &&
+          stepNumber === 1 &&
+          !txFailed
+            ? displayToast(
+                {
+                  message: "Tokenizing your staked ATOM"
+                },
+                ToastType.LOADING
+              )
+            : ""}
           {stepNumber === 2 && !txFailed
             ? displayToast(
                 {
-                  message: "Deposit Transaction in progress"
+                  message:
+                    liquidStakeType === "ibcStaking"
+                      ? "Deposit Transaction in progress"
+                      : "transferring tokenized shares to persistence chain"
                 },
                 ToastType.LOADING
               )
@@ -51,7 +64,11 @@ const StakeToasts = () => {
           {stepNumber === 3 && !txFailed
             ? displayToast(
                 {
-                  message: "Atom transferred to persistence chain successfully"
+                  message:
+                    liquidStakeType === "delegationStaking" ||
+                    liquidStakeType === "tokenizedSharesStaking"
+                      ? "tokens transferred to persistence chain"
+                      : "Atom transferred to persistence chain successfully"
                 },
                 ToastType.SUCCESS
               )
@@ -59,7 +76,7 @@ const StakeToasts = () => {
           {stepNumber === 4 && !txFailed
             ? displayToast(
                 {
-                  message: "Stake Transaction in progress"
+                  message: "Liquid Stake Transaction in progress"
                 },
                 ToastType.LOADING
               )

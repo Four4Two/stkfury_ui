@@ -466,6 +466,11 @@ input[type="number"] {
   max-width: 600px;
 }
 
+.delegationModal .modalDialog{
+  max-width: 800px;
+}
+
+.delegationModal .modalBody,
 .stakeModal .modalBody,
 .claimModal .modalBody {
   padding: 0;
@@ -510,4 +515,16 @@ input[type="number"] {
   -ms-transition: all 0.5s ease-in;
   -o-transition: all 0.5s ease-in;
   transition: all 0.5s ease-in;
+}
+
+
+/*switch styles*/
+.switch.sm{
+  width: 1.75rem;
+  height: 1rem
+}
+
+.switch.sm:after{
+  width: 0.9rem;
+  height: 0.9rem;
 }

@@ -6,7 +6,12 @@ import {
 
 import { QueryClientImpl as LiquidStakeQueryClient } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/query";
 
-import { QueryClientImpl as StakeQuery } from "cosmjs-types/cosmos/staking/v1beta1/query";
+import {
+  QueryClientImpl as StakeQuery,
+  QueryDelegatorDelegationsResponse,
+  QueryDelegatorValidatorsResponse,
+  QueryValidatorResponse
+} from "cosmjs-types/cosmos/staking/v1beta1/query";
 
 import {
   decimalize,
@@ -26,10 +31,19 @@ import {
   APR_BASE_RATE,
   APR_DEFAULT,
   COSMOS_UNBOND_TIME,
+  MIN_STAKE,
   STK_ATOM_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
+import {
+  DelegatedValidator,
+  DelegatedValidators
+} from "../../store/reducers/transactions/stake/types";
+import { getAvatar } from "./externalAPIs";
+import { QueryClient, setupIbcExtension } from "@cosmjs/stargate";
+import { Validator } from "cosmjs-types/cosmos/staking/v1beta1/staking";
+import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
@@ -59,7 +73,10 @@ export const getTokenBalance = (
   }
 };
 
-export const fetchAccountBalance = async (address: string, rpc: string) => {
+export const fetchAccountBalance = async (
+  address: string,
+  rpc: string
+): Promise<QueryAllBalancesResponse> => {
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
@@ -67,10 +84,10 @@ export const fetchAccountBalance = async (address: string, rpc: string) => {
       address: address
     });
   } catch (error) {
-    console.log(error, "cosmosBalances");
-
     printConsole(error);
-    return "0";
+    return {
+      balances: []
+    };
   }
 };
 
@@ -319,5 +336,252 @@ export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
     });
     genericErrorHandler(e, customScope);
     return 0;
+  }
+};
+
+export const getValidators = async (
+  rpc: string,
+  hostChainId: string
+): Promise<PstakeValidator[]> => {
+  try {
+    let validators: PstakeValidator[] = [];
+    const rpcClient = await RpcClient(rpc);
+    const pstakeQueryService = new LiquidStakeQueryClient(rpcClient);
+    const chainParamsResponse = await pstakeQueryService.HostChain({
+      chainId: hostChainId
+    });
+    if (chainParamsResponse && chainParamsResponse.hostChain?.validators) {
+      validators = chainParamsResponse.hostChain?.validators;
+    }
+    return validators;
+  } catch (e) {
+    return [];
+  }
+};
+
+export const getDelegations = async (
+  address: string,
+  rpc: string,
+  validators: PstakeValidator[]
+): Promise<DelegatedValidators> => {
+  try {
+    console.log(address, rpc, "params getDelegations");
+    const delegations: DelegatedValidator[] = [];
+    let eligibleDelegations: DelegatedValidator[] = [];
+    let notEligibleDelegations: DelegatedValidator[] = [];
+    let totalAmount: number = 0;
+    const rpcClient = await RpcClient(rpc);
+    const stakingQueryService = new StakeQuery(rpcClient);
+    const delegationsResponse: QueryDelegatorDelegationsResponse =
+      await stakingQueryService.DelegatorDelegations({
+        delegatorAddr: address
+      });
+
+    const delegatedValidators: QueryDelegatorValidatorsResponse =
+      await stakingQueryService.DelegatorValidators({
+        delegatorAddr: address
+      });
+    console.log(
+      delegatedValidators,
+      "delegatedValidators",
+      delegationsResponse
+    );
+
+    if (delegationsResponse.delegationResponses.length > 0) {
+      totalAmount = delegationsResponse.delegationResponses.reduce(
+        (accumulator, object) => {
+          return accumulator + Number(object?.balance?.amount);
+        },
+        0
+      );
+      for (const delegation of delegationsResponse.delegationResponses) {
+        const validator = delegatedValidators.validators.find(
+          (validator: Validator) => {
+            return (
+              validator.operatorAddress ===
+              delegation.delegation?.validatorAddress
+            );
+          }
+        );
+        console.log(
+          validator,
+          "validator-123",
+          decimalize(delegation.balance?.amount!),
+          delegation.balance?.amount
+        );
+        const eligibilityCheck = validators.find(
+          (item) => item.operatorAddress === validator!.operatorAddress
+        );
+        const activeCheck = !validator!.jailed && validator!.status === 3;
+
+        console.log(eligibilityCheck, "validatorCheck", validator);
+        if (Number(delegation.balance?.amount) > 0) {
+          delegations.push({
+            name: validator!.description?.moniker!,
+            identity: await getAvatar(validator!.description?.identity!),
+            amount: decimalize(delegation.balance?.amount!),
+            inputAmount: "",
+            validatorAddress: validator!.operatorAddress,
+            status:
+              eligibilityCheck === undefined ||
+              Number(decimalize(delegation.balance?.amount!)) <= MIN_STAKE
+                ? "not-eligible"
+                : !activeCheck
+                ? "inactive"
+                : "active"
+          });
+        }
+      }
+    }
+    if (delegations.length > 0) {
+      eligibleDelegations = delegations.filter(
+        (item) => item.status === "active"
+      );
+      notEligibleDelegations = delegations.filter(
+        (item) => item.status !== "active"
+      );
+    }
+    console.log(delegations, "delegations-12");
+    return {
+      list: eligibleDelegations.concat(notEligibleDelegations),
+      eligible: eligibleDelegations,
+      nonEligible: notEligibleDelegations,
+      totalAmount: decimalize(totalAmount)
+    };
+  } catch (e) {
+    const customScope = new Scope();
+    customScope.setLevel("fatal");
+    customScope.setTags({
+      "Error while fetching delegation": rpc
+    });
+    genericErrorHandler(e, customScope);
+    return {
+      list: [],
+      eligible: [],
+      nonEligible: [],
+      totalAmount: 0
+    };
+  }
+};
+
+export const getTokenizedSharesFromBalance = async (
+  balances: QueryAllBalancesResponse,
+  address: string,
+  rpc: string,
+  prefix: string
+) => {
+  try {
+    const tendermintClient = await Tendermint34Client.connect(rpc);
+    const queryClient = new QueryClient(tendermintClient);
+    console.log(balances, "response-123");
+    if (balances && balances!.balances!.length) {
+      let balancesList: Coin[] = [];
+      for (let item of balances!.balances) {
+        console.log(item, "item-123");
+        if (item.denom.includes("ibc/")) {
+          const ibcExtension = setupIbcExtension(queryClient);
+          let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(
+            item.denom
+          );
+          if (ibcDenomeResponse!.denomTrace!.baseDenom.includes(prefix)) {
+            const balance = {
+              denom: item.denom,
+              baseDenom: ibcDenomeResponse!.denomTrace!.baseDenom,
+              amount: item.amount
+            };
+            balancesList.push(balance);
+            console.log(ibcDenomeResponse, "ibcDenomeResponse");
+          }
+        }
+      }
+      return balancesList.length > 1
+        ? balancesList.sort(
+            (a, b) =>
+              Number(a.denom.substring(a.denom.length - 1)) -
+              Number(b.denom.substring(b.denom.length - 1))
+          )
+        : balancesList;
+    }
+    return [];
+  } catch (error) {
+    printConsole(error);
+    return [];
+  }
+};
+
+export const getTokenizedShares = async (
+  balances: QueryAllBalancesResponse,
+  address: string,
+  chainInfo: ChainInfo,
+  dstChainInfo: ChainInfo,
+  chain: string,
+  prefix: string
+) => {
+  try {
+    const tendermintClient = await Tendermint34Client.connect(chainInfo.rpc!);
+    const queryClient = new QueryClient(tendermintClient);
+    let totalAmount: number = 0;
+    console.log(balances, "balances-1");
+    const delegations: any = [];
+    if (balances && balances!.balances!.length) {
+      for (let item of balances!.balances) {
+        console.log(item, "item-123");
+        let valAddress: string = "";
+        if (chain === "cosmos") {
+          if (item.denom.startsWith(prefix)) {
+            valAddress = item.denom.substring(0, item.denom.indexOf("/"));
+          }
+        } else if (chain === "persistence") {
+          if (item.denom.includes("ibc/")) {
+            const ibcExtension = setupIbcExtension(queryClient);
+            let ibcDenomeResponse = await ibcExtension.ibc.transfer.denomTrace(
+              item.denom
+            );
+            console.log(ibcDenomeResponse, "ibcDenomeResponse", prefix);
+            if (ibcDenomeResponse!.denomTrace!.baseDenom.includes(prefix)) {
+              valAddress = ibcDenomeResponse!.denomTrace!.baseDenom.substring(
+                0,
+                ibcDenomeResponse!.denomTrace!.baseDenom.indexOf("/")
+              );
+            }
+          }
+        }
+        console.log(valAddress, "valAddress-123", item);
+        if (valAddress !== "") {
+          console.log(valAddress, "valAddress-123-IN", item);
+          totalAmount = totalAmount + Number(decimalize(item?.amount!));
+          const rpcClient = await RpcClient(dstChainInfo.rpc);
+          const stakingQueryService = new StakeQuery(rpcClient);
+          const vresponse: QueryValidatorResponse =
+            await stakingQueryService.Validator({
+              validatorAddr: valAddress
+            });
+          delegations.push({
+            denom: item.denom,
+            name: vresponse.validator!.description!.moniker!,
+            identity: await getAvatar(
+              vresponse.validator!.description?.identity!
+            ),
+            amount: item?.amount,
+            inputAmount: "",
+            validatorAddress: vresponse.validator!.operatorAddress,
+            status:
+              !vresponse.validator!.jailed &&
+              vresponse.validator!.status === 3 &&
+              Number(item?.amount) <= MIN_STAKE
+          });
+        }
+      }
+    }
+    console.log(delegations, "delegations");
+    return {
+      list: delegations,
+      totalAmount: totalAmount
+    };
+  } catch (e) {
+    return {
+      list: [],
+      totalAmount: 0
+    };
   }
 };

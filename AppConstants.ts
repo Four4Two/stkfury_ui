@@ -11,10 +11,15 @@ export const COSMOS_LIQUID_UN_STAKE_URL =
   "/pstake.liquidstakeibc.v1beta1.MsgLiquidUnstake";
 export const REDEEM_URL = "/pstake.liquidstakeibc.v1beta1.MsgRedeem";
 export const IBC_TRANSFER_URL = "/ibc.applications.transfer.v1.MsgTransfer";
+export const msgValidatorBondUrl = "/cosmos.staking.v1beta1.MsgValidatorBond";
+export const TOKENIZE_URL = "/cosmos.staking.v1beta1.MsgTokenizeShares";
+export const COSMOS_LIQUID_STAKE_LSM_URL =
+  "/pstake.liquidstakeibc.v1beta1.MsgLiquidStakeLSM";
 
 export const SHORT_INTERVAL = 10000;
 export const MIN_BALANCE_CHECK = 0.00003;
 export const MIN_DEPOSIT = 0.01;
+export const MIN_STAKE = 0.01;
 export const MIN_STAKE_FEE = 0.01;
 export const MIN_REDEEM = 0.01;
 export const BUG_REPORT_URL =

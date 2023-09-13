@@ -14,7 +14,11 @@ import { APR_BASE_RATE, COIN_ATOM_DENOM, TEST_NET } from "../../AppConstants";
 import { QueryClientImpl as StakingQueryClient } from "cosmjs-types/cosmos/staking/v1beta1/query";
 import { ChainInfo } from "@keplr-wallet/types";
 const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
-import { QueryClientImpl as BankQueryClient } from "cosmjs-types/cosmos/bank/v1beta1/query";
+import {
+  QueryAllBalancesResponse,
+  QueryClientImpl as BankQueryClient
+} from "cosmjs-types/cosmos/bank/v1beta1/query";
+import { Dec, DecUtils, Int } from "@keplr-wallet/unit";
 
 import { QueryClientImpl as MintQueryClient } from "cosmjs-types/cosmos/mint/v1beta1/query";
 
@@ -131,11 +135,49 @@ export const unDecimalize = (valueString: string | number, decimals = 6) => {
 };
 
 export const genericErrorHandler = (e: any, scope = new Scope()) => {
-  console.log(e);
+  console.error(e);
   Sentry.captureException(e, scope);
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const pollAccountBalanceList = async (
+  initialList: any,
+  address: string,
+  rpc: string
+): Promise<any> => {
+  await delay(PollingConfig.initialTxHashQueryDelay);
+  for (let i = 0; i < PollingConfig.numberOfRetries; i++) {
+    console.log(initialList, "initialList");
+    try {
+      const balances: QueryAllBalancesResponse = await fetchAccountBalance(
+        address,
+        rpc
+      );
+      console.log(balances, "balances-poll");
+      if (
+        balances &&
+        balances.balances &&
+        balances.balances.length !==
+          (initialList ? initialList.balances.length : 0)
+      ) {
+        return balances.balances;
+      } else {
+        throw Error("Balance unchanged");
+      }
+    } catch (error: any) {
+      printConsole(
+        "polling balance in " +
+          PollingConfig.scheduledTxHashQueryDelay +
+          ": " +
+          i +
+          "th time"
+      );
+      await delay(PollingConfig.scheduledTxHashQueryDelay);
+    }
+  }
+  return [];
+};
 
 export async function pollAccountBalance(
   address: string,
@@ -305,3 +347,9 @@ export async function GetCosmosAPY() {
     Number(stakingPool!.pool!.bondedTokens)
   );
 }
+
+export const amountDecimalize = (amount: string) => {
+  let dec = new Dec(amount);
+  dec = dec.mul(DecUtils.getTenExponentNInPrecisionRange(6));
+  return dec.truncate().toString();
+};
