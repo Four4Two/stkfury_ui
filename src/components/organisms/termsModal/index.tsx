@@ -21,7 +21,7 @@ const TermsModal = () => {
 
   const handleScroll = (e: any) => {
     const bottom =
-      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+      e.target.scrollHeight - e.target.scrollTop <= e.target.clientHeight;
     if (bottom) {
       setBottom(true);
     }

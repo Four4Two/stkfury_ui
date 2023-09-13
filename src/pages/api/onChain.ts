@@ -421,7 +421,7 @@ export const getDelegations = async (
             validatorAddress: validator!.operatorAddress,
             status:
               eligibilityCheck === undefined ||
-              Number(decimalize(delegation.balance?.amount!)) <= MIN_STAKE
+              Number(decimalize(delegation.balance?.amount!)) < MIN_STAKE
                 ? "not-eligible"
                 : !activeCheck
                 ? "inactive"
@@ -565,7 +565,7 @@ export const getTokenizedShares = async (
             status:
               !vresponse.validator!.jailed &&
               vresponse.validator!.status === 3 &&
-              Number(item?.amount) <= MIN_STAKE
+              Number(item?.amount) >= MIN_STAKE
           });
         }
       }
