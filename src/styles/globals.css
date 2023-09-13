@@ -332,6 +332,10 @@ input[type="number"] {
   max-width: 750px;
 }
 
+.termsModal .modalDialog .modalBody {
+  padding: 18px !important;
+}
+
 .inputContainer:focus-within {
   border: 1px solid rgba(252, 252, 252, 0.7);
   box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
