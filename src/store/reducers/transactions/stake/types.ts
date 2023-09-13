@@ -59,6 +59,7 @@ export interface StakeAmount {
   delegationStakeAmount: string;
   delegatedValidators: DelegatedValidators;
   delegatedValidatorsLoader: boolean;
+  tokenizeSharesLoader: boolean;
   validatorModal: boolean;
   tokenizedShares: TokenizedShares;
   tokenizedModal: boolean;
@@ -125,6 +126,7 @@ export type FetchDelegatedValidatorsSaga =
   PayloadAction<fetchDelegatedValidatorsParams>;
 export type SetDelegatedValidators = PayloadAction<DelegatedValidators>;
 export type SetDelegatedValidatorsLoader = PayloadAction<boolean>;
+export type SetTokenizeSharesLoader = PayloadAction<boolean>;
 export type SetDelegationsStakeAmount = PayloadAction<string>;
 export type DelegationStakeTransactionPayload =
   PayloadAction<DelegationStakeTransactionParams>;
