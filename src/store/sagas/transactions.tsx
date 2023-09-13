@@ -26,6 +26,7 @@ import {
   executeStakeTransactionSaga,
   setStakeAmount,
   setStakeTxnFailed,
+  setStakeTxnFailedResponse,
   setStakeTxnStepNumber
 } from "../reducers/transactions/stake";
 import { MakeIBCTransferMsg, Transaction } from "../../helpers/transaction";
@@ -37,7 +38,8 @@ import {
   genericErrorHandler,
   pollAccountBalance,
   pollAccountBalanceList,
-  printConsole
+  printConsole,
+  structureErrorMessage
 } from "../../helpers/utils";
 import {
   failedTransactionActions,
@@ -122,6 +124,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
   } catch (e: any) {
     yield put(setStakeTxnFailed(true));
     yield put(resetTransaction());
+    yield put(setStakeTxnFailedResponse(structureErrorMessage(e.message)));
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL);
     customScope.setTags({
@@ -389,6 +392,7 @@ export function* executeDepositTransaction({
     }
   } catch (e: any) {
     yield put(setStakeTxnFailed(true));
+    yield put(setStakeTxnFailedResponse(structureErrorMessage(e.message)));
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL);
     customScope.setTags({
@@ -648,6 +652,7 @@ export function* executeDelegationStakeTransaction({
   } catch (e: any) {
     console.log(e, "-cosmos error in executeLSMTransaction");
     yield put(setStakeTxnFailed(true));
+    yield put(setStakeTxnFailedResponse(structureErrorMessage(e.message)));
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL);
     customScope.setTags({
@@ -798,6 +803,7 @@ export function* executeTokenizedShareStakeTransaction({
   } catch (e: any) {
     console.log(e, "-cosmos error in executeLSMTransaction");
     yield put(setStakeTxnFailed(true));
+    yield put(setStakeTxnFailedResponse(structureErrorMessage(e.message)));
     const customScope = new Sentry.Scope();
     customScope.setLevel(FATAL);
     customScope.setTags({
