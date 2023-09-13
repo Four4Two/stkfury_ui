@@ -622,22 +622,16 @@ export function* executeDelegationStakeTransaction({
             console.log(liquidStakeTxn, "liquidStakeTxn");
             if (liquidStakeTxn.code === 0) {
               // step 7:  polling to check liquidStake txn status
-              const pollLiquidStakeTxn: any = yield pollAccountBalanceList(
-                srcBalances,
-                account, // account,
-                srcChainInfo.rpc //srcChainInfo.rpc
+              yield put(setStakeTxnStepNumber(5));
+              yield postTransactionActions(
+                "delegationStaking",
+                account,
+                dstAddress,
+                srcChainInfo,
+                dstChainInfo
               );
-              console.log(pollLiquidStakeTxn, "pollLiquidStakeTxn");
-              if (pollLiquidStakeTxn.length > 0) {
-                yield put(setStakeTxnStepNumber(5));
-                yield postTransactionActions(
-                  "delegationStaking",
-                  account,
-                  dstAddress,
-                  srcChainInfo,
-                  dstChainInfo
-                );
-              }
+            } else {
+              throw new Error("some thing went wrong");
             }
           } else {
             throw new Error("some thing went wrong");
@@ -798,6 +792,8 @@ export function* executeTokenizedShareStakeTransaction({
         srcChainInfo,
         dstChainInfo
       );
+    } else {
+      throw new Error("some thing went wrong");
     }
   } catch (e: any) {
     console.log(e, "-cosmos error in executeLSMTransaction");
