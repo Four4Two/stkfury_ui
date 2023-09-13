@@ -159,9 +159,7 @@ const ValidatorStakeModal = () => {
         </div>
         <div className="pb-4">
           <div className="flex justify-between items-center mb-3">
-            <p className={"text-light-high text-sm"}>
-              List of staked validators
-            </p>
+            <p className={"text-light-high text-sm"}>List of validators</p>
             <Switch
               size={"sm"}
               checked={switchValue}
