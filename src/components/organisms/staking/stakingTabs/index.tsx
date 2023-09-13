@@ -4,32 +4,34 @@ import TabItem from "../../../molecules/tabs/tabItem";
 import TabContent from "../../../molecules/tabs/tabContent";
 import Stake from "../stake";
 import UnStake from "../unstake";
-import {useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
 import { Icon } from "../../../atoms/icon";
 import Tooltip from "rc-tooltip";
 import { decimalize, formatNumber } from "../../../../helpers/utils";
 import { Spinner } from "../../../atoms/spinner";
 import { APR_DEFAULT } from "../../../../../AppConstants";
-import {setActiveStakeTab} from "../../../../store/reducers/initialData";
-import {ActiveStakeTab} from "../../../../store/reducers/initialData/types";
+import { setActiveStakeTab } from "../../../../store/reducers/initialData";
+import { ActiveStakeTab } from "../../../../store/reducers/initialData/types";
 
 const StakingTabs = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { apy, exchangeRate } = useSelector(
     (state: RootState) => state.initialData
   );
   const { tvu } = useSelector((state: RootState) => state.liveData);
-  const { activeStakeTab } = useSelector((state: RootState) => state.initialData);
+  const { activeStakeTab } = useSelector(
+    (state: RootState) => state.initialData
+  );
   const inverseExchangeRate: number = 1 / exchangeRate;
   const tabItemClasses =
     "cursor-pointer w-full bg-tabHeader " +
     "font-semibold text-lg leading-normal text-center" +
     " text-light-mid flex-1 px-4 py-2 md:px-2 md:py-1.5 md:text-base";
 
-  const tabHandler = (tab:ActiveStakeTab) =>{
-    dispatch(setActiveStakeTab(tab))
-  }
+  const tabHandler = (tab: ActiveStakeTab) => {
+    dispatch(setActiveStakeTab(tab));
+  };
 
   return (
     <div
@@ -97,7 +99,7 @@ const StakingTabs = () => {
             Total Value Unlocked(TVU)
           </p>
           <p className="text-light-emphasis font-semibold leading-normal text-2xl text-center md:text-base">
-            {formatNumber(Number(decimalize(tvu)), 3, 2)} ATOM
+            {formatNumber(Number(decimalize(tvu)) / exchangeRate, 3, 2)} ATOM
           </p>
         </div>
       </div>
