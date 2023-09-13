@@ -480,7 +480,9 @@ export function* executeDelegationStakeTransaction({
     dstAddress,
     msg,
     dstChainSigner,
-    pollInitialBalance
+    pollInitialBalance,
+    initialCosmosBalance,
+    initialPersistenceBalance
   } = payload;
   try {
     let ibcInfo = IBCChainInfos[env].find(
@@ -489,14 +491,8 @@ export function* executeDelegationStakeTransaction({
     yield put(setStakeTxnStepNumber(1));
     // step 1: fetch initial balance on destination chain
     // @ts-ignore
-    const balances: any = yield fetchAccountBalance(
-      dstAddress,
-      dstChainInfo!.rpc
-    );
-    const balancesOnPersistence: any = yield fetchAccountBalance(
-      account,
-      srcChainInfo!.rpc
-    );
+    const balances = initialCosmosBalance;
+    const balancesOnPersistence = initialPersistenceBalance;
     console.log(balances, "balance response1", msg);
     // step 2: make tokenize txn
     const transaction: DeliverTxResponse = yield Transaction(
@@ -601,13 +597,6 @@ export function* executeDelegationStakeTransaction({
               srcChainInfo.rpc, // srcChainInfo.rpc
               ibcInfo!.prefix
             );
-            // let delegations = [];
-            // msg.forEach((msgItem) => {
-            //   const filtered = tokens.filter((item) =>
-            //     item.denom.includes(msgItem.value.validatorAddress)
-            //   );
-            //   delegations.push(...filtered);
-            // });
             console.log("tokens", tokens);
             let liquidStakeMsg: any = [];
             msg.forEach((msgItem) => {

@@ -49,9 +49,13 @@ const Submit = ({
   }, [inputState]);
 
   const dispatch = useDispatch();
-  const { atomBalance, stkAtomBalance, ibcAtomBalance } = useSelector(
-    (state: RootState) => state.balances
-  );
+  const {
+    atomBalance,
+    stkAtomBalance,
+    ibcAtomBalance,
+    cosmosBalances,
+    persistenceBalances
+  } = useSelector((state: RootState) => state.balances);
 
   const {
     cosmosAccountData,
@@ -99,7 +103,9 @@ const Submit = ({
           srcChainInfo: persistenceChainData!,
           pollInitialBalance: stkAtomBalance,
           dstAddress: cosmosAccountData!.address,
-          dstChainInfo: cosmosChainData!
+          dstChainInfo: cosmosChainData!,
+          initialCosmosBalance: cosmosBalances,
+          initialPersistenceBalance: persistenceBalances
         })
       );
       dispatch(setValidatorModal(false));

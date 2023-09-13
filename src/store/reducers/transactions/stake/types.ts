@@ -7,6 +7,7 @@ import {
 } from "../../../../helpers/protoMsg";
 import { OfflineDirectSigner } from "@cosmjs/proto-signing";
 import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
+import { QueryAllBalancesResponse } from "cosmjs-types/cosmos/bank/v1beta1/query";
 
 // 0- initialized, 1-depositStart, 2-depositSigned, 3-stakeStart, 4-stakeSigned, 5-complete
 export type TransactionSteps = 0 | 1 | 2 | 3 | 4 | 5; // These are txn steps number for easy transaction tracking in ui.
@@ -80,6 +81,8 @@ export interface DelegationStakeTransactionParams {
   account: string;
   msg: TokenizeShareMsgTypes[];
   pollInitialBalance: number;
+  initialCosmosBalance: QueryAllBalancesResponse;
+  initialPersistenceBalance: QueryAllBalancesResponse;
   dstAddress: string;
   dstChainInfo: ChainInfo;
 }
