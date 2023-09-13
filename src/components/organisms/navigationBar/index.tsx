@@ -41,9 +41,6 @@ const NavigationBar = () => {
     (state: RootState) => state.balances
   );
 
-  const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
-    useSelector((state: RootState) => state.stake);
-
   const { persistenceChainStatus } = useSelector(
     (state: RootState) => state.liveData
   );

@@ -33,7 +33,8 @@ import {
 import {
   setDelegatedValidators,
   setDelegatedValidatorsLoader,
-  setTokenizedShares
+  setTokenizedShares,
+  setTokenizeSharesLoader
 } from "../reducers/transactions/stake";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
@@ -122,6 +123,7 @@ export function* fetchDelegations({ payload }: FetchDelegatedValidatorsSaga) {
     payload.rpc,
     payload.validators
   );
+  console.log(response, "delegatedValidatorsfiect-saga");
   yield put(setDelegatedValidators(response));
   yield put(setDelegatedValidatorsLoader(false));
 }
@@ -129,7 +131,7 @@ export function* fetchDelegations({ payload }: FetchDelegatedValidatorsSaga) {
 export function* fetchTokenizeShares({
   payload
 }: FetchTokenizeSharesSaga): any {
-  yield put(setDelegatedValidatorsLoader(true));
+  yield put(setTokenizeSharesLoader(true));
   const sharesOnPersistence = yield getTokenizedShares(
     payload.srcChainBalances,
     payload!.address,
@@ -154,5 +156,5 @@ export function* fetchTokenizeShares({
       sharesOnSourceChain: sharesOnPersistence
     })
   );
-  yield put(setDelegatedValidatorsLoader(false));
+  yield put(setTokenizeSharesLoader(false));
 }

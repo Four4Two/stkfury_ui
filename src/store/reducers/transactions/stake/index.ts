@@ -16,7 +16,8 @@ import {
   DelegationStakeTransactionPayload,
   SetTokenizedShares,
   SetTokenizedShareModal,
-  TokenizedShareStakeTransactionPayload
+  TokenizedShareStakeTransactionPayload,
+  SetTokenizeSharesLoader
 } from "./types";
 
 const initialState: StakeAmount = {
@@ -45,7 +46,8 @@ const initialState: StakeAmount = {
       totalAmount: 0
     }
   },
-  tokenizedModal: false
+  tokenizedModal: false,
+  tokenizeSharesLoader: false
 };
 
 const stake = createSlice({
@@ -107,6 +109,9 @@ const stake = createSlice({
     ) => {
       state.delegatedValidatorsLoader = payload;
     },
+    setTokenizeSharesLoader: (state, { payload }: SetTokenizeSharesLoader) => {
+      state.tokenizeSharesLoader = payload;
+    },
     fetchTokenizeSharesSaga: (state, action: FetchTokenizeSharesSaga) => {},
     setTokenizedShares: (state, { payload }: SetTokenizedShares) => {
       state.tokenizedShares = payload;
@@ -132,7 +137,8 @@ export const {
   fetchTokenizeSharesSaga,
   setTokenizedShares,
   setTokenizedShareModal,
-  executeTokenizedShareStakeTransactionSaga
+  executeTokenizedShareStakeTransactionSaga,
+  setTokenizeSharesLoader
 } = stake.actions;
 
 export default stake.reducer;

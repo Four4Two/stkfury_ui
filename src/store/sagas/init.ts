@@ -31,7 +31,6 @@ import {
   setShadeCollateral,
   setValidators
 } from "../reducers/initialData";
-import { setDelegatedValidatorsLoader } from "../reducers/transactions/stake";
 import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstakeibc/v1beta1/liquidstakeibc";
 
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;

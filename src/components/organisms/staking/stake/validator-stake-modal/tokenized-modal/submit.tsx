@@ -18,12 +18,10 @@ import {
   showStakeModal
 } from "../../../../../../store/reducers/transactions/stake";
 import Button from "../../../../../atoms/button";
-import { TokenizeSharesMsg } from "../../../../../../helpers/protoMsg";
 
 const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
   const [error, setError] = useState<any>(false);
-  const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
-    useSelector((state: RootState) => state.stake);
+  const { tokenizedShares } = useSelector((state: RootState) => state.stake);
   useEffect(() => {
     if (inputState.length) {
       const amount = inputState.find((item: any) => {

@@ -23,8 +23,9 @@ const TokenizedSharesModal = () => {
 
   const dispatch = useDispatch();
 
-  const { tokenizedModal, delegatedValidatorsLoader, tokenizedShares } =
-    useSelector((state: RootState) => state.stake);
+  const { tokenizedModal, tokenizeSharesLoader, tokenizedShares } = useSelector(
+    (state: RootState) => state.stake
+  );
 
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
 
@@ -86,7 +87,7 @@ const TokenizedSharesModal = () => {
           </p>
         </div>
         <div className="py-4 px-8 bg-black-800 w-full rounded-md mb-8">
-          {!delegatedValidatorsLoader ? (
+          {!tokenizeSharesLoader ? (
             totalAmount > MIN_STAKE ? (
               <div className="flex justify-between items-center">
                 <div>
