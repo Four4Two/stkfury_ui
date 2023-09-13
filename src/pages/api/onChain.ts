@@ -1,6 +1,7 @@
 import {
   QueryAllBalancesResponse,
   QueryClientImpl as BankQuery,
+  QuerySupplyOfResponse,
   QueryTotalSupplyResponse
 } from "cosmjs-types/cosmos/bank/v1beta1/query";
 
@@ -147,19 +148,15 @@ export const getChainTVU = async (
   try {
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
-    const supplyResponse: QueryTotalSupplyResponse =
-      await bankQueryService.TotalSupply({});
-    if (supplyResponse.supply.length) {
-      const token: Coin | undefined = supplyResponse.supply.find(
-        (item: Coin) => item.denom === denom
-      );
-      if (token !== undefined) {
-        return Number(token?.amount);
-      } else {
-        return 0;
-      }
+    const supply: QuerySupplyOfResponse = await bankQueryService.SupplyOf({
+      denom: "stk/uatom"
+    });
+    console.log(supply, "supply");
+    if (supply) {
+      return Number(supply.amount?.amount);
+    } else {
+      return 0;
     }
-    return 0;
   } catch (e) {
     console.log(e, "-cosmos error in getChainTVU");
     const customScope = new Scope();

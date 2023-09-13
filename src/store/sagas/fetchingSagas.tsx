@@ -111,7 +111,10 @@ export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
 // @ts-ignore
 export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
   const { persistenceChainInfo }: any = payload;
-  const [tvu, atomPrice] = yield Promise.all([getTVU(), fetchAtomPrice()]);
+  const [tvu, atomPrice] = yield Promise.all([
+    getChainTVU(persistenceChainInfo.rpc, "stk/uatom"),
+    fetchAtomPrice()
+  ]);
   yield put(setAtomPrice(atomPrice));
   yield put(setTVU(tvu));
 }
