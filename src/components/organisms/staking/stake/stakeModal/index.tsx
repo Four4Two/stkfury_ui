@@ -25,7 +25,8 @@ const StakeModal = () => {
     stepNumber,
     amount,
     liquidStakeType,
-    delegationStakeAmount
+    delegationStakeAmount,
+    txFailedResponse
   } = useSelector((state: RootState) => state.stake);
 
   const handleClose = () => {
@@ -175,12 +176,14 @@ const StakeModal = () => {
         </div>
 
         {txFailed ? (
-          <p className="text-base text-light-high text-center font-semibold mb-4 md:mb-3 md:text-sm">
-            Transfer could not be completed.
-          </p>
+          <div>
+            <p className="text-base text-light-high text-center font-medium mb-4 md:mb-3 md:text-sm">
+              {txFailedResponse}
+            </p>
+          </div>
         ) : null}
         {stepNumber === 5 && (
-          <p className="text-base text-light-high text-center font-semibold mb-4 md:text-sm">
+          <p className="text-base text-light-high text-center font-medium mb-4 md:text-sm">
             You&apos;ve successfully staked {amount} ATOM on pSTAKE
           </p>
         )}

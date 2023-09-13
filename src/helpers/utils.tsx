@@ -353,3 +353,14 @@ export const amountDecimalize = (amount: string) => {
   dec = dec.mul(DecUtils.getTenExponentNInPrecisionRange(6));
   return dec.truncate().toString();
 };
+
+export const structureErrorMessage = (message: string) => {
+  if (message.includes("insufficient validator bond shares")) {
+    return "Transaction could not be completed. Validator does not have sufficient self-bond to liquid stake.";
+  } else if (message.includes("out of gas in location")) {
+    return message;
+  } else if (message.includes("signature verification failed")) {
+    return message;
+  }
+  return "Transaction could not be completed";
+};

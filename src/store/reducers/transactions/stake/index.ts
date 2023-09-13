@@ -17,7 +17,8 @@ import {
   SetTokenizedShares,
   SetTokenizedShareModal,
   TokenizedShareStakeTransactionPayload,
-  SetTokenizeSharesLoader
+  SetTokenizeSharesLoader,
+  SetTransactionFailedResponse
 } from "./types";
 
 const initialState: StakeAmount = {
@@ -28,6 +29,7 @@ const initialState: StakeAmount = {
   liquidStakeType: "directStaking",
   stakeOption: "wallet",
   validatorModal: false,
+  txFailedResponse: "",
   delegationStakeAmount: "",
   delegatedValidators: {
     list: [],
@@ -74,6 +76,12 @@ const stake = createSlice({
     },
     setStakeTxnFailed: (state, { payload }: SetTransactionFailedStatus) => {
       state.txFailed = payload;
+    },
+    setStakeTxnFailedResponse: (
+      state,
+      { payload }: SetTransactionFailedResponse
+    ) => {
+      state.txFailedResponse = payload;
     },
     setStakeTxnStepNumber: (state, { payload }: SetTransactionStep) => {
       state.stepNumber = payload;
@@ -125,6 +133,7 @@ export const {
   hideStakeModal,
   showStakeModal,
   setStakeTxnFailed,
+  setStakeTxnFailedResponse,
   setStakeTxnStepNumber,
   setLiquidStakeTxnType,
   setValidatorModal,

@@ -63,7 +63,8 @@ const Submit = ({
     persistenceChainData,
     persistenceAccountData,
     persistenceSigner,
-    cosmosSigner
+    cosmosSigner,
+    isWalletConnected
   } = useWallet();
 
   const stakeHandler = async () => {
@@ -116,7 +117,7 @@ const Submit = ({
     }
   };
 
-  return (
+  return isWalletConnected ? (
     <Button
       className={`button w-full !py-[8px] md:text-sm ${className}`}
       type="primary"
@@ -124,6 +125,14 @@ const Submit = ({
       disabled={error || Number(totalAmount) <= 0}
       onClick={stakeHandler}
       content={buttonText}
+    />
+  ) : (
+    <Button
+      className="button w-full md:py-2 md:text-sm"
+      type="primary"
+      size="large"
+      disabled={true}
+      content="Connect wallet"
     />
   );
 };

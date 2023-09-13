@@ -53,6 +53,7 @@ export interface StakeAmount {
   amount: string;
   showModal: boolean;
   txFailed: boolean;
+  txFailedResponse: any;
   stepNumber: TransactionSteps;
   liquidStakeType: LiquidStakeType | TokenizeShareMsgTypes;
   stakeOption: StakeOption;
@@ -117,6 +118,7 @@ export interface fetchDelegatedValidatorsParams {
 export type StakeTransactionPayload = PayloadAction<StakeTransactionParams>;
 export type SetStakeAmount = PayloadAction<string>;
 export type SetTransactionFailedStatus = PayloadAction<boolean>;
+export type SetTransactionFailedResponse = PayloadAction<any>;
 export type SetLiquidStakeType = PayloadAction<LiquidStakeType>;
 export type SetTransactionStep = PayloadAction<TransactionSteps>;
 export type SetLiquidStakeOption = PayloadAction<StakeOption>;
