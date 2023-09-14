@@ -184,17 +184,14 @@ export const fetchUnbondingList = async (
     let claimableAmount: number = 0;
     if (response.userUnbondings.length) {
       for (let item of response.userUnbondings) {
+        console.log(response, "-cosmos response", Number(item.epochNumber));
         if (hostChainId === item.chainId) {
           const unbondResponse = await lsQueryService.Unbonding({
             chainId: item.chainId,
             epoch: item.epochNumber
           });
           console.log(unbondResponse, "-cosmos unbondResponse");
-          const unStakedon = moment(
-            unbondResponse!.unbonding!.matureTime!.seconds.toNumber()! * 1000
-          ).format("DD MMM YYYY hh:mm A");
           const unbondTime = await getUnbondTime(item.epochNumber, rpc);
-
           claimableAmount += Number(
             unbondResponse!.unbonding!.unbondAmount!.amount
           );
@@ -213,20 +210,19 @@ export const fetchUnbondingList = async (
   }
 };
 
-const getUnbondTime = async (epochNumber: any, rpc: string) => {
+const getUnbondTime = async (epochNumber: BigInt, rpc: string) => {
   try {
     const epochInfo = await getEpochInfo(rpc);
     const currentEpochNumberResponse = await getCurrentEpoch(rpc);
-    const currentEpochNumber =
-      currentEpochNumberResponse.currentEpoch.toNumber();
+    const currentEpochNumber = Number(currentEpochNumberResponse.currentEpoch);
 
-    const nextEpochNumber = epochNumber.toNumber();
-    const drs = epochInfo.epochs[0]?.duration?.seconds.toNumber()!;
+    const nextEpochNumber = Number(epochNumber);
+    const drs = Number(epochInfo.epochs[0]?.duration?.seconds);
 
     const diff = (nextEpochNumber - currentEpochNumber + 1) * drs;
 
     const tentativeTime = moment(
-      epochInfo!.epochs[0]!.currentEpochStartTime?.seconds.toNumber()! * // ms conversion
+      Number(epochInfo!.epochs[0]!.currentEpochStartTime?.seconds)! * // ms conversion
         1000
     )
       .add(diff + COSMOS_UNBOND_TIME, "seconds")
@@ -407,7 +403,9 @@ export const getDelegations = async (
           delegation.balance?.amount
         );
         const eligibilityCheck = validators.find(
-          (item) => item.operatorAddress === validator!.operatorAddress
+          (item) =>
+            item.operatorAddress === validator!.operatorAddress &&
+            item.delegable
         );
         const activeCheck = !validator!.jailed && validator!.status === 3;
 
@@ -565,7 +563,7 @@ export const getTokenizedShares = async (
             status:
               !vresponse.validator!.jailed &&
               vresponse.validator!.status === 3 &&
-              Number(item?.amount) >= MIN_STAKE
+              Number(decimalize(item?.amount!)) >= MIN_STAKE
           });
         }
       }
