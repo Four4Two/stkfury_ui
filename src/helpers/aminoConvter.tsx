@@ -107,7 +107,7 @@ export function createLSIBCosmosAminoConverters(): AminoConverters {
         delegatorAddress: delegator_address,
         validatorAddress: validator_address!,
         tokenizedShareOwner: tokenized_share_owner,
-        amount: amount
+        amount: amount!
       })
     },
     [COSMOS_LIQUID_STAKE_URL]: {
@@ -124,7 +124,7 @@ export function createLSIBCosmosAminoConverters(): AminoConverters {
         amount
       }: AminoMsgLiquidStake["value"]): MsgLiquidStake => ({
         delegatorAddress: delegator_address,
-        amount: amount
+        amount: amount!
       })
     },
     [COSMOS_LIQUID_UN_STAKE_URL]: {
@@ -141,7 +141,7 @@ export function createLSIBCosmosAminoConverters(): AminoConverters {
         amount
       }: AminoMsgLiquidUnStake["value"]): MsgLiquidUnstake => ({
         delegatorAddress: delegator_address,
-        amount: amount
+        amount: amount!
       })
     },
     [REDEEM_URL]: {
@@ -158,7 +158,7 @@ export function createLSIBCosmosAminoConverters(): AminoConverters {
         amount
       }: AminoMsgRedeem["value"]): MsgRedeem => ({
         delegatorAddress: delegator_address,
-        amount: amount
+        amount: amount!
       })
     }
   };
