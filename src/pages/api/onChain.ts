@@ -403,13 +403,9 @@ export const getDelegations = async (
           delegation.balance?.amount
         );
         const eligibilityCheck = validators.find(
-          (item) =>
-            item.operatorAddress === validator!.operatorAddress &&
-            item.delegable
+          (item) => item.operatorAddress === validator!.operatorAddress
         );
         const activeCheck = !validator!.jailed && validator!.status === 3;
-
-        console.log(eligibilityCheck, "validatorCheck", validator);
         if (Number(delegation.balance?.amount) > 0) {
           delegations.push({
             name: validator!.description?.moniker!,
@@ -423,6 +419,8 @@ export const getDelegations = async (
                 ? "not-eligible"
                 : !activeCheck
                 ? "inactive"
+                : !eligibilityCheck.delegable
+                ? "not-bonded"
                 : "active"
           });
         }
