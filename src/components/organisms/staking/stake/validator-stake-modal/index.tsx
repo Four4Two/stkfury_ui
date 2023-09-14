@@ -143,18 +143,13 @@ const ValidatorStakeModal = () => {
             Select the validator(s) and enter the amount of staked ATOM you wish
             to liquid stake.&nbsp;
             <a
-              href="/"
+              href="https://blog.pstake.finance/2023/09/12/cosmos-lsm-atom-liquid-staking-made-simpler-with-pstake/"
               target="_blank"
               rel="noreferrer"
               className="text-[#3E73F0] underline"
             >
               Learn more here.
             </a>
-            {/*<span className="text-light-emphasis">Total Staked:</span>{" "}*/}
-            {/*{truncateToFixedDecimalPlaces(*/}
-            {/*  Number(delegatedValidators.totalAmount)*/}
-            {/*)}{" "}*/}
-            {/*ATOM*/}
           </p>
         </div>
         <div className="pb-4">

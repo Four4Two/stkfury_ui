@@ -11,9 +11,8 @@ import { resetTransaction } from "../../../../store/reducers/transaction";
 
 const StakeToasts = () => {
   const dispatch = useDispatch();
-  const { txFailed, stepNumber, liquidStakeType } = useSelector(
-    (state: RootState) => state.stake
-  );
+  const { txFailed, stepNumber, liquidStakeType, txFailedResponse } =
+    useSelector((state: RootState) => state.stake);
 
   useEffect(() => {
     if (stepNumber === 5) {
@@ -34,7 +33,7 @@ const StakeToasts = () => {
       {txFailed ? (
         displayToast(
           {
-            message: "This transaction could not be completed"
+            message: txFailedResponse
           },
           ToastType.ERROR
         )
