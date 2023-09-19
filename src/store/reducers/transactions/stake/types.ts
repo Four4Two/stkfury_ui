@@ -14,7 +14,11 @@ export type TransactionSteps = 0 | 1 | 2 | 3 | 4 | 5; // These are txn steps num
 
 export type StakeOption = "wallet" | "validator";
 
-export type DelegatedValidatorStatus = "not-eligible" | "inactive" | "active";
+export type DelegatedValidatorStatus =
+  | "not-eligible"
+  | "inactive"
+  | "active"
+  | "not-bonded";
 
 export type LiquidStakeType =
   | "directStaking"

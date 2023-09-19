@@ -277,6 +277,8 @@ const ValidatorStakeModal = () => {
                                     <span className="uppercase">
                                       {item.status === "inactive"
                                         ? "Jailed"
+                                        : item.status === "not-bonded"
+                                        ? "Validator bond not available"
                                         : "Not Eligible"}
                                     </span>
                                   )}

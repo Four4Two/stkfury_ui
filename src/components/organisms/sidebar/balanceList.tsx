@@ -166,18 +166,6 @@ const BalanceList = () => {
                   <span className="text-light-mid text-sm leading-5 ml-2.5">
                     ATOM
                   </span>
-                  <Tooltip
-                    placement="bottom"
-                    overlay={
-                      <span className="text-center block">
-                        (ATOM on Persistence)
-                      </span>
-                    }
-                  >
-                    <button className="icon-button px-1">
-                      <Icon viewClass="arrow-right" iconName="info" />
-                    </button>
-                  </Tooltip>
                 </div>
                 <p
                   className="text-light-mid text-sm font-medium leading-5"
