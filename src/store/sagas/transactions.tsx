@@ -605,7 +605,10 @@ export function* executeDelegationStakeTransaction({
             let liquidStakeMsg: any = [];
             msg.forEach((msgItem) => {
               tokens.forEach((item: any) => {
-                if (item.baseDenom.includes(msgItem!.value!.validatorAddress)) {
+                if (
+                  item.baseDenom.includes(msgItem!.value!.validatorAddress) &&
+                  Number(decimalize(item.amount)) >= MIN_STAKE
+                ) {
                   liquidStakeMsg.push(
                     LiquidStakeLsmMsg(account, item.amount, item.denom)
                   );
