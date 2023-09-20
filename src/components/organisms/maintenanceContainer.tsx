@@ -48,7 +48,7 @@ const MaintenanceContainer = () => {
           className="m-auto w-[86px] mb-4"
         />
         <p className="font-normal text-sm leading-7 text-light-emphasis mb-4">
-         Persistence Core-1 chain is undergoing maintenance and will be back online shortly. During this time, transactions will not be processed. We apologize for any inconvenience this may cause and will provide regular updates on our progress. Thank you for your patience
+         Persistence Core-1 chain is down and under maintenance but will be back online shortly. During this time, transactions will not be processed. We apologize for any inconvenience this may cause and will provide regular updates on our progress. Thank you for your patience
         </p>
         <p className="text-light-emphasis text-base font-semibold leading-normal mb-4">
           — The pSTAKE Team
