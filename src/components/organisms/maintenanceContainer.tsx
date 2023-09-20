@@ -48,16 +48,7 @@ const MaintenanceContainer = () => {
           className="m-auto w-[86px] mb-4"
         />
         <p className="font-normal text-sm leading-7 text-light-emphasis mb-4">
-          Sorry for the inconvenience. Something went wrong. Please try again,
-          or refresh the page. If you keep seeing this message, you can report{" "}
-          <a
-            href={BUG_REPORT_URL}
-            className="text-[#0d6efd] font-semibold"
-            target={"_blank"}
-            rel="noreferrer"
-          >
-            here
-          </a>{" "}
+         Persistence Core-1 chain is undergoing maintenance and will be back online shortly. During this time, transactions will not be processed. We apologize for any inconvenience this may cause and will provide regular updates on our progress. Thank you for your patience
         </p>
         <p className="text-light-emphasis text-base font-semibold leading-normal mb-4">
           — The pSTAKE Team
