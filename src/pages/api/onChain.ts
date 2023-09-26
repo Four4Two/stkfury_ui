@@ -186,17 +186,12 @@ export const fetchUnbondingList = async (
       for (let item of response.userUnbondings) {
         console.log(response, "-cosmos response", Number(item.epochNumber));
         if (hostChainId === item.chainId) {
-          const unbondResponse = await lsQueryService.Unbonding({
-            chainId: item.chainId,
-            epoch: item.epochNumber
-          });
-          console.log(unbondResponse, "-cosmos unbondResponse");
           const unbondTime = await getUnbondTime(item.epochNumber, rpc);
           claimableAmount += Number(
             unbondResponse!.unbonding!.unbondAmount!.amount
           );
           list.push({
-            unbondAmount: unbondResponse!.unbonding!.unbondAmount!.amount,
+           unbondAmount: item.unbondAmount.amount,
             unStakedon: unbondTime.time,
             daysRemaining: unbondTime.remainingDays
           });
