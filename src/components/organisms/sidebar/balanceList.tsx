@@ -61,7 +61,7 @@ const BalanceList = () => {
 
     if (pendingList.length) {
       pendingList.forEach((item: any) => {
-        totalPendingClaimableAmount += item.unbondAmount;
+        totalPendingClaimableAmount += Number(item.unbondAmount);
       });
     }
     setTotalPendingBalance(totalPendingClaimableAmount);
@@ -69,7 +69,7 @@ const BalanceList = () => {
     let totalUnlistedPendingClaimableAmount: number = 0;
     if (unlistedPendingClaimList.length) {
       unlistedPendingClaimList.forEach((item: any) => {
-        totalUnlistedPendingClaimableAmount += item.unbondAmount;
+        totalUnlistedPendingClaimableAmount += Number(item.unbondAmount);
       });
     }
     setTotalUnlistedPendingClaims(totalUnlistedPendingClaimableAmount);
