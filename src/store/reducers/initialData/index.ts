@@ -35,8 +35,8 @@ const initialState: InitialDataState = {
   activeStakeTab: "Stake",
   shadeCollateral: initialTVLAPY,
   shadeInfo: {
-    atomStkAtom: initialTVLAPY,
-    stkATOMSilk: initialTVLAPY
+    furyStkFury: initialTVLAPY,
+    stkFURYSilk: initialTVLAPY
   },
   validators: []
 };

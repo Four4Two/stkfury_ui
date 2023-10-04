@@ -78,11 +78,11 @@ const TokenizedSharesModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-4">
-          Existing tokenized staked ATOM
+          Existing tokenized staked FURY
         </p>
         <div className="flex items-center mb-6 justify-between">
           <p className="text-sm text-light-mid pr-2">
-            Looks like you already have some staked ATOM that can be liquid
+            Looks like you already have some staked FURY that can be liquid
             staked. Proceed to Liquid Stake.
           </p>
         </div>
@@ -128,7 +128,7 @@ const TokenizedSharesModal = () => {
                 <div>
                   <p className="text-sm text-light-mid pb-2">Total Amount</p>
                   <p className="text-sm text-light-full">
-                    {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
+                    {truncateToFixedDecimalPlaces(Number(totalAmount))} FURY
                   </p>
                 </div>
                 <div>
@@ -137,13 +137,13 @@ const TokenizedSharesModal = () => {
                     {truncateToFixedDecimalPlaces(
                       Number(totalAmount) * exchangeRate
                     )}{" "}
-                    stkATOM
+                    stkFURY
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-light-mid pb-2">Exchange Rate</p>
                   <p className="text-sm text-light-full">
-                    1 ATOM = {formatNumber(exchangeRate)} &nbsp; stkATOM
+                    1 FURY = {formatNumber(exchangeRate)} &nbsp; stkFURY
                   </p>
                 </div>
               </div>

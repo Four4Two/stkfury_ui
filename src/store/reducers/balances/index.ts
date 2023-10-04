@@ -2,20 +2,20 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   BalanceState,
   FetchBalanceSaga,
-  SetAtomBalance,
+  SetFuryBalance,
   SetCosmosBalances,
-  SetIbcAtomBalance,
+  SetIbcFuryBalance,
   SetPersistenceBalances,
-  SetStkAtomBalance,
+  SetStkFuryBalance,
   SetXprtBalance
 } from "./types";
 
 const initialState: BalanceState = {
-  atomBalance: 0,
-  stkAtomBalance: 0,
-  ibcAtomBalance: 0,
+  furyBalance: 0,
+  stkFuryBalance: 0,
+  ibcFuryBalance: 0,
   xprtBalance: 0,
-  cosmosBalances: {
+  furyBalances: {
     balances: []
   },
   persistenceBalances: {
@@ -28,14 +28,14 @@ const balances = createSlice({
   initialState,
   reducers: {
     fetchBalanceSaga: (state, action: FetchBalanceSaga) => {},
-    setAtomBalance: (state, action: SetAtomBalance) => {
-      state.atomBalance = action.payload;
+    setFuryBalance: (state, action: SetFuryBalance) => {
+      state.furyBalance = action.payload;
     },
-    setStkAtomBalance: (state, action: SetStkAtomBalance) => {
-      state.stkAtomBalance = action.payload;
+    setStkFuryBalance: (state, action: SetStkFuryBalance) => {
+      state.stkFuryBalance = action.payload;
     },
-    setIbcAtomBalance: (state, action: SetIbcAtomBalance) => {
-      state.ibcAtomBalance = action.payload;
+    setIbcFuryBalance: (state, action: SetIbcFuryBalance) => {
+      state.ibcFuryBalance = action.payload;
     },
     setXprtBalance: (state, action: SetXprtBalance) => {
       state.xprtBalance = action.payload;
@@ -44,15 +44,15 @@ const balances = createSlice({
       state.persistenceBalances = action.payload;
     },
     setCosmosBalances: (state, action: SetCosmosBalances) => {
-      state.cosmosBalances = action.payload;
+      state.furyBalances = action.payload;
     }
   }
 });
 
 export const {
-  setAtomBalance,
-  setStkAtomBalance,
-  setIbcAtomBalance,
+  setFuryBalance,
+  setStkFuryBalance,
+  setIbcFuryBalance,
   setXprtBalance,
   fetchBalanceSaga,
   setPersistenceBalances,

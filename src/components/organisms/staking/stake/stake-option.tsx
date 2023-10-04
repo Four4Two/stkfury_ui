@@ -135,7 +135,7 @@ const StakeOptions = () => {
                 />
               </div>
               <span className="text-sm text-light-emphasis leading-normal md:text-xsm md:ml-2 capitalize">
-                Liquid Stake your staked ATOM using LSM
+                Liquid Stake your staked FURY using LSM
               </span>
             </div>
           </div>

@@ -43,7 +43,7 @@ const IndividualUnstakingClaim = ({
         <div>
           <p className="amount text-light-mid font-normal leading-normal text-lg mb-2">
             {decimalize(amount)}
-            {type === "listedClaims" ? " ATOM" : " stkATOM"}
+            {type === "listedClaims" ? " FURY" : " stkFURY"}
           </p>
           <p className="leading-normal text-light-mid text-xsm font-normal">
             {type === "listedClaims"
@@ -63,7 +63,7 @@ const IndividualUnstakingClaim = ({
 
 const ClaimModal = () => {
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].furyChainID
   );
   const [expand, setExpand] = useState(true);
   const { showModal } = useSelector((state: RootState) => state.claim);
@@ -78,11 +78,11 @@ const ClaimModal = () => {
     persistenceAccountData,
     persistenceSigner,
     persistenceChainData,
-    cosmosChainData,
-    cosmosAccountData
+    furyChainData,
+    furyAccountData
   } = useWallet();
 
-  const { atomBalance, stkAtomBalance } = useSelector(
+  const { furyBalance, stkFuryBalance } = useSelector(
     (state: RootState) => state.balances
   );
 
@@ -94,7 +94,7 @@ const ClaimModal = () => {
   const {
     claimableBalance,
     pendingClaimList,
-    claimableStkAtomBalance,
+    claimableStkFuryBalance,
     unlistedPendingClaimList
   } = useSelector((state: RootState) => state.claimQueries);
 
@@ -105,7 +105,7 @@ const ClaimModal = () => {
   }, [claimableBalance, pendingClaimList, unlistedPendingClaimList]);
 
   const enable =
-    Number(activeClaims) > 0 || Number(claimableStkAtomBalance) > 0;
+    Number(activeClaims) > 0 || Number(claimableStkFuryBalance) > 0;
 
   const handleClose = () => {
     dispatch(hideClaimModal());
@@ -116,12 +116,12 @@ const ClaimModal = () => {
       show={showModal}
       onClose={handleClose}
       className="claimModal"
-      header="Claim Unstaked ATOM"
+      header="Claim Unstaked FURY"
       closeButton={false}
       staticBackDrop={toolTipEnabled}
     >
       <div className="px-8 pb-4 pt-4 md:px-7">
-        {activeClaims > 0 || claimableStkAtomBalance > 0 ? (
+        {activeClaims > 0 || claimableStkFuryBalance > 0 ? (
           <div className="bg-[#101010] rounded-md p-6 md:py-4 px-6 mb-4">
             <div className="block">
               <p

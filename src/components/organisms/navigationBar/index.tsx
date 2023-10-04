@@ -32,12 +32,12 @@ const NavigationBar = () => {
   const {
     isWalletConnected,
     persistenceAccountData,
-    cosmosAccountData,
-    cosmosChainData,
+    furyAccountData,
+    furyChainData,
     persistenceChainData
   } = useWallet();
 
-  const { cosmosBalances, persistenceBalances } = useSelector(
+  const { furyBalances, persistenceBalances } = useSelector(
     (state: RootState) => state.balances
   );
 
@@ -51,12 +51,12 @@ const NavigationBar = () => {
       dispatch(
         fetchLiveDataSaga({
           persistenceChainInfo: persistenceChainData!,
-          cosmosChainInfo: cosmosChainData!
+          furyChainInfo: furyChainData!
         })
       );
     }, SHORT_INTERVAL);
     return () => clearInterval(interval);
-  }, [dispatch, persistenceChainData, cosmosChainData]);
+  }, [dispatch, persistenceChainData, furyChainData]);
 
   // fetch call on every 3min sec
   useEffect(() => {
@@ -66,21 +66,21 @@ const NavigationBar = () => {
           fetchPendingClaimsSaga({
             address: persistenceAccountData!.address,
             persistenceChainInfo: persistenceChainData!,
-            dstChainInfo: cosmosChainData!
+            dstChainInfo: furyChainData!
           })
         );
         dispatch(
           fetchInitSaga({
             persistenceChainInfo: persistenceChainData!,
-            cosmosChainInfo: cosmosChainData!
+            furyChainInfo: furyChainData!
           })
         );
         dispatch(
           fetchBalanceSaga({
             persistenceAddress: persistenceAccountData!.address,
-            cosmosAddress: cosmosAccountData!.address,
+            furyAddress: furyAccountData!.address,
             persistenceChainInfo: persistenceChainData!,
-            cosmosChainInfo: cosmosChainData!
+            furyChainInfo: furyChainData!
           })
         );
       }
@@ -88,31 +88,31 @@ const NavigationBar = () => {
     return () => clearInterval(interval);
   }, [
     persistenceAccountData,
-    cosmosAccountData,
+    furyAccountData,
     isWalletConnected,
     dispatch,
     persistenceChainData,
-    cosmosChainData
+    furyChainData
   ]);
 
   useEffect(() => {
     if (
       isWalletConnected &&
-      (cosmosBalances.balances.length > 0 ||
+      (furyBalances.balances.length > 0 ||
         persistenceBalances.balances.length > 0)
     ) {
       dispatch(
         fetchTokenizeSharesSaga({
           address: persistenceAccountData!.address,
-          dstAddress: cosmosAccountData!.address,
+          dstAddress: furyAccountData!.address,
           srcChain: persistenceChainData!,
-          dstChain: cosmosChainData!,
+          dstChain: furyChainData!,
           srcChainBalances: persistenceBalances,
-          dstChainBalances: cosmosBalances
+          dstChainBalances: furyBalances
         })
       );
     }
-  }, [isWalletConnected, cosmosBalances, persistenceBalances]);
+  }, [isWalletConnected, furyBalances, persistenceBalances]);
 
   if (
     persistenceChainStatus ||

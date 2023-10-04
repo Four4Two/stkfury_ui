@@ -16,17 +16,17 @@ const Options = () => {
   );
 
   // user balance after deducting redeem fee
-  const stkAtomAmount = Number(amount) - Number(amount) * redeemFee;
+  const stkFuryAmount = Number(amount) - Number(amount) * redeemFee;
 
-  //converting stkAtom to atom
-  const atomAmount = Number(stkAtomAmount) / exchangeRate;
+  //converting stkFury to fury
+  const furyAmount = Number(stkFuryAmount) / exchangeRate;
 
   let redeemAmount: number;
 
   if (Number(amount) > MIN_REDEEM) {
-    redeemAmount = truncateToFixedDecimalPlaces(atomAmount);
+    redeemAmount = truncateToFixedDecimalPlaces(furyAmount);
   } else {
-    redeemAmount = Number(atomAmount.toFixed(18).match(/^\d+(?:\.\d{0,6})?/));
+    redeemAmount = Number(furyAmount.toFixed(18).match(/^\d+(?:\.\d{0,6})?/));
   }
 
   const optionHandler = (value: unStakeType) => {
@@ -57,7 +57,7 @@ const Options = () => {
             className={`${styles.amount} option-value font-medium m-0 text-light-mid
              text-2xl text-center text-right overflow-x-auto md:text-base`}
           >
-            {truncateToFixedDecimalPlaces(redeemAmount)} ATOM
+            {truncateToFixedDecimalPlaces(redeemAmount)} FURY
           </p>
         </div>
       </div>
@@ -76,7 +76,7 @@ const Options = () => {
             className={`${styles.amount} option-value font-medium m-0 text-light-mid 
             text-2xl text-center text-right overflow-x-auto md:text-base`}
           >
-            ~{truncateToFixedDecimalPlaces(Number(amount) / exchangeRate)} ATOM
+            ~{truncateToFixedDecimalPlaces(Number(amount) / exchangeRate)} FURY
           </p>
         </div>
       </div>

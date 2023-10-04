@@ -13,11 +13,11 @@ const ExchangeRate = ({ type }: ExchangeRateTypes) => {
     <>
       {type === "stake"
         ? reverseExchangeRate
-          ? `1 stkATOM = ${formatNumber(1 / exchangeRate)} ATOM`
-          : `1 ATOM = ${formatNumber(exchangeRate)} stkATOM`
+          ? `1 stkFURY = ${formatNumber(1 / exchangeRate)} FURY`
+          : `1 FURY = ${formatNumber(exchangeRate)} stkFURY`
         : reverseExchangeRate
-        ? `1 ATOM = ${formatNumber(exchangeRate)} stkATOM`
-        : `1 stkATOM = ${formatNumber(1 / exchangeRate)} ATOM`}
+        ? `1 FURY = ${formatNumber(exchangeRate)} stkFURY`
+        : `1 stkFURY = ${formatNumber(1 / exchangeRate)} FURY`}
 
       <span
         className="flex ml-2 items-center cursor-pointer"

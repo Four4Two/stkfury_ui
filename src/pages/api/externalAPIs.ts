@@ -5,7 +5,7 @@ import {
   genericErrorHandler
 } from "../../helpers/utils";
 import { Scope } from "@sentry/nextjs";
-import { APR_DEFAULT, CRESCENT_STK_ATOM_DENOM } from "../../../AppConstants";
+import { APR_DEFAULT, CRESCENT_STK_FURY_DENOM } from "../../../AppConstants";
 import { initialTVLAPY } from "../../store/reducers/initialData";
 import {
   InitialTvlApyFeeTypes,
@@ -13,25 +13,25 @@ import {
 } from "../../store/reducers/initialData/types";
 export const SHADE_URL =
   "https://na36v10ce3.execute-api.us-east-1.amazonaws.com/API-mainnet-STAGE/shadeswap/pairs";
-export const ATOM_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
+export const FURY_PRICE_URL = "https://api.coingecko.com/api/v3/coins/cosmos";
 export const OSMOSIS_POOL_URL = "https://api-osmosis.imperator.co/pools/v2/886";
 export const OSMOSIS_POOL_APR_URL = "https://api.osmosis.zone/apr/v2/886";
 export const CRESCENT_POOL_URL = "https://apigw-v3.crescent.network/pool/live";
 export const UMEE_URL =
   "https://testnet-client-bff-ocstrhuppq-uc.a.run.app/convexity/assets/all";
-export const STK_ATOM_APY_API =
-  "https://api.persistence.one/pstake/stkatom/apy";
-export const STK_ATOM_CVALUE_API =
-  "https://api.persistence.one/pstake/stkatom/c_value";
-export const STK_ATOM_TVU_API =
-  "https://api.persistence.one/pstake/stkatom/atom_tvu";
+export const STK_FURY_APY_API =
+  "https://api.persistence.one/pstake/stkfury/apy";
+export const STK_FURY_CVALUE_API =
+  "https://api.persistence.one/pstake/stkfury/c_value";
+export const STK_FURY_TVU_API =
+  "https://api.persistence.one/pstake/stkfury/fury_tvu";
 export const DEXTER_POOL_URL = "https://api.core-1.dexter.zone/v1/graphql";
 export const SHADE_LCD = "https://lcd.secret.express";
 import { SecretNetworkClient } from "secretjs";
 
-export const fetchAtomPrice = async (): Promise<number> => {
+export const fetchFuryPrice = async (): Promise<number> => {
   try {
-    const res = await Axios.get(ATOM_PRICE_URL);
+    const res = await Axios.get(FURY_PRICE_URL);
     if (res && res.data) {
       return res.data.market_data.current_price.usd;
     }
@@ -40,16 +40,16 @@ export const fetchAtomPrice = async (): Promise<number> => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error fetching price of ATOM": ATOM_PRICE_URL
+      "Error fetching price of FURY": FURY_PRICE_URL
     });
     genericErrorHandler(e, customScope);
     return 0;
   }
 };
 
-export const getStkAtomAPY = async (): Promise<number> => {
+export const getStkFuryAPY = async (): Promise<number> => {
   try {
-    const res = await Axios.get(STK_ATOM_APY_API);
+    const res = await Axios.get(STK_FURY_APY_API);
     if (res && res.data) {
       return Number((res.data * 100).toFixed(2));
     }
@@ -58,7 +58,7 @@ export const getStkAtomAPY = async (): Promise<number> => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error fetching apy": STK_ATOM_APY_API
+      "Error fetching apy": STK_FURY_APY_API
     });
     genericErrorHandler(e, customScope);
     return -1;
@@ -67,7 +67,7 @@ export const getStkAtomAPY = async (): Promise<number> => {
 
 export const getExchangeRate = async (): Promise<number> => {
   try {
-    const res = await Axios.get(STK_ATOM_CVALUE_API);
+    const res = await Axios.get(STK_FURY_CVALUE_API);
     if (res && res.data) {
       return Number(res.data);
     }
@@ -76,7 +76,7 @@ export const getExchangeRate = async (): Promise<number> => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching exchange rate": STK_ATOM_CVALUE_API
+      "Error while fetching exchange rate": STK_FURY_CVALUE_API
     });
     genericErrorHandler(e, customScope);
     return 1;
@@ -85,7 +85,7 @@ export const getExchangeRate = async (): Promise<number> => {
 
 export const getTVU = async (): Promise<number> => {
   try {
-    const res = await Axios.get(STK_ATOM_TVU_API);
+    const res = await Axios.get(STK_FURY_TVU_API);
     if (res && res.data) {
       return Number(res?.data!.amount!.amount);
     }
@@ -94,7 +94,7 @@ export const getTVU = async (): Promise<number> => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching tvu": STK_ATOM_TVU_API
+      "Error while fetching tvu": STK_FURY_TVU_API
     });
     genericErrorHandler(e, customScope);
     return 0;
@@ -152,16 +152,16 @@ export const fetchCrescentPoolInfo = async () => {
     if (res && res.data) {
       const response = res.data.data;
       let crescentInfo = response.find(
-        (item: any) => item!.Reserved[1]?.denom === CRESCENT_STK_ATOM_DENOM
+        (item: any) => item!.Reserved[1]?.denom === CRESCENT_STK_FURY_DENOM
       );
-      const atomTvl =
+      const furyTvl =
         Number(crescentInfo.Reserved[0].amount) *
         crescentInfo.Reserved[0].priceOracle;
-      const stkAtomTvl =
+      const stkFuryTvl =
         Number(crescentInfo.Reserved[1].amount) *
         crescentInfo.Reserved[1].priceOracle;
       return {
-        tvl: Number(decimalize(atomTvl + stkAtomTvl)).toFixed(2),
+        tvl: Number(decimalize(furyTvl + stkFuryTvl)).toFixed(2),
         total_apy: Number(crescentInfo?.apr).toFixed(2)
       };
     }
@@ -238,29 +238,29 @@ export const fetchShadeInfo = async (): Promise<ShadeInitialInfo> => {
   try {
     const res = await Axios.get(SHADE_URL);
     if (res && res.data) {
-      const stkATOMSilk = res.data.find(
+      const stkFURYSilk = res.data.find(
         (item: any) => item.id === "ec478c0a-c7cd-4327-b6cb-8d01ca87d319"
       );
-      const atomStkATOM = res.data.find(
+      const furyStkFURY = res.data.find(
         (item: any) => item.id === "1d7f9ba8-b4be-4a34-a54d-63554f14f8fb"
       );
-      console.log(stkATOMSilk, "stkATOMSilk", atomStkATOM);
+      console.log(stkFURYSilk, "stkFURYSilk", furyStkFURY);
       return {
-        stkATOMSilk: {
-          total_apy: Number(stkATOMSilk.apr.total).toFixed(2),
-          tvl: Number(stkATOMSilk.liquidity_usd).toFixed(2),
-          fees: (Number(stkATOMSilk.fees.lp) * 100).toFixed(2)
+        stkFURYSilk: {
+          total_apy: Number(stkFURYSilk.apr.total).toFixed(2),
+          tvl: Number(stkFURYSilk.liquidity_usd).toFixed(2),
+          fees: (Number(stkFURYSilk.fees.lp) * 100).toFixed(2)
         },
-        atomStkAtom: {
-          total_apy: Number(atomStkATOM.apr.total).toFixed(2),
-          tvl: Number(atomStkATOM.liquidity_usd).toFixed(2),
-          fees: (Number(atomStkATOM.fees.lp) * 100).toFixed(2)
+        furyStkFury: {
+          total_apy: Number(furyStkFURY.apr.total).toFixed(2),
+          tvl: Number(furyStkFURY.liquidity_usd).toFixed(2),
+          fees: (Number(furyStkFURY.fees.lp) * 100).toFixed(2)
         }
       };
     }
     return {
-      stkATOMSilk: initialTVLAPY,
-      atomStkAtom: initialTVLAPY
+      stkFURYSilk: initialTVLAPY,
+      furyStkFury: initialTVLAPY
     };
   } catch (e) {
     const customScope = new Scope();
@@ -270,8 +270,8 @@ export const fetchShadeInfo = async (): Promise<ShadeInitialInfo> => {
     });
     genericErrorHandler(e, customScope);
     return {
-      stkATOMSilk: initialTVLAPY,
-      atomStkAtom: initialTVLAPY
+      stkFURYSilk: initialTVLAPY,
+      furyStkFury: initialTVLAPY
     };
   }
 };
@@ -280,12 +280,12 @@ export const fetchUmeeInfo = async (): Promise<InitialTvlApyFeeTypes> => {
   try {
     const res = await Axios.get(UMEE_URL);
     if (res && res.data) {
-      const stkatom = res.data.find((item: any) => item.asset === "STKATOM");
-      if (stkatom) {
+      const stkfury = res.data.find((item: any) => item.asset === "STKFURY");
+      if (stkfury) {
         return {
-          borrow_apy: Number(stkatom.borrow_apy).toFixed(2),
-          lending_apy: Number(stkatom.supply_apy).toFixed(2),
-          total_supply: Number(stkatom.market_size_usd).toFixed(2)
+          borrow_apy: Number(stkfury.borrow_apy).toFixed(2),
+          lending_apy: Number(stkfury.supply_apy).toFixed(2),
+          total_supply: Number(stkfury.market_size_usd).toFixed(2)
         };
       }
       return initialTVLAPY;
@@ -305,12 +305,12 @@ export const fetchUmeeInfo = async (): Promise<InitialTvlApyFeeTypes> => {
 export const fetchShadeCollateral =
   async (): Promise<InitialTvlApyFeeTypes> => {
     try {
-      let stkAtomPrice = 1;
+      let stkFuryPrice = 1;
       const res = await Axios.get(
-        "https://api.coingecko.com/api/v3/coins/stkatom"
+        "https://api.coingecko.com/api/v3/coins/stkfury"
       );
       if (res && res.data) {
-        stkAtomPrice = res.data.market_data.current_price.usd;
+        stkFuryPrice = res.data.market_data.current_price.usd;
       }
 
       const secretjs = new SecretNetworkClient({
@@ -326,7 +326,7 @@ export const fetchShadeCollateral =
         return {
           total_supply:
             Number(decimalizeRaw(result.vault.collateral.base!, 18)) *
-            stkAtomPrice,
+            stkFuryPrice,
           fees: Number(result.vault.config.fees.borrow_fee.delta) * 100
         };
       }

@@ -13,12 +13,12 @@ export interface WithdrawState {
 }
 
 export interface WithdrawTransactionParams {
-  cosmosChainInfo: ChainInfo;
+  furyChainInfo: ChainInfo;
   persistenceChainInfo: ChainInfo;
-  cosmosAddress: string;
+  furyAddress: string;
   persistenceAddress: string;
   withdrawMsg: LiquidStakeMsgTypes;
-  pollInitialIBCAtomBalance: number;
+  pollInitialIBCFuryBalance: number;
   persistenceSigner: OfflineSigner | OfflineDirectSigner;
 }
 

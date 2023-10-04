@@ -9,22 +9,22 @@ import {
 } from "../../pages/api/onChain";
 import { put } from "@redux-saga/core/effects";
 import {
-  setAtomBalance,
+  setFuryBalance,
   setCosmosBalances,
-  setIbcAtomBalance,
+  setIbcFuryBalance,
   setPersistenceBalances,
-  setStkAtomBalance,
+  setStkFuryBalance,
   setXprtBalance
 } from "../reducers/balances";
 import { decimalize } from "../../helpers/utils";
 import { CHAIN_ID, IBCChainInfos } from "../../helpers/config";
-import { STK_ATOM_MINIMAL_DENOM } from "../../../AppConstants";
+import { STK_FURY_MINIMAL_DENOM } from "../../../AppConstants";
 import { FetchPendingClaimSaga } from "../reducers/claim/types";
 import { setClaimableBalance, setPendingClaimList } from "../reducers/claim";
-import { fetchAtomPrice, getTVU } from "../../pages/api/externalAPIs";
+import { fetchFuryPrice, getTVU } from "../../pages/api/externalAPIs";
 
 import { FetchLiveDataSaga } from "../reducers/liveData/types";
-import { setAtomPrice, setTVU } from "../reducers/liveData";
+import { setFuryPrice, setTVU } from "../reducers/liveData";
 import {
   DelegatedValidators,
   FetchDelegatedValidatorsSaga,
@@ -40,15 +40,15 @@ import {
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 let IBCInfo = IBCChainInfos[env].find(
-  (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+  (chain) => chain.counterpartyChainId === CHAIN_ID[env].furyChainID
 );
 
 export function* fetchBalance({ payload }: FetchBalanceSaga) {
   const {
     persistenceAddress,
-    cosmosAddress,
+    furyAddress,
     persistenceChainInfo,
-    cosmosChainInfo
+    furyChainInfo
   }: any = payload;
   //fetch balance on persistence chain
   // @ts-ignore
@@ -56,24 +56,24 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     persistenceAddress,
     persistenceChainInfo.rpc
   );
-  //fetch balance on cosmos chain
+  //fetch balance on fury chain
   // @ts-ignore
-  const cosmosBalances: any = yield fetchAccountBalance(
-    cosmosAddress,
-    cosmosChainInfo.rpc
+  const furyBalances: any = yield fetchAccountBalance(
+    furyAddress,
+    furyChainInfo.rpc
   );
 
-  console.log(cosmosBalances, "cosmosBalances1");
-  //atom balance on persistence chain
-  const ibcAtomBalance = getTokenBalance(
+  console.log(furyBalances, "furyBalances1");
+  //fury balance on persistence chain
+  const ibcFuryBalance = getTokenBalance(
     persistenceBalances,
     IBCInfo!.coinDenom
   );
 
-  //stkAtom balance on persistence chain
-  const stkAtomBalance = getTokenBalance(
+  //stkFury balance on persistence chain
+  const stkFuryBalance = getTokenBalance(
     persistenceBalances,
-    STK_ATOM_MINIMAL_DENOM
+    STK_FURY_MINIMAL_DENOM
   );
 
   //xprt balance on persistence chain
@@ -82,17 +82,17 @@ export function* fetchBalance({ payload }: FetchBalanceSaga) {
     persistenceChainInfo.stakeCurrency.coinMinimalDenom
   );
 
-  //atom balance on cosmos chain
-  const atomBalance = getTokenBalance(
-    cosmosBalances,
-    cosmosChainInfo.stakeCurrency.coinMinimalDenom
+  //fury balance on fury chain
+  const furyBalance = getTokenBalance(
+    furyBalances,
+    furyChainInfo.stakeCurrency.coinMinimalDenom
   );
 
-  yield put(setIbcAtomBalance(Number(decimalize(ibcAtomBalance))));
+  yield put(setIbcFuryBalance(Number(decimalize(ibcFuryBalance))));
   yield put(setXprtBalance(Number(decimalize(xprtBalance))));
-  yield put(setStkAtomBalance(Number(decimalize(stkAtomBalance))));
-  yield put(setAtomBalance(Number(decimalize(atomBalance))));
-  yield put(setCosmosBalances(cosmosBalances));
+  yield put(setStkFuryBalance(Number(decimalize(stkFuryBalance))));
+  yield put(setFuryBalance(Number(decimalize(furyBalance))));
+  yield put(setCosmosBalances(furyBalances));
   yield put(setPersistenceBalances(persistenceBalances));
 }
 
@@ -111,11 +111,11 @@ export function* fetchPendingClaims({ payload }: FetchPendingClaimSaga) {
 // @ts-ignore
 export function* fetchLiveData({ payload }: FetchLiveDataSaga) {
   const { persistenceChainInfo }: any = payload;
-  const [tvu, atomPrice] = yield Promise.all([
-    getChainTVU(persistenceChainInfo.rpc, "stk/uatom"),
-    fetchAtomPrice()
+  const [tvu, furyPrice] = yield Promise.all([
+    getChainTVU(persistenceChainInfo.rpc, "stk/ufury"),
+    fetchFuryPrice()
   ]);
-  yield put(setAtomPrice(atomPrice));
+  yield put(setFuryPrice(furyPrice));
   yield put(setTVU(tvu));
 }
 
@@ -141,7 +141,7 @@ export function* fetchTokenizeShares({
     payload.srcChain!,
     payload.dstChain!,
     "persistence",
-    "cosmos"
+    "fury"
   );
   console.log(sharesOnPersistence, "sharesOnPersistence");
   const sharesOnCosmos = yield getTokenizedShares(
@@ -149,8 +149,8 @@ export function* fetchTokenizeShares({
     payload.dstAddress,
     payload.dstChain!,
     payload.dstChain!,
-    "cosmos",
-    "cosmos"
+    "fury",
+    "fury"
   );
   console.log(sharesOnCosmos, "sharesOnCosmos");
   yield put(

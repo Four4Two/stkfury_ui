@@ -12,7 +12,7 @@ import { decimalize } from "../../../../helpers/utils";
 const Stake = () => {
   const { type, amount } = useSelector((state: RootState) => state.unStake);
 
-  const { stkAtomBalance, atomBalance } = useSelector(
+  const { stkFuryBalance, furyBalance } = useSelector(
     (state: RootState) => state.balances
   );
 
@@ -36,26 +36,26 @@ const Stake = () => {
 
       {type === INSTANT ? (
         Number(amount) > Number(decimalize(maxRedeem)) ? (
-          Number(amount) > Number(stkAtomBalance) ? (
+          Number(amount) > Number(stkFuryBalance) ? (
             <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
-              Redeem stkATOM and receive ATOM to your Cosmos wallet instantly.
+              Redeem stkFURY and receive FURY to your Cosmos wallet instantly.
             </p>
           ) : (
             <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
               Due to insufficient liquidity to redeem instantly on pSTAKE, you
-              can instead swap stkATOM for ATOM on one of the DEXes listed in
+              can instead swap stkFURY for FURY on one of the DEXes listed in
               our DeFi section.
             </p>
           )
         ) : (
           <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
-            Redeem stkATOM and receive ATOM to your Cosmos wallet instantly.
+            Redeem stkFURY and receive FURY to your Cosmos wallet instantly.
           </p>
         )
       ) : (
         <p className="text-light-emphasis font-normal leading-normal text-sm mt-4">
-          Your stkATOM will only be unbonded after an unbonding period of 21-25
-          days. If you want immediate liquidity, you can swap stkATOM for ATOM
+          Your stkFURY will only be unbonded after an unbonding period of 21-25
+          days. If you want immediate liquidity, you can swap stkFURY for FURY
           on one of the DEXes listed in our&nbsp;
           <Link href="/defi" className="text-[#3e73f0]" passHref>
             DeFi section.

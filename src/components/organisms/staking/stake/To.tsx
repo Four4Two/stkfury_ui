@@ -9,15 +9,15 @@ import { RootState } from "../../../../store/reducers";
 import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const To = () => {
-  const { stkAtomBalance } = useSelector((state: RootState) => state.balances);
+  const { stkFuryBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.stake);
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
-  const { atomPrice } = useSelector((state: RootState) => state.liveData);
-  const stkATOMAmount = truncateToFixedDecimalPlaces(
+  const { furyPrice } = useSelector((state: RootState) => state.liveData);
+  const stkFURYAmount = truncateToFixedDecimalPlaces(
     Number(amount) * exchangeRate
   );
 
-  const priceInDollars = atomPrice * Number(amount);
+  const priceInDollars = furyPrice * Number(amount);
   const { isMobile } = useWindowSize();
 
   return (
@@ -26,20 +26,20 @@ const To = () => {
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
             <img
-              src={"/images/tokens/stk_atom.svg"}
+              src={"/images/tokens/stk_fury.svg"}
               width={isMobile ? 20 : 32}
               height={isMobile ? 20 : 32}
               className="logo"
-              alt="atomIcon"
+              alt="furyIcon"
             />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg lg:text-lg">
-              stkATOM
+              stkFURY
             </span>
           </div>
           <p className="mt-3 leading-normal text-sm font-normal md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+              {formatNumber(stkFuryBalance, 3, isMobile ? 2 : 6)}
             </span>
           </p>
         </div>
@@ -47,7 +47,7 @@ const To = () => {
           <InputText
             type="number"
             placeholder="0.00"
-            value={stkATOMAmount.toString()}
+            value={stkFURYAmount.toString()}
             disable={true}
             required={true}
             name="stakeInput"

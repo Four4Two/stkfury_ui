@@ -17,8 +17,8 @@ export interface UnStakeTransactionParams {
   address: string;
   msg: LiquidStakeMsgTypes[];
   pollInitialBalance: number;
-  cosmosChainInfo: ChainInfo;
-  cosmosAddress: string;
+  furyChainInfo: ChainInfo;
+  furyAddress: string;
 }
 
 export type UnStakeTransactionPayload = PayloadAction<UnStakeTransactionParams>;

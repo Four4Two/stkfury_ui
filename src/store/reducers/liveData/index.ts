@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  SetAtomPrice,
+  SetFuryPrice,
   FetchLiveDataSaga,
   InitialDataState,
   SetChainStatus,
@@ -8,9 +8,9 @@ import {
 } from "./types";
 
 const initialState: InitialDataState = {
-  atomPrice: 0,
+  furyPrice: 0,
   tvu: 0,
-  cosmosChainStatus: false,
+  furyChainStatus: false,
   persistenceChainStatus: false
 };
 
@@ -19,11 +19,11 @@ const initData = createSlice({
   initialState,
   reducers: {
     fetchLiveDataSaga: (state, action: FetchLiveDataSaga) => {},
-    setAtomPrice: (state, action: SetAtomPrice) => {
-      state.atomPrice = action.payload;
+    setFuryPrice: (state, action: SetFuryPrice) => {
+      state.furyPrice = action.payload;
     },
     setCosmosChainStatus: (state, action: SetChainStatus) => {
-      state.cosmosChainStatus = action.payload;
+      state.furyChainStatus = action.payload;
     },
     setTVU: (state, action: SetTVU) => {
       state.tvu = action.payload;
@@ -36,7 +36,7 @@ const initData = createSlice({
 
 export const {
   fetchLiveDataSaga,
-  setAtomPrice,
+  setFuryPrice,
   setTVU,
   setCosmosChainStatus,
   setPersistenceChainStatus

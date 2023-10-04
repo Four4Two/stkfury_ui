@@ -20,22 +20,22 @@ const BalanceList = () => {
   const dispatch = useDispatch();
   const [activeClaims, setActiveClaims] = useState<number>(0);
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
-  const { atomPrice } = useSelector((state: RootState) => state.liveData);
-  const [activeStkAtomClaims, setActiveStkAtomClaims] = useState<number>(0);
+  const { furyPrice } = useSelector((state: RootState) => state.liveData);
+  const [activeStkFuryClaims, setActiveStkFuryClaims] = useState<number>(0);
   const [pendingList, setPendingList] = useState<any>([]);
   const [open, setOpen] = useState<any>({
     persistenceBalance: true,
-    cosmosBalance: false,
+    furyBalance: false,
     unStaking: false
   });
   const [totalPendingBalance, setTotalPendingBalance] = useState<number>(0);
   const [totalUnListedPendingClaims, setTotalUnlistedPendingClaims] =
     useState<number>(0);
-  const { ibcAtomBalance, stkAtomBalance, xprtBalance, atomBalance } =
+  const { ibcFuryBalance, stkFuryBalance, xprtBalance, furyBalance } =
     useSelector((state: RootState) => state.balances);
 
-  const stkATOMAmount = truncateToFixedDecimalPlaces(
-    Number(stkAtomBalance) * (1 / exchangeRate)
+  const stkFURYAmount = truncateToFixedDecimalPlaces(
+    Number(stkFuryBalance) * (1 / exchangeRate)
   );
 
   const { isWalletConnected } = useWallet();
@@ -44,7 +44,7 @@ const BalanceList = () => {
   const {
     claimableBalance,
     pendingClaimList,
-    claimableStkAtomBalance,
+    claimableStkFuryBalance,
     unlistedPendingClaimList
   } = useSelector((state: RootState) => state.claimQueries);
 
@@ -56,7 +56,7 @@ const BalanceList = () => {
   useEffect(() => {
     setActiveClaims(claimableBalance);
     setPendingList(pendingClaimList);
-    setActiveStkAtomClaims(claimableStkAtomBalance);
+    setActiveStkFuryClaims(claimableStkFuryBalance);
     let totalPendingClaimableAmount: number = 0;
 
     if (pendingList.length) {
@@ -76,7 +76,7 @@ const BalanceList = () => {
   }, [
     claimableBalance,
     pendingClaimList,
-    claimableStkAtomBalance,
+    claimableStkFuryBalance,
     pendingList,
     unlistedPendingClaimList
   ]);
@@ -117,24 +117,24 @@ const BalanceList = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <img
-                  src={"/images/tokens/stk_atom.svg"}
+                  src={"/images/tokens/stk_fury.svg"}
                   width={22}
                   height={22}
-                  alt="atom"
+                  alt="fury"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
-                  stkATOM
+                  stkFURY
                 </span>
               </div>
               <p
                 className="text-light-mid text-sm font-medium leading-5"
                 title={`$${formatNumber(
-                  atomPrice * stkATOMAmount,
+                  furyPrice * stkFURYAmount,
                   3,
                   isMobile ? 2 : 6
                 )}`}
               >
-                {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+                {formatNumber(stkFuryBalance, 3, isMobile ? 2 : 6)}
               </p>
             </div>
             <div className="flex justify-between items-center mt-4">
@@ -158,27 +158,27 @@ const BalanceList = () => {
               <div className="flex justify-between items-center mt-4">
                 <div className="flex items-center">
                   <img
-                    src={"/images/tokens/atom.svg"}
+                    src={"/images/tokens/fury.svg"}
                     width={22}
                     height={22}
-                    alt="atom"
+                    alt="fury"
                   />
                   <span className="text-light-mid text-sm leading-5 ml-2.5">
-                    ATOM
+                    FURY
                   </span>
                 </div>
                 <p
                   className="text-light-mid text-sm font-medium leading-5"
                   title={`$${formatNumber(
-                    atomPrice * ibcAtomBalance,
+                    furyPrice * ibcFuryBalance,
                     3,
                     isMobile ? 2 : 6
                   )}`}
                 >
-                  {formatNumber(ibcAtomBalance, 3, isMobile ? 2 : 6)}
+                  {formatNumber(ibcFuryBalance, 3, isMobile ? 2 : 6)}
                 </p>
               </div>
-              {ibcAtomBalance > MIN_BALANCE_CHECK ? (
+              {ibcFuryBalance > MIN_BALANCE_CHECK ? (
                 <div className={`m-auto w-[220px] md:w-auto`}>
                   <WithdrawButton />
                 </div>
@@ -189,10 +189,10 @@ const BalanceList = () => {
       </div>
       <div>
         <p
-          onClick={() => handleCollapse("cosmosBalance")}
+          onClick={() => handleCollapse("furyBalance")}
           className={`flex items-center justify-between navLink moreListHeader cursor-pointer m-0 
                  ${
-                   open["cosmosBalance"] ? "opened" : "closed"
+                   open["furyBalance"] ? "opened" : "closed"
                  } py-3 px-8 group`}
         >
           <span className="flex items-center">
@@ -200,38 +200,38 @@ const BalanceList = () => {
               className="text-light-emphasis flex items-center
              text-sm flex items-center font-medium leading-normal"
             >
-              {isMobile ? "Assets on Cosmos" : "Assets on Cosmos Hub"}
+              {isMobile ? "Assets on Cosmos" : "Assets on Highbury"}
             </span>
           </span>
           <Icon iconName="right-arrow" viewClass="side-bar-icon arrow" />
         </p>
         <div
-          id="cosmosBalance"
+          id="furyBalance"
           className={`${
-            open["cosmosBalance"] ? "active" : ""
+            open["furyBalance"] ? "active" : ""
           } collapseMenu overflow-hidden relative bg-[#1B1B1B] px-6`}
         >
           <div className="flex justify-between items-center pb-4 pt-2">
             <div className="flex items-center">
               <img
-                src={"/images/tokens/atom.svg"}
+                src={"/images/tokens/fury.svg"}
                 width={22}
                 height={22}
-                alt="atom"
+                alt="fury"
               />
               <span className="text-light-mid text-sm leading-5 ml-2.5">
-                ATOM
+                FURY
               </span>
             </div>
             <p
               className="text-light-mid text-sm font-medium leading-5"
               title={`$${formatNumber(
-                atomPrice * atomBalance,
+                furyPrice * furyBalance,
                 3,
                 isMobile ? 2 : 6
               )}`}
             >
-              {formatNumber(atomBalance, 3, isMobile ? 2 : 6)}
+              {formatNumber(furyBalance, 3, isMobile ? 2 : 6)}
             </p>
           </div>
         </div>
@@ -275,20 +275,20 @@ const BalanceList = () => {
             <div className="flex justify-between items-center">
               <div className="flex items-center">
                 <img
-                  src={"/images/tokens/atom.svg"}
+                  src={"/images/tokens/fury.svg"}
                   width={22}
                   height={22}
-                  alt="atom"
+                  alt="fury"
                 />
                 <span className="text-light-mid text-sm leading-5 ml-2.5">
-                  ATOM
+                  FURY
                 </span>
               </div>
               <p className="text-light-mid text-sm font-medium leading-5">
                 {formatNumber(
                   Number(decimalize(activeClaims)) +
                     Number(decimalize(totalPendingBalance)) +
-                    Number(decimalize(activeStkAtomClaims)) +
+                    Number(decimalize(activeStkFuryClaims)) +
                     Number(decimalize(totalUnListedPendingClaims)),
                   3,
                   isMobile ? 2 : 6
@@ -298,7 +298,7 @@ const BalanceList = () => {
             {isWalletConnected &&
             (activeClaims > 0 ||
               totalPendingBalance > 0 ||
-              activeStkAtomClaims > 0 ||
+              activeStkFuryClaims > 0 ||
               totalUnListedPendingClaims > 0) ? (
               <div className={`m-auto w-[220px] md:w-auto`}>
                 <Button

@@ -15,8 +15,8 @@ export interface InitialTvlApyFeeTypes {
 export type ActiveStakeTab = "Stake" | "Unstake";
 
 export interface ShadeInitialInfo {
-  atomStkAtom: InitialTvlApyFeeTypes;
-  stkATOMSilk: InitialTvlApyFeeTypes;
+  furyStkFury: InitialTvlApyFeeTypes;
+  stkFURYSilk: InitialTvlApyFeeTypes;
 }
 
 export interface InitialDataState {
@@ -37,7 +37,7 @@ export interface InitialDataState {
 
 export interface FetchInitialDataSagaParams {
   persistenceChainInfo: ChainInfo;
-  cosmosChainInfo: ChainInfo;
+  furyChainInfo: ChainInfo;
 }
 
 export interface FetchValidatorsSagaParams {

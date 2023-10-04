@@ -5,7 +5,7 @@ import { ChainInfo } from "@keplr-wallet/types";
 export interface ClaimState {
   pendingClaimList: any[];
   claimableBalance: number;
-  claimableStkAtomBalance: number;
+  claimableStkFuryBalance: number;
   unlistedPendingClaimList: any[];
 }
 
@@ -17,6 +17,6 @@ export interface FetchPendingClaimSagaParams {
 
 export type SetPendingClaimList = PayloadAction<any[]>;
 export type SetClaimableBalance = PayloadAction<number>;
-export type SetClaimableStkAtomBalance = PayloadAction<number>;
+export type SetClaimableStkFuryBalance = PayloadAction<number>;
 
 export type FetchPendingClaimSaga = PayloadAction<FetchPendingClaimSagaParams>;

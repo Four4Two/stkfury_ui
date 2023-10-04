@@ -10,7 +10,7 @@ import { Scope } from "@sentry/nextjs";
 import * as Sentry from "@sentry/nextjs";
 import { fetchAccountBalance, getTokenBalance } from "../pages/api/onChain";
 import { CHAIN_ID, ExternalChains, PollingConfig } from "./config";
-import { APR_BASE_RATE, COIN_ATOM_DENOM, TEST_NET } from "../../AppConstants";
+import { APR_BASE_RATE, COIN_FURY_DENOM, TEST_NET } from "../../AppConstants";
 import { QueryClientImpl as StakingQueryClient } from "cosmjs-types/cosmos/staking/v1beta1/query";
 import { ChainInfo } from "@keplr-wallet/types";
 const tendermint = require("cosmjs-types/ibc/lightclients/tendermint/v1/tendermint");
@@ -30,8 +30,8 @@ const persistenceChainInfo = ExternalChains[env].find(
   (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
-const cosmosChainInfo = ExternalChains[env].find(
-  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].cosmosChainID
+const furyChainInfo = ExternalChains[env].find(
+  (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].furyChainID
 );
 
 export async function RpcClient(rpc: string) {
@@ -261,13 +261,13 @@ export const printConsole = (message: any, helpText = "") => {
 
 export async function getBaseRate() {
   try {
-    const cosmosClient = await RpcClient(cosmosChainInfo!.rpc);
-    const stakingQueryClient = new StakingQueryClient(cosmosClient);
-    const bankQueryClient = new BankQueryClient(cosmosClient);
-    const mintQueryClient = new MintQueryClient(cosmosClient);
-    const distributionQueryClient = new DistrQueryClient(cosmosClient);
+    const furyClient = await RpcClient(furyChainInfo!.rpc);
+    const stakingQueryClient = new StakingQueryClient(furyClient);
+    const bankQueryClient = new BankQueryClient(furyClient);
+    const mintQueryClient = new MintQueryClient(furyClient);
+    const distributionQueryClient = new DistrQueryClient(furyClient);
     const stakingPool = await stakingQueryClient.Pool({});
-    const supply = await bankQueryClient.SupplyOf({ denom: "uatom" });
+    const supply = await bankQueryClient.SupplyOf({ denom: "ufury" });
     const inflation = await mintQueryClient.Inflation({});
     const distributionParams = await distributionQueryClient.Params({});
     return (
@@ -285,7 +285,7 @@ export async function getBaseRate() {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching baseRate": cosmosChainInfo?.rpc
+      "Error while fetching baseRate": furyChainInfo?.rpc
     });
     genericErrorHandler(e, customScope);
     return APR_BASE_RATE;
@@ -325,14 +325,14 @@ export const numberFormat = (number: any, decPlaces: number) => {
   return number;
 };
 
-export async function GetCosmosAPY() {
-  const cosmosClient = await RpcClient(cosmosChainInfo!.rpc);
-  const stakingQueryClient = new StakingQueryClient(cosmosClient);
-  const bankQueryClient = new BankQueryClient(cosmosClient);
-  const mintQueryClient = new MintQueryClient(cosmosClient);
-  const distributionQueryClient = new DistrQueryClient(cosmosClient);
+export async function GetFuryAPY() {
+  const furyClient = await RpcClient(furyChainInfo!.rpc);
+  const stakingQueryClient = new StakingQueryClient(furyClient);
+  const bankQueryClient = new BankQueryClient(furyClient);
+  const mintQueryClient = new MintQueryClient(furyClient);
+  const distributionQueryClient = new DistrQueryClient(furyClient);
   const stakingPool = await stakingQueryClient.Pool({});
-  const supply = await bankQueryClient.SupplyOf({ denom: COIN_ATOM_DENOM });
+  const supply = await bankQueryClient.SupplyOf({ denom: COIN_FURY_DENOM });
   const inflation = await mintQueryClient.Inflation({});
   const distributionParams = await distributionQueryClient.Params({});
   return (

@@ -31,17 +31,17 @@ const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const WithdrawButton = () => {
   const dispatch = useDispatch();
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].furyChainID
   );
-  const { atomBalance, ibcAtomBalance } = useSelector(
+  const { furyBalance, ibcFuryBalance } = useSelector(
     (state: RootState) => state.balances
   );
   const { inProgress, name } = useSelector(
     (state: RootState) => state.transaction
   );
   const {
-    cosmosAccountData,
-    cosmosChainData,
+    furyAccountData,
+    furyChainData,
     persistenceAccountData,
     persistenceSigner,
     persistenceChainData
@@ -50,30 +50,30 @@ const WithdrawButton = () => {
 
   const withdrawHandler = async () => {
     dispatch(hideMobileSidebar());
-    dispatch(setWithdrawAmount(ibcAtomBalance));
+    dispatch(setWithdrawAmount(ibcFuryBalance));
     dispatch(setWithdrawTxnFailed(false));
     dispatch(setTransactionProgress(WITHDRAW));
     const withDrawMsg = await MakeIBCTransferMsg({
       channel: ibcInfo?.destinationChannelId,
       fromAddress: persistenceAccountData?.address,
-      toAddress: cosmosAccountData?.address,
-      amount: unDecimalize(ibcAtomBalance),
+      toAddress: furyAccountData?.address,
+      amount: unDecimalize(ibcFuryBalance),
       timeoutHeight: undefined,
       timeoutTimestamp: undefined,
       denom: ibcInfo?.coinDenom,
       sourceRPCUrl: persistenceChainData?.rpc,
-      destinationRPCUrl: cosmosChainData?.rpc,
+      destinationRPCUrl: furyChainData?.rpc,
       port: IBCConfiguration.ibcDefaultPort
     });
 
     dispatch(
       executeWithdrawTransactionSaga({
-        cosmosChainInfo: cosmosChainData!,
+        furyChainInfo: furyChainData!,
         persistenceChainInfo: persistenceChainData!,
-        cosmosAddress: cosmosAccountData?.address!,
+        furyAddress: furyAccountData?.address!,
         persistenceAddress: persistenceAccountData?.address!,
         withdrawMsg: withDrawMsg,
-        pollInitialIBCAtomBalance: atomBalance,
+        pollInitialIBCFuryBalance: furyBalance,
         persistenceSigner: persistenceSigner!
       })
     );

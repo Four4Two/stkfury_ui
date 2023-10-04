@@ -28,12 +28,12 @@ const socialList = [
     tooltip: "Telegram"
   },
   {
-    url: "https://blog.pstake.finance/category/stkatom/",
+    url: "https://blog.pstake.finance/category/stkfury/",
     iconName: "medium-m",
     tooltip: "Medium"
   },
   {
-    url: "https://pstake.finance/atom",
+    url: "https://pstake.finance/fury",
     iconName: "globe",
     tooltip: "Website"
   },
@@ -46,7 +46,7 @@ const socialList = [
 
 const moreList = [
   {
-    url: "https://docs.pstake.finance/stkATOM_Introduction/",
+    url: "https://docs.pstake.finance/stkFURY_Introduction/",
     name: "Docs",
     icon: "docs"
   },

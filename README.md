@@ -1,4 +1,4 @@
-# stkATOM WebApp 
+# stkFURY WebApp 
 
 ### Tools and Technologies
 

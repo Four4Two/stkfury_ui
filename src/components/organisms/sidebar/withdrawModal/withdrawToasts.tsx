@@ -51,7 +51,7 @@ const WithdrawToasts = () => {
           {stepNumber === 3 && !txFailed
             ? displayToast(
                 {
-                  message: "Your ATOM withdrawn Successfully"
+                  message: "Your FURY withdrawn Successfully"
                 },
                 ToastType.SUCCESS
               )

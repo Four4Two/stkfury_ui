@@ -9,10 +9,10 @@ export interface DepositState {
   showModal: boolean;
 }
 export interface DepositTransactionParams {
-  cosmosSigner: OfflineSigner | OfflineDirectSigner;
-  cosmosChainInfo: ChainInfo;
+  furySigner: OfflineSigner | OfflineDirectSigner;
+  furyChainInfo: ChainInfo;
   persistenceChainInfo: ChainInfo;
-  cosmosAddress: string;
+  furyAddress: string;
   persistenceAddress: string;
   depositMsg: LiquidStakeMsgTypes;
   pollInitialDepositBalance: number;

@@ -23,17 +23,17 @@ export function* failedTransactionActions(txnHash: string) {
 export function* postTransactionActions(
   type: TransactionType,
   persistenceAddress: string,
-  cosmosAddress: string,
+  furyAddress: string,
   persistenceChainData: ChainInfo,
-  cosmosChainData: ChainInfo
+  furyChainData: ChainInfo
 ) {
   yield put(resetTransaction());
   yield put(
     fetchBalanceSaga({
       persistenceAddress: persistenceAddress,
-      cosmosAddress: cosmosAddress,
+      furyAddress: furyAddress,
       persistenceChainInfo: persistenceChainData!,
-      cosmosChainInfo: cosmosChainData!
+      furyChainInfo: furyChainData!
     })
   );
   if (type === "unstake" || type === "claim") {
@@ -41,7 +41,7 @@ export function* postTransactionActions(
       fetchPendingClaimsSaga({
         address: persistenceAddress,
         persistenceChainInfo: persistenceChainData!,
-        dstChainInfo: cosmosChainData
+        dstChainInfo: furyChainData
       })
     );
   }

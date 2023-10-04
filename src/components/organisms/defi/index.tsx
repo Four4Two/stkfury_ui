@@ -66,8 +66,8 @@ const DefiList = () => {
       initData.crescentInfo,
       initData.dexterInfo,
       initData.umeeInfo,
-      initData.shadeInfo.stkATOMSilk,
-      initData.shadeInfo.atomStkAtom,
+      initData.shadeInfo.stkFURYSilk,
+      initData.shadeInfo.furyStkFury,
       initData.shadeCollateral
     );
     const sortedDefiData: any[] = arraySortDestruct(defiList);
@@ -96,8 +96,8 @@ const DefiList = () => {
       initData.crescentInfo,
       initData.dexterInfo,
       initData.umeeInfo,
-      initData.shadeInfo.stkATOMSilk,
-      initData.shadeInfo.atomStkAtom,
+      initData.shadeInfo.stkFURYSilk,
+      initData.shadeInfo.furyStkFury,
       initData.shadeCollateral
     );
     const filteredArray: any[] = arrayFilterDestruct(defiList, searchTerm);
@@ -114,9 +114,9 @@ const DefiList = () => {
           DeFi
         </h1>
         <h6 className="text-base text-light-high text-center leading-normal md:text-sm">
-          Put your stkATOM to work in the Cosmos DeFi Ecosystem with additional
+          Put your stkFURY to work in the Cosmos DeFi Ecosystem with additional
           <br />
-          yield while still earning ATOM staking rewards
+          yield while still earning FURY staking rewards
         </h6>
       </div>
       <Filters

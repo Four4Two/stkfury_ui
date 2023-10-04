@@ -44,7 +44,7 @@ const StakeToasts = () => {
           !txFailed
             ? displayToast(
                 {
-                  message: "Tokenizing your staked ATOM"
+                  message: "Tokenizing your staked FURY"
                 },
                 ToastType.LOADING
               )
@@ -67,7 +67,7 @@ const StakeToasts = () => {
                     liquidStakeType === "delegationStaking" ||
                     liquidStakeType === "tokenizedSharesStaking"
                       ? "tokens transferred to persistence chain"
-                      : "Atom transferred to persistence chain successfully"
+                      : "Fury transferred to persistence chain successfully"
                 },
                 ToastType.SUCCESS
               )
@@ -83,7 +83,7 @@ const StakeToasts = () => {
           {stepNumber === 5 && !txFailed
             ? displayToast(
                 {
-                  message: "Your ATOM Staked Successfully"
+                  message: "Your FURY Staked Successfully"
                 },
                 ToastType.SUCCESS
               )

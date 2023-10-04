@@ -30,14 +30,14 @@ const ValidatorStakeModal = () => {
 
   const dispatch = useDispatch();
   const {
-    cosmosAccountData,
-    cosmosChainData,
+    furyAccountData,
+    furyChainData,
     persistenceChainData,
     persistenceAccountData,
     isWalletConnected
   } = useWallet();
 
-  const { atomPrice } = useSelector((state: RootState) => state.liveData);
+  const { furyPrice } = useSelector((state: RootState) => state.liveData);
   const { validators } = useSelector((state: RootState) => state.initialData);
 
   const { validatorModal, delegatedValidators, delegatedValidatorsLoader } =
@@ -49,13 +49,13 @@ const ValidatorStakeModal = () => {
     if (isWalletConnected) {
       dispatch(
         fetchDelegatedValidatorsSaga({
-          address: cosmosAccountData?.address!,
-          rpc: cosmosChainData?.rpc!,
+          address: furyAccountData?.address!,
+          rpc: furyChainData?.rpc!,
           validators: validators
         })
       );
     }
-  }, [cosmosAccountData, isWalletConnected]);
+  }, [furyAccountData, isWalletConnected]);
 
   useEffect(() => {
     if (delegatedValidators) {
@@ -136,14 +136,14 @@ const ValidatorStakeModal = () => {
     >
       <div className={`px-10 py-10 md:p-7`}>
         <p className="text-light-emphasis text-xl font-semibold pb-2">
-          Liquid Stake your staked ATOM using LSM
+          Liquid Stake your staked FURY using LSM
         </p>
         <div className="flex items-center mb-6 justify-between">
           <p className="text-sm text-light-mid pr-2">
-            Select the validator(s) and enter the amount of staked ATOM you wish
+            Select the validator(s) and enter the amount of staked FURY you wish
             to liquid stake.&nbsp;
             <a
-              href="https://blog.pstake.finance/2023/09/12/cosmos-lsm-atom-liquid-staking-made-simpler-with-pstake/"
+              href="https://blog.pstake.finance/2023/09/12/cosmos-lsm-fury-liquid-staking-made-simpler-with-pstake/"
               target="_blank"
               rel="noreferrer"
               className="text-[#3E73F0] underline"
@@ -177,7 +177,7 @@ const ValidatorStakeModal = () => {
                     className="px-4 py-3 text-light-mid text-sm backdrop-blur font-normal
                    text-left sticky top-0 !bg-[#252525] h-[48px]"
                   >
-                    Staked ATOM
+                    Staked FURY
                   </th>
                   <th
                     className="px-4 py-3 text-light-mid text-sm  backdrop-blur font-normal
@@ -256,7 +256,7 @@ const ValidatorStakeModal = () => {
                                   "block text-light-low font-medium text-sm"
                                 }
                               >{`$${(
-                                atomPrice * Number(item.amount)
+                                furyPrice * Number(item.amount)
                               ).toLocaleString()}`}</span>
                             </p>
                           </td>
@@ -397,7 +397,7 @@ const ValidatorStakeModal = () => {
             <div className={"flex-[20%]"}>
               <p className="text-sm text-light-mid pb-2">Total Amount</p>
               <p className="text-sm text-light-full">
-                {truncateToFixedDecimalPlaces(Number(totalAmount))} ATOM
+                {truncateToFixedDecimalPlaces(Number(totalAmount))} FURY
               </p>
             </div>
             <div className={"flex-[30%]"}>
@@ -406,13 +406,13 @@ const ValidatorStakeModal = () => {
                 {truncateToFixedDecimalPlaces(
                   Number(totalAmount) * exchangeRate
                 )}{" "}
-                stkATOM
+                stkFURY
               </p>
             </div>
             <div className={"flex-[30%]"}>
               <p className="text-sm text-light-mid pb-2">Exchange Rate</p>
               <p className="text-sm text-light-full">
-                1 ATOM = {formatNumber(exchangeRate)} &nbsp; stkATOM
+                1 FURY = {formatNumber(exchangeRate)} &nbsp; stkFURY
               </p>
             </div>
           </div>

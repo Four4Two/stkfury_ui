@@ -76,8 +76,8 @@ export interface StakeTransactionParams {
   account: string;
   msg: LiquidStakeMsgTypes;
   pollInitialBalance: number;
-  cosmosAddress: string;
-  cosmosChainInfo: ChainInfo;
+  furyAddress: string;
+  furyChainInfo: ChainInfo;
 }
 
 export interface DelegationStakeTransactionParams {

@@ -18,7 +18,7 @@ import {
   COSMOS_CHAIN_ID,
   INSTANT,
   MIN_REDEEM,
-  STK_ATOM_MINIMAL_DENOM,
+  STK_FURY_MINIMAL_DENOM,
   UN_STAKE
 } from "../../../../../AppConstants";
 import { executeUnStakeTransactionSaga } from "../../../../store/reducers/transactions/unstake";
@@ -36,9 +36,9 @@ const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 const Submit = () => {
   const dispatch = useDispatch();
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].furyChainID
   );
-  const { stkAtomBalance, atomBalance } = useSelector(
+  const { stkFuryBalance, furyBalance } = useSelector(
     (state: RootState) => state.balances
   );
   const { amount, type } = useSelector((state: RootState) => state.unStake);
@@ -55,19 +55,19 @@ const Submit = () => {
     persistenceAccountData,
     persistenceSigner,
     persistenceChainData,
-    cosmosAccountData,
-    cosmosChainData
+    furyAccountData,
+    furyChainData
   } = useWallet();
 
-  const stkAtomAmount = Number(amount) - Number(amount) * redeemFee;
-  const atomAmount = Number(stkAtomAmount) / exchangeRate;
+  const stkFuryAmount = Number(amount) - Number(amount) * redeemFee;
+  const furyAmount = Number(stkFuryAmount) / exchangeRate;
 
   let redeemAmount: number = 0;
 
   if (Number(amount) > MIN_REDEEM) {
-    redeemAmount = truncateToFixedDecimalPlaces(atomAmount);
+    redeemAmount = truncateToFixedDecimalPlaces(furyAmount);
   } else {
-    redeemAmount = Number(atomAmount.toFixed(18).match(/^\d+(?:\.\d{0,6})?/));
+    redeemAmount = Number(furyAmount.toFixed(18).match(/^\d+(?:\.\d{0,6})?/));
   }
 
   const stakeHandler = async () => {
@@ -78,29 +78,29 @@ const Submit = () => {
       const withDrawMsg = await MakeIBCTransferMsg({
         channel: ibcInfo?.destinationChannelId,
         fromAddress: persistenceAccountData?.address,
-        toAddress: cosmosAccountData?.address,
+        toAddress: furyAccountData?.address,
         amount: unDecimalize(redeemAmount),
         timeoutHeight: undefined,
         timeoutTimestamp: undefined,
         denom: ibcInfo?.coinDenom,
         sourceRPCUrl: persistenceChainData?.rpc,
-        destinationRPCUrl: cosmosChainData?.rpc,
+        destinationRPCUrl: furyChainData?.rpc,
         port: IBCConfiguration.ibcDefaultPort
       });
       const redeemMsg = RedeemMsg(
         persistenceAccountData!.address,
         unDecimalize(amount),
-        STK_ATOM_MINIMAL_DENOM
+        STK_FURY_MINIMAL_DENOM
       );
-      pollingBalance = atomBalance;
+      pollingBalance = furyBalance;
       messages = [redeemMsg, withDrawMsg];
     } else {
       const liquidUnStakeMsg = LiquidUnStakeMsg(
         persistenceAccountData!.address,
         unDecimalize(amount),
-        STK_ATOM_MINIMAL_DENOM
+        STK_FURY_MINIMAL_DENOM
       );
-      pollingBalance = stkAtomBalance;
+      pollingBalance = stkFuryBalance;
       messages = [liquidUnStakeMsg];
     }
 
@@ -111,14 +111,14 @@ const Submit = () => {
         address: persistenceAccountData!.address,
         persistenceChainInfo: persistenceChainData!,
         pollInitialBalance: pollingBalance,
-        cosmosAddress: cosmosAccountData?.address!,
-        cosmosChainInfo: cosmosChainData!
+        furyAddress: furyAccountData?.address!,
+        furyChainInfo: furyChainData!
       })
     );
   };
 
   const enable =
-    amount && Number(amount) > 0 && Number(amount) <= Number(stkAtomBalance);
+    amount && Number(amount) > 0 && Number(amount) <= Number(stkFuryBalance);
 
   return isWalletConnected ? (
     <Button
@@ -137,7 +137,7 @@ const Submit = () => {
       content={
         name === UN_STAKE && inProgress ? (
           <Spinner size={isMobile ? "small" : "medium"} />
-        ) : Number(amount) > Number(stkAtomBalance) ? (
+        ) : Number(amount) > Number(stkFuryBalance) ? (
           "Insufficient balance"
         ) : type === INSTANT ? (
           Number(amount) > Number(decimalize(maxRedeem)) ? (

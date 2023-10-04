@@ -53,21 +53,21 @@ const StakeModal = () => {
       <div className="flex items-center justify-center px-10 pt-10 md:px-7 md:pt-7">
         <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
           <Image
-            src={"/images/tokens/atom.svg"}
+            src={"/images/tokens/fury.svg"}
             width={40}
             height={40}
             className="logo !md:w-[26px] !md:h-[26px]"
-            alt="atomIcon"
+            alt="furyIcon"
           />
         </div>
         <Icon iconName="right-arrow-bold" viewClass="icon-arrow mx-4" />
         <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
           <Image
-            src={"/images/tokens/stk_atom.svg"}
+            src={"/images/tokens/stk_fury.svg"}
             width={40}
             height={40}
             className="logo !md:w-[26px] !md:h-[26px]"
-            alt="atomIcon"
+            alt="furyIcon"
           />
         </div>
       </div>
@@ -77,7 +77,7 @@ const StakeModal = () => {
         liquidStakeType === "tokenizedSharesStaking"
           ? truncateToFixedDecimalPlaces(Number(delegationStakeAmount))
           : truncateToFixedDecimalPlaces(Number(amount))}{" "}
-        ATOM
+        FURY
       </p>
       <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
         <div className="mb-10 md:mb-7">
@@ -108,7 +108,7 @@ const StakeModal = () => {
                   stepNumber >= 1 ? "text-light-emphasis" : "text-light-low"
                 } text-base font-normal`}
               >
-                Approve to tokenize your staked ATOM
+                Approve to tokenize your staked FURY
               </p>
             </div>
           ) : (
@@ -184,7 +184,7 @@ const StakeModal = () => {
         ) : null}
         {stepNumber === 5 && (
           <p className="text-base text-light-high text-center font-medium mb-4 md:text-sm">
-            You&apos;ve successfully staked {amount} ATOM on pSTAKE
+            You&apos;ve successfully staked {amount} FURY on pSTAKE
           </p>
         )}
         {txFailed || stepNumber === 5 ? (

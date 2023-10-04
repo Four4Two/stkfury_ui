@@ -36,17 +36,17 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
   }, [inputState]);
 
   const dispatch = useDispatch();
-  const { atomBalance, stkAtomBalance, ibcAtomBalance } = useSelector(
+  const { furyBalance, stkFuryBalance, ibcFuryBalance } = useSelector(
     (state: RootState) => state.balances
   );
 
   const {
-    cosmosAccountData,
-    cosmosChainData,
+    furyAccountData,
+    furyChainData,
     persistenceChainData,
     persistenceAccountData,
     persistenceSigner,
-    cosmosSigner
+    furySigner
   } = useWallet();
 
   const stakeHandler = async () => {
@@ -60,13 +60,13 @@ const Submit = ({ inputState, totalAmount, buttonText, className }: any) => {
       dispatch(
         executeTokenizedShareStakeTransactionSaga({
           srcChainSigner: persistenceSigner!,
-          dstChainSigner: cosmosSigner!,
+          dstChainSigner: furySigner!,
           tokenList: tokenizedShares,
           account: persistenceAccountData?.address!,
           srcChainInfo: persistenceChainData!,
-          pollInitialBalance: stkAtomBalance,
-          dstAddress: cosmosAccountData!.address,
-          dstChainInfo: cosmosChainData!
+          pollInitialBalance: stkFuryBalance,
+          dstAddress: furyAccountData!.address,
+          dstChainInfo: furyChainData!
         })
       );
       dispatch(setTokenizedShareModal(false));

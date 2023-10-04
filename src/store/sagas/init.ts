@@ -36,16 +36,16 @@ import { Validator as PstakeValidator } from "persistenceonejs/pstake/liquidstak
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 export function* fetchInit({ payload }: FetchInitialDataSaga): any {
-  const { persistenceChainInfo, cosmosChainInfo }: any = payload;
+  const { persistenceChainInfo, furyChainInfo }: any = payload;
   const [exchangeRate, redeemFee, maxRedeem] = yield Promise.all([
     env === "Testnet"
       ? getExchangeRateFromRpc(
           persistenceChainInfo.rpc,
-          cosmosChainInfo.chainId
+          furyChainInfo.chainId
         )
       : getExchangeRate(),
-    getFee(persistenceChainInfo.rpc, cosmosChainInfo.chainId),
-    getMaxRedeem(persistenceChainInfo.rpc, cosmosChainInfo.chainId)
+    getFee(persistenceChainInfo.rpc, furyChainInfo.chainId),
+    getMaxRedeem(persistenceChainInfo.rpc, furyChainInfo.chainId)
   ]);
   yield put(setExchangeRate(exchangeRate));
   yield put(setRedeemFee(redeemFee));

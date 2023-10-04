@@ -34,15 +34,15 @@ export const IBCConfiguration = {
 
 export const CHAIN_ID: any = {
   Devnet: {
-    cosmosChainID: "gaiad-1",
+    furyChainID: "gaiad-1",
     persistenceChainID: "pstaked-1"
   },
   Testnet: {
-    cosmosChainID: "theta-testnet-001",
+    furyChainID: "theta-testnet-001",
     persistenceChainID: "test-core-2"
   },
   Mainnet: {
-    cosmosChainID: "cosmoshub-4",
+    furyChainID: "highbury_710-1",
     persistenceChainID: "core-1"
   }
 };
@@ -57,7 +57,7 @@ export const IBCChainInfos: IBCChainData = {
       portID: "transfer",
       coinDenom:
         "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2",
-      prefix: "cosmos"
+      prefix: "fury"
     }
   ],
   Testnet: [
@@ -69,19 +69,19 @@ export const IBCChainInfos: IBCChainData = {
       portID: "transfer",
       coinDenom:
         "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
-      prefix: "cosmos"
+      prefix: "fury"
     }
   ],
   Mainnet: [
     {
-      counterpartyChainId: "cosmoshub-4",
-      chainName: "Cosmos Hub",
+      counterpartyChainId: "highbury_710-1",
+      chainName: "Highbury",
       sourceChannelId: "channel-190",
       destinationChannelId: "channel-24",
       portID: "transfer",
       coinDenom:
         "ibc/C8A74ABBE2AF892E15680D916A7C22130585CE5704F9B17A10F184A90D53BECA",
-      prefix: "cosmos"
+      prefix: "fury"
     }
   ]
 };
@@ -110,8 +110,8 @@ export const ExternalChains: ExternalChainData = {
           coinGeckoId: "persistence"
         },
         {
-          coinDenom: "STKATOM",
-          coinMinimalDenom: "stk/uatom",
+          coinDenom: "STKFURY",
+          coinMinimalDenom: "stk/ufury",
           coinDecimals: 6,
           coinGeckoId: "persistence"
         },
@@ -140,41 +140,41 @@ export const ExternalChains: ExternalChainData = {
       }
     },
     {
-      rpc: "https://rpc.devnet.cosmos.pstake.finance",
-      rest: "https://rest.devnet.cosmos.pstake.finance",
+      rpc: "https://rpc.devnet.fury.pstake.finance",
+      rest: "https://rest.devnet.fury.pstake.finance",
       chainId: "gaiad-1",
       chainName: "pStake Cosmos Devnet",
       stakeCurrency: {
-        coinDenom: "ATOM",
-        coinMinimalDenom: "uatom",
+        coinDenom: "FURY",
+        coinMinimalDenom: "ufury",
         coinDecimals: 6,
-        coinGeckoId: "cosmos"
+        coinGeckoId: "fury"
       },
       bip44: {
         coinType: 118
       },
       currencies: [
         {
-          coinDenom: "ATOM",
-          coinMinimalDenom: "uatom",
+          coinDenom: "FURY",
+          coinMinimalDenom: "ufury",
           coinDecimals: 6,
-          coinGeckoId: "cosmos"
+          coinGeckoId: "fury"
         }
       ],
       feeCurrencies: [
         {
-          coinDenom: "ATOM",
-          coinMinimalDenom: "uatom",
+          coinDenom: "FURY",
+          coinMinimalDenom: "ufury",
           coinDecimals: 6,
-          coinGeckoId: "cosmos"
+          coinGeckoId: "fury"
         }
       ],
       bech32Config: {
-        bech32PrefixAccAddr: "cosmos",
-        bech32PrefixAccPub: "cosmospub",
-        bech32PrefixValAddr: "cosmosvaloper",
-        bech32PrefixValPub: "cosmosvaloperpub",
-        bech32PrefixConsAddr: "cosmosvalcons",
+        bech32PrefixAccAddr: "fury",
+        bech32PrefixAccPub: "furypub",
+        bech32PrefixValAddr: "furyvaloper",
+        bech32PrefixValPub: "furyvaloperpub",
+        bech32PrefixConsAddr: "furyvalcons",
         bech32PrefixConsPub: "persistencevalconspub"
       },
       gasPriceStep: {
@@ -207,8 +207,8 @@ export const ExternalChains: ExternalChainData = {
           coinGeckoId: "persistence"
         },
         {
-          coinDenom: "STKATOM",
-          coinMinimalDenom: "stk/uatom",
+          coinDenom: "STKFURY",
+          coinMinimalDenom: "stk/ufury",
           coinDecimals: 6,
           coinGeckoId: "persistence"
         }
@@ -241,77 +241,77 @@ export const ExternalChains: ExternalChainData = {
       chainId: "theta-testnet-001",
       chainName: "pStake Cosmos Testnet",
       stakeCurrency: {
-        coinDenom: "ATOM",
-        coinMinimalDenom: "uatom",
+        coinDenom: "FURY",
+        coinMinimalDenom: "ufury",
         coinDecimals: 6,
-        coinGeckoId: "cosmos"
+        coinGeckoId: "fury"
       },
       bip44: {
         coinType: 118
       },
       currencies: [
         {
-          coinDenom: "ATOM",
-          coinMinimalDenom: "uatom",
+          coinDenom: "FURY",
+          coinMinimalDenom: "ufury",
           coinDecimals: 6,
-          coinGeckoId: "cosmos"
+          coinGeckoId: "fury"
         }
       ],
       feeCurrencies: [
         {
-          coinDenom: "ATOM",
-          coinMinimalDenom: "uatom",
+          coinDenom: "FURY",
+          coinMinimalDenom: "ufury",
           coinDecimals: 6,
-          coinGeckoId: "cosmos"
+          coinGeckoId: "fury"
         }
       ],
       bech32Config: {
-        bech32PrefixAccAddr: "cosmos",
-        bech32PrefixAccPub: "cosmospub",
-        bech32PrefixValAddr: "cosmosvaloper",
-        bech32PrefixValPub: "cosmosvaloperpub",
-        bech32PrefixConsAddr: "cosmosvalcons",
+        bech32PrefixAccAddr: "fury",
+        bech32PrefixAccPub: "furypub",
+        bech32PrefixValAddr: "furyvaloper",
+        bech32PrefixValPub: "furyvaloperpub",
+        bech32PrefixConsAddr: "furyvalcons",
         bech32PrefixConsPub: "persistencevalconspub"
       }
     }
   ],
   Mainnet: [
     {
-      rpc: "https://rpc.cosmos.audit.one/",
-      rest: "https://rest.cosmos.audit.one/",
-      chainId: "cosmoshub-4",
-      chainName: "Cosmos Hub",
+      rpc: "https://rpc.furya.io/",
+      rest: "https://api-mainnet.furya.io/",
+      chainId: "highbury_710-1",
+      chainName: "Highbury",
       stakeCurrency: {
-        coinDenom: "ATOM",
-        coinMinimalDenom: "uatom",
+        coinDenom: "FURY",
+        coinMinimalDenom: "ufury",
         coinDecimals: 6,
-        coinGeckoId: "cosmos"
+        coinGeckoId: "fury"
       },
       bip44: {
         coinType: 118
       },
       currencies: [
         {
-          coinDenom: "ATOM",
-          coinMinimalDenom: "uatom",
+          coinDenom: "FURY",
+          coinMinimalDenom: "ufury",
           coinDecimals: 6,
-          coinGeckoId: "cosmos"
+          coinGeckoId: "fury"
         }
       ],
       feeCurrencies: [
         {
-          coinDenom: "ATOM",
-          coinMinimalDenom: "uatom",
+          coinDenom: "FURY",
+          coinMinimalDenom: "ufury",
           coinDecimals: 6,
-          coinGeckoId: "cosmos"
+          coinGeckoId: "fury"
         }
       ],
       bech32Config: {
-        bech32PrefixAccAddr: "cosmos",
-        bech32PrefixAccPub: "cosmospub",
-        bech32PrefixValAddr: "cosmosvaloper",
-        bech32PrefixValPub: "cosmosvaloperpub",
-        bech32PrefixConsAddr: "cosmosvalcons",
+        bech32PrefixAccAddr: "fury",
+        bech32PrefixAccPub: "furypub",
+        bech32PrefixValAddr: "furyvaloper",
+        bech32PrefixValPub: "furyvaloperpub",
+        bech32PrefixConsAddr: "furyvalcons",
         bech32PrefixConsPub: "persistencevalconspub"
       }
     },
@@ -337,8 +337,8 @@ export const ExternalChains: ExternalChainData = {
           coinGeckoId: "persistence"
         },
         {
-          coinDenom: "STKATOM",
-          coinMinimalDenom: "stk/uatom",
+          coinDenom: "STKFURY",
+          coinMinimalDenom: "stk/ufury",
           coinDecimals: 6,
           coinGeckoId: "persistence"
         }

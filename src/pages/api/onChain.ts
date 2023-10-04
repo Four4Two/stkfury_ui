@@ -33,7 +33,7 @@ import {
   APR_DEFAULT,
   COSMOS_UNBOND_TIME,
   MIN_STAKE,
-  STK_ATOM_MINIMAL_DENOM
+  STK_FURY_MINIMAL_DENOM
 } from "../../../AppConstants";
 import { CHAIN_ID, ExternalChains } from "../../helpers/config";
 import { StatusResponse, Tendermint34Client } from "@cosmjs/tendermint-rpc";
@@ -52,7 +52,7 @@ const persistenceChainInfo = ExternalChains[env].find(
   (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
-const cosmosChainInfo = ExternalChains[env].find(
+const furyChainInfo = ExternalChains[env].find(
   (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
 );
 
@@ -103,10 +103,10 @@ export const getExchangeRateFromRpc = async (
     const cvalue = await pstakeQueryService.ExchangeRate({
       chainId: chainId
     });
-    console.log(cvalue, "-cosmos cvalue in getExchangeRateFromRpc", chainId);
+    console.log(cvalue, "-fury cvalue in getExchangeRateFromRpc", chainId);
     return Number(decimalize(cvalue.rate, 18));
   } catch (e) {
-    console.log(e, "-cosmos error in getExchangeRateFromRpc");
+    console.log(e, "-fury error in getExchangeRateFromRpc");
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
@@ -130,7 +130,7 @@ export const getFee = async (
     const fee = chainParamsResponse!.hostChain!.params!.redemptionFee;
     return Number(Number(decimalize(fee, 18)).toFixed(6));
   } catch (e) {
-    console.log(e, "-cosmos error in getFee");
+    console.log(e, "-fury error in getFee");
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
@@ -149,7 +149,7 @@ export const getChainTVU = async (
     const rpcClient = await RpcClient(rpc);
     const bankQueryService = new BankQuery(rpcClient);
     const supply: QuerySupplyOfResponse = await bankQueryService.SupplyOf({
-      denom: "stk/uatom"
+      denom: "stk/ufury"
     });
     console.log(supply, "supply");
     if (supply) {
@@ -158,7 +158,7 @@ export const getChainTVU = async (
       return 0;
     }
   } catch (e) {
-    console.log(e, "-cosmos error in getChainTVU");
+    console.log(e, "-fury error in getChainTVU");
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
@@ -184,7 +184,7 @@ export const fetchUnbondingList = async (
     let claimableAmount: number = 0;
     if (response.userUnbondings.length) {
       for (let item of response.userUnbondings) {
-        console.log(response, "-cosmos response", Number(item.epochNumber));
+        console.log(response, "-fury response", Number(item.epochNumber));
         if (hostChainId === item.chainId) {
           const unbondTime = await getUnbondTime(item.epochNumber, rpc);
           list.push({
@@ -268,7 +268,7 @@ export const getMaxRedeem = async (
       ? Number(moduleAccountResponse.balance?.amount)
       : 0;
   } catch (e) {
-    console.log(e, "cosmos error getMaxRedeem");
+    console.log(e, "fury error getMaxRedeem");
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
@@ -317,7 +317,7 @@ export const getCosmosUnbondTime = async (rpc: string): Promise<number> => {
     const customScope = new Scope();
     customScope.setLevel("fatal");
     customScope.setTags({
-      "Error while fetching cosmos unbond time": rpc
+      "Error while fetching fury unbond time": rpc
     });
     genericErrorHandler(e, customScope);
     return 0;
@@ -512,7 +512,7 @@ export const getTokenizedShares = async (
       for (let item of balances!.balances) {
         console.log(item, "item-123");
         let valAddress: string = "";
-        if (chain === "cosmos") {
+        if (chain === "highbury") {
           if (item.denom.startsWith(prefix)) {
             valAddress = item.denom.substring(0, item.denom.indexOf("/"));
           }

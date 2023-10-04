@@ -6,13 +6,13 @@ import {fetchLiveDataSaga, setPersistenceChainStatus} from "../../store/reducers
 import { BUG_REPORT_URL, SHORT_INTERVAL } from "../../../AppConstants";
 import { useWallet } from "../../context/WalletConnect/WalletConnect";
 import {getChainStatus} from "../../pages/api/onChain";
-import {getStkAtomAPY} from "../../pages/api/externalAPIs";
+import {getStkFuryAPY} from "../../pages/api/externalAPIs";
 import {setAPY} from "../../store/reducers/initialData";
 
 const MaintenanceContainer = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { cosmosChainStatus, persistenceChainStatus } = useSelector(
+  const { furyChainStatus, persistenceChainStatus } = useSelector(
     (state: RootState) => state.liveData
   );
 
@@ -32,12 +32,12 @@ const MaintenanceContainer = () => {
     if (
       process.env.NEXT_PUBLIC_MAINTENANCE === "false" &&
       router.pathname === "/maintenance" &&
-      !cosmosChainStatus &&
+      !furyChainStatus &&
       !persistenceChainStatus
     ) {
       router.push("/");
     }
-  }, [router, cosmosChainStatus, persistenceChainStatus]);
+  }, [router, furyChainStatus, persistenceChainStatus]);
 
   return (
     <div className="bg-background flex gap-3 justify-center items-center h-screen px-4">

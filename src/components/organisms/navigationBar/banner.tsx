@@ -9,7 +9,7 @@ const Banner = () => {
             <div className="text-center mr-4">
                 <p className="text-[#DB2438] text-xsm">
                     Unstaking has been temporarily disabled due to intermittent failures. Please use Instant Redemption
-                    or swap your stkATOM on a decentralized exchange instead.
+                    or swap your stkFURY on a decentralized exchange instead.
                 </p>
             </div>
             <div onClick={()=>{setShow(false)}} className='cursor-pointer mr-2'>

@@ -44,22 +44,22 @@ const WithdrawModal = () => {
       <div className="flex items-center justify-center px-10 pt-10 md:px-7 md:pt-7">
         <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
           <img
-            src={"/images/tokens/stk_atom.svg"}
+            src={"/images/tokens/stk_fury.svg"}
             className="logo w-[40px] h-[40px] md:w-[26px] md:h-[26px]"
-            alt="atomIcon"
+            alt="furyIcon"
           />
         </div>
         <Icon iconName="right-arrow-bold" viewClass="icon-arrow mx-4" />
         <div className="w-[60px] h-[60px] md:w-[46px] md:h-[46px] bg-[#000] rounded-full flex items-center justify-center">
           <img
-            src={"/images/tokens/atom.svg"}
+            src={"/images/tokens/fury.svg"}
             className="logo w-[40px] h-[40px] md:w-[26px] md:h-[26px]"
-            alt="atomIcon"
+            alt="furyIcon"
           />
         </div>
       </div>
       <p className="text-light-high text-center font-semibold text-lg leading normal px-8 md:text-base md:px-7">
-        Withdrawing {amount} ATOM from Persistence to Cosmos
+        Withdrawing {amount} FURY from Persistence to Cosmos
       </p>
       <div className={`${styles.stakeModalBody} px-10 pt-10 md:px-7 md:pt-7`}>
         <div className="mb-10 md:mb-7">
@@ -84,7 +84,7 @@ const WithdrawModal = () => {
                 stepNumber >= 2 ? "text-light-emphasis" : "text-light-low"
               } text-base font-normal`}
             >
-              Send ATOM to your Cosmos wallet
+              Send FURY to your Cosmos wallet
             </p>
           </div>
         </div>
@@ -95,7 +95,7 @@ const WithdrawModal = () => {
         ) : null}
         {stepNumber === 3 && (
           <p className="text-base text-light-high text-center font-semibold mb-4 md:text-sm">
-            {amount} ATOM was withdrawn successfully!
+            {amount} FURY was withdrawn successfully!
           </p>
         )}
         {txFailed || stepNumber === 3 ? (

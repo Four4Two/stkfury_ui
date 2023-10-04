@@ -34,8 +34,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].persistenceChainID
   );
 
-  let cosmosChainInfo = ExternalChains[env].find(
-    (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].cosmosChainID
+  let furyChainInfo = ExternalChains[env].find(
+    (chain: ChainInfo) => chain.chainId === CHAIN_ID[env].furyChainID
   );
 
   return (
@@ -93,23 +93,23 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta
           name="keywords"
-          content="liquid staking, pstake, $pstake, cosmos, persistence, xprt, atom"
+          content="liquid staking, pstake, $pstake, highbury, persistence, xprt, fury"
         />
         {/*Open Graph Tags*/}
-        <meta content="pSTAKE | ATOM Liquid Staking" property="og:title" />
+        <meta content="pSTAKE | FURY Liquid Staking" property="og:title" />
         <meta property="og:image" content="/og.jpg" />
         <meta
           property="og:description"
           content="Liquid Staking for The Internet of Blockchains"
         />
         {/*Twitter Tags*/}
-        <meta content="pSTAKE | ATOM Liquid Staking" property="twitter:title" />
+        <meta content="pSTAKE | FURY Liquid Staking" property="twitter:title" />
         <meta
           content="Liquid Staking for The Internet of Blockchains"
           property="twitter:description"
         />
         <meta content="/og.jpg" property="twitter:image" />
-        <title>pSTAKE | ATOM Liquid Staking</title>
+        <title>pSTAKE | FURY Liquid Staking</title>
       </Head>
       <Provider store={store}>
         <TermsModal />
@@ -126,7 +126,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <WalletProvider
           persistenceChainInfo={persistenceChainInfo!}
-          cosmosChainInfo={cosmosChainInfo!}
+          furyChainInfo={furyChainInfo!}
         >
           {process.env.NEXT_PUBLIC_MAINTENANCE === "true" ? (
             <Maintenance />

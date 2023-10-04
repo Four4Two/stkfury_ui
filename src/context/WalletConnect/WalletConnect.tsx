@@ -27,19 +27,19 @@ import {
   setPersistenceChainStatus
 } from "../../store/reducers/liveData";
 import { getChainStatus } from "../../pages/api/onChain";
-import { getStkAtomAPY } from "../../pages/api/externalAPIs";
+import { getStkFuryAPY } from "../../pages/api/externalAPIs";
 
 declare global {
   interface Window extends KeplrWindow {}
 }
 
 const WalletContext = createContext<WalletState>({
-  cosmosAccountData: null,
+  furyAccountData: null,
   persistenceAccountData: null,
-  cosmosChainData: null,
+  furyChainData: null,
   persistenceChainData: null,
   persistenceSigner: null,
-  cosmosSigner: null,
+  furySigner: null,
   connect(): Promise<boolean> {
     return Promise.resolve(false);
   },
@@ -53,15 +53,15 @@ export const useWallet = (): WalletState => {
 
 export const WalletProvider: FC<WalletProviderProps> = ({
   children,
-  cosmosChainInfo,
+  furyChainInfo,
   persistenceChainInfo
 }) => {
-  const [cosmosChainData, setCosmosChainData] = useState<ChainInfo | null>(
+  const [furyChainData, setCosmosChainData] = useState<ChainInfo | null>(
     null
   );
   const [persistenceChainData, setPersistenceChainData] =
     useState<ChainInfo | null>(null);
-  const [cosmosSigner, setCosmosSigner] = useState<
+  const [furySigner, setCosmosSigner] = useState<
     OfflineSigner | OfflineDirectSigner | null
   >(null);
   const [persistenceSigner, setPersistenceSigner] = useState<
@@ -71,7 +71,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   const [walletType, setWalletType] = useState<walletType>("keplr");
   const [persistenceAccountData, setPersistenceAccountData] =
     useState<AccountData | null>(null);
-  const [cosmosAccountData, setCosmosAccountData] =
+  const [furyAccountData, setCosmosAccountData] =
     useState<AccountData | null>(null);
   const [walletConnected, setWalletConnected] = useLocalStorage("wallet", "");
   const [walletName, setWalletName] = useLocalStorage("walletName", "");
@@ -96,22 +96,22 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     dispatch(
       fetchInitSaga({
         persistenceChainInfo: persistenceChainInfo!,
-        cosmosChainInfo: cosmosChainInfo!
+        furyChainInfo: furyChainInfo!
       })
     );
     dispatch(
       fetchValidatorsSaga({
         rpc: persistenceChainInfo.rpc!,
-        chainID: cosmosChainInfo.chainId
+        chainID: furyChainInfo.chainId
       })
     );
     dispatch(
       fetchLiveDataSaga({
         persistenceChainInfo: persistenceChainInfo!,
-        cosmosChainInfo: cosmosChainInfo!
+        furyChainInfo: furyChainInfo!
       })
     );
-  }, [persistenceChainInfo, dispatch, cosmosChainInfo]);
+  }, [persistenceChainInfo, dispatch, furyChainInfo]);
 
   // fetch calls only on initial render
   useEffect(() => {
@@ -119,7 +119,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
       const [persistenceChainStatus] = await Promise.all([
         getChainStatus(persistenceChainInfo.rpc)
       ]);
-      const apy = await getStkAtomAPY();
+      const apy = await getStkFuryAPY();
       dispatch(setAPY(apy));
       dispatch(setPersistenceChainStatus(persistenceChainStatus));
     };
@@ -127,9 +127,9 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   }, []);
 
   useEffect(() => {
-    setCosmosChainData(cosmosChainInfo);
+    setCosmosChainData(furyChainInfo);
     setPersistenceChainData(persistenceChainInfo);
-  }, [cosmosChainInfo, persistenceChainInfo]);
+  }, [furyChainInfo, persistenceChainInfo]);
 
   const connect = async (walletType: walletType): Promise<boolean> => {
     try {
@@ -138,33 +138,33 @@ export const WalletProvider: FC<WalletProviderProps> = ({
         walletType
       );
 
-      let cosmosSignerData: any = await WalletHandler(
-        cosmosChainInfo,
+      let furySignerData: any = await WalletHandler(
+        furyChainInfo,
         walletType
       );
 
       let persistenceAddressData: any =
         await persistenceSignerData!.getAccounts();
-      let cosmosAddressData: any = await cosmosSignerData!.getAccounts();
+      let furyAddressData: any = await furySignerData!.getAccounts();
 
-      setCosmosAccountData(cosmosAddressData[0]);
-      setCosmosSigner(cosmosSignerData);
+      setCosmosAccountData(furyAddressData[0]);
+      setCosmosSigner(furySignerData);
       setPersistenceAccountData(persistenceAddressData[0]);
       setPersistenceSigner(persistenceSignerData);
 
       dispatch(
         fetchBalanceSaga({
           persistenceAddress: persistenceAddressData[0]!.address,
-          cosmosAddress: cosmosAddressData[0]!.address,
+          furyAddress: furyAddressData[0]!.address,
           persistenceChainInfo: persistenceChainInfo!,
-          cosmosChainInfo: cosmosChainInfo!
+          furyChainInfo: furyChainInfo!
         })
       );
       dispatch(
         fetchPendingClaimsSaga({
           address: persistenceAddressData[0]!.address,
           persistenceChainInfo: persistenceChainInfo!,
-          dstChainInfo: cosmosChainInfo
+          dstChainInfo: furyChainInfo
         })
       );
       setWalletName(walletType);
@@ -191,9 +191,9 @@ export const WalletProvider: FC<WalletProviderProps> = ({
   };
 
   const walletState: WalletState = {
-    cosmosAccountData,
-    cosmosSigner,
-    cosmosChainData,
+    furyAccountData,
+    furySigner,
+    furyChainData,
     persistenceAccountData,
     persistenceSigner,
     persistenceChainData,

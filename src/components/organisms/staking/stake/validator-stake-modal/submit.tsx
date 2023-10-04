@@ -50,20 +50,20 @@ const Submit = ({
 
   const dispatch = useDispatch();
   const {
-    atomBalance,
-    stkAtomBalance,
-    ibcAtomBalance,
-    cosmosBalances,
+    furyBalance,
+    stkFuryBalance,
+    ibcFuryBalance,
+    furyBalances,
     persistenceBalances
   } = useSelector((state: RootState) => state.balances);
 
   const {
-    cosmosAccountData,
-    cosmosChainData,
+    furyAccountData,
+    furyChainData,
     persistenceChainData,
     persistenceAccountData,
     persistenceSigner,
-    cosmosSigner,
+    furySigner,
     isWalletConnected
   } = useWallet();
 
@@ -79,15 +79,15 @@ const Submit = ({
         console.log(response, "response-44");
         messages.push(
           TokenizeSharesMsg(
-            cosmosAccountData!.address,
+            furyAccountData!.address,
             response.validatorAddress,
-            cosmosAccountData!.address, // dstAccountData.address,
+            furyAccountData!.address, // dstAccountData.address,
             (
               Number(
                 response.inputAmount ? response.inputAmount : response?.amount
               ) * 1000000
             ).toFixed(0),
-            cosmosChainData!.stakeCurrency.coinMinimalDenom // cosmosAccountData.stakeCurrency.coinMinimalDenom
+            furyChainData!.stakeCurrency.coinMinimalDenom // furyAccountData.stakeCurrency.coinMinimalDenom
           )
         );
       });
@@ -98,14 +98,14 @@ const Submit = ({
       dispatch(
         executeDelegationStakeTransactionSaga({
           srcChainSigner: persistenceSigner!,
-          dstChainSigner: cosmosSigner!,
+          dstChainSigner: furySigner!,
           msg: messages,
           account: persistenceAccountData?.address!,
           srcChainInfo: persistenceChainData!,
-          pollInitialBalance: stkAtomBalance,
-          dstAddress: cosmosAccountData!.address,
-          dstChainInfo: cosmosChainData!,
-          initialCosmosBalance: cosmosBalances,
+          pollInitialBalance: stkFuryBalance,
+          dstAddress: furyAccountData!.address,
+          dstChainInfo: furyChainData!,
+          initialCosmosBalance: furyBalances,
           initialPersistenceBalance: persistenceBalances
         })
       );

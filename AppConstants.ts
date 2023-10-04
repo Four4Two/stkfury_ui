@@ -2,9 +2,9 @@ export const PERSISTENCE_CHAIN_ID = "pstaked-1";
 export const COSMOS_CHAIN_ID = "gaiad-1";
 export const TEST_NET = "Testnet";
 export const DEV_NET = "Devnet";
-export const DEPOSIT_ADDRESS = "cosmos16vhhczel0jzdf6kxxk62uwzkay763p9cryp7we";
+export const DEPOSIT_ADDRESS = "fury154f55zvupfknzweveltcramsccrctg7ey9auv7";
 export const PERSISTENCE_FEE = "0uxprt";
-export const COSMOS_FEE = "0.0025uatom";
+export const COSMOS_FEE = "0.0025ufury";
 export const COSMOS_LIQUID_STAKE_URL =
   "/pstake.liquidstakeibc.v1beta1.MsgLiquidStake";
 export const COSMOS_LIQUID_UN_STAKE_URL =
@@ -26,17 +26,17 @@ export const BUG_REPORT_URL =
   "https://docs.google.com/forms/d/1SpwpntQ5jVAb5BwtG7-Ul58z0vE7RocCSrN-s6bCl8M/viewform?edit_requested=true";
 export const IBC_DENOM =
   "ibc/27394FB092D2ECCD56123C74F36E4C1F926001CEADA9CA97EA622B25F41E5EB2";
-export const CRESCENT_STK_ATOM_DENOM =
+export const CRESCENT_STK_FURY_DENOM =
   "ibc/E32F6485CDAE995FC492010770936119D0BF90F5226C9AED727988DF03B5F569";
 
 // Key works
-export const COIN_ATOM = "ATOM";
-export const COIN_ATOM_DENOM = "uatom";
-export const STK_ATOM_DENOM = "STKATOM";
-export const STK_ATOM_MINIMAL_DENOM = "stk/uatom";
-export const ATOM_BALANCE = "AtomBalance";
-export const STK_ATOM_BALANCE = "stkATOMBalance";
-export const COSMOS_ATOM_BALANCE = "CosmosAtomBalance";
+export const COIN_FURY = "FURY";
+export const COIN_FURY_DENOM = "ufury";
+export const STK_FURY_DENOM = "STKFURY";
+export const STK_FURY_MINIMAL_DENOM = "stk/ufury";
+export const FURY_BALANCE = "FuryBalance";
+export const STK_FURY_BALANCE = "stkFURYBalance";
+export const COSMOS_FURY_BALANCE = "CosmosFuryBalance";
 export const COIN_GRAVITY_DENOM = "ugraviton";
 export const KEPLR = "keplr";
 export const LEDGER = "ledger";
@@ -65,4 +65,4 @@ export const ERROR_WHILE_STAKING = "ERROR_WHILE_STAKING";
 export const ERROR_WHILE_DEPOSITING = "ERROR_WHILE_DEPOSITING";
 export const ERROR_WHILE_UNSTAKING = "ERROR_WHILE_UNSTAKING";
 export const EMPTY_POOL_ERROR =
-  "Query failed with (6): rpc error: code = Unknown desc = failed to execute message; message index: 0: Delegated amount: 0uatom is less than total undelegations for the epoch:";
+  "Query failed with (6): rpc error: code = Unknown desc = failed to execute message; message index: 0: Delegated amount: 0ufury is less than total undelegations for the epoch:";

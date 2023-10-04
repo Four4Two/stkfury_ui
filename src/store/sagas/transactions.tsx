@@ -20,7 +20,7 @@ import {
   MIN_STAKE,
   PERSISTENCE_FEE,
   STAKE,
-  STK_ATOM_MINIMAL_DENOM
+  STK_FURY_MINIMAL_DENOM
 } from "../../../AppConstants";
 import {
   executeStakeTransactionSaga,
@@ -76,7 +76,7 @@ import { LiquidStakeLsmMsg } from "../../helpers/protoMsg";
 const env: string = process.env.NEXT_PUBLIC_ENVIRONMENT!;
 
 let ibcInfo = IBCChainInfos[env].find(
-  (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+  (chain) => chain.counterpartyChainId === CHAIN_ID[env].furyChainID
 );
 
 export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
@@ -86,8 +86,8 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     account,
     msg,
     pollInitialBalance,
-    cosmosAddress,
-    cosmosChainInfo
+    furyAddress,
+    furyChainInfo
   } = payload;
   try {
     const transaction: DeliverTxResponse = yield Transaction(
@@ -103,7 +103,7 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     if (transaction.code === 0) {
       const response: string = yield pollAccountBalance(
         account,
-        STK_ATOM_MINIMAL_DENOM,
+        STK_FURY_MINIMAL_DENOM,
         persistenceChainInfo.rpc,
         pollInitialBalance.toString()
       );
@@ -112,9 +112,9 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
         yield postTransactionActions(
           "stake",
           account,
-          cosmosAddress,
+          furyAddress,
           persistenceChainInfo,
-          cosmosChainInfo
+          furyChainInfo
         );
       }
       yield put(resetTransaction());
@@ -129,14 +129,14 @@ export function* executeStakeTransaction({ payload }: StakeTransactionPayload) {
     customScope.setLevel(FATAL);
     customScope.setTags({
       [ERROR_WHILE_STAKING]: payload.account,
-      cosmosAddress
+      furyAddress
     });
     yield postTransactionActions(
       "stake",
       account,
-      cosmosAddress,
+      furyAddress,
       persistenceChainInfo,
-      cosmosChainInfo
+      furyChainInfo
     );
     genericErrorHandler(e, customScope);
   }
@@ -151,8 +151,8 @@ export function* executeUnStakeTransaction({
     address,
     msg,
     pollInitialBalance,
-    cosmosAddress,
-    cosmosChainInfo
+    furyAddress,
+    furyChainInfo
   } = payload;
   try {
     const transaction: DeliverTxResponse = yield Transaction(
@@ -176,9 +176,9 @@ export function* executeUnStakeTransaction({
           ToastType.LOADING
         );
         const response: string = yield pollAccountBalance(
-          cosmosAddress,
-          cosmosChainInfo?.stakeCurrency.coinMinimalDenom!,
-          cosmosChainInfo.rpc,
+          furyAddress,
+          furyChainInfo?.stakeCurrency.coinMinimalDenom!,
+          furyChainInfo.rpc,
           pollInitialBalance.toString()
         );
         if (response !== "0") {
@@ -186,9 +186,9 @@ export function* executeUnStakeTransaction({
           yield postTransactionActions(
             "unstake",
             address,
-            cosmosAddress,
+            furyAddress,
             persistenceChainInfo,
-            cosmosChainInfo
+            furyChainInfo
           );
           displayToast(
             {
@@ -208,9 +208,9 @@ export function* executeUnStakeTransaction({
         yield postTransactionActions(
           "unstake",
           address,
-          cosmosAddress,
+          furyAddress,
           persistenceChainInfo,
-          cosmosChainInfo
+          furyChainInfo
         );
         displayToast(
           {
@@ -234,9 +234,9 @@ export function* executeUnStakeTransaction({
     yield postTransactionActions(
       "unstake",
       address,
-      cosmosAddress,
+      furyAddress,
       persistenceChainInfo,
-      cosmosChainInfo
+      furyChainInfo
     );
     if (e.message && e.message.includes(EMPTY_POOL_ERROR)) {
       displayToast(
@@ -258,9 +258,9 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
     persistenceChainInfo,
     address,
     msg,
-    cosmosChainInfo,
-    cosmosAddress,
-    pollInitialIBCAtomBalance,
+    furyChainInfo,
+    furyAddress,
+    pollInitialIBCFuryBalance,
     claimType
   } = payload;
   try {
@@ -282,23 +282,23 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
       );
 
       const response: string = yield pollAccountBalance(
-        claimType === "claimAll" ? cosmosAddress : address,
+        claimType === "claimAll" ? furyAddress : address,
         claimType === "claimAll"
-          ? cosmosChainInfo?.stakeCurrency.coinMinimalDenom!
-          : STK_ATOM_MINIMAL_DENOM,
+          ? furyChainInfo?.stakeCurrency.coinMinimalDenom!
+          : STK_FURY_MINIMAL_DENOM,
         claimType === "claimAll"
-          ? cosmosChainInfo.rpc
+          ? furyChainInfo.rpc
           : persistenceChainInfo.rpc,
-        pollInitialIBCAtomBalance.toString()
+        pollInitialIBCFuryBalance.toString()
       );
 
       if (response !== "0") {
         yield postTransactionActions(
           "claim",
           address,
-          cosmosAddress,
+          furyAddress,
           persistenceChainInfo,
-          cosmosChainInfo
+          furyChainInfo
         );
         displayToast(
           {
@@ -322,9 +322,9 @@ export function* executeClaimTransaction({ payload }: ClaimTransactionPayload) {
     yield postTransactionActions(
       "claim",
       address,
-      cosmosAddress,
+      furyAddress,
       persistenceChainInfo,
-      cosmosChainInfo
+      furyChainInfo
     );
     yield failedTransactionActions("");
   }
@@ -335,25 +335,25 @@ export function* executeDepositTransaction({
 }: DepositTransactionPayload) {
   const {
     persistenceChainInfo,
-    cosmosSigner,
-    cosmosChainInfo,
+    furySigner,
+    furyChainInfo,
     depositMsg,
     persistenceSigner,
     stakeMsg,
     persistenceAddress,
-    cosmosAddress,
+    furyAddress,
     pollInitialDepositBalance,
     pollInitialStakeBalance
   } = payload;
   try {
     yield put(setStakeTxnStepNumber(1));
     const transaction: DeliverTxResponse = yield Transaction(
-      cosmosSigner,
-      cosmosAddress,
+      furySigner,
+      furyAddress,
       [depositMsg],
       COSMOS_FEE,
       "",
-      cosmosChainInfo.rpc
+      furyChainInfo.rpc
     );
     yield put(setStakeTxnStepNumber(2));
     printConsole(transaction, "transaction deposit");
@@ -369,9 +369,9 @@ export function* executeDepositTransaction({
         yield postTransactionActions(
           "deposit",
           persistenceAddress,
-          cosmosAddress,
+          furyAddress,
           persistenceChainInfo,
-          cosmosChainInfo
+          furyChainInfo
         );
         yield put(setStakeTxnStepNumber(3));
         yield put(
@@ -381,8 +381,8 @@ export function* executeDepositTransaction({
             account: persistenceAddress,
             persistenceChainInfo: persistenceChainInfo!,
             pollInitialBalance: pollInitialStakeBalance,
-            cosmosAddress,
-            cosmosChainInfo
+            furyAddress,
+            furyChainInfo
           })
         );
         yield put(setTransactionProgress(STAKE));
@@ -401,9 +401,9 @@ export function* executeDepositTransaction({
     yield postTransactionActions(
       "deposit",
       persistenceAddress,
-      cosmosAddress,
+      furyAddress,
       persistenceChainInfo,
-      cosmosChainInfo
+      furyChainInfo
     );
     genericErrorHandler(e, customScope);
   }
@@ -414,12 +414,12 @@ export function* executeWithdrawTransaction({
 }: WithdrawTransactionPayload) {
   const {
     persistenceChainInfo,
-    cosmosChainInfo,
+    furyChainInfo,
     withdrawMsg,
     persistenceAddress,
-    cosmosAddress,
+    furyAddress,
     persistenceSigner,
-    pollInitialIBCAtomBalance
+    pollInitialIBCFuryBalance
   } = payload;
   try {
     yield put(setWithdrawTxnStepNumber(1));
@@ -435,19 +435,19 @@ export function* executeWithdrawTransaction({
     yield put(setWithdrawTxnStepNumber(2));
     if (transaction.code === 0) {
       const response: string = yield pollAccountBalance(
-        cosmosAddress,
-        cosmosChainInfo?.stakeCurrency.coinMinimalDenom!,
-        cosmosChainInfo.rpc,
-        pollInitialIBCAtomBalance.toString()
+        furyAddress,
+        furyChainInfo?.stakeCurrency.coinMinimalDenom!,
+        furyChainInfo.rpc,
+        pollInitialIBCFuryBalance.toString()
       );
       if (response !== "0") {
         yield put(setWithdrawTxnStepNumber(3));
         yield postTransactionActions(
           "withdraw",
           persistenceAddress,
-          cosmosAddress,
+          furyAddress,
           persistenceChainInfo,
-          cosmosChainInfo
+          furyChainInfo
         );
       }
       yield put(resetTransaction());
@@ -465,9 +465,9 @@ export function* executeWithdrawTransaction({
     yield postTransactionActions(
       "withdraw",
       persistenceAddress,
-      cosmosAddress,
+      furyAddress,
       persistenceChainInfo,
-      cosmosChainInfo
+      furyChainInfo
     );
     genericErrorHandler(e, customScope);
   }

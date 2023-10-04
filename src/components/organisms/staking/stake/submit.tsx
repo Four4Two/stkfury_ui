@@ -34,9 +34,9 @@ const Submit = () => {
   const { isMobile } = useWindowSize();
   const { minDeposit } = useSelector((state: RootState) => state.initialData);
   let ibcInfo = IBCChainInfos[env].find(
-    (chain) => chain.counterpartyChainId === CHAIN_ID[env].cosmosChainID
+    (chain) => chain.counterpartyChainId === CHAIN_ID[env].furyChainID
   );
-  const { atomBalance, stkAtomBalance, ibcAtomBalance } = useSelector(
+  const { furyBalance, stkFuryBalance, ibcFuryBalance } = useSelector(
     (state: RootState) => state.balances
   );
   const { amount, showModal } = useSelector((state: RootState) => state.stake);
@@ -44,19 +44,19 @@ const Submit = () => {
     (state: RootState) => state.transaction
   );
   const {
-    cosmosAccountData,
-    cosmosChainData,
-    cosmosSigner,
+    furyAccountData,
+    furyChainData,
+    furySigner,
     persistenceAccountData,
     persistenceSigner,
     persistenceChainData,
     isWalletConnected
   } = useWallet();
 
-  //atom on both cosmos and persistence chains
-  const totalAtomBalance: number = atomBalance + ibcAtomBalance;
+  //fury on both cosmos and persistence chains
+  const totalFuryBalance: number = furyBalance + ibcFuryBalance;
 
-  const diff = Number((totalAtomBalance - Number(amount)).toFixed(6));
+  const diff = Number((totalFuryBalance - Number(amount)).toFixed(6));
 
   // stake amount after leaving min stake fee(MIN_STAKE_FEE)
   const stakeAmount =
@@ -72,7 +72,7 @@ const Submit = () => {
         unDecimalize(stakeAmount),
         ibcInfo!.coinDenom
       );
-      if (Number(stakeAmount) <= ibcAtomBalance) {
+      if (Number(stakeAmount) <= ibcFuryBalance) {
         dispatch(setLiquidStakeTxnType("directStaking"));
         dispatch(setTransactionProgress(STAKE));
         dispatch(setStakeTxnStepNumber(3));
@@ -82,9 +82,9 @@ const Submit = () => {
             msg: stakeMsg,
             account: persistenceAccountData?.address!,
             persistenceChainInfo: persistenceChainData!,
-            pollInitialBalance: stkAtomBalance,
-            cosmosAddress: cosmosAccountData!.address,
-            cosmosChainInfo: cosmosChainData!
+            pollInitialBalance: stkFuryBalance,
+            furyAddress: furyAccountData!.address,
+            furyChainInfo: furyChainData!
           })
         );
       } else {
@@ -94,32 +94,32 @@ const Submit = () => {
         //ibc balance from cosmos to persistence
         const ibcBalance = Number(
           Number(unDecimalize(stakeAmount)) -
-            Number(unDecimalize(ibcAtomBalance))
+            Number(unDecimalize(ibcFuryBalance))
         ).toFixed(6);
 
         const depositMsg = await MakeIBCTransferMsg({
           channel: ibcInfo?.sourceChannelId,
-          fromAddress: cosmosAccountData?.address,
+          fromAddress: furyAccountData?.address,
           toAddress: persistenceAccountData?.address,
           amount: ibcBalance,
           timeoutHeight: undefined,
           timeoutTimestamp: undefined,
-          denom: cosmosChainData?.stakeCurrency.coinMinimalDenom,
-          sourceRPCUrl: cosmosChainData?.rpc,
+          denom: furyChainData?.stakeCurrency.coinMinimalDenom,
+          sourceRPCUrl: furyChainData?.rpc,
           destinationRPCUrl: persistenceChainData?.rpc,
           port: IBCConfiguration.ibcDefaultPort
         });
         dispatch(
           executeDepositTransactionSaga({
-            cosmosSigner: cosmosSigner!,
-            cosmosChainInfo: cosmosChainData!,
+            furySigner: furySigner!,
+            furyChainInfo: furyChainData!,
             persistenceChainInfo: persistenceChainData!,
-            cosmosAddress: cosmosAccountData!.address,
+            furyAddress: furyAccountData!.address,
             persistenceAddress: persistenceAccountData!.address,
             depositMsg: depositMsg,
             stakeMsg: stakeMsg,
-            pollInitialDepositBalance: ibcAtomBalance,
-            pollInitialStakeBalance: stkAtomBalance,
+            pollInitialDepositBalance: ibcFuryBalance,
+            pollInitialStakeBalance: stkFuryBalance,
             persistenceSigner: persistenceSigner!
           })
         );
@@ -134,9 +134,9 @@ const Submit = () => {
   const enable =
     amount &&
     Number(amount) > 0 &&
-    Number(amount) <= Number(totalAtomBalance) &&
+    Number(amount) <= Number(totalFuryBalance) &&
     minDeposit <= Number(amount) &&
-    MIN_STAKE_FEE + minDeposit <= Number(totalAtomBalance);
+    MIN_STAKE_FEE + minDeposit <= Number(totalFuryBalance);
 
   return isWalletConnected ? (
     <Button

@@ -12,19 +12,19 @@ import { useWallet } from "../../../../context/WalletConnect/WalletConnect";
 
 const From = () => {
   const dispatch = useDispatch();
-  const { stkAtomBalance } = useSelector((state: RootState) => state.balances);
+  const { stkFuryBalance } = useSelector((state: RootState) => state.balances);
   const { amount } = useSelector((state: RootState) => state.unStake);
   const { exchangeRate } = useSelector((state: RootState) => state.initialData);
-  const { atomPrice } = useSelector((state: RootState) => state.liveData);
+  const { furyPrice } = useSelector((state: RootState) => state.liveData);
   const { isMobile } = useWindowSize();
   const { isWalletConnected } = useWallet();
 
-  const stkATOMAmount = truncateToFixedDecimalPlaces(
+  const stkFURYAmount = truncateToFixedDecimalPlaces(
     Number(amount) * (1 / exchangeRate)
   );
 
   // dollar value of user input based on exchangeRate at that moments
-  const priceInDollars = atomPrice * Number(stkATOMAmount);
+  const priceInDollars = furyPrice * Number(stkFURYAmount);
 
   const inputHandler = (evt: ChangeEvent<HTMLInputElement>) => {
     let rex = /^\d{0,10}(\.\d{0,6})?$/;
@@ -36,7 +36,7 @@ const From = () => {
   };
 
   const maxHandler = () => {
-    dispatch(setUnStakeAmount(stkAtomBalance.toString()));
+    dispatch(setUnStakeAmount(stkFuryBalance.toString()));
   };
 
   return (
@@ -45,22 +45,22 @@ const From = () => {
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
             <img
-              src={"/images/tokens/stk_atom.svg"}
+              src={"/images/tokens/stk_fury.svg"}
               width={isMobile ? 20 : 32}
               height={isMobile ? 20 : 32}
               className="logo"
-              alt="atomIcon"
+              alt="furyIcon"
             />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg lg:text-lg">
-              stkATOM
+              stkFURY
             </span>
           </div>
           <p className="mt-3 leading-normal text-sm font-normal text-sm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(stkAtomBalance, 3, isMobile ? 2 : 6)}
+              {formatNumber(stkFuryBalance, 3, isMobile ? 2 : 6)}
             </span>
-            {isWalletConnected && stkAtomBalance > 0 ? (
+            {isWalletConnected && stkFuryBalance > 0 ? (
               <span
                 className="text-light-high ml-2 font-bold uppercase cursor-pointer"
                 onClick={maxHandler}

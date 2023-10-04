@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from "react";
 import InputText from "../../../atoms/input";
-import { COIN_ATOM, MIN_STAKE_FEE } from "../../../../../AppConstants";
+import { COIN_FURY, MIN_STAKE_FEE } from "../../../../../AppConstants";
 import { formatNumber } from "../../../../helpers/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../store/reducers";
@@ -10,15 +10,15 @@ import { useWindowSize } from "../../../../customHooks/useWindowSize";
 
 const From = () => {
   const dispatch = useDispatch();
-  const { atomBalance, ibcAtomBalance } = useSelector(
+  const { furyBalance, ibcFuryBalance } = useSelector(
     (state: RootState) => state.balances
   );
   const { amount } = useSelector((state: RootState) => state.stake);
-  const { atomPrice } = useSelector((state: RootState) => state.liveData);
+  const { furyPrice } = useSelector((state: RootState) => state.liveData);
   const { minDeposit } = useSelector((state: RootState) => state.initialData);
-  const priceInDollars = atomPrice * Number(amount);
+  const priceInDollars = furyPrice * Number(amount);
 
-  const totalAtomBalance = atomBalance + ibcAtomBalance;
+  const totalFuryBalance = furyBalance + ibcFuryBalance;
   const { isWalletConnected } = useWallet();
   const { isMobile } = useWindowSize();
 
@@ -33,7 +33,7 @@ const From = () => {
 
   const maxHandler = () => {
     dispatch(
-      setStakeAmount((Number(totalAtomBalance) - MIN_STAKE_FEE).toFixed(6))
+      setStakeAmount((Number(totalFuryBalance) - MIN_STAKE_FEE).toFixed(6))
     );
   };
 
@@ -43,23 +43,23 @@ const From = () => {
         <div className="flex justify-center flex-col flex-1">
           <div className="input-logo flex items-center">
             <img
-              src={"/images/tokens/atom.svg"}
+              src={"/images/tokens/fury.svg"}
               width={isMobile ? 20 : 32}
               height={isMobile ? 20 : 32}
               className="tokenImage"
-              alt="atomIcon"
+              alt="furyIcon"
             />
             <span className="text-light-high text-3xl font-normal ml-2 md:text-lg md:text-lg lg:text-lg">
-              {COIN_ATOM}
+              {COIN_FURY}
             </span>
           </div>
           <p className="mt-3 leading-normal text-sm md:text-xsm">
             <span className="text-light-low">Available: </span>
             <span className="text-light-mid">
-              {formatNumber(totalAtomBalance, 3, isMobile ? 2 : 6)}
+              {formatNumber(totalFuryBalance, 3, isMobile ? 2 : 6)}
             </span>
             {isWalletConnected &&
-            Number(atomBalance) > MIN_STAKE_FEE + minDeposit ? (
+            Number(furyBalance) > MIN_STAKE_FEE + minDeposit ? (
               <span
                 className="text-light-high ml-2 font-bold uppercase cursor-pointer"
                 onClick={maxHandler}
@@ -69,7 +69,7 @@ const From = () => {
             ) : null}
             {isWalletConnected &&
             Number(amount) > 0 &&
-            Number(atomBalance) <= MIN_STAKE_FEE + minDeposit &&
+            Number(furyBalance) <= MIN_STAKE_FEE + minDeposit &&
             Number(amount) < MIN_STAKE_FEE + minDeposit ? (
               <span className="text-light-high ml-2 font-semibold">
                 Min Stake: {MIN_STAKE_FEE}

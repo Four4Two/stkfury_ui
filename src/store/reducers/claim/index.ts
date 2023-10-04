@@ -4,13 +4,13 @@ import {
   SetPendingClaimList,
   SetClaimableBalance,
   FetchPendingClaimSaga,
-  SetClaimableStkAtomBalance
+  SetClaimableStkFuryBalance
 } from "./types";
 
 const initialState: ClaimState = {
   pendingClaimList: [],
   claimableBalance: 0,
-  claimableStkAtomBalance: 0,
+  claimableStkFuryBalance: 0,
   unlistedPendingClaimList: []
 };
 
@@ -28,8 +28,8 @@ const claimQueries = createSlice({
     setClaimableBalance: (state, action: SetClaimableBalance) => {
       state.claimableBalance = action.payload;
     },
-    setClaimableStkAtomBalance: (state, action: SetClaimableStkAtomBalance) => {
-      state.claimableStkAtomBalance = action.payload;
+    setClaimableStkFuryBalance: (state, action: SetClaimableStkFuryBalance) => {
+      state.claimableStkFuryBalance = action.payload;
     }
   }
 });
@@ -38,7 +38,7 @@ export const {
   fetchPendingClaimsSaga,
   setPendingClaimList,
   setClaimableBalance,
-  setClaimableStkAtomBalance,
+  setClaimableStkFuryBalance,
   setUnlistedPendingClaimList
 } = claimQueries.actions;
 
